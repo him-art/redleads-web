@@ -1,0 +1,147 @@
+'use client';
+
+import { useRef, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform, useWillChange } from 'framer-motion';
+
+export default function Hero({ children }: { children?: React.ReactNode }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end'],
+  });
+
+  const willChange = useWillChange();
+
+  // Responsive donut positioning - scales with screen size and text
+  const [windowWidth, setWindowWidth] = useState(1200);
+  const [scale, setScale] = useState(1);
+  
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      
+      // Calculate scale factor based on screen width
+      // Base design at 1440px width
+      const baseWidth = 1440;
+      const scaleValue = Math.min(window.innerWidth / baseWidth, 1);
+      setScale(scaleValue);
+    };
+    
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Fixed positions and sizes (scaled by screen size)
+  const donutSize = 40 * scale; // Base size at full scale
+  const xOffset = 40 * scale; // Fixed horizontal offset - positioned after "Int"
+  const yOffset = 1 * scale; // Fixed vertical offset
+
+  // "The Giant Donut" Logic:
+  // We use a div with a massive border to act as the "Light Overlay".
+  // The "Hole" is the inner content box of this div.
+  // We scale this div up. 
+  // - Because the border scales with the div, it maintains coverage ratio.
+  // - Transform is cheap (GPU).
+  
+  // Scale range:
+  // Start: 1 (Hole size = ~50px to cover just the "o")
+  // End: 50 (Hole size = ~2500px, clearing the screen)
+  const scaleTransform = useTransform(scrollYProgress, [0, 0.4, 0.9], [1, 5, 50]);
+  
+  // Opacity for the mask to fade it completely at the end
+  const maskOpacity = useTransform(scrollYProgress, [0.85, 0.9], [1, 0]);
+  
+  // Keep hero text fully visible and static (no opacity fade, no movement)
+  const heroOpacity = 1; // Always visible
+  const yText = useTransform(scrollYProgress, [0, 1], [0, 0]); // No movement
+
+  return (
+    <div ref={containerRef} className="relative h-[250vh]">
+      <div className="sticky top-0 h-screen overflow-hidden bg-gradient-to-br from-[#1a1a1a] via-[#2a2a2a] to-[#1a1a1a]">
+        
+        {/* The Content to Reveal (Next Section) */}
+        {/* We place the children here. They sit behind the mask. */}
+        <div className="absolute inset-0 flex items-center justify-center z-0">
+           {children}
+        </div>
+
+        {/* The Giant Donut (The Mask) - Responsive sizing */}
+        <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+           <motion.div
+             style={{ 
+               scale: scaleTransform, 
+               opacity: maskOpacity, 
+               willChange, 
+               x: xOffset, 
+               y: yOffset,
+               width: donutSize,
+               height: donutSize
+             }}
+             className="rounded-full shadow-[0_0_0_5000px_#f5f5f5]"
+           />
+        </div>
+
+        {/* Hero Content (Floating on top) */}
+        <motion.div 
+            style={{ opacity: heroOpacity, y: yText, scale }}
+            className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none px-4" 
+        >
+             <div className="relative pointer-events-auto">
+
+                  {/* Main headline - Fixed layout that scales */}
+                  <div className="flex flex-col items-center justify-center text-center leading-tight gap-2">
+                      {/* Line 1: Turn Reddit Conversations */}
+                      <div>
+                          <span className="text-[72px] font-bold tracking-tight text-[#1a1a1a] block whitespace-nowrap">
+                            Turn Reddit Conversations
+                          </span>
+                      </div>
+
+                      {/* Line 2: Into (centered with offset for the 'o') */}
+                      <div className="flex justify-center">
+                          <span 
+                            style={{ marginRight: '56px' }}
+                            className="text-[72px] font-bold tracking-tight text-[#1a1a1a]"
+                          >
+                            Int
+                          </span>
+                      </div>
+
+                      {/* Line 3: Paying Customers */}
+                      <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.5 }}
+                      >
+                          <span className="text-[88px] font-bold tracking-tight font-serif italic inline-block">
+                            <span className="text-orange-500 relative whitespace-nowrap">
+                              Paying Customers
+                              <motion.span 
+                                initial={{ scaleX: 0 }}
+                                animate={{ scaleX: 1 }}
+                                transition={{ duration: 0.8, delay: 0.8 }}
+                                className="absolute -bottom-2 left-0 right-0 h-[10px] bg-gradient-to-r from-orange-400 to-orange-600 rounded-full origin-left"
+                              ></motion.span>
+                            </span>
+                          </span>
+                      </motion.div>
+                  </div>
+             </div>
+        </motion.div>
+
+        {/* Fixed Icon in the center (The Target) */}
+        {/* This icon sits INSIDE the hole initially and fades out */}
+        <div className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none">
+           <motion.div 
+             style={{ opacity: heroOpacity }}
+             className="text-6xl"
+           >
+             
+           </motion.div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
