@@ -1,14 +1,17 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import IntroSection from "@/components/IntroSection";
+
 import NextSection from "@/components/NextSection";
+import PainPoints from "@/components/PainPoints";
 import HowItWorks from "@/components/HowItWorks";
+import StoryFlow from "@/components/StoryFlow";
 import Features from "@/components/Features";
-import Comparison from "@/components/Comparison";
-import SocialProof from "@/components/SocialProof";
+import TargetAudience from "@/components/TargetAudience";
+import FounderNote from "@/components/FounderNote";
+//import SocialProof from "@/components/SocialProof";
 import Pricing from "@/components/Pricing";
 import FAQ from "@/components/FAQ";
-import FinalCTA from "@/components/FinalCTA";
+
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -17,15 +20,20 @@ export default function Home() {
       <div className="relative">
         <Navbar />
         <Hero>
-          <IntroSection />
+          
         </Hero>
         <NextSection />
+
+        <PainPoints />
         <HowItWorks />
-        <SocialProof />
-        <Comparison />
-        <Features />
+        <StoryFlow />
+        
+        <TargetAudience />
+        <FounderNote />
+
         <Pricing />
-        <FinalCTA />
+
+        
         <FAQ />
         <Footer />
       </div>

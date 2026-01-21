@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-inter);
-  --color-primary: #2563eb; /* blue-600 */
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-garamond), serif;
+  --color-primary: #f25e36; /* brand-orange */
   --color-primary-foreground: #ffffff;
   --color-accent: #f59e0b; /* amber-500 */
   --color-accent-foreground: #ffffff;
@@ -20,8 +21,19 @@
   }
 }
 
+html,
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.5s infinite;
 }

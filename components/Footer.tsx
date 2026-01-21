@@ -12,8 +12,9 @@ const Footer = () => {
             
             <span className="font-bold text-white">RedLeads.</span>
           </div>
-          
-          
+          <div className="flex gap-6">
+            {/* <Link href="/privacy" className="text-sm text-gray-400 hover:text-white transition-colors">Privacy Policy</Link> */}
+          </div>
 
           <div className="text-sm text-gray-500">
             &copy; {new Date().getFullYear()} RedLeads. All rights reserved.

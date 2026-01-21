@@ -15,4 +15,17 @@ const firebaseConfig = {
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export { app, db };
+// Analytics initialization (client-side only)
+import { getAnalytics, isSupported } from "firebase/analytics";
+
+let analytics: any = null;
+
+if (typeof window !== "undefined") {
+  isSupported().then((supported) => {
+    if (supported) {
+      analytics = getAnalytics(app);
+    }
+  });
+}
+
+export { app, db, analytics };

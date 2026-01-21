@@ -8,17 +8,14 @@ const faqs = [
     answer: "RedLeads uses AI to monitor relevant subreddits for conversations about your product or competitors. It then analyzes these posts for purchase intent and organizes high-potential leads in your dashboard."
   },
   {
-    question: "Is my Reddit account safe?",
-    answer: "Yes. We use a local-first architecture with AES-256 encryption. Your Reddit credentials are stored encrypted on your own device and are never sent to our servers."
+    question: "What is RedLeads?",
+    answer: "RedLeads is an AI platform that helps you get seen by generating organic marketing content and community engagement automatically."
   },
   {
     question: "What makes RedLeads different?",
     answer: "Unlike other tools that just do keyword matching, RedLeads uses advanced AI to understand context and intent. Plus, our privacy-first approach ensures you maintain full control of your data."
   },
-  {
-    question: "Do I need Reddit API keys?",
-    answer: "No, RedLeads handles the connection for you. You just need to log in securely through our local client."
-  },
+  
   {
     question: "Can I cancel anytime?",
     answer: "Absolutely. There are no contracts or lock-in periods. You can downgrade to the Starter plan or cancel your subscription at any time."

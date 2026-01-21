@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useWillChange } from 'framer-motion';
@@ -33,9 +33,9 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
   }, []);
 
   // Fixed positions and sizes (scaled by screen size)
-  const donutSize = 37 * scale; // Base size at full scale
-  const xOffset = 37 * scale; // Fixed horizontal offset - positioned after "Int"
-  const yOffset = 0 * scale; // Fixed vertical offset
+  const donutSize = 40 * scale; // Base size at full scale
+  const xOffset = 40 * scale; // Fixed horizontal offset - positioned after "Int"
+  const yOffset = 1 * scale; // Fixed vertical offset
 
   // "The Giant Donut" Logic:
   // We use a div with a massive border to act as the "Light Overlay".
@@ -45,7 +45,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
   // - Transform is cheap (GPU).
   
   // Scale range:
-  // Start: 1 (Hole size = ~47px to cover just the "o")
+  // Start: 1 (Hole size = ~50px to cover just the "o")
   // End: 50 (Hole size = ~2500px, clearing the screen)
   const scaleTransform = useTransform(scrollYProgress, [0, 0.4, 0.9], [1, 5, 50]);
   
@@ -58,7 +58,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
 
   return (
     <div ref={containerRef} className="relative h-[250vh]">
-      <div className="sticky top-0 h-screen overflow-hidden bg-gradient-to-br from-[#1a1a1a] via-[#1a1a1a] to-[#1a1a1a]">
+      <div className="sticky top-0 h-screen overflow-hidden bg-gradient-to-br from-[#1a1a1a] via-[#2a2a2a] to-[#1a1a1a]">
         
         {/* The Content to Reveal (Next Section) */}
         {/* We place the children here. They sit behind the mask. */}

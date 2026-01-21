@@ -3,8 +3,8 @@ import { Shield, Target, Bot, Kanban, Zap, User } from 'lucide-react';
 const features = [
   {
     icon: Shield,
-    title: "Privacy-First",
-    description: "Your data never leaves your device unencrypted. We use local AES-256 encryption to keep your Reddit credentials safe.",
+    title: "100% Ban-Safe",
+    description: "We use distributed residential proxies and intelligent staggering to ensure your account acts human and stays safe.",
   },
   {
     icon: Target,
@@ -13,8 +13,8 @@ const features = [
   },
   {
     icon: Bot,
-    title: "AI Analysis",
-    description: "Powered by Gemini AI to understand context, sarcasm, and genuine buying signals better than keyword matching.",
+    title: "Context-Aware AI",
+    description: "Powered by advanced LLMs to understand context, sarcasm, and genuine buying signals better than keyword matching.",
   },
   {
     icon: Kanban,
