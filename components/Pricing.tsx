@@ -1,7 +1,37 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Check } from 'lucide-react';
+import { createClient } from '@/lib/supabase';
+import { type User as SupabaseUser } from '@supabase/supabase-js';
 
 const Pricing = () => {
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const supabase = createClient();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogin = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback?next=/scanner`,
+      },
+    });
+  };
   return (
     <section id="pricing" className="bg-[#1a1a1a] py-24 border-t border-white/5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -58,9 +88,18 @@ const Pricing = () => {
               ))}
             </ul>
 
-            <Link href="https://tally.so/r/7RK9g0" id="cta-scout-apply" className="mt-8 block w-full rounded-full border border-white/10 bg-white/5 py-3 text-center text-sm font-semibold text-white transition-all hover:bg-white/10 hover:border-white/20">
-              Apply for Beta Access
-            </Link>
+            {user ? (
+              <div className="mt-8 block w-full rounded-full bg-orange-500/10 border border-orange-500/20 py-3 text-center text-sm font-semibold text-orange-400">
+                You're in! Accessing Benefits...
+              </div>
+            ) : (
+              <button 
+                onClick={handleLogin}
+                className="mt-8 block w-full rounded-full border border-white/10 bg-white/5 py-3 text-center text-sm font-semibold text-white transition-all hover:bg-white/10 hover:border-white/20"
+              >
+                Apply for Beta Access
+              </button>
+            )}
             
             <div className="mt-6 pt-6 border-t border-white/5">
               <div className="flex items-center gap-2 text-xs text-gray-400">
@@ -113,9 +152,18 @@ const Pricing = () => {
               ))}
             </ul>
 
-            <Link href="https://tally.so/r/7RK9g0" id="cta-growth-apply" className="mt-8 block w-full rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 py-3 text-center text-sm font-semibold text-white transition-all hover:from-blue-700 hover:to-indigo-700 hover:scale-[1.02] shadow-lg shadow-blue-500/25">
-              Apply for Beta Access
-            </Link>
+            {user ? (
+              <div className="mt-8 block w-full rounded-full bg-green-500/10 border border-green-500/20 py-3 text-center text-sm font-semibold text-green-400">
+                 Active in Early Access
+              </div>
+            ) : (
+              <button 
+                onClick={handleLogin}
+                className="mt-8 block w-full rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 py-3 text-center text-sm font-semibold text-white transition-all hover:from-blue-700 hover:to-indigo-700 hover:scale-[1.02] shadow-lg shadow-blue-500/25"
+              >
+                Apply for Beta Access
+              </button>
+            )}
             
             <div className="mt-6 pt-6 border-t border-white/5">
               <div className="flex items-center gap-2 text-xs text-gray-300">

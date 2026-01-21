@@ -11,16 +11,20 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase
-const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
-const db = getFirestore(app);
+// Initialize Firebase with safety check for build time
+const app = (firebaseConfig.apiKey && getApps().length === 0) 
+  ? initializeApp(firebaseConfig) 
+  : (getApps().length > 0 ? getApp() : undefined);
+
+// Initialize Firestore only if app is valid
+const db = app ? getFirestore(app) : null;
 
 // Analytics initialization (client-side only)
 import { getAnalytics, isSupported } from "firebase/analytics";
 
 let analytics: any = null;
 
-if (typeof window !== "undefined") {
+if (typeof window !== "undefined" && app) {
   isSupported().then((supported) => {
     if (supported) {
       analytics = getAnalytics(app);

@@ -13,7 +13,9 @@ const Footer = () => {
             <span className="font-bold text-white">RedLeads.</span>
           </div>
           <div className="flex gap-6">
-            {/* <Link href="/privacy" className="text-sm text-gray-400 hover:text-white transition-colors">Privacy Policy</Link> */}
+            <Link href="/scanner" className="text-sm text-gray-400 hover:text-white transition-colors">Free Scanner</Link>
+            <Link href="/privacy" className="text-sm text-gray-400 hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="text-sm text-gray-400 hover:text-white transition-colors">Terms of Service</Link>
           </div>
 
           <div className="text-sm text-gray-500">
