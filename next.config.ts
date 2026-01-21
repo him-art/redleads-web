@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://*.posthog.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https://*.googleusercontent.com https://*.reddit.com; font-src 'self' data:; frame-src 'self' https://tally.so; connect-src 'self' https://*.supabase.co https://*.googleapis.com https://*.firebaseio.com https://api.groq.com https://api.tavily.com https://www.reddit.com/search.json https://*.posthog.com;",
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://*.posthog.com https://*.firebasedatabase.app https://www.clarity.ms; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https://*.googleusercontent.com https://*.reddit.com https://*.clarity.ms; font-src 'self' data:; frame-src 'self' https://tally.so; connect-src 'self' https://*.supabase.co https://*.googleapis.com https://*.firebaseio.com https://api.groq.com https://api.tavily.com https://www.reddit.com/search.json https://*.posthog.com https://*.clarity.ms;",
           },
           {
             key: 'X-Frame-Options',

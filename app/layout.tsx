@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Outfit, EB_Garamond } from "next/font/google";
 import "./globals.css";
 import AnalyticsListener from "@/components/AnalyticsListener";
-import CSPostHogProvider from "@/components/providers/PostHogProvider";
+import ClarityProvider from "@/components/providers/ClarityProvider";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -63,10 +63,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${outfit.variable} ${ebGaramond.variable}`}>
       <body className="antialiased font-sans">
-        <CSPostHogProvider>
+        <ClarityProvider>
           {children}
           <AnalyticsListener />
-        </CSPostHogProvider>
+        </ClarityProvider>
       </body>
     </html>
   );
