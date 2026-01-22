@@ -15,7 +15,7 @@ const WaitlistCTA = () => {
           Stop Wasting Hours on Reddit.<br />Start Finding Customers Today.
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-400">
-          We are opening limited easly access spots to ensure we can provide 1-on-1 support. Secure your spot now.
+          We are opening limited early access spots to ensure we can provide 1-on-1 support. Secure your spot now.
         </p>
 
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">

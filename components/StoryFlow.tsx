@@ -31,7 +31,7 @@ const StoryStep = ({
       >
         <span className="text-orange-500 font-bold text-xs uppercase tracking-widest mb-4 block">Stage 0{index + 1}</span>
         <h3 className="text-3xl sm:text-4xl font-bold text-white mb-4 tracking-tight">{title}</h3>
-        <p className="text-gray-400 text-lg leading-relaxed max-w-md ml-auto mr-0 align-left:ml-auto align-right:mr-auto">
+        <p className="text-gray-400 text-lg leading-relaxed max-w-md ml-auto mr-auto sm:ml-0 sm:mr-0">
             {description}
         </p>
       </motion.div>

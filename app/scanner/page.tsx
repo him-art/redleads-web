@@ -356,7 +356,7 @@ export default function ScannerPage() {
                             </div>
                             <h2 className="text-3xl font-black mb-4 leading-tight">Unlimited Access</h2>
                             <p className="text-gray-400 mb-8 font-light">
-                                You've used your 2 free scans. Sign-in to unlock unlimited AI-powered Reddit lead discovery.
+                                You've used your 2 free scans. Sign in to unlock unlimited AI-powered Reddit lead discovery.
                             </p>
                             <div className="space-y-4">
                                 <button 

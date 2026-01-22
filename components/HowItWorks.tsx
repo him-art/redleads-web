@@ -71,7 +71,7 @@ const HowItWorks = () => {
               <div className="mt-auto">
                 <h3 className="text-xl font-bold text-white mb-3">We Prepare Content</h3>
                 <p className="text-gray-300 text-sm leading-relaxed">
-                  RedLeads finds the best leads , pain points and opportunities for your SaaS.
+                  RedLeads finds the best leads, pain points and opportunities for your SaaS.
                 </p>
               </div>
             </div>
@@ -96,7 +96,7 @@ const HowItWorks = () => {
               <div className="mt-auto">
                 <h3 className="text-xl font-bold text-white mb-3">Reply with Value</h3>
                 <p className="text-gray-300 text-sm leading-relaxed">
-                  RedLeads writes "Mini-Playbooks" helpful comments that solve problems first and convert second. Bringing trafic to your website.
+                  RedLeads writes "Mini-Playbooks" helpful comments that solve problems first and convert second. Bringing traffic to your website.
                 </p>
               </div>
             </div>

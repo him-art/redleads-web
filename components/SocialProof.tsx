@@ -12,7 +12,7 @@ const SocialProof = () => {
       url: "https://x.com/danielrachlin1/status/2008658629189398817?s=20"
     },
     {
-      quote: "You need testers? I see the potentisl in this ngl", 
+      quote: "You need testers? I see the potential in this ngl", 
       author: "sdotdev",
       handle: "@sdotdev",
       initial: "S",
@@ -37,7 +37,7 @@ const SocialProof = () => {
             Trusted by Solo Founders
           </h2>
           <p className="mt-4 text-lg text-gray-400 max-w-2xl mx-auto">
-            Join the growing community of indie hackers and founders who are finding their first customers from Reddit on auto pilot.
+            Join the growing community of indie hackers and founders who are finding their first customers from Reddit on autopilot.
           </p>
         </div>
 
