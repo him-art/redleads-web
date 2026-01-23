@@ -380,7 +380,7 @@ export default function ScannerPage() {
                 )}
             </AnimatePresence>
 
-            <Footer variant="slim" />
+            <Footer />
         </main>
     );
 }
