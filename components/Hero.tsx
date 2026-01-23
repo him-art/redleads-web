@@ -25,7 +25,8 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
       // Calculate scale factor based on screen width
       // Base design at 1440px width
       const baseWidth = 1440;
-      const scaleValue = Math.min(window.innerWidth / baseWidth, 1);
+      const currentScale = window.innerWidth / baseWidth;
+      const scaleValue = Math.max(0.5, Math.min(currentScale, 1));
       setScale(scaleValue);
     };
     
@@ -162,18 +163,12 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                     </p>
                     
                     <div className="flex flex-col sm:flex-row items-center gap-4 pointer-events-auto">
-                      {user ? (
-                        <div className="px-10 py-5 bg-orange-500/10 border border-orange-500/30 text-orange-600 rounded-3xl text-lg font-bold">
-                           Welcome back, {user.user_metadata.full_name?.split(' ')[0] || 'Founder'}!
-                        </div>
-                      ) : (
-                        <button 
-                          onClick={handleLogin}
-                          className="px-10 py-5 bg-[#f25e36] text-white rounded-3xl text-lg font-bold shadow-2xl shadow-orange-500/40 hover:bg-[#d94a24] hover:scale-105 active:scale-95 transition-all text-center"
-                        >
-                          Get Early Access
-                        </button>
-                      )}
+                      <Link 
+                        href="/join"
+                        className="px-10 py-5 bg-[#f25e36] text-white rounded-3xl text-lg font-bold shadow-2xl shadow-orange-500/40 hover:bg-[#d94a24] hover:scale-105 active:scale-95 transition-all text-center"
+                      >
+                        Join now
+                      </Link>
                       <Link 
                         href="/scanner"
                         className="px-10 py-5 bg-white border-2 border-slate-200 text-slate-900 rounded-3xl text-lg font-bold shadow-xl hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 group text-center"

@@ -43,7 +43,7 @@ const StoryStep = ({
            whileInView={{ scale: 1, opacity: 1 }}
            viewport={{ once: true }}
            transition={{ duration: 0.5 }}
-           className="w-16 h-16 rounded-full bg-[#2a2a2a] border-4 border-[#1a1a1a] flex items-center justify-center shadow-2xl z-20"
+           className="w-16 h-16 rounded-full bg-[#2a2a2a] border-4 border-[#1a1a1a] flex items-center justify-center z-20"
         >
           <Icon className="w-6 h-6 text-orange-500" />
         </motion.div>
@@ -79,7 +79,7 @@ const NoiseVisual = () => (
 );
 
 const WatchtowerVisual = () => (
-    <div className="bg-[#2a2a2a] p-4 rounded-2xl border border-white/10 shadow-xl space-y-3">
+    <div className="bg-[#2a2a2a] p-4 rounded-2xl border border-white/10 space-y-3">
         <div className="flex items-center justify-between text-[10px] font-mono text-gray-400 border-b border-white/5 pb-2 mb-2">
             <span>RADAR_SCANNER</span>
             <span className="text-green-500 animate-pulse">LIVE</span>
@@ -87,7 +87,7 @@ const WatchtowerVisual = () => (
         {['r/SaaS', 'r/Startup', 'r/Marketing'].map((sub, i) => (
             <div key={sub} className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.5)]" />
+                    <div className="w-2 h-2 rounded-full bg-orange-500" />
                     <span className="text-xs font-bold text-white">{sub}</span>
                 </div>
                 <div className="w-12 h-1 bg-white/5 rounded-full overflow-hidden">
@@ -103,7 +103,7 @@ const WatchtowerVisual = () => (
 );
 
 const SignalVisual = () => (
-    <div className="bg-orange-500/10 border-2 border-orange-500/30 p-5 rounded-2xl shadow-2xl relative overflow-hidden">
+    <div className="bg-orange-500/10 border-2 border-orange-500/30 p-5 rounded-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 bg-orange-500 text-black text-[10px] font-black px-2 py-1 rounded-bl-xl">
             MATCH DETECTED
         </div>
@@ -122,7 +122,7 @@ const SignalVisual = () => (
 );
 
 const ApproachVisual = () => (
-    <div className="bg-[#2a2a2a] p-5 rounded-2xl border border-white/10 shadow-2xl">
+    <div className="bg-[#2a2a2a] p-5 rounded-2xl border border-white/10">
         <div className="flex items-center gap-2 mb-4 border-b border-white/5 pb-3">
             <PenTool size={14} className="text-orange-500" />
             <span className="text-xs font-bold text-white uppercase tracking-tighter">AI Draft Engine</span>
@@ -181,13 +181,13 @@ export default function StoryFlow() {
         {/* Journey Feed */}
         <div className="relative">
           {/* Horizontal Divider - START POINT */}
-          <div className="w-24 h-1 bg-orange-500 mx-auto rounded-full shadow-[0_0_20px_rgba(249,115,22,0.5)] mb-20 relative z-10"></div>
+          <div className="w-24 h-1 bg-orange-500 mx-auto rounded-full mb-20 relative z-10"></div>
 
           {/* The Connection Line */}
           <div className="absolute left-1/2 top-0 bottom-0 w-1 -translate-x-1/2 bg-white/5 z-0">
             <motion.div 
               style={{ scaleY: scrollYProgress }}
-              className="absolute top-0 left-0 right-0 bg-gradient-to-b from-orange-500 via-orange-400 to-amber-500 origin-top w-full h-full shadow-[0_0_20px_rgba(249,115,22,0.5)]"
+              className="absolute top-0 left-0 right-0 bg-gradient-to-b from-orange-500 via-orange-400 to-amber-500 origin-top w-full h-full"
             />
           </div>
 

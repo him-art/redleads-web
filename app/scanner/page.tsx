@@ -324,7 +324,7 @@ export default function ScannerPage() {
                                             onClick={user ? undefined : handleSignIn}
                                             className="inline-flex items-center gap-2 px-8 py-4 bg-black text-white rounded-2xl font-black uppercase text-sm hover:scale-105 transition-all shadow-xl"
                                         >
-                                            {user ? 'Monitoring Active' : 'Get Early Access'} <ArrowRight size={18} />
+                                            {user ? 'Monitoring Active' : 'Join now'} <ArrowRight size={18} />
                                         </button>
                                     </div>
                                 </motion.div>

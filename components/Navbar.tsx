@@ -44,7 +44,7 @@ const Navbar = () => {
         {/* Left: RedLeads Brand */}
         <Link 
           href="/"
-          className="px-6 py-2.5 bg-white border border-slate-100 rounded-2xl shadow-xl shadow-black/5 hover:scale-[1.02] transition-all duration-300 pointer-events-auto flex items-center"
+          className="px-6 py-2.5 bg-white/80 backdrop-blur-xl border border-white/40 rounded-full shadow-xl shadow-black/5 hover:scale-[1.02] transition-all duration-300 pointer-events-auto flex items-center"
         >
           <span className="text-xl font-extrabold tracking-tighter text-slate-900">
             RedLeads.

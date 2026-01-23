@@ -20,7 +20,7 @@ const WaitlistCTA = () => {
 
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Link
-            href="https://tally.so/r/7RK9g0"
+            href="/join"
             className="group flex w-full items-center justify-center gap-2 rounded-full bg-orange-600 px-8 py-4 font-semibold text-white shadow-xl shadow-amber-900/20 transition-all hover:bg-amber-700 hover:scale-105 sm:w-auto"
           >
             Get started
