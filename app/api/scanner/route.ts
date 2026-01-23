@@ -53,6 +53,85 @@ export async function POST(req: Request) {
         if (action === 'SCAN') {
             if (!url) return NextResponse.json({ error: 'URL is required' }, { status: 400 });
 
+            // ENFORCEMENT LOGIC
+            // 1. Get IP Hash for Anonymous Users
+            const ip = req.headers.get('x-forwarded-for')?.split(',')[0] || 'unknown';
+            // Simple hash for IP (In prod use a better hash or separate service)
+            // Note: crypto is available in Edge Runtime / Node
+            const crypto = require('crypto');
+            const ipHash = crypto.createHash('sha256').update(ip).digest('hex');
+
+            if (user) {
+                // LOGGED IN USER CHECK
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('daily_scan_count, last_scan_at, scan_count')
+                    .eq('id', user.id)
+                    .single();
+                
+                const now = new Date();
+                const lastScanAt = profile?.last_scan_at ? new Date(profile.last_scan_at) : null;
+                const isNewDay = !lastScanAt || lastScanAt.toDateString() !== now.toDateString();
+                
+                const currentDailyCount = isNewDay ? 0 : (profile?.daily_scan_count || 0);
+
+                if (currentDailyCount >= 10) {
+                    return NextResponse.json({ 
+                        error: 'Daily scan limit reached. Come back tomorrow!', 
+                        code: 'DAILY_LIMIT_REACHED' 
+                    }, { status: 403 });
+                }
+
+                // Increment Daily Count
+                await supabase.from('profiles').update({ 
+                    daily_scan_count: currentDailyCount + 1,
+                    last_scan_at: now.toISOString(),
+                    scan_count: (profile?.scan_count || 0) + 1 // Keep global count too
+                }).eq('id', user.id);
+
+            } else {
+                // ANONYMOUS USER CHECK (Strict IP)
+                const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+                const adminClient = createServerClient(
+                    supabaseUrl,
+                    serviceKey!,
+                    { cookies: { get: () => undefined, set: () => {}, remove: () => {} } }
+                );
+
+                const { data: anonData } = await adminClient
+                    .from('anon_usage')
+                    .select('daily_scan_count, last_scan_at')
+                    .eq('ip_hash', ipHash)
+                    .single();
+                
+                const now = new Date();
+                const lastScanAt = anonData?.last_scan_at ? new Date(anonData.last_scan_at) : null;
+                const isNewDay = !lastScanAt || lastScanAt.toDateString() !== now.toDateString();
+                
+                const currentDailyCount = isNewDay ? 0 : (anonData?.daily_scan_count || 0);
+
+                if (currentDailyCount >= 10) {
+                    return NextResponse.json({ 
+                        error: 'Daily limit reached for free scans. Join the waitlist for more!', 
+                        code: 'DAILY_LIMIT_REACHED' 
+                    }, { status: 403 });
+                }
+
+                // Increment Anon Count
+                if (anonData) {
+                    await adminClient.from('anon_usage').update({ 
+                        daily_scan_count: currentDailyCount + 1,
+                        last_scan_at: now.toISOString()
+                    }).eq('ip_hash', ipHash);
+                } else {
+                    await adminClient.from('anon_usage').insert({
+                        ip_hash: ipHash,
+                        daily_scan_count: 1,
+                        last_scan_at: now.toISOString()
+                    });
+                }
+            }
+
             console.log(`[Scanner] Analyzing site: ${url}`);
 
             // A. Check for Groq API Key

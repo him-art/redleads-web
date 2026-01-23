@@ -3,7 +3,9 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useWillChange } from 'framer-motion';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
+import { Search, ArrowRight, Globe, CheckCircle2 } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
 import { type User as SupabaseUser } from '@supabase/supabase-js';
 
 export default function Hero({ children }: { children?: React.ReactNode }) {
@@ -18,6 +20,8 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
   // Responsive donut positioning - scales with screen size and text
   const [scale, setScale] = useState(1);
   const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [urlInput, setUrlInput] = useState('');
+  const router = useRouter();
   const supabase = createClient();
   
   useEffect(() => {
@@ -49,13 +53,15 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
     };
   }, []);
 
-  const handleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=/scanner`,
-      },
-    });
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!urlInput.trim()) return;
+    
+    // Simple normalization
+    let domain = urlInput.trim().toLowerCase();
+    domain = domain.replace(/^(https?:\/\/)?(www\.)?/, '');
+    
+    router.push(`/scanner?url=${encodeURIComponent(domain)}`);
   };
 
   // "The Giant Donut" Logic:
@@ -132,52 +138,53 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                       </div>
 
                       {/* Line 3: Paying Customers */}
-                      <motion.div 
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.5 }}
-                      >
+                      <div>
                           <span className="text-[88px] font-bold tracking-tight font-serif italic inline-block">
                             <span className="text-orange-500 relative whitespace-nowrap">
                               Paying Customers
-                              <motion.span 
-                                initial={{ scaleX: 0 }}
-                                animate={{ scaleX: 1 }}
-                                transition={{ duration: 0.8, delay: 0.8 }}
-                                className="absolute -bottom-2 left-0 right-0 h-[10px] bg-gradient-to-r from-orange-400 to-orange-600 rounded-full origin-left"
-                              ></motion.span>
+                              <span 
+                                className="absolute -bottom-2 left-0 right-0 h-[10px] bg-gradient-to-r from-orange-400 to-orange-600 rounded-full"
+                              ></span>
                             </span>
                           </span>
-                      </motion.div>
+                      </div>
                   </div>
 
                   {/* Subtitle and CTAs */}
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.7 }}
-                    className="mt-12 flex flex-col items-center gap-8"
-                  >
+                  <div className="mt-12 flex flex-col items-center gap-8 px-4 w-full">
                     <p className="text-xl sm:text-2xl text-[#1a1a1a] font-light max-w-2xl text-center leading-relaxed">
-                      AI-powered lead discovery for SaaS founders. <br className="hidden sm:block" />
+                      See who's talking about your business on Reddit right now.
                     </p>
                     
-                    <div className="flex flex-col sm:flex-row items-center gap-4 pointer-events-auto">
-                      <Link 
-                        href="/join"
-                        className="px-10 py-5 bg-[#f25e36] text-white rounded-3xl text-lg font-bold shadow-2xl shadow-orange-500/40 hover:bg-[#d94a24] hover:scale-105 active:scale-95 transition-all text-center"
+                    <form 
+                      onSubmit={handleSearch}
+                      className="w-full max-w-xl relative group pointer-events-auto"
+                    >
+                      <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
+                        <Globe className="text-slate-400 group-focus-within:text-orange-500 transition-colors" size={20} />
+                      </div>
+                      <input 
+                        type="text" 
+                        placeholder="yourwebsite.com"
+                        value={urlInput}
+                        onChange={(e) => setUrlInput(e.target.value)}
+                        className="w-full bg-white border-2 border-slate-200 rounded-[2rem] py-6 pl-16 pr-32 text-lg text-slate-900 focus:outline-none focus:border-orange-500/50 focus:ring-8 focus:ring-orange-500/5 transition-all shadow-2xl shadow-black/5"
+                      />
+                      <button 
+                        type="submit"
+                        className="absolute right-2 top-2 bottom-2 px-8 bg-[#f25e36] text-white rounded-[1.5rem] font-bold hover:bg-[#d94a24] transition-all flex items-center gap-2"
                       >
-                        Join now
-                      </Link>
-                      <Link 
-                        href="/scanner"
-                        className="px-10 py-5 bg-white border-2 border-slate-200 text-slate-900 rounded-3xl text-lg font-bold shadow-xl hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 group text-center"
-                      >
-                        Try Free Scanner
-                        <span className="text-xs px-2 py-0.5 bg-orange-500/10 text-orange-600 rounded-full border border-orange-500/20 group-hover:bg-orange-500/20 transition-colors">Beta</span>
-                      </Link>
+                        <Search size={18} />
+                        <span className="hidden sm:inline">Scan</span>
+                      </button>
+                    </form>
+
+                    <div className="flex items-center gap-4 text-sm font-medium text-slate-500">
+                       <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-green-500" /> Free Scan</span>
+                       <span className="w-1 h-1 bg-slate-300 rounded-full" />
+                       <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-green-500" /> No Card Required</span>
                     </div>
-                  </motion.div>
+                  </div>
              </div>
         </motion.div>
 

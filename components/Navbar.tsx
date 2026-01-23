@@ -2,51 +2,53 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, LogOut, User } from 'lucide-react';
-import { createClient } from '@/lib/supabase';
+import { Menu, X, LogOut } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { createClient } from '@/lib/supabase/client';
 import { type User as SupabaseUser } from '@supabase/supabase-js';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
   useEffect(() => {
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
+      } catch (err) {
+        console.error('Navbar session check error:', err);
+      } finally {
+        setLoading(false);
+      }
     };
     getUser();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
+      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
-  }, []);
-
-  const handleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-  };
+  }, [supabase]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    // Force a full page reload to clear any server-side state/cookies ensuring a clean logout
+    window.location.href = '/';
   };
 
   return (
     <>
-      <div className="fixed top-6 left-0 right-0 z-50 flex items-center justify-between px-6 sm:px-12 pointer-events-none">
+      <div className="fixed top-4 sm:top-6 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-12 pointer-events-none">
         {/* Left: RedLeads Brand */}
         <Link 
           href="/"
-          className="px-6 py-2.5 bg-white/80 backdrop-blur-xl border border-white/40 rounded-full shadow-xl shadow-black/5 hover:scale-[1.02] transition-all duration-300 pointer-events-auto flex items-center"
+          className="px-5 sm:px-6 py-2 sm:py-2.5 bg-white/80 backdrop-blur-xl border border-white/40 rounded-full shadow-xl shadow-black/5 hover:scale-[1.02] transition-all duration-300 pointer-events-auto flex items-center"
         >
-          <span className="text-xl font-extrabold tracking-tighter text-slate-900">
+          <span className="text-lg sm:text-xl font-extrabold tracking-tighter text-slate-900">
             RedLeads.
           </span>
         </Link>
@@ -62,38 +64,33 @@ const Navbar = () => {
             <Link href="#faq" className="hover:text-slate-900 transition-colors">FAQ</Link>
           </div>
           
-          {user ? (
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200">
-                {user.user_metadata.avatar_url ? (
-                  <img src={user.user_metadata.avatar_url} alt="Profile" className="w-6 h-6 rounded-full" />
-                ) : (
-                  <User size={16} className="text-slate-600" />
-                )}
-                <span className="text-xs font-bold text-slate-700">{user.user_metadata.full_name || user.email}</span>
-              </div>
+          {loading ? (
+            <div className="w-20 h-8 bg-slate-100 animate-pulse rounded-full" />
+          ) : user ? (
+            <div className="flex items-center gap-3 px-4 py-1.5 bg-white/80 backdrop-blur-xl border border-white/40 rounded-full shadow-lg shadow-black/5">
+              <span className="text-xs font-bold text-slate-700">{user.user_metadata?.full_name?.split(' ')[0] || user.email?.split('@')[0] || 'User'}</span>
+              <div className="w-px h-3 bg-slate-200 mx-1" />
               <button 
                 onClick={handleLogout}
-                className="text-slate-500 hover:text-red-500 transition-colors"
-                title="Sign Out"
+                className="text-xs font-bold text-slate-500 hover:text-red-500 transition-colors"
               >
-                <LogOut size={18} />
+                Log Out
               </button>
             </div>
           ) : (
-            <button 
-              onClick={handleLogin}
-              className="bg-[#f25e36] text-white text-sm font-bold px-6 py-2.5 rounded-2xl hover:bg-[#d94a24] hover:scale-105 active:scale-95 transition-all shadow-lg shadow-orange-500/30"
+            <Link
+              href="/login"
+              className="bg-[#f25e36] text-white text-sm font-bold px-6 py-2.5 rounded-full hover:bg-[#d94a24] hover:scale-105 active:scale-95 transition-all shadow-lg shadow-orange-500/30"
             >
               Sign In
-            </button>
+            </Link>
           )}
         </div>
 
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="lg:hidden p-2 sm:p-3 bg-white/50 backdrop-blur-xl border border-white/40 rounded-full shadow-lg shadow-black/5 hover:bg-white/70 transition-all duration-300"
+          className="lg:hidden p-2.5 sm:p-3 bg-white/80 backdrop-blur-xl border border-white/40 rounded-full shadow-lg shadow-black/5 hover:bg-white/90 transition-all duration-300 pointer-events-auto"
           aria-label="Toggle menu"
         >
           {isMenuOpen ? (
@@ -105,72 +102,84 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div className="fixed top-20 sm:top-24 left-4 right-4 z-40 lg:hidden">
-          <div className="bg-white/95 backdrop-blur-xl border border-white/40 rounded-3xl shadow-2xl shadow-black/10 p-6 space-y-4">
-            
-            <Link 
-              href="#how-it-works" 
-              className="block text-base font-semibold text-slate-800 hover:text-amber-600 transition-colors py-2"
+      <AnimatePresence>
+        {isMenuOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/40 backdrop-blur-md z-40 lg:hidden"
               onClick={() => setIsMenuOpen(false)}
+            />
+            <motion.div 
+              initial={{ opacity: 0, y: -20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed top-20 sm:top-24 left-4 right-4 z-50 lg:hidden"
             >
-              How it Works
-            </Link>
-            
-            <Link 
-              href="/scanner" 
-              className="flex items-center gap-2 text-base font-semibold text-slate-800 hover:text-amber-600 transition-colors py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Free Scanner
-              <span className="text-[10px] px-1.5 py-0.5 bg-orange-500/10 text-[#f25e36] rounded-md border border-orange-500/20 uppercase tracking-tighter">Beta</span>
-            </Link>
-            
-            <Link 
-              href="#faq" 
-              className="block text-base font-semibold text-slate-800 hover:text-amber-600 transition-colors py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              FAQ
-            </Link>
-            
-            <div className="pt-4 border-t border-slate-200">
-              {user ? (
+              <div className="bg-white/95 backdrop-blur-2xl border border-white/40 rounded-3xl shadow-2xl shadow-black/20 p-6 sm:p-8 space-y-6">
+                
                 <div className="space-y-4">
-                  <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-100">
-                    <img src={user.user_metadata.avatar_url} alt="Profile" className="w-10 h-10 rounded-full" />
-                    <div>
-                      <p className="text-sm font-bold text-slate-900">{user.user_metadata.full_name}</p>
-                      <p className="text-xs text-slate-500">{user.email}</p>
-                    </div>
-                  </div>
-                  <button 
-                    onClick={handleLogout}
-                    className="w-full text-center bg-slate-100 text-slate-700 text-base font-bold px-6 py-3 rounded-full hover:bg-slate-200 transition-all"
+                  <Link 
+                    href="#how-it-works" 
+                    className="block text-lg font-bold text-slate-800 hover:text-[#f25e36] transition-colors py-2"
+                    onClick={() => setIsMenuOpen(false)}
                   >
-                    Log Out
-                  </button>
+                    How it Works
+                  </Link>
+                  
+                  <Link 
+                    href="/scanner" 
+                    className="flex items-center gap-3 text-lg font-bold text-slate-800 hover:text-[#f25e36] transition-colors py-2"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Free Scanner
+                    <span className="text-[10px] px-2 py-0.5 bg-[#f25e36]/10 text-[#f25e36] rounded-md border border-[#f25e36]/20 uppercase tracking-wider font-black">Beta</span>
+                  </Link>
+                  
+                  <Link 
+                    href="#faq" 
+                    className="block text-lg font-bold text-slate-800 hover:text-[#f25e36] transition-colors py-2"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    FAQ
+                  </Link>
                 </div>
-              ) : (
-                <button 
-                  onClick={handleLogin}
-                  className="block w-full text-center bg-[#f25e36] text-white text-base font-bold px-6 py-3 rounded-full hover:bg-[#d94a24] active:scale-95 transition-all shadow-md shadow-orange-500/20"
-                >
-                  Sign In
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Backdrop overlay for mobile menu */}
-      {isMenuOpen && (
-        <div 
-          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30 lg:hidden"
-          onClick={() => setIsMenuOpen(false)}
-        />
-      )}
+                
+                <div className="pt-6 border-t border-slate-100">
+                  {loading ? (
+                    <div className="w-full h-14 bg-slate-50 animate-pulse rounded-full" />
+                  ) : user ? (
+                    <div className="space-y-4">
+                      <div className="flex flex-col gap-1 px-1">
+                        <p className="text-sm text-slate-400 font-medium">Signed in as</p>
+                        <p className="text-base font-bold text-slate-900 truncate">{user.email}</p>
+                      </div>
+                      <button 
+                        onClick={handleLogout}
+                        className="w-full bg-slate-100 text-slate-700 text-base font-bold px-6 py-4 rounded-full hover:bg-slate-200 transition-all flex items-center justify-center gap-2"
+                      >
+                        <LogOut size={18} />
+                        Log Out
+                      </button>
+                    </div>
+                  ) : (
+                    <Link 
+                      href="/login"
+                      className="block w-full text-center bg-[#f25e36] text-white text-lg font-bold px-6 py-4 rounded-full hover:bg-[#d94a24] active:scale-95 transition-all shadow-xl shadow-orange-500/30"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Sign In
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 };

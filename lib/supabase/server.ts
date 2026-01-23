@@ -14,20 +14,18 @@ export async function createClient() {
         },
         set(name: string, value: string, options: CookieOptions) {
           try {
+            console.log(`Server Client: Setting cookie ${name}`);
             cookieStore.set({ name, value, ...options })
           } catch (error) {
-            // The `set` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
+            console.error('Error setting cookie:', error)
           }
         },
         remove(name: string, options: CookieOptions) {
           try {
-            cookieStore.set({ name, value: '', ...options })
+            console.log(`Server Client: Removing cookie ${name}`);
+            cookieStore.delete({ name, ...options })
           } catch (error) {
-            // The `delete` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
+            console.error('Error removing cookie:', error)
           }
         },
       },

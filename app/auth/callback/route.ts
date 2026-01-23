@@ -1,42 +1,58 @@
-import { NextResponse } from 'next/server'
-// The client you created in Step 1
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse, type NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  // if "next" is in search params, use it as the redirection URL
   const next = searchParams.get('next') ?? '/scanner'
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || origin
 
   if (code) {
     const cookieStore = await cookies()
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.VITE_SUPABASE_URL;
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY;
-
+    
     const supabase = createServerClient(
-      supabaseUrl!,
-      supabaseAnonKey!,
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
         cookies: {
           get(name: string) {
             return cookieStore.get(name)?.value
           },
-          set(name: string, value: string, options: CookieOptions) {
-            cookieStore.set({ name, value, ...options })
+          set(name: string, value: string, options: any) {
+            try {
+              cookieStore.set({ name, value, ...options })
+            } catch (error) {
+              // Silently handle cookie set errors in middleware/route handlers
+            }
           },
-          remove(name: string, options: CookieOptions) {
-            cookieStore.set({ name, value: '', ...options })
+          remove(name: string, options: any) {
+            try {
+              cookieStore.set({ name, value: '', ...options })
+            } catch (error) {
+              // Silently handle cookie remove errors
+            }
           },
         },
       }
     )
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
-    if (!error) {
-      return NextResponse.redirect(`${origin}${next}`)
+    
+    // Exchange code for session
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+    
+    if (error || !data.session) {
+      console.error('OAuth Code Exchange Error:', error?.message || 'No session returned');
+      return NextResponse.redirect(`${siteUrl}/login?error=OAuth failed`)
     }
+
+    // EXPLICITLY set the session to force cookie persistence across browser/server
+    await supabase.auth.setSession({
+      access_token: data.session.access_token,
+      refresh_token: data.session.refresh_token,
+    })
+    
+    return NextResponse.redirect(`${siteUrl}${next}`)
   }
 
-  // return the user to an error page with instructions
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`)
+  return NextResponse.redirect(`${siteUrl}/login?error=No code provided`)
 }
