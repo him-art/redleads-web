@@ -18,7 +18,7 @@ export default function FounderNote() {
             <div className="relative w-32 h-32 md:w-36 md:h-36 rounded-2xl overflow-hidden border-4 border-white shadow-2xl">
               <Image 
                 src="/founder-avatar.jpg" 
-                alt="Axel Schapmann" 
+                alt="Tim Jayas" 
                 fill 
                 className="object-cover grayscale"
                 unoptimized={true}
@@ -42,8 +42,8 @@ export default function FounderNote() {
                 <span className="text-red-500 font-bold tracking-widest text-xs uppercase">FROM THE FOUNDER</span>
             </div>
             
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 leading-tight">
-              I built this because I was tired of <span className="text-red-500">manually searching for customers.</span>
+            <h2 className="text-[2.5rem] sm:text-[3.5rem] font-black text-white leading-tight mb-8">
+              I built this because I was tired of <span className="text-orange-500 italic font-serif font-light">manually searching for customers.</span>
             </h2>
             
             <div className="space-y-6 text-gray-400 text-lg leading-relaxed">

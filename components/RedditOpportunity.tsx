@@ -37,6 +37,13 @@ export default function RedditOpportunity() {
     <section className="py-24 bg-[#1a1a1a]">
       <div className="max-w-7xl mx-auto px-6">
         
+        {/* Section Heading */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-[2.5rem] sm:text-[3.5rem] font-black text-white leading-tight mb-4">
+                How <span className="text-orange-500 font-serif italic font-bold">Reddit Marketing</span> Helps You Get Customers
+            </h2>
+        </div>
+
         {/* Stats Banner */}
         <div className="bg-[#2a1a1a] rounded-3xl p-8 mb-20 border border-orange-500/10 shadow-[0_0_50px_rgba(234,88,12,0.05)]">
             <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 gap-8 md:gap-0">

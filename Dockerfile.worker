@@ -1,0 +1,17 @@
+# Dockerfile for RedLeads RSS Sentinel
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies (including devDependencies for ts-node)
+RUN npm install
+
+# Copy the rest of the application (including lib/ and worker/)
+COPY . .
+
+# Environment variables will be passed via docker-compose or .env file
+# We use ts-node to run the worker directly for now (ideal for heartbeats)
+CMD ["npx", "ts-node", "--project", "worker/tsconfig.json", "worker/src/rss-monitor.ts"]

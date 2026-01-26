@@ -11,9 +11,9 @@ const HowItWorks = () => {
     <section id="how-it-works" className="bg-[#1a1a1a] py-12 sm:py-16 md:py-20 lg:py-24 border-t border-white/5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-6xl font-black tracking-tight text-white leading-[1.1]">
+          <h2 className="text-[2.5rem] sm:text-[3.5rem] font-black text-white leading-tight">
             Your 3-step ticket to <br/>
-            <span className="text-orange-500 italic font-serif">Red-Hot Leads.</span>
+            <span className="text-orange-500 italic font-serif font-bold">Red-Hot Leads.</span>
           </h2>
         </div>
 
@@ -94,9 +94,9 @@ const HowItWorks = () => {
               </div>
 
               <div className="mt-auto">
-                <h3 className="text-xl font-bold text-white mb-3">Reply with Value</h3>
+                <h3 className="text-xl font-bold text-white mb-3">Join the Conversation</h3>
                 <p className="text-gray-300 text-sm leading-relaxed">
-                  RedLeads writes "Mini-Playbooks" helpful comments that solve problems first and convert second. Bringing traffic to your website.
+                  Engage with potential customers by providing value first. Build authority by solving problems and naturally introducing your product.
                 </p>
               </div>
             </div>

@@ -36,8 +36,8 @@ const Pricing = () => {
     <section id="pricing" className="bg-[#1a1a1a] py-24 border-t border-white/5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Early Access Pricing
+          <h2 className="text-[2.5rem] sm:text-[3.5rem] font-black text-white leading-tight">
+            <span className="text-orange-500 italic font-serif font-light">Early Access</span> Pricing
           </h2>
           <p className="mt-4 text-lg text-gray-400">
             First 10 get lifetime beta pricing. After that, full price.
@@ -140,7 +140,6 @@ const Pricing = () => {
             <ul className="mt-8 space-y-4">
               {[
                 "Everything in Scout",
-                "AI Reply Drafter",
                 "Monitor 10 subreddits",
                 "Unlimited Keywords",
                 "Direct Founder Access"               

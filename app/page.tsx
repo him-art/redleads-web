@@ -26,7 +26,6 @@ export default function Home() {
         <NextSection />
 
         <RedditOpportunity />
-        <SectionCTA title="Ready to turn Reddit into your best growth channel?" />
         <HowItWorks />
         <StoryFlow />
         <SectionCTA title="See how RedLeads can work for you." buttonText="Get early access" />

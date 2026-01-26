@@ -11,8 +11,8 @@ const WaitlistCTA = () => {
       <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 rounded-full bg-orange-500/10 p-32 blur-3xl opacity-50" />
 
       <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold tracking-tight text-white sm:text-5xl">
-          Stop Wasting Hours on Reddit.<br />Start Finding Customers Today.
+        <h2 className="text-[2.5rem] sm:text-[3.5rem] font-black text-white leading-tight">
+          Stop Wasting Hours on Reddit.<br /><span className="text-orange-500 italic font-serif font-light">Start Finding Customers Today.</span>
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-400">
           We are opening limited early access spots to ensure we can provide 1-on-1 support. Secure your spot now.

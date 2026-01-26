@@ -7,9 +7,10 @@ export default async function ScannerPage() {
     const { data: { user } } = await supabase.auth.getUser();
 
     // If not logged in, go to login
-    if (!user) {
-        redirect('/login');
-    }
+    // Allow anonymous access for the free scan trial
+    // if (!user) {
+    //     redirect('/login');
+    // }
 
     return <ScannerClient initialUser={user} />;
 }

@@ -97,7 +97,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
         {/* Hero Content (Floating on top) */}
         <motion.div 
             style={{ opacity: heroOpacity, y: yText, scale }}
-            className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none px-4" 
+            className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none px-4 pt-10" 
         >
              <div className="relative pointer-events-auto">
 
@@ -151,30 +151,30 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                   </div>
 
                   {/* Subtitle and CTAs */}
-                  <div className="mt-12 flex flex-col items-center gap-8 px-4 w-full">
-                    <p className="text-xl sm:text-2xl text-[#1a1a1a] font-light max-w-2xl text-center leading-relaxed">
-                      See who's talking about your business on Reddit right now.
+                  <div className="mt-8 flex flex-col items-center gap-8 px-4 w-full">
+                    <p className="text-xl sm:text-2xl text-[#1a1a1a] italic max-w-2xl text-center leading-relaxed">
+                      Watch prospects seeking your solution on Reddit in real time
                     </p>
                     
                     <form 
                       onSubmit={handleSearch}
-                      className="w-full max-w-xl relative group pointer-events-auto"
+                      className="w-full max-w-4xl relative group pointer-events-auto"
                     >
-                      <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
-                        <Globe className="text-slate-400 group-focus-within:text-orange-500 transition-colors" size={20} />
+                      <div className="absolute inset-y-0 left-8 flex items-center pointer-events-none">
+                        <Globe className="text-slate-400 group-focus-within:text-orange-500 transition-colors" size={24} />
                       </div>
                       <input 
                         type="text" 
                         placeholder="yourwebsite.com"
                         value={urlInput}
                         onChange={(e) => setUrlInput(e.target.value)}
-                        className="w-full bg-white border-2 border-slate-200 rounded-[2rem] py-6 pl-16 pr-32 text-lg text-slate-900 focus:outline-none focus:border-orange-500/50 focus:ring-8 focus:ring-orange-500/5 transition-all shadow-2xl shadow-black/5"
+                        className="w-full bg-white border-2 border-orange-500 rounded-full py-6 pl-20 pr-48 text-2xl text-slate-900 focus:outline-none focus:ring-8 focus:ring-orange-500/5 transition-all shadow-2xl shadow-black/5 placeholder:text-slate-300"
                       />
                       <button 
                         type="submit"
-                        className="absolute right-2 top-2 bottom-2 px-8 bg-[#f25e36] text-white rounded-[1.5rem] font-bold hover:bg-[#d94a24] transition-all flex items-center gap-2"
+                        className="absolute right-2 top-2 bottom-2 px-10 bg-[#f25e36] text-white rounded-full text-xl font-bold hover:bg-[#d94a24] transition-all flex items-center gap-3 hover:scale-105 active:scale-95 shadow-xl shadow-orange-500/20"
                       >
-                        <Search size={18} />
+                        <Search size={22} />
                         <span className="hidden sm:inline">Scan</span>
                       </button>
                     </form>

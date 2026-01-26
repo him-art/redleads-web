@@ -28,8 +28,8 @@ const FAQ = () => {
   return (
     <section id="faq" className="bg-[#1a1a1a] py-24 border-t border-white/5">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-center text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          Frequently Asked Questions
+        <h2 className="text-center text-[2.5rem] sm:text-[3.5rem] font-black text-white leading-tight">
+          Frequently Asked <span className="text-orange-500 italic font-serif font-light">Questions</span>
         </h2>
         
         <div className="mt-12 space-y-4">

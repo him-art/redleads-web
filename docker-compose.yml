@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  redleads-sentinel:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: redleads-sentinel
+    restart: always
+    env_file:
+      - .env.local
+    volumes:
+      - .:/app
+      - /app/node_modules
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10mb"
+        max-file: "3"

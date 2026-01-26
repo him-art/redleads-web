@@ -1,7 +1,7 @@
 import { type NextRequest } from 'next/server'
 import { updateSession } from '@/lib/supabase/supabase-middleware'
 
-export async function proxy(request: Request) {
+export async function middleware(request: Request) {
   const req = request as NextRequest;
   console.log('Proxy Request:', req.nextUrl.pathname, '| Cookies:', req.cookies.getAll().length);
   return await updateSession(req)
