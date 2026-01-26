@@ -110,15 +110,43 @@ async function generateDailyReport() {
     }
 }
 
-// 0. SAFETY CONFIG: Reddit requires a User-Agent and ~60 req/min limit
+// 0. SAFETY CONFIG: Reddit requires a unique User-Agent and ~60 req/min limit
 const parser = new Parser({
-    headers: {
-        'User-Agent': 'RedLeadsBot/1.0 (internal research tool; contact your@email.com)'
-    },
     customFields: {
         item: [['content:encoded', 'contentEncoded']],
     }
 });
+
+// Robust Fetch Utility to avoid 403 Forbidden
+async function fetchRedditRSS(subreddit: string) {
+    const url = `https://www.reddit.com/r/${subreddit}/new/.rss`;
+    const userAgents = [
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 RedLeads/1.1',
+        'RedLeadsBot/1.1 (Lead Intelligence Tool; contact redleads.app@gmail.com)',
+        'social-monitor:redleads:v1.1 (by /u/RedLeadsAdmin)'
+    ];
+    
+    const response = await fetch(url, {
+        headers: {
+            'User-Agent': userAgents[Math.floor(Math.random() * userAgents.length)],
+            'Accept': 'application/rss+xml, application/xml, text/xml',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
+        }
+    });
+
+    if (response.status === 403) {
+        throw new Error('403 Forbidden: Reddit blocked our User-Agent or IP.');
+    }
+
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const xml = await response.text();
+    return await parser.parseString(xml);
+}
 
 /**
  * THE RSS SENTINEL
@@ -197,10 +225,14 @@ async function runSentinel() {
                 const batch = subreddits.slice(i, i + BATCH_SIZE);
                 console.log(`📡 Fetching Batch ${Math.floor(i/BATCH_SIZE) + 1}/${Math.ceil(subreddits.length/BATCH_SIZE)}: ${batch.length} subs`);
 
-                await Promise.all(batch.map(async (sub) => {
+                await Promise.all(batch.map(async (sub, idx) => {
                     if (!isRunning) return; // Stop if shutdown signaled
+                    
+                    // Stagger individual requests within the batch to mimic human browsing
+                    await new Promise(r => setTimeout(r, idx * 2000));
+                    
                     try {
-                        const feed = await parser.parseURL(`https://www.reddit.com/r/${sub}/new/.rss`);
+                        const feed = await fetchRedditRSS(sub);
                         
                         for (const item of feed.items as any[]) {
                             const postID = item.id || item.link;
