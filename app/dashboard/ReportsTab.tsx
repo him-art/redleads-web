@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Mail, Calendar, ChevronDown, ExternalLink, Clock, Radar, Bookmark } from 'lucide-react';
+import { Mail, Calendar, ChevronDown, ExternalLink, Clock, Radar, Bookmark, Trash2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 interface MonitoredLead {
@@ -19,7 +19,12 @@ export default function ReportsTab({ reports, profile }: { reports: any[], profi
     const [activeSection, setActiveSection] = useState<'leads' | 'reports'>('leads');
     const [filter, setFilter] = useState<'all' | 'saved'>('all');
     const [historyLeads, setHistoryLeads] = useState<MonitoredLead[]>([]);
+    const [localReports, setLocalReports] = useState<any[]>(reports);
     const [expandedDay, setExpandedDay] = useState<string | null>(null);
+
+    useEffect(() => {
+        setLocalReports(reports);
+    }, [reports]);
     const supabase = createClient();
     
     const hasConfig = profile?.website_url || (profile?.keywords?.length > 0) || (profile?.subreddits?.length > 0);
@@ -171,27 +176,55 @@ export default function ReportsTab({ reports, profile }: { reports: any[], profi
                                                                 const newStatus = !lead.is_saved;
                                                                 // Optimistic UI update
                                                                 setHistoryLeads(prev => prev.map(l => l.id === lead.id ? { ...l, is_saved: newStatus } : l));
-                                                                    const { error } = await supabase.from('monitored_leads').update({ is_saved: newStatus }).eq('id', lead.id);
-                                                                    if (error) {
-                                                                        console.error('Error saving lead:', error);
-                                                                        // Revert optimistic update
-                                                                        setHistoryLeads(prev => prev.map(l => l.id === lead.id ? { ...l, is_saved: !newStatus } : l));
-                                                                        alert('Failed to save lead. Check console for details.');
-                                                                    }
-                                                                }}
+                                                                const { error } = await supabase.from('monitored_leads').update({ is_saved: newStatus }).eq('id', lead.id);
+                                                                if (error) {
+                                                                    console.error('Error saving lead:', error);
+                                                                    // Revert optimistic update
+                                                                    setHistoryLeads(prev => prev.map(l => l.id === lead.id ? { ...l, is_saved: !newStatus } : l));
+                                                                    alert('Failed to save lead.');
+                                                                }
+                                                            }}
                                                             className={`p-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 ${
                                                                 lead.is_saved 
                                                                     ? 'opacity-100 bg-orange-500 text-white' 
                                                                     : 'bg-white/5 text-gray-500 hover:text-white hover:bg-orange-500/20'
                                                             }`}
+                                                            title={lead.is_saved ? "Unsave Lead" : "Save Lead"}
                                                         >
                                                             <Bookmark size={14} fill={lead.is_saved ? "currentColor" : "none"} />
                                                         </button>
+
+                                                        <button 
+                                                            onClick={async () => {
+                                                                if (!confirm('Permanently delete this lead from history?')) return;
+                                                                
+                                                                // Optimistic UI update
+                                                                setHistoryLeads(prev => prev.filter(l => l.id !== lead.id));
+                                                                
+                                                                const { error } = await supabase
+                                                                    .from('monitored_leads')
+                                                                    .delete()
+                                                                    .eq('id', lead.id);
+                                                                    
+                                                                if (error) {
+                                                                    console.error('Error deleting lead:', error);
+                                                                    alert('Failed to delete lead.');
+                                                                    // We'd need to re-fetch or revert if critical, 
+                                                                    // but filter is usually safe for non-critical deletion
+                                                                }
+                                                            }}
+                                                            className="p-2 rounded-lg bg-white/5 text-gray-500 hover:text-red-500 hover:bg-red-500/10 transition-all opacity-0 group-hover:opacity-100"
+                                                            title="Delete Lead"
+                                                        >
+                                                            <Trash2 size={14} />
+                                                        </button>
+
                                                         <a 
                                                             href={lead.url} 
                                                             target="_blank" 
                                                             rel="noopener noreferrer"
                                                             className="p-2 rounded-lg bg-white/5 text-gray-500 hover:text-white hover:bg-orange-500 transition-all opacity-0 group-hover:opacity-100"
+                                                            title="View on Reddit"
                                                         >
                                                             <ExternalLink size={14} />
                                                         </a>
@@ -209,27 +242,74 @@ export default function ReportsTab({ reports, profile }: { reports: any[], profi
 
             {activeSection === 'reports' && (
                 <div className="space-y-4">
-                     {/* Existing Reports Logic Preserved */}
                     <div className="flex items-center justify-between mb-2">
                         <h2 className="text-xl font-bold">Daily Email Reports</h2>
                         <span className="text-xs text-gray-500">Past 30 days</span>
                     </div>
 
-                    {reports.length === 0 ? (
+                    {localReports.length === 0 ? (
                         <div className="text-center py-12 bg-black/20 rounded-2xl border border-dashed border-white/5">
                             <Mail className="mx-auto text-gray-600 mb-4" size={32} />
                             <p className="text-sm text-gray-500">No email reports sent yet.</p>
                         </div>
                     ) : (
-                        reports.map((report) => (
-                             <div key={report.id} className="bg-black/40 border border-white/10 rounded-xl p-4 flex items-center justify-between">
-                                <div>
-                                    <h4 className="font-bold text-sm text-gray-200">{report.subject}</h4>
-                                    <p className="text-xs text-gray-500">{new Date(report.created_at).toLocaleDateString()}</p>
+                        localReports.map((report) => {
+                            const isExpanded = expandedDay === report.id;
+                            return (
+                                <div key={report.id} className="bg-black/40 border border-white/10 rounded-xl overflow-hidden group">
+                                    <div className="flex items-center">
+                                        <button 
+                                            onClick={() => setExpandedDay(isExpanded ? null : report.id)}
+                                            className="flex-grow p-4 flex items-center justify-between hover:bg-white/5 transition-colors text-left"
+                                        >
+                                            <div>
+                                                <h4 className="font-bold text-sm text-gray-200">{report.subject}</h4>
+                                                <p className="text-xs text-gray-500">{new Date(report.created_at).toLocaleDateString()}</p>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-[10px] bg-green-500/10 text-green-500 px-2 py-1 rounded-md font-bold uppercase tracking-tighter">Sent</span>
+                                                <ChevronDown size={14} className={`text-gray-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                                            </div>
+                                        </button>
+                                        
+                                        <button 
+                                            onClick={async (e) => {
+                                                e.stopPropagation();
+                                                if (!confirm('Are you sure you want to delete this report?')) return;
+                                                
+                                                // Optimistic update
+                                                setLocalReports(prev => prev.filter(r => r.id !== report.id));
+                                                
+                                                const { error } = await supabase
+                                                    .from('email_drafts')
+                                                    .delete()
+                                                    .eq('id', report.id);
+                                                    
+                                                if (error) {
+                                                    console.error('Error deleting report:', error);
+                                                    alert('Failed to delete report.');
+                                                    // Revert on error
+                                                    setLocalReports(reports);
+                                                }
+                                            }}
+                                            className="p-4 text-gray-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                                            title="Delete Report"
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </div>
+                                    
+                                    {isExpanded && (
+                                        <div className="p-6 border-t border-white/5 bg-black/60">
+                                            <div 
+                                                className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap"
+                                                dangerouslySetInnerHTML={{ __html: report.body_html }}
+                                            />
+                                        </div>
+                                    )}
                                 </div>
-                                <span className="text-xs bg-green-500/10 text-green-500 px-2 py-1 rounded-md font-bold uppercase">Sent</span>
-                             </div>
-                        ))
+                            );
+                        })
                     )}
                 </div>
             )}

@@ -2,6 +2,11 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { Resend } from 'resend';
+import { z } from 'zod';
+
+const sendDraftSchema = z.object({
+    draft_id: z.string().uuid(),
+});
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -23,8 +28,15 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
-        // 2. Get Draft
-        const { draft_id } = await req.json();
+        // 2. Validate Input
+        const body = await req.json();
+        const result = sendDraftSchema.safeParse(body);
+        
+        if (!result.success) {
+            return NextResponse.json({ error: 'Invalid Input', details: result.error.format() }, { status: 400 });
+        }
+
+        const { draft_id } = result.data;
         
         const { data: draft } = await supabase
             .from('email_drafts')

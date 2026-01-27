@@ -1,9 +1,9 @@
 
 /**
- * Shared Groq Manager for Key Rotation and Rate-Limit Handling
+ * Shared AI Manager for Key Rotation and Rate-Limit Handling
  * Supports both Next.js (Edge/Server) and Node.js (Worker)
  */
-export class GroqManager {
+export class AIManager {
     private keys: string[] = [];
     private currentIndex = 0;
     private disabledUntil: Record<string, number> = {};
@@ -14,12 +14,12 @@ export class GroqManager {
         } else {
             // Auto-discover from process.env
             const potentialKeys = [
-                process.env.GROQ_API_KEY,
-                process.env.GROQ_API_KEY_2,
-                process.env.GROQ_API_KEY_3,
-                process.env.GROQ_API_KEY_4,
-                process.env.GROQ_API_KEY_5,
-                process.env.GROQ_API_KEY_6
+                process.env.AI_API_KEY,
+                process.env.AI_API_KEY_2,
+                process.env.AI_API_KEY_3,
+                process.env.AI_API_KEY_4,
+                process.env.AI_API_KEY_5,
+                process.env.AI_API_KEY_6
             ];
             this.keys = potentialKeys.filter(k => !!k) as string[];
         }
@@ -39,22 +39,30 @@ export class GroqManager {
         return null;
     }
 
+    /**
+     * Returns the total number of configured keys
+     */
+    public getKeyCount(): number {
+        return this.keys.length;
+    }
+
     async call(payload: any): Promise<any> {
         let attempts = 0;
         const maxAttempts = Math.max(1, this.keys.length);
 
         if (this.keys.length === 0) {
-            throw new Error('No Groq API keys available in environment.');
+            throw new Error('No AI API keys available in environment.');
         }
 
         while (attempts < maxAttempts) {
             const key = this.getNextKey();
             if (!key) {
                 // All keys are currently disabled, wait briefly or fail
-                throw new Error('All Groq keys are currently rate-limited. Please try again in 60s.');
+                throw new Error('All AI keys are currently rate-limited. Please try again in 60s.');
             }
 
             try {
+                // Keeping Groq endpoint as the backend provider for now
                 const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
                     method: 'POST',
                     headers: {
@@ -72,7 +80,7 @@ export class GroqManager {
 
                 if (!response.ok) {
                     const error = await response.json();
-                    throw new Error(error.error?.message || 'Groq API error');
+                    throw new Error(error.error?.message || 'AI API error');
                 }
 
                 return await response.json();
@@ -84,9 +92,9 @@ export class GroqManager {
                 if (attempts >= maxAttempts) throw err;
             }
         }
-        throw new Error('Groq calls failed across all available keys.');
+        throw new Error('AI calls failed across all available keys.');
     }
 }
 
 // Singleton instance for easy import
-export const groq = new GroqManager();
+export const ai = new AIManager();

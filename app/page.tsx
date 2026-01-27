@@ -31,6 +31,7 @@ export default function Home() {
         <SectionCTA title="See how RedLeads can work for you." buttonText="Get early access" />
         
         <TargetAudience />
+        <Pricing />
         <FounderNote />
 
         

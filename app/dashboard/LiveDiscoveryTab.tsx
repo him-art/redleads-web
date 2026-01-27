@@ -18,12 +18,12 @@ export default function LiveDiscoveryTab({ user, profile, onNavigate }: { user: 
                     </div>
                     <h2 className="text-3xl font-black tracking-tight">Live Monitoring</h2>
                 </div>
-                <p className="text-gray-400">Your 24/7 autonomous lead monitor. It scans your subreddits every 15 minutes.</p>
+                <p className="text-gray-400">Your 24/7 autonomous lead monitor. It scans your subreddits every 30 minutes.</p>
             </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Live Stream Column */}
-                <div className="lg:col-span-2 bg-[#202020]/50 rounded-[2.5rem] p-6 lg:p-8 border border-white/5">
+                <div className="lg:col-span-2">
                     <LiveFeed userId={user.id} onViewArchive={() => onNavigate('reports')} />
                 </div>
 

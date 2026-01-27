@@ -8,7 +8,12 @@ const nextConfig: NextConfig = {
         source: '/api/:path*',
         headers: [
           { key: 'Access-Control-Allow-Credentials', value: 'true' },
-          { key: 'Access-Control-Allow-Origin', value: '*' }, // Replace with specific domains in production
+          { 
+            key: 'Access-Control-Allow-Origin', 
+            value: process.env.NODE_ENV === 'production' 
+              ? (process.env.NEXT_PUBLIC_SITE_URL || 'https://redleads.app') 
+              : '*' 
+          },
           { key: 'Access-Control-Allow-Methods', value: 'GET,DELETE,PATCH,POST,PUT' },
           { key: 'Access-Control-Allow-Headers', value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization' },
         ],
@@ -29,8 +34,16 @@ const nextConfig: NextConfig = {
             value: 'nosniff',
           },
           {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains; preload',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+          {
             key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin',
+            value: 'strict-origin-when-cross-origin',
           },
           {
             key: 'Permissions-Policy',
@@ -55,6 +68,11 @@ const nextConfig: NextConfig = {
         destination: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/:path*`,
       },
     ];
+  },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
   },
 };
 

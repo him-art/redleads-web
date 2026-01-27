@@ -1,187 +1,119 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { Check } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
-import { type User as SupabaseUser } from '@supabase/supabase-js';
+import { useState } from 'react';
+import { Check, Zap, Loader2, ArrowRight } from 'lucide-react';
 
 const Pricing = () => {
-  const [user, setUser] = useState<SupabaseUser | null>(null);
-  const supabase = createClient();
+    const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
+    const handleCheckout = async () => {
+        setIsLoading(true);
+        try {
+            const res = await fetch('/api/payments/create-checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+            });
+            
+            const data = await res.json();
+            
+            if (data.checkout_url) {
+                window.location.href = data.checkout_url;
+            } else if (data.error === 'Unauthorized') {
+                window.location.href = '/login?next=/pricing';
+            } else {
+                alert(data.error || 'Failed to create checkout session');
+            }
+        } catch (error) {
+            console.error('Checkout error:', error);
+            alert('Something went wrong. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
     };
-    getUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const handleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=/scanner`,
-      },
-    });
-  };
-  return (
-    <section id="pricing" className="bg-[#1a1a1a] py-24 border-t border-white/5">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h2 className="text-[2.5rem] sm:text-[3.5rem] font-black text-white leading-tight">
-            <span className="text-orange-500 italic font-serif font-light">Early Access</span> Pricing
-          </h2>
-          <p className="mt-4 text-lg text-gray-400">
-            First 10 get lifetime beta pricing. After that, full price.
-          </p>
-        </div>
-
-        {/* Simple Beta Pricing Info */}
-        <div className="mt-12 mb-16 max-w-2xl mx-auto">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-center">
-            <p className="text-sm text-gray-400">
-              Beta testers save <span className="text-orange-400 font-bold">$120/year</span> and get lifetime founder access.
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-16 grid gap-8 lg:grid-cols-2 lg:gap-12 max-w-4xl mx-auto">
-          {/* Scout Tier */}
-          <div className="rounded-3xl border border-white/5 bg-[#222] p-8 shadow-sm">
-            <h3 className="text-lg font-semibold text-white">Scout Plan</h3>
-            
-            <div className="mt-4">
-              <div className="flex items-center gap-3">
-                <span className="text-xl font-bold text-gray-500/50 line-through">$19</span>
-                <div className="px-2 py-0.5 rounded-md bg-orange-500/10 border border-orange-500/20 text-[10px] font-bold text-orange-400 uppercase tracking-wider">
-                  BETA OFFER
+    return (
+        <section id="pricing" className="py-24 px-4 bg-[#0a0a0a]">
+            <div className="max-w-4xl mx-auto">
+                {/* Header */}
+                <div className="text-center mb-12">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-sm font-medium mb-6">
+                        <Zap size={16} fill="currentColor" />
+                        Simple Pricing
+                    </div>
+                    <h2 className="text-3xl sm:text-5xl font-black text-white mb-4">
+                        One Plan. <span className="text-orange-500">Everything Included.</span>
+                    </h2>
+                    <p className="text-lg text-gray-400 max-w-xl mx-auto">
+                        No complicated tiers. Get full access to RedLeads and start finding high-intent leads today.
+                    </p>
                 </div>
-              </div>
-              
-              <div className="flex items-baseline text-6xl font-bold tracking-tight text-white mt-2">
-                $9
-                <span className="text-xl font-normal text-gray-500 ml-1">/mo</span>
-              </div>
-            </div>
-            
-            <p className="mt-4 text-sm text-gray-500">Perfect for solopreneurs testing Reddit as a channel.</p>
-            
-            <ul className="mt-8 space-y-4">
-              {[
-                "Daily 'High-Pain' Lead Report",
-                "Ban-Proof Monitoring",
-                "Monitor 5 subreddits",
-                "Keyword search"
-              ].map((feature) => (
-                <li key={feature} className="flex items-center gap-3 text-sm text-gray-300">
-                  <Check className="h-5 w-5 text-blue-500" />
-                  {feature}
-                </li>
-              ))}
-            </ul>
 
-            {user ? (
-              <div className="mt-8 block w-full rounded-full bg-orange-500/10 border border-orange-500/20 py-3 text-center text-sm font-semibold text-orange-400">
-                You're in! Accessing Benefits...
-              </div>
-            ) : (
-              <button 
-                onClick={handleLogin}
-                className="mt-8 block w-full rounded-full border border-white/10 bg-white/5 py-3 text-center text-sm font-semibold text-white transition-all hover:bg-white/10 hover:border-white/20"
-              >
-                Apply for Beta Access
-              </button>
-            )}
-            
-            <div className="mt-6 pt-6 border-t border-white/5">
-              <div className="flex items-center gap-2 text-xs text-gray-400">
-                <Check className="h-4 w-4 text-green-500" />
-                <span>Cancel anytime</span>
-              </div>
-            </div>
-          </div>
+                {/* Single Pricing Card */}
+                <div className="max-w-md mx-auto">
+                    <div className="relative rounded-3xl border-2 border-orange-500/50 bg-gradient-to-b from-orange-500/10 to-transparent p-8 overflow-hidden">
+                        {/* Glow effect */}
+                        <div className="absolute top-0 right-0 w-40 h-40 bg-orange-500/20 blur-[80px] -mr-20 -mt-20" />
+                        
+                        <div className="relative z-10">
+                            <div className="flex items-center justify-between mb-6">
+                                <h3 className="text-2xl font-bold text-white">Pro Plan</h3>
+                                <span className="px-3 py-1 rounded-full bg-orange-500 text-black text-xs font-black uppercase">
+                                    Full Access
+                                </span>
+                            </div>
+                            
+                            <div className="mb-8">
+                                <div className="flex items-baseline">
+                                    <span className="text-6xl font-black text-white">$25</span>
+                                    <span className="text-gray-400 ml-2 text-lg">/month</span>
+                                </div>
+                            </div>
 
-          {/* Growth Tier */}
-          <div className="relative rounded-3xl border border-blue-500/30 bg-gradient-to-br from-blue-900/20 to-indigo-900/20 p-8 shadow-xl overflow-hidden">
-            <div className="absolute top-0 right-0 bg-gradient-to-l from-blue-600 to-transparent w-32 h-32 opacity-20 blur-2xl -mr-16 -mt-16"></div>
-            
-            <div className="absolute top-4 right-4">
-              <div className="rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-3 py-1 text-xs font-bold text-white">
-                BEST VALUE
-              </div>
-            </div>
+                            <ul className="space-y-4 mb-8">
+                                {[
+                                    "Daily high-intent lead reports",
+                                    "Monitor unlimited subreddits",
+                                    "Unlimited keyword tracking",
+                                    "Ban-proof monitoring system",
+                                    "AI-powered lead analysis",
+                                    "Priority email delivery",
+                                    "Direct founder support"
+                                ].map((feature) => (
+                                    <li key={feature} className="flex items-center gap-3 text-white">
+                                        <Check className="h-5 w-5 text-orange-500 flex-shrink-0" />
+                                        {feature}
+                                    </li>
+                                ))}
+                            </ul>
 
-            <h3 className="text-lg font-semibold text-white">Growth Plan</h3>
-            
-            <div className="mt-4">
-              <div className="flex items-center gap-3">
-                <span className="text-xl font-bold text-gray-500/50 line-through">$29</span>
-                <div className="px-2 py-0.5 rounded-md bg-blue-500/10 border border-blue-500/20 text-[10px] font-bold text-blue-400 uppercase tracking-wider">
-                  BETA OFFER
+                            <button
+                                onClick={handleCheckout}
+                                disabled={isLoading}
+                                className="w-full py-4 rounded-xl bg-orange-500 text-black font-black text-lg hover:bg-orange-400 transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-lg shadow-orange-500/25"
+                            >
+                                {isLoading ? (
+                                    <Loader2 size={22} className="animate-spin" />
+                                ) : (
+                                    <>Get Started <ArrowRight size={20} /></>
+                                )}
+                            </button>
+
+                            <div className="mt-6 flex flex-wrap justify-center gap-4 text-sm text-gray-500">
+                                <span className="flex items-center gap-1">
+                                    <Check size={14} className="text-green-500" />
+                                    Cancel anytime
+                                </span>
+                                <span className="flex items-center gap-1">
+                                    <Check size={14} className="text-green-500" />
+                                    Instant access
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              
-              <div className="flex items-baseline text-6xl font-bold tracking-tight text-white mt-2">
-                $19
-                <span className="text-xl font-normal text-gray-400 ml-1">/mo</span>
-              </div>
             </div>
-            
-            <p className="mt-4 text-sm text-gray-400">For founders serious about Reddit marketing.</p>
-            
-            <ul className="mt-8 space-y-4">
-              {[
-                "Everything in Scout",
-                "Monitor 10 subreddits",
-                "Unlimited Keywords",
-                "Direct Founder Access"               
-              ].map((feature) => (
-                <li key={feature} className="flex items-center gap-3 text-sm text-white">
-                  <Check className="h-5 w-5 text-blue-500" />
-                  {feature}
-                </li>
-              ))}
-            </ul>
-
-            {user ? (
-              <div className="mt-8 block w-full rounded-full bg-green-500/10 border border-green-500/20 py-3 text-center text-sm font-semibold text-green-400">
-                 Active in Early Access
-              </div>
-            ) : (
-              <button 
-                onClick={handleLogin}
-                className="mt-8 block w-full rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 py-3 text-center text-sm font-semibold text-white transition-all hover:from-blue-700 hover:to-indigo-700 hover:scale-[1.02] shadow-lg shadow-blue-500/25"
-              >
-                Apply for Beta Access
-              </button>
-            )}
-            
-            <div className="mt-6 pt-6 border-t border-white/5">
-              <div className="flex items-center gap-2 text-xs text-gray-300">
-                <Check className="h-4 w-4 text-green-500" />
-                <span>Cancel anytime</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Simple footer note */}
-        <div className="mt-12 text-center">
-          <p className="text-sm text-gray-500">
-            Beta pricing locks in forever. Choose your plan in the application.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
+        </section>
+    );
 };
 
 export default Pricing;

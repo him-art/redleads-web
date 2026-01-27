@@ -2,11 +2,23 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { groq } from '@/lib/groq';
+import { z } from 'zod';
+
+const autofillSchema = z.object({
+    url: z.string().url(),
+    description: z.string().optional(),
+});
 
 export async function POST(req: Request) {
     try {
-        const { url, description: userDescription } = await req.json();
-        if (!url) return NextResponse.json({ error: 'URL is required' }, { status: 400 });
+        const body = await req.json();
+        const result = autofillSchema.safeParse(body);
+
+        if (!result.success) {
+            return NextResponse.json({ error: 'Invalid Input', details: result.error.format() }, { status: 400 });
+        }
+
+        const { url, description: userDescription } = result.data;
 
         const prompt = `
             Analyze this business:

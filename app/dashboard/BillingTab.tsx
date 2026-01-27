@@ -1,9 +1,34 @@
 'use client';
 
-import { CheckCircle2, Zap } from 'lucide-react';
+import { CheckCircle2, Zap, Loader2 } from 'lucide-react';
+import { useState } from 'react';
 
 export default function BillingTab({ profile }: { profile: any }) {
     const isPro = profile?.subscription_tier === 'pro';
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleUpgrade = async () => {
+        setIsLoading(true);
+        try {
+            const res = await fetch('/api/payments/create-checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+            });
+            
+            const data = await res.json();
+            
+            if (data.checkout_url) {
+                window.location.href = data.checkout_url;
+            } else {
+                alert(data.error || 'Failed to create checkout session');
+            }
+        } catch (error) {
+            console.error('Checkout error:', error);
+            alert('Something went wrong. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <div className="max-w-2xl space-y-8">
@@ -57,8 +82,17 @@ export default function BillingTab({ profile }: { profile: any }) {
                     </div>
 
                     {!isPro && (
-                        <button className="w-full py-4 bg-orange-500 text-black font-black rounded-xl hover:bg-orange-400 transition-all shadow-lg flex items-center justify-center gap-2">
-                             <Zap size={20} fill="currentColor" /> Upgrade to Pro
+                        <button 
+                            onClick={handleUpgrade}
+                            disabled={isLoading}
+                            className="w-full py-4 bg-orange-500 text-black font-black rounded-xl hover:bg-orange-400 transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {isLoading ? (
+                                <Loader2 size={20} className="animate-spin" />
+                            ) : (
+                                <Zap size={20} fill="currentColor" />
+                            )}
+                            {isLoading ? 'Processing...' : 'Upgrade to Pro'}
                         </button>
                     )}
                     
@@ -71,7 +105,7 @@ export default function BillingTab({ profile }: { profile: any }) {
             </div>
             
             <p className="text-xs text-gray-500 text-center">
-                Secure payments processed by Stripe. You can cancel anytime.
+                Secure payments processed by Dodo Payments. You can cancel anytime.
             </p>
         </div>
     );
