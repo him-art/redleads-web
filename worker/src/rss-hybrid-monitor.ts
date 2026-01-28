@@ -42,6 +42,10 @@ const REQUEST_TIMEOUT_MS = 15000; // 15 second timeout
 const RSS_LIMIT = 20; // Top 20 newest posts
 const MAX_AI_EVAL_PER_SUB_CYCLE = 10; // Max posts to score per cycle per sub
 
+// ═══════════════════════════════════════════════════════════════════════════
+// PURE RSS MODE: No .json fetching for Reddit data.
+// ═══════════════════════════════════════════════════════════════════════════
+
 // AI Matching
 const QUICK_SCORE_THRESHOLD = 0.7; // Only fetch full post if score > 0.7
 
@@ -255,9 +259,21 @@ async function getBatchMatchScores(posts: { title: string, snippet: string }[], 
         });
 
         const content = response.choices?.[0]?.message?.content?.trim() || '[]';
-        const scores = JSON.parse(content);
         
-        return Array.isArray(scores) ? scores.map(s => isNaN(parseFloat(s)) ? 0 : Math.min(1, Math.max(0, parseFloat(s)))) : posts.map(() => 0);
+        // Robust parsing: extract the first [...] found in the text
+        let jsonStr = content;
+        const match = content.match(/\[[\s\S]*\]/);
+        if (match) {
+            jsonStr = match[0];
+        }
+
+        try {
+            const scores = JSON.parse(jsonStr);
+            return Array.isArray(scores) ? scores.map(s => isNaN(parseFloat(s)) ? 0 : Math.min(1, Math.max(0, parseFloat(s)))) : posts.map(() => 0);
+        } catch (parseErr) {
+            console.warn('[RSS] Failed to parse AI JSON, content was:', content);
+            return posts.map(() => 0);
+        }
     } catch (e) {
         console.error('[RSS] Batch match score error:', e);
         return posts.map(() => 0);
@@ -454,7 +470,13 @@ async function pollCycle(): Promise<void> {
     console.log('[RSS] 🚀 Starting new poll cycle...');
     console.log('[RSS] ═══════════════════════════════════════════════════════\n');
 
-    // Get all unique, non-paused subreddits
+    // 1. Sync unique_subreddits from profiles to ensure new user preferences are picked up
+    const { error: syncError } = await supabase.rpc('sync_unique_subreddits');
+    if (syncError) {
+        console.warn('[RSS] ⚠️ Subreddit sync failed (non-critical):', syncError.message);
+    }
+
+    // 2. Get all unique, non-paused subreddits
     const subreddits = await getUniqueSubreddits();
     
     if (subreddits.length === 0) {
@@ -509,10 +531,17 @@ async function pollCycle(): Promise<void> {
  * Supports --once flag for single execution (GitHub Actions).
  */
 async function startMonitor(): Promise<void> {
-    const isOnce = process.argv.includes('--once');
+    // Robust flag detection for different shells/npm versions
+    const isOnce = process.argv.some(arg => arg.toLowerCase().includes('once')) || 
+                   process.env.npm_config_once === 'true' ||
+                   process.argv.includes('--once');
 
     console.log('[RSS] 🎬 RedLeads Hybrid RSS Monitor starting...');
-    console.log(`[RSS] Mode: ${isOnce ? 'ONCE (public run)' : 'CONTINUOUS (Cron)'}`);
+    if (isOnce) {
+        console.log('[RSS] Mode: ONCE (Manual/CI run)');
+    } else {
+        console.log('[RSS] Mode: CONTINUOUS (Cron)');
+    }
     console.log('[RSS] Configuration:');
     console.log(`     - Delay: ${DELAY_BETWEEN_REQ_MS}ms + ${JITTER_MAX_MS}ms jitter`);
     console.log(`     - Quick score threshold: ${QUICK_SCORE_THRESHOLD}`);

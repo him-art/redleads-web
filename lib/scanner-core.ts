@@ -1,4 +1,4 @@
-import { groq } from '@/lib/groq';
+import { ai as groq } from '@/lib/ai';
 
 export interface ScannerResult {
     leads: any[];
@@ -88,29 +88,11 @@ export async function performScan(url: string, options: ScannerOptions): Promise
         }
     }
 
-    // D. STEP C: FALLBACK SEARCH (Reddit Public API)
+    // D. STEP C: FALLBACK SEARCH (Reddit Search Disabled - Pure RSS Only)
     if (leads.length === 0) {
-        try {
-            console.log(`[ScannerLib] FALLBACK: Searching Reddit Public API`);
-            const simpleQuery = searchQuery.replace(/site:reddit\.com/gi, '').trim();
-            const redditResponse = await fetch(`https://www.reddit.com/search.json?q=${encodeURIComponent(simpleQuery)}&sort=relevance&t=year&limit=21`, {
-                headers: { 'User-Agent': 'RedLeadsScanner/1.0 (by /u/RedLeads)' }
-            });
-
-            const redditData = await redditResponse.json();
-            
-            if (redditData.data?.children && redditData.data.children.length > 0) {
-                leads = redditData.data.children
-                    .filter((child: any) => child.data.subreddit)
-                    .map((child: any) => ({
-                        subreddit: child.data.subreddit,
-                        title: child.data.title,
-                        url: `https://reddit.com${child.data.permalink}`
-                    }));
-            }
-        } catch (rError) {
-            console.error('[ScannerLib] Reddit Fallback failed.', rError);
-        }
+        console.log(`[ScannerLib] FALLBACK: Reddit JSON Search is DISABLED. (Pure RSS Mode Active)`);
+        // We do not use search.json per user requirements.
+        // Future: could implement subreddit-specific RSS feed checking here.
     }
 
     // E. FINAL FALLBACK: Mock Data
