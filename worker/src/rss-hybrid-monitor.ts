@@ -23,6 +23,9 @@ import dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.local' });
 
+import { MOCK_USERS } from './mock-users';
+const SCALE_TEST = process.env.SCALE_TEST === 'true';
+
 // ═══════════════════════════════════════════════════════════════════════════
 // CONFIGURATION
 // ═══════════════════════════════════════════════════════════════════════════
@@ -200,10 +203,12 @@ async function updateLastPubdate(subName: string, date: Date): Promise<void> {
         .eq('name', subName);
 }
 
-/**
- * Get all users monitoring a specific subreddit.
- */
 async function getUsersForSubreddit(subName: string): Promise<UserProfile[]> {
+    if (SCALE_TEST) {
+        // Return a subset of mock users based on their random subreddit interests
+        return MOCK_USERS.filter(() => Math.random() > 0.7); // Simulate ~30% users interested in any given sub
+    }
+
     const { data, error } = await supabase
         .from('profiles')
         .select('id, keywords, description')
@@ -284,6 +289,10 @@ async function getBatchMatchScores(posts: { title: string, snippet: string }[], 
  * Store a lead for a specific user with a personalized match score.
  */
 async function storePersonalizedLead(postData: RSSPost, userId: string, score: number): Promise<void> {
+    if (SCALE_TEST) {
+        // console.log(`[SCALE] 💾 Mock storing lead for user ${userId.slice(0, 8)}`);
+        return;
+    }
     try {
         const { error } = await supabase.from('monitored_leads').insert({
             user_id: userId,

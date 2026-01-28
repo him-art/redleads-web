@@ -15,11 +15,7 @@ export class AIManager {
             // Auto-discover from process.env
             const potentialKeys = [
                 process.env.AI_API_KEY,
-                process.env.AI_API_KEY_2,
-                process.env.AI_API_KEY_3,
-                process.env.AI_API_KEY_4,
-                process.env.AI_API_KEY_5,
-                process.env.AI_API_KEY_6
+                process.env.AI_API_KEY_2
             ];
             this.keys = potentialKeys.filter(k => !!k) as string[];
         }
