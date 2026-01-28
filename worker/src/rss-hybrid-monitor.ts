@@ -527,14 +527,14 @@ async function startMonitor(): Promise<void> {
         process.exit(0);
     }
 
-    // Schedule recurring runs (every 20 minutes)
-    cron.schedule('*/20 * * * *', async () => {
+    // Schedule recurring runs (every 30 minutes)
+    cron.schedule('*/30 * * * *', async () => {
         if (isRunning) {
             await pollCycle();
         }
     });
 
-    console.log('[RSS] ✅ Cron scheduled: */20 * * * *');
+    console.log('[RSS] ✅ Cron scheduled: */30 * * * *');
 }
 
 // Start the monitor
