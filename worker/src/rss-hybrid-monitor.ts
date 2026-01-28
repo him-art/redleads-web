@@ -38,6 +38,10 @@ const DELAY_BETWEEN_REQ_MS = 1800; // 1.8 seconds base delay
 const JITTER_MAX_MS = 1000; // Up to 1 second random jitter
 const REQUEST_TIMEOUT_MS = 15000; // 15 second timeout
 
+// Ingestion Limits
+const RSS_LIMIT = 20; // Top 20 newest posts
+const MAX_AI_EVAL_PER_SUB_CYCLE = 10; // Max posts to score per cycle per sub
+
 // AI Matching
 const QUICK_SCORE_THRESHOLD = 0.7; // Only fetch full post if score > 0.7
 
@@ -53,6 +57,10 @@ const limit = pLimit(1); // Sequential processing
 
 // Graceful Shutdown
 let isRunning = true;
+
+// Local Deduplication (prevents processing same post twice in same hour)
+const processedPosts = new Set<string>();
+setInterval(() => processedPosts.clear(), 60 * 60 * 1000); // Clear every hour
 
 // ═══════════════════════════════════════════════════════════════════════════
 // GRACEFUL SHUTDOWN HANDLERS
@@ -90,6 +98,7 @@ interface RSSPost {
     snippet: string;
     pubDate: Date;
     subreddit: string;
+    author: string;
 }
 
 interface RedditPostData {
@@ -102,6 +111,12 @@ interface RedditPostData {
     created_utc: number;
     score: number;
     num_comments: number;
+}
+
+interface UserProfile {
+    id: string;
+    keywords: string[];
+    description: string;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -182,6 +197,23 @@ async function updateLastPubdate(subName: string, date: Date): Promise<void> {
 }
 
 /**
+ * Get all users monitoring a specific subreddit.
+ */
+async function getUsersForSubreddit(subName: string): Promise<UserProfile[]> {
+    const { data, error } = await supabase
+        .from('profiles')
+        .select('id, keywords, description')
+        .contains('subreddits', [subName.toLowerCase()]);
+
+    if (error) {
+        console.error(`[RSS] Failed to fetch users for r/${subName}:`, error.message);
+        return [];
+    }
+
+    return data || [];
+}
+
+/**
  * Extract Reddit post ID from a URL.
  */
 function extractPostId(url: string): string | null {
@@ -190,119 +222,71 @@ function extractPostId(url: string): string | null {
 }
 
 /**
- * Quick AI match score using Groq (fast model).
- * Returns 0-1 indicating relevance.
- * 
- * Groq llama-3.1-8b-instant prompt:
- * "Score 0-1 how likely this Reddit post indicates high-intent SaaS buyer 
- * (explicit complaint, seeking alternative, recommendation request, 'looking for tool'). 
- * Title: {{title}} Snippet: {{snippet}} Output ONLY a number 0-1 with no explanation."
+ * Personalized AI match score for a batch of posts against a single user's business description.
+ * Returns an array of scores (0-1).
  */
-async function getQuickMatchScore(text: string): Promise<number> {
+async function getBatchMatchScores(posts: { title: string, snippet: string }[], userDesc: string): Promise<number[]> {
+    if (posts.length === 0) return [];
+    
     try {
-        // Import the AI manager dynamically to avoid circular deps
         const { AIManager } = await import('../../lib/ai');
         const ai = new AIManager();
 
-        const defaultPrompt = "Score this post 0-1 for relevance.";
-        const systemPrompt = process.env.LEAD_SCORE_PROMPT || defaultPrompt;
+        const postsBlock = posts.map((p, i) => `[POST ${i+1}]\nTitle: ${p.title}\nSnippet: ${p.snippet}`).join('\n\n');
 
         const response = await ai.call({
-            model: 'llama-3.1-8b-instant', // Fast model for quick scoring
+            model: 'llama-3.1-8b-instant',
             messages: [
                 {
                     role: 'system',
-                    content: `Score 0-1 how likely this Reddit post indicates high-intent SaaS buyer (explicit complaint, seeking alternative, recommendation request, 'looking for tool'). Output ONLY a number 0-1 with no explanation.`
+                    content: `You are a high-intent lead bouncer. Given a business description, score each Reddit post 0 to 1 based on how likely it indicates a target audience member, a competitor mention, or an ICP match.
+                    
+                    Business Description: ${userDesc}
+                    
+                    Respond with a JSON array of numbers only. Example: [0.8, 0.1, 0.9]`
                 },
                 {
                     role: 'user',
-                    content: text
+                    content: postsBlock
                 }
             ],
             temperature: 0.1,
-            max_tokens: 10,
+            max_tokens: 100,
         });
 
-        const score = parseFloat(response.choices?.[0]?.message?.content?.trim() || '0');
-        return isNaN(score) ? 0 : Math.min(1, Math.max(0, score));
-    } catch (e) {
-        console.error('[RSS] Quick match score error:', e);
-        return 0;
-    }
-}
-
-/**
- * Fetch full post content from Reddit JSON endpoint.
- */
-async function fetchFullPost(postId: string): Promise<RedditPostData | null> {
-    try {
-        const url = `https://www.reddit.com/comments/${postId}.json?limit=1&raw_json=1`;
+        const content = response.choices?.[0]?.message?.content?.trim() || '[]';
+        const scores = JSON.parse(content);
         
-        const response = await axios.get(url, {
-            headers: { 'User-Agent': USER_AGENT },
-            timeout: REQUEST_TIMEOUT_MS,
-        });
-
-        const postData = response.data?.[0]?.data?.children?.[0]?.data;
-        if (!postData) return null;
-
-        return {
-            id: postData.id,
-            title: postData.title,
-            selftext: postData.selftext || '',
-            url: `https://www.reddit.com${postData.permalink}`,
-            subreddit: postData.subreddit,
-            author: postData.author,
-            created_utc: postData.created_utc,
-            score: postData.score,
-            num_comments: postData.num_comments,
-        };
+        return Array.isArray(scores) ? scores.map(s => isNaN(parseFloat(s)) ? 0 : Math.min(1, Math.max(0, parseFloat(s)))) : posts.map(() => 0);
     } catch (e) {
-        console.error(`[RSS] Failed to fetch full post ${postId}:`, (e as Error).message);
-        return null;
+        console.error('[RSS] Batch match score error:', e);
+        return posts.map(() => 0);
     }
 }
 
 /**
- * Process a full lead through the existing pipeline.
- * Stores in monitored_leads, assigns to users, triggers Realtime.
+ * Store a lead for a specific user with a personalized match score.
  */
-async function processFullLead(postData: RedditPostData): Promise<void> {
+async function storePersonalizedLead(postData: RSSPost, userId: string, score: number): Promise<void> {
     try {
-        // Get users monitoring this subreddit
-        const { data: userSubs } = await supabase
-            .from('profiles')
-            .select('id, subreddits')
-            .contains('subreddits', [postData.subreddit.toLowerCase()]);
+        const { error } = await supabase.from('monitored_leads').insert({
+            user_id: userId,
+            title: postData.title,
+            body_text: postData.snippet,
+            subreddit: postData.subreddit,
+            url: postData.link,
+            author: postData.author,
+            reddit_score: 0,
+            comment_count: 0,
+            match_score: score,
+            status: 'new',
+        });
 
-        if (!userSubs || userSubs.length === 0) {
-            console.log(`[RSS] No users monitoring r/${postData.subreddit}, skipping.`);
-            return;
+        if (error && !error.message.includes('duplicate')) {
+            console.error(`[RSS] Failed to insert lead for user ${userId}:`, error.message);
         }
-
-        // Insert lead for each user (RLS handles isolation)
-        for (const user of userSubs) {
-            const { error } = await supabase.from('monitored_leads').insert({
-                user_id: user.id,
-                title: postData.title,
-                body_text: postData.selftext,
-                subreddit: postData.subreddit,
-                url: postData.url,
-                author: postData.author,
-                reddit_score: postData.score,
-                comment_count: postData.num_comments,
-                match_score: 0.8, // Re-score with full analysis if needed
-                status: 'new',
-            });
-
-            if (error && !error.message.includes('duplicate')) {
-                console.error(`[RSS] Failed to insert lead for user ${user.id}:`, error.message);
-            }
-        }
-
-        console.log(`[RSS] ✅ Processed lead: "${postData.title.slice(0, 50)}..." → ${userSubs.length} users`);
     } catch (e) {
-        console.error('[RSS] processFullLead error:', e);
+        console.error('[RSS] storePersonalizedLead error:', e);
     }
 }
 
@@ -314,7 +298,7 @@ async function processFullLead(postData: RedditPostData): Promise<void> {
  * Fetch and parse RSS feed for a subreddit.
  */
 async function fetchRSSFeed(subName: string): Promise<RSSPost[]> {
-    const url = `https://www.reddit.com/r/${subName}/new.rss?limit=25`;
+    const url = `https://www.reddit.com/r/${subName}/new.rss?limit=${RSS_LIMIT}`;
 
     const response = await axios.get(url, {
         headers: { 'User-Agent': USER_AGENT },
@@ -335,6 +319,7 @@ async function fetchRSSFeed(subName: string): Promise<RSSPost[]> {
         snippet: (item.content?._ || item.summary || '').replace(/<[^>]*>/g, '').slice(0, 500),
         pubDate: new Date(item.updated || item.published || Date.now()),
         subreddit: subName,
+        author: item.author?.name?.replace('/u/', '') || 'anonymous',
     }));
 }
 
@@ -350,7 +335,7 @@ async function processSubreddit(sub: UniqueSubreddit): Promise<boolean> {
     try {
         console.log(`[RSS] 🔍 Scanning r/${sub.name}...`);
 
-        // 1. Fetch RSS feed
+        // 1. Fetch RSS feed (Limited to newest)
         const posts = await fetchRSSFeed(sub.name);
         
         if (posts.length === 0) {
@@ -359,53 +344,78 @@ async function processSubreddit(sub: UniqueSubreddit): Promise<boolean> {
             return true;
         }
 
-        // 2. Filter to only new posts (after last_pubdate)
-        const lastPubdate = sub.last_pubdate ? new Date(sub.last_pubdate) : new Date(0);
-        const newPosts = posts.filter(p => p.pubDate > lastPubdate);
-
-        if (newPosts.length === 0) {
-            console.log(`[RSS] No new posts in r/${sub.name} since ${lastPubdate.toISOString()}`);
+        // 2. Identify users monitoring this subreddit early
+        const relevantUsers = await getUsersForSubreddit(sub.name);
+        if (relevantUsers.length === 0) {
+            console.log(`[RSS] No users monitoring r/${sub.name}, skipping AI entirely.`);
             await resetErrorStreak(sub.name);
             return true;
         }
 
-        console.log(`[RSS] Found ${newPosts.length} new posts in r/${sub.name}`);
+        // 3. Filter to only new posts (Early Age Filter)
+        const lastPubdate = sub.last_pubdate ? new Date(sub.last_pubdate) : new Date(0);
+        const newPosts = posts
+            .filter(p => p.pubDate > lastPubdate)
+            .slice(0, MAX_AI_EVAL_PER_SUB_CYCLE);
 
-        // 3. Process each new post
-        let latestPubdate = lastPubdate;
-        let processedCount = 0;
+        if (newPosts.length === 0) {
+            console.log(`[RSS] No new posts in r/${sub.name} (checked top ${posts.length})`);
+            await resetErrorStreak(sub.name);
+            return true;
+        }
+
+        console.log(`[RSS] Processing ${newPosts.length} new posts for ${relevantUsers.length} users in r/${sub.name}`);
+
+        // 4. Group posts by user keywords
+        let totalLeadsFound = 0;
+        const userMatches: Map<string, RSSPost[]> = new Map();
 
         for (const post of newPosts) {
-            if (!isRunning) break;
-            
-            // Quick AI score on title + snippet
-            const quickScore = await getQuickMatchScore(`${post.title}\n\n${post.snippet}`);
-            
-            if (quickScore >= QUICK_SCORE_THRESHOLD) {
-                // High intent detected → fetch full post
-                console.log(`[RSS] 🎯 High-intent (${quickScore.toFixed(2)}): "${post.title.slice(0, 40)}..."`);
-                
-                await delay(DELAY_BETWEEN_REQ_MS); // Pace before .json fetch
-                
-                const fullPost = await fetchFullPost(post.id);
-                if (fullPost) {
-                    await processFullLead(fullPost);
-                    processedCount++;
+            const normalizedText = `${post.title} ${post.snippet}`.toLowerCase();
+            for (const user of relevantUsers) {
+                const hasKeyword = user.keywords.some(kw => normalizedText.includes(kw.toLowerCase()));
+                if (hasKeyword) {
+                    const matches = userMatches.get(user.id) || [];
+                    matches.push(post);
+                    userMatches.set(user.id, matches);
                 }
-            }
-
-            // Track latest pubdate
-            if (post.pubDate > latestPubdate) {
-                latestPubdate = post.pubDate;
             }
         }
 
-        // 4. Update last_pubdate and reset error streak
+        // 5. Batch score for each user
+        for (const [userId, matchingPosts] of userMatches.entries()) {
+            if (!isRunning) break;
+            
+            const user = relevantUsers.find(u => u.id === userId)!;
+            console.log(`[RSS] 🎯 Scoring ${matchingPosts.length} matches for user ${userId.slice(0, 8)}`);
+
+            // Split into batches of 5 for efficiency
+            for (let i = 0; i < matchingPosts.length; i += 5) {
+                const batch = matchingPosts.slice(i, i + 5);
+                const scores = await getBatchMatchScores(batch, user.description);
+
+                for (let j = 0; j < batch.length; j++) {
+                    const score = scores[j] || 0;
+                    if (score >= QUICK_SCORE_THRESHOLD) {
+                        console.log(`[RSS] 🔥 Lead qualified (${score.toFixed(2)}) for user ${userId.slice(0, 8)}: "${batch[j].title.slice(0, 30)}..."`);
+                        
+                        // JSON enrichment disabled - storing directly from RSS
+                        await storePersonalizedLead(batch[j], userId, score);
+                        totalLeadsFound++;
+                    }
+                }
+            }
+        }
+
+        // 6. Update latest pubdate
+        const latestPubdate = newPosts.reduce((max, p) => p.pubDate > max ? p.pubDate : max, lastPubdate);
+
+        // 7. Update last_pubdate and reset error streak
         await updateLastPubdate(sub.name, latestPubdate);
         await resetErrorStreak(sub.name);
 
-        const duration = ((Date.now() - startTime) / 1000).toFixed(1);
-        console.log(`[RSS] ✅ r/${sub.name} complete: ${processedCount} leads processed in ${duration}s`);
+        const durationSec = ((Date.now() - startTime) / 1000).toFixed(1);
+        console.log(`[RSS] ✅ r/${sub.name} complete: ${totalLeadsFound} leads found in ${durationSec}s`);
         
         return true;
 
