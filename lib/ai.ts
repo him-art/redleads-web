@@ -62,7 +62,7 @@ export class AIManager {
             }
 
             try {
-                // Keeping Groq endpoint as the backend provider for now
+                // Keeping AI endpoint as the backend provider for now
                 const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
                     method: 'POST',
                     headers: {

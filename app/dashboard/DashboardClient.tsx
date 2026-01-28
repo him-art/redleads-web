@@ -17,7 +17,7 @@ export default function DashboardClient({ profile, reports, user }: DashboardCli
     const [activeTab, setActiveTab] = useState<'reports' | 'discovery' | 'live' | 'settings' | 'billing'>('reports');
 
     const tabs = [
-        { id: 'reports', label: 'Reports & History', icon: FileText },
+        { id: 'reports', label: 'Lead History', icon: FileText },
         // { id: 'saved', label: 'Saved Leads', icon: FileText }, // Merged into Reports
         { id: 'live', label: 'Live Discovery', icon: Radar },
         { id: 'settings', label: 'Tracking Configuration', icon: Settings },

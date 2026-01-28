@@ -1,4 +1,4 @@
-import { ai as groq } from '@/lib/ai';
+import { ai as AI } from '@/lib/ai';
 
 export interface ScannerResult {
     leads: any[];
@@ -7,7 +7,7 @@ export interface ScannerResult {
 }
 
 export interface ScannerOptions {
-    groqApiKey?: string;
+    AIApiKey?: string;
     tavilyApiKey?: string;
     keywords?: string[];
     subreddits?: string[];
@@ -39,15 +39,15 @@ export async function performScan(url: string, options: ScannerOptions): Promise
             ONLY return the query string, nothing else. No quotes, no intro text.
         `;
 
-        const groqData = await groq.call({
+        const AIData = await AI.call({
             model: "llama-3.3-70b-versatile",
             messages: [{ role: "user", content: prompt }],
             temperature: 0.1,
         });
 
-        searchQuery = groqData.choices?.[0]?.message?.content?.trim();
+        searchQuery = AIData.choices?.[0]?.message?.content?.trim();
     } catch (e) {
-        console.error('[ScannerLib] Groq API Failed', e);
+        console.error('[ScannerLib] AI API Failed', e);
     }
 
     if (!searchQuery) {

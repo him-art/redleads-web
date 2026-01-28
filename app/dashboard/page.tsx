@@ -21,12 +21,8 @@ export default async function DashboardPage() {
         .eq('id', user.id)
         .single();
 
-    // Fetch Reports (Drafts + Sent)
-    const { data: reports } = await supabase
-        .from('email_drafts')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
+    // Fetch Reports (Drafts + Sent) - Removed as Daily Reports feature is decommissioned
+    const reports: any[] = [];
 
     return (
         <main className="min-h-screen bg-[#111] text-white flex flex-col">
@@ -35,7 +31,7 @@ export default async function DashboardPage() {
                 <div className="max-w-6xl mx-auto">
                     <header className="mb-12">
                         <h1 className="text-4xl font-black tracking-tight mb-2">Dashboard</h1>
-                        <p className="text-gray-500">Manage your daily reports and tracking settings.</p>
+                        <p className="text-gray-500">Manage your tracking settings and view lead history.</p>
                     </header>
                     
                     <DashboardClient 

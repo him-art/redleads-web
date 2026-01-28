@@ -1,12 +1,11 @@
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { groq } from '@/lib/groq';
+import { ai } from '@/lib/ai';
 import { z } from 'zod';
 
 const autofillSchema = z.object({
-    url: z.string().url(),
-    description: z.string().optional(),
+    description: z.string().min(10, "Description must be at least 10 characters long"),
 });
 
 export async function POST(req: Request) {
@@ -18,34 +17,38 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Invalid Input', details: result.error.format() }, { status: 400 });
         }
 
-        const { url, description: userDescription } = result.data;
+        const { description: userDescription } = result.data;
 
         const prompt = `
-            Analyze this business:
-            URL: ${url}
-            Description (User Provided): ${userDescription || 'Not provided'}
+            Analyze this business description to generate tracking configuration:
+            Business Description: ${userDescription}
             
-            Based on this information, identify:
-            1. The top 5 high-intent "Priority Keywords". These MUST be single words only (e.g. "inventory", "churn", "outreach").
-            2. The top 5 most relevant Reddit subreddits where their target audience might ask for help or recommendations (e.g. "solopreneur", "SaaS").
-            ${!userDescription ? '3. A very short (1 sentence) description of what the business does.' : ''}
+            Based on this information, identify a mix of EXACTLY 15 high-intent keywords and phrases:
+            1. Product/Service terms (e.g., "CRM software", "sales tools")
+            2. Pain points (e.g., "low conversion rates", "manual data entry")
+            3. Competitor indicators (e.g., brand names if relevant)
+            4. Industry terms (e.g., "B2B SaaS", "go-to-market")
+
+            Requirements for output:
+            - Keywords/Phrases: Provide EXACTLY 15 relevant items total. Mixture of single words and multi-word phrases.
+            - Subreddits: Provide EXACTLY 10 most relevant Reddit subreddits. Do not include r/ prefix.
             
             Return the result as a STRICT JSON object in this format:
             {
-                "keywords": ["word1", "word2", "word3", "word4", "word5"],
-                "subreddits": ["subreddit1", "subreddit2", "subreddit3", "subreddit4", "subreddit5"]${!userDescription ? ',\n                "description": "A 1-sentence description."' : ''}
+                "keywords": ["phrase or word 1", "phrase or word 2", ...],
+                "subreddits": ["subreddit1", "subreddit2", ...]
             }
             
-            ONLY return the JSON object, nothing else. Do not include r/ prefix in subreddit names. Keywords MUST be single words.
+            ONLY return the JSON object, nothing else.
         `;
 
-        const groqData = await groq.call({
+        const AIData = await ai.call({
             model: "llama-3.3-70b-versatile",
             messages: [{ role: "user", content: prompt }],
             temperature: 0.1,
             response_format: { type: "json_object" }
         });
-        const content = groqData.choices?.[0]?.message?.content;
+        const content = AIData.choices?.[0]?.message?.content;
         
         if (!content) throw new Error('AI failed to generate suggestions');
 

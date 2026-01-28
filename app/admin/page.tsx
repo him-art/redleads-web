@@ -2,9 +2,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import DraftCard from './DraftCard';
-import CreateDraft from './CreateDraft';
-import ConfigToggle from '@/app/admin/ConfigToggle';
+// Daily Reports components removed
+// ConfigToggle removed
 import { CheckCircle, XCircle, Send, Edit, Clock } from 'lucide-react';
 
 export default async function AdminDashboard() {
@@ -35,15 +34,8 @@ export default async function AdminDashboard() {
         );
     }
 
-    // Fetch Drafts
-    const { data: drafts } = await supabase
-        .from('email_drafts')
-        .select(`
-            *,
-            profiles:user_id (email, website_url)
-        `)
-        .eq('status', 'draft')
-        .order('created_at', { ascending: false });
+    // Fetch Drafts - Removed as daily reports feature is decommissioned
+    const drafts: any[] = [];
 
     // Fetch Stats
     // Fetch Stats & Users for Dropdown
@@ -69,11 +61,6 @@ export default async function AdminDashboard() {
         .eq('id', 'sentinel')
         .single();
     
-    const { data: approvalSetting } = await supabase
-        .from('system_settings')
-        .select('value')
-        .eq('key', 'report_approval_required')
-        .single();
 
     const isWorkerActive = worker?.last_heartbeat 
         ? (new Date().getTime() - new Date(worker.last_heartbeat).getTime()) < 600000 // 10 mins
@@ -118,12 +105,12 @@ export default async function AdminDashboard() {
 
                         {drafts?.length === 0 ? (
                             <div className="p-12 text-center bg-white/5 rounded-2xl border border-dashed border-white/10">
-                                <p className="text-gray-500">All clear! No drafts waiting for review.</p>
+                                <p className="text-gray-500">Live monitoring active. No actions required.</p>
                             </div>
                         ) : (
-                            drafts?.map((draft: any) => (
-                                <DraftCard key={draft.id} draft={draft} />
-                            ))
+                            <div className="p-12 text-center bg-white/5 rounded-2xl border border-dashed border-white/10">
+                                <p className="text-gray-500">Feature decommissioned.</p>
+                            </div>
                         )}
                     </div>
 
@@ -131,22 +118,7 @@ export default async function AdminDashboard() {
                     <div className="space-y-6">
                          <div className="bg-[#1a1a1a] p-6 rounded-2xl border border-white/5">
                             <h3 className="text-lg font-bold mb-4">Quick Actions</h3>
-                            <CreateDraft users={users || []} />
-                         </div>
-
-                         {/* System Settings */}
-                         <div className="bg-[#1a1a1a] p-6 rounded-2xl border border-white/5">
-                            <h3 className="text-lg font-bold mb-4">System Settings</h3>
-                            <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl">
-                                <span className="text-sm font-bold">Manual Review Mode</span>
-                                <ConfigToggle 
-                                    settingKey="report_approval_required" 
-                                    initialValue={approvalSetting?.value === true || approvalSetting?.value === 'true'} 
-                                />
-                            </div>
-                            <p className="text-[10px] text-gray-500 mt-2 px-1">
-                                If enabled, new daily reports will be saved as drafts for your review.
-                            </p>
+                            <p className="text-gray-500 text-sm italic">Direct monitoring active...</p>
                          </div>
 
                          {/* System Status */}
