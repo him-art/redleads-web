@@ -6,8 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "worker": "npx ts-node --project worker/tsconfig.json worker/src/rss-hybrid-monitor.ts",
-    "worker:ingestion": "npx ts-node --project worker/tsconfig.json worker/src/rss-hybrid-monitor.ts",
+    "worker": "npx ts-node --transpile-only --project worker/tsconfig.json worker/src/rss-hybrid-monitor.ts",
+    "worker:ingestion": "npx ts-node --transpile-only --project worker/tsconfig.json worker/src/rss-hybrid-monitor.ts",
     "lint": "eslint"
   },
   "dependencies": {

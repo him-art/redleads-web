@@ -27,8 +27,14 @@ dotenv.config({ path: '.env.local' });
 // CONFIGURATION
 // ═══════════════════════════════════════════════════════════════════════════
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+    console.error('[RSS] ❌ CRITICAL: Missing Supabase configuration.');
+    console.error('     Check NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY');
+    process.exit(1);
+}
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
@@ -538,6 +544,15 @@ async function startMonitor(): Promise<void> {
                    process.argv.includes('--once');
 
     console.log('[RSS] 🎬 RedLeads Hybrid RSS Monitor starting...');
+    
+    // Pre-flight check
+    const aiKey = process.env.AI_API_KEY;
+    const aiKey2 = process.env.AI_API_KEY_2;
+    console.log('[RSS] Pre-flight check:');
+    console.log(`     - Supabase URL: ${SUPABASE_URL ? '✅ Configured' : '❌ Missing'}`);
+    console.log(`     - AI Key 1: ${aiKey ? '✅ Configured' : '❌ Missing'}`);
+    console.log(`     - AI Key 2: ${aiKey2 ? '✅ Configured' : '❕ Optional'}`);
+
     if (isOnce) {
         console.log('[RSS] Mode: ONCE (Manual/CI run)');
     } else {

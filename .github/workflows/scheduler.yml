@@ -29,5 +29,4 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           AI_API_KEY: ${{ secrets.AI_API_KEY }}
           AI_API_KEY_2: ${{ secrets.AI_API_KEY_2 }}
-          LEAD_SCORE_PROMPT: ${{ secrets.LEAD_SCORE_PROMPT }}
         run: npm run worker:ingestion -- --once
