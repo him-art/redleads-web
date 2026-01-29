@@ -1,16 +1,16 @@
 import DodoPayments from 'dodopayments';
+import { BETA_MODE, BETA_SEAT_LIMIT } from './constants';
 
 /**
  * Dodo Payments Client
  * Initialize the SDK with your API key from environment variables.
+ * Only instantiated on the server to prevent client-side evaluation errors.
  */
-export const dodo = new DodoPayments({
+export const dodo = typeof window === 'undefined' ? new DodoPayments({
     bearerToken: process.env.DODO_API_KEY,
-});
+}) : null as unknown as DodoPayments;
 
 // Test mode flag - set to true for development
 export const isTestMode = process.env.NODE_ENV !== 'production';
 
-// Public Beta Mode Configuration
-export const BETA_MODE = process.env.NEXT_PUBLIC_BETA_MODE === 'true';
-export const BETA_SEAT_LIMIT = 20;
+export { BETA_MODE, BETA_SEAT_LIMIT };

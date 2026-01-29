@@ -37,7 +37,7 @@ export default function BillingTab({ profile }: { profile: any }) {
     };
 
     const handleUpgrade = async () => {
-        const isBetaMode = require('@/lib/dodo').BETA_MODE;
+        const isBetaMode = require('@/lib/constants').BETA_MODE;
         if (isBetaMode) {
             setShowSurvey(true);
             return;

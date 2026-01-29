@@ -107,7 +107,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
 
             {/* Main Content Area */}
             <main className="flex-grow bg-white/[0.02] rounded-[2.5rem] border border-white/5 p-6 lg:p-12 overflow-hidden relative group">
-                {require('@/lib/dodo').BETA_MODE && <BetaBanner />}
+                {require('@/lib/constants').BETA_MODE && <BetaBanner />}
                 
                 <AnimatePresence mode="wait">
                     <motion.div

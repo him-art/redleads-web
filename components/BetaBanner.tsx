@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, MessageCircle, Users, X } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
-import { BETA_SEAT_LIMIT } from '@/lib/dodo';
+import { BETA_SEAT_LIMIT } from '@/lib/constants';
 
 export default function BetaBanner() {
     const [seatsLeft, setSeatsLeft] = useState<number | null>(null);

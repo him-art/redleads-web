@@ -185,8 +185,8 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
 
                      <div className="flex items-center gap-4 text-sm font-medium text-slate-500">
                         <span className="flex items-center gap-1.5">
-                            <CheckCircle2 className={`w-4 h-4 ${require('@/lib/dodo').BETA_MODE ? 'text-orange-500' : 'text-green-500'}`} /> 
-                            {require('@/lib/dodo').BETA_MODE ? 'Join 20 Founders in Public Beta' : '3-Day Full Trial Access'}
+                            <CheckCircle2 className={`w-4 h-4 ${require('@/lib/constants').BETA_MODE ? 'text-orange-500' : 'text-green-500'}`} /> 
+                            {require('@/lib/constants').BETA_MODE ? 'Join 20 Founders in Public Beta' : '3-Day Full Trial Access'}
                         </span>
                         <span className="w-1 h-1 bg-slate-300 rounded-full" />
                         <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-green-500" /> No Card Required</span>

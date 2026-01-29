@@ -41,10 +41,10 @@ const Pricing = () => {
                          Pricing
                      </div>
                      <h2 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight">
-                         {require('@/lib/dodo').BETA_MODE ? 'Public Beta now ' : 'Scale your '}<span className="text-orange-500 italic font-serif">{require('@/lib/dodo').BETA_MODE ? 'Open' : 'Red-Hot'}</span>{require('@/lib/dodo').BETA_MODE ? '.' : ' growth.'}
+                         {require('@/lib/constants').BETA_MODE ? 'Public Beta now ' : 'Scale your '}<span className="text-orange-500 italic font-serif">{require('@/lib/constants').BETA_MODE ? 'Open' : 'Red-Hot'}</span>{require('@/lib/constants').BETA_MODE ? '.' : ' growth.'}
                      </h2>
                      <p className="text-base text-gray-500 max-w-xl mx-auto font-medium leading-relaxed">
-                         {require('@/lib/dodo').BETA_MODE 
+                         {require('@/lib/constants').BETA_MODE 
                             ? 'The first 20 founders get full Pro access for free in exchange for feedback. Help us shape the future.' 
                             : 'One transparent plan designed for autonomous lead generation. Full intelligence suite included.'}
                      </p>
