@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 export default function FounderNote() {
   return (
-    <section className="py-24 bg-[#1a1a1a] overflow-hidden">
+    <section className="py-24 bg-[#1a1a1a] overflow-hidden border-t border-white/5">
       <div className="max-w-4xl mx-auto px-6">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -17,10 +17,10 @@ export default function FounderNote() {
           <div className="flex-shrink-0 relative">
             <div className="relative w-32 h-32 md:w-36 md:h-36 rounded-2xl overflow-hidden border-4 border-white shadow-2xl">
               <Image 
-                src="/founder-avatar.jpg" 
+                src="/founder.png" 
                 alt="Tim Jayas" 
                 fill 
-                className="object-cover grayscale"
+                className="object-cover"
                 unoptimized={true}
               />
             </div>
@@ -51,7 +51,7 @@ export default function FounderNote() {
                 As a serial builder, I know Reddit is a goldmine for early user acquisition. But trying to catch every relevant conversation manually? It's a full-time job. I was spending hours scrolling and still missing the best moments to jump in.
               </p>
               <p>
-                I needed a tool that would do the heavy lifting scanning 24/7, filtering out the noise, and only pinging me when a lead was actually worth my time. That tool didn't exist, so I coded RedLeads.
+                I needed a tool that would do the heavy lifting scanning 24/7, filtering out the noise. That tool didn't exist, so I coded RedLeads.
               </p>
               <p className="text-white font-medium">
                 Today, I spend my mornings replying to high-intent leads instead of searching for them. It completely changed my workflow, and I think it will change yours too.

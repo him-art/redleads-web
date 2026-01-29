@@ -127,6 +127,8 @@ interface UserProfile {
     id: string;
     keywords: string[];
     description: string;
+    email?: string;
+    full_name?: string;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -213,7 +215,7 @@ async function getUsersForSubreddit(subName: string): Promise<UserProfile[]> {
     
     const { data, error } = await supabase
         .from('profiles')
-        .select('id, keywords, description')
+        .select('id, keywords, description, email, full_name')
         .contains('subreddits', [subName.toLowerCase()]);
 
     if (error) {
@@ -420,11 +422,31 @@ async function processSubreddit(sub: UniqueSubreddit): Promise<boolean> {
                 for (let j = 0; j < batch.length; j++) {
                     const score = scores[j] || 0;
                     if (score >= QUICK_SCORE_THRESHOLD) {
-                        console.log(`[RSS] 🔥 Lead qualified (${score.toFixed(2)}) for user ${userId.slice(0, 8)}: "${batch[j].title.slice(0, 30)}..."`);
-                        
-                        // JSON enrichment disabled - storing directly from RSS
+                        // 7. Store Lead
                         await storePersonalizedLead(batch[j], userId, score);
                         totalLeadsFound++;
+
+                        // 8. Trigger Email Alert for high-intent matches (>0.9)
+                        if (score >= 0.9 && user.email) {
+                            try {
+                                const { sendEmail } = await import('../../lib/email');
+                                const LeadAlertEmail = (await import('../../lib/email-templates/LeadAlertEmail')).default;
+                                
+                                console.log(`[RSS] 📧 Sending lead alert email to ${user.email} for score ${score}`);
+                                await sendEmail({
+                                    to: user.email,
+                                    subject: `New Lead: ${batch[j].title.slice(0, 40)}...`,
+                                    react: LeadAlertEmail({
+                                        fullName: user.full_name || user.email.split('@')[0],
+                                        leadTitle: batch[j].title,
+                                        subreddit: batch[j].subreddit,
+                                        matchScore: Math.round(score * 100)
+                                    })
+                                });
+                            } catch (emailErr: any) {
+                                console.error(`[RSS] Failed to send lead alert email:`, emailErr.message);
+                            }
+                        }
                     }
                 }
             }

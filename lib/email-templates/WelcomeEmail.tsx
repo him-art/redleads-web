@@ -1,40 +1,51 @@
 import * as React from 'react';
 
 interface WelcomeEmailProps {
-  websiteUrl: string;
+  fullName: string;
 }
 
-export default function WelcomeEmail({ websiteUrl }: WelcomeEmailProps) {
+export default function WelcomeEmail({ fullName }: WelcomeEmailProps) {
   return (
-    <div style={{ fontFamily: 'sans-serif', lineHeight: '1.6', color: '#1a1a1a' }}>
-      <h1>Welcome to RedLeads!</h1>
-      <p>Thanks for trusting us with your lead generation.</p>
+    <div style={{ fontFamily: 'sans-serif', lineHeight: '1.6', color: '#1a1a1a', maxWidth: '600px', margin: '0 auto' }}>
+      <h1 style={{ color: '#f25e36', fontSize: '24px', fontWeight: 'black', letterSpacing: '-0.02em' }}>Welcome to RedLeads, {fullName}!</h1>
+      <p>Your 3-day full access trial is now active.</p>
       
       <p>
-        We are configuring our scanners for: <strong>{websiteUrl}</strong>
+        RedLeads is built to find your next customers on Reddit without you having to lift a finger. 
+        Our Sentinel is now ready to begin monitoring your target communities 24/7.
       </p>
 
-      <p>
-        Our AI is now analyzing Reddit conversations 24/7 to find people looking for exactly 
-        what you offer.
-      </p>
+      <div style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '15px', marginTop: '30px' }}>
+        <h2 style={{ fontSize: '18px', margin: '0 0 15px 0' }}>Next Steps</h2>
+        <ol style={{ paddingLeft: '20px' }}>
+          <li style={{ marginBottom: '10px' }}><strong>Configure Tracking</strong>: Head to your Dashboard and set up your keywords and target subreddits.</li>
+          <li style={{ marginBottom: '10px' }}><strong>Activate Sentinel</strong>: Once set up, your Sentinel will automatically start surfacing high-intent leads.</li>
+          <li style={{ marginBottom: '10px' }}><strong>Direct Engagement</strong>: We'll notify you whenever we find a perfect match.</li>
+        </ol>
+      </div>
 
-      <h2>What happens next?</h2>
-      <ol>
-        <li>We identify high-intent conversations relevant to your niche.</li>
-        <li>We curate the best opportunities.</li>
-        <li>You receive a weekly digest of leads directly to this inbox.</li>
-      </ol>
+      <div style={{ marginTop: '40px', textAlign: 'center' }}>
+        <a 
+          href="https://redleads.com/dashboard" 
+          style={{ 
+            backgroundColor: '#f25e36', 
+            color: 'white', 
+            padding: '16px 32px', 
+            borderRadius: '12px', 
+            textDecoration: 'none', 
+            fontWeight: 'bold',
+            display: 'inline-block'
+          }}
+        >
+          Go to Command Center
+        </a>
+      </div>
 
-      <p>
-        If you want to speed up the process and see leads <em>right now</em>, check out our 
-        <a href="https://redleads.com/scanner" style={{ color: '#f25e36' }}> Free Scanner</a>.
-      </p>
-
-      <hr style={{ borderColor: '#e5e5e5', margin: '20px 0' }} />
+      <hr style={{ borderColor: '#e5e5e5', margin: '40px 0' }} />
       
-      <p style={{ fontSize: '12px', color: '#666' }}>
-        RedLeads - Turn Reddit Conversations Into Paying Customers.
+      <p style={{ fontSize: '12px', color: '#666', textAlign: 'center' }}>
+        RedLeads - Turn Reddit Conversations Into Paying Customers.<br/>
+        You are receiving this because you signed up for RedLeads.
       </p>
     </div>
   );

@@ -57,10 +57,9 @@ const Navbar = () => {
         <div className="hidden lg:flex items-center gap-8 px-8 py-3 bg-white/80 backdrop-blur-xl border border-white/40 rounded-full shadow-2xl shadow-black/5 pointer-events-auto">
           <div className="flex gap-8 text-sm font-bold text-slate-600">
             <Link href="#how-it-works" className="hover:text-slate-900 transition-colors">How it Works</Link>
-            <Link href="/scanner" className="hover:text-[#f25e36] transition-colors flex items-center gap-1.5">
-              Free Scanner
-              <span className="text-[10px] px-1.5 py-0.5 bg-orange-500/10 text-[#f25e36] rounded-md border border-orange-500/20 uppercase tracking-tighter">Beta</span>
-            </Link>
+            {user && (
+              <Link href="/dashboard" className="text-[#f25e36] hover:text-[#d94a24] transition-colors">Dashboard</Link>
+            )}
             <Link href="#faq" className="hover:text-slate-900 transition-colors">FAQ</Link>
           </div>
           
@@ -130,14 +129,15 @@ const Navbar = () => {
                     How it Works
                   </Link>
                   
-                  <Link 
-                    href="/scanner" 
-                    className="flex items-center gap-3 text-lg font-bold text-slate-800 hover:text-[#f25e36] transition-colors py-2"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Free Scanner
-                    <span className="text-[10px] px-2 py-0.5 bg-[#f25e36]/10 text-[#f25e36] rounded-md border border-[#f25e36]/20 uppercase tracking-wider font-black">Beta</span>
-                  </Link>
+                  {user && (
+                    <Link 
+                      href="/dashboard" 
+                      className="block text-lg font-bold text-[#f25e36] hover:text-[#d94a24] transition-colors py-2"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+                  )}
                   
                   <Link 
                     href="#faq" 

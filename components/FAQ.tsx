@@ -5,7 +5,7 @@ import { ChevronDown } from 'lucide-react';
 const faqs = [
   {
     question: "How does RedLeads work?",
-    answer: "RedLeads uses AI to monitor relevant subreddits for conversations about your product or competitors. It then analyzes these posts for purchase intent and organizes high-potential leads in your dashboard."
+    answer: "RedLeads uses AI to monitor relevant subreddits for conversations about your product and competitors which are publicly available. We then analyzes these posts for purchase intent and organizes high-potential leads in your dashboard."
   },
   {
     question: "What is RedLeads?",

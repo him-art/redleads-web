@@ -5,7 +5,9 @@ import DashboardClient from './DashboardClient';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
-export default async function DashboardPage() {
+export default async function DashboardPage(props: { searchParams: Promise<{ search?: string }> }) {
+    const searchParams = await props.searchParams;
+    const initialSearch = searchParams.search || '';
     const supabase = await createClient();
 
     const { data: { user } } = await supabase.auth.getUser();
@@ -38,6 +40,7 @@ export default async function DashboardPage() {
                         profile={profile} 
                         reports={reports || []} 
                         user={user}
+                        initialSearch={initialSearch}
                     />
                 </div>
             </div>

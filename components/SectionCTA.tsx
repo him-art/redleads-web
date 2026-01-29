@@ -1,7 +1,10 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/client';
+import { type User as SupabaseUser } from '@supabase/supabase-js';
 
 interface SectionCTAProps {
   title?: string;
@@ -14,8 +17,14 @@ export default function SectionCTA({
   buttonText = "Join now", 
   href = "/join" 
 }: SectionCTAProps) {
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const supabase = createClient();
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => setUser(user));
+  }, []);
   return (
-    <section className="pt-16 pb-24 bg-[#1a1a1a]">
+    <section className="pt-16 pb-24 bg-[#1a1a1a] border-t border-white/5">
       <div className="max-w-7xl mx-auto px-6">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -28,19 +37,13 @@ export default function SectionCTA({
             {title}
           </h2>
           
-          <div className="flex flex-col sm:flex-row items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center">
             <Link 
-              href={href}
-              className="px-10 py-5 bg-[#f25e36] text-white rounded-3xl text-lg font-bold shadow-2xl shadow-orange-500/40 hover:bg-[#d94a24] hover:scale-105 active:scale-95 transition-all text-center min-w-[200px]"
+              href={user ? "/dashboard" : "/login?next=/dashboard"}
+              className="px-10 py-5 bg-[#f25e36] text-white rounded-3xl text-lg font-bold shadow-2xl shadow-orange-500/40 hover:bg-[#d94a24] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 group text-center min-w-[220px]"
             >
-              {buttonText}
-            </Link>
-            <Link 
-              href="/scanner"
-              className="px-10 py-5 bg-white border-2 border-slate-200 text-slate-900 rounded-3xl text-lg font-bold shadow-xl hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 group text-center min-w-[200px]"
-            >
-              Try Free Scanner
-              <span className="text-xs px-2 py-0.5 bg-orange-500/10 text-orange-600 rounded-full border border-orange-500/20 group-hover:bg-orange-500/20 transition-colors">Beta</span>
+              Start Free Trial
+              <span className="text-xs px-2 py-0.5 bg-white/10 text-white rounded-full border border-white/20 group-hover:bg-white/20 transition-colors">PRO</span>
             </Link>
           </div>
         </motion.div>

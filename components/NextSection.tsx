@@ -60,10 +60,10 @@ export default function NextSection() {
             </div>
             
             <Link
-              href="/join"
+              href="/dashboard"
               className="group relative px-10 py-5 bg-orange-500 text-white hover:bg-orange-600 rounded-2xl font-bold text-lg transition-all duration-300 inline-flex items-center gap-3 overflow-hidden shadow-2xl shadow-orange-500/20"
             >
-              Join now
+              Start Now
               <ArrowUpRight className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
             </Link>
           </div>

@@ -30,10 +30,9 @@ const Footer = () => {
             <div className="flex flex-col gap-4">
                <h3 className="font-bold text-gray-500 text-[10px] tracking-widest uppercase">Useful</h3>
                <Link href="/#how-it-works" className="text-gray-400 hover:text-white transition-colors">How it Works</Link>
-               <Link href="/scanner" className="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5">
-                  Scanner
-                  <span className="text-[9px] px-1 py-0.5 bg-white/10 text-white/60 rounded border border-white/10">BETA</span>
-               </Link>
+                <Link href="/dashboard" className="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5">
+                   Dashboard
+                </Link>
             </div>
              {/* LEGAL */}
             <div className="flex flex-col gap-4">

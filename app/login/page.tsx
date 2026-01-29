@@ -8,7 +8,7 @@ export default async function LoginPage() {
   
   // If already logged in, go to scanner
   if (session) {
-    redirect('/scanner');
+    redirect('/dashboard');
   }
   
   return <LoginForm />;

@@ -10,3 +10,7 @@ export const dodo = new DodoPayments({
 
 // Test mode flag - set to true for development
 export const isTestMode = process.env.NODE_ENV !== 'production';
+
+// Public Beta Mode Configuration
+export const BETA_MODE = process.env.NEXT_PUBLIC_BETA_MODE === 'true';
+export const BETA_SEAT_LIMIT = 20;

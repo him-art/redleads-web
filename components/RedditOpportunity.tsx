@@ -34,7 +34,7 @@ const Card = ({ title, description, children, delay }: { title: string, descript
 
 export default function RedditOpportunity() {
   return (
-    <section className="py-24 bg-[#1a1a1a]">
+    <section className="py-24 bg-[#1a1a1a] border-t border-white/5">
       <div className="max-w-7xl mx-auto px-6">
         
         {/* Section Heading */}

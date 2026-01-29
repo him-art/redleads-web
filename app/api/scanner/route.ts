@@ -54,51 +54,55 @@ export async function POST(req: Request) {
             const hashIP = crypto.createHash('sha256').update(remoteIP).digest('hex');
             
             let isPro = false;
+            let isInTrial = false;
 
-            if (user) {
-                const { data: profile } = await supabase
-                    .from('user_access_status')
-                    .select('daily_scan_count, last_scan_at, effective_tier')
-                    .eq('id', user.id)
-                    .single();
-                
-                isPro = profile?.effective_tier === 'pro';
-                
-                if (!isPro) {
-                    const today = new Date().toDateString();
-                    const lastDay = profile?.last_scan_at ? new Date(profile.last_scan_at).toDateString() : '';
-                    const countUsed = today === lastDay ? (profile?.daily_scan_count || 0) : 0;
-
-                    if (countUsed >= 5) return NextResponse.json({ 
-                        error: 'Daily limit reached for free account.', 
-                        code: 'DAILY_LIMIT_REACHED' 
-                    }, { status: 403 });
-
-                    await supabase.from('profiles').update({ 
-                        daily_scan_count: countUsed + 1,
-                        last_scan_at: new Date().toISOString()
-                    }).eq('id', user.id);
-                }
-            } else {
-                const adminKey = process.env.SUPABASE_SERVICE_ROLE_KEY || keySB;
-                const admin = createServerClient(urlSB, adminKey!, { cookies: { get: () => undefined, set: () => {}, remove: () => {} } });
-                const { data: anon } = await admin.from('anon_usage').select('daily_scan_count, last_scan_at').eq('ip_hash', hashIP).single();
-                
-                const today = new Date().toDateString();
-                const lastDay = anon?.last_scan_at ? new Date(anon.last_scan_at).toDateString() : '';
-                const countUsed = today === lastDay ? (anon?.daily_scan_count || 0) : 0;
-
-                if (countUsed >= 1) return NextResponse.json({ 
-                    error: 'Free demo scan used. Sign in to continue!', 
-                    code: 'DAILY_LIMIT_REACHED' 
-                }, { status: 403 });
-
-                if (anon) {
-                    await admin.from('anon_usage').update({ daily_scan_count: countUsed + 1, last_scan_at: new Date().toISOString() }).eq('ip_hash', hashIP);
-                } else {
-                    await admin.from('anon_usage').insert({ ip_hash: hashIP, daily_scan_count: 1, last_scan_at: new Date().toISOString() });
-                }
+            if (!user) {
+                return NextResponse.json({ 
+                    error: 'Authentication required. Please sign in to start your free trial.', 
+                    code: 'AUTH_REQUIRED' 
+                }, { status: 401 });
             }
+
+            const { data: profile } = await supabase
+                .from('user_access_status')
+                .select('scan_count, last_scan_at, effective_tier, trial_ends_at')
+                .eq('id', user.id)
+                .single();
+            
+            isPro = profile?.effective_tier === 'pro';
+            
+            // Get trial status from profile
+            const trialEndsAt = profile?.trial_ends_at;
+            isInTrial = trialEndsAt ? new Date(trialEndsAt) > new Date() : false;
+
+            if (!(isPro || isInTrial)) {
+                return NextResponse.json({ 
+                    error: 'Your trial has ended. Please upgrade to Pro to continue finding leads.', 
+                    code: 'PAYWALL_REQUIRED' 
+                }, { status: 403 });
+            }
+
+            const today = new Date().toDateString();
+            const lastDay = profile?.last_scan_at ? new Date(profile.last_scan_at).toDateString() : '';
+            
+            // PRO = 5 per day | TRIAL = 5 total
+            let currentCount = profile?.scan_count || 0;
+            if (isPro) {
+                // If Pro, reset if it's a new day
+                currentCount = (today === lastDay) ? (profile?.scan_count || 0) : 0;
+            }
+            
+            if (currentCount >= 5) {
+                const msg = isPro 
+                    ? 'Daily scan limit (5) reached. Check back tomorrow!' 
+                    : 'You have used all 5 trial scans. Upgrade to Pro for 5 fresh scans every day!';
+                return NextResponse.json({ error: msg, code: 'DAILY_LIMIT_REACHED' }, { status: 403 });
+            }
+
+            await supabase.from('profiles').update({ 
+                scan_count: currentCount + 1,
+                last_scan_at: new Date().toISOString()
+            }).eq('id', user.id);
 
             const scanResult = await performScan(url, {
                 tavilyApiKey: process.env.TAVILY_API_KEY
@@ -109,15 +113,37 @@ export async function POST(req: Request) {
                 return NextResponse.json({ error: scanResult.error }, { status: 500 });
             }
 
-            // TEASER LOGIC: Only return top 3 leads if not PRO
-            const originalCount = scanResult.leads?.length || 0;
-            if (!isPro && originalCount > 3) {
-                scanResult.leads = scanResult.leads.slice(0, 3);
-                (scanResult as any).isTeaser = true;
-                (scanResult as any).totalFound = originalCount;
+            console.log(`[Scanner API] Scan completed. Found ${scanResult.leads?.length || 0} leads.`);
+
+            // PERSISTENCE LOGIC: If the user is Pro or in Trial, save these leads to their dashboard!
+            if (user && (isPro || isInTrial)) {
+                try {
+                    const leadsToSave = scanResult.leads.map((lead: any) => ({
+                        user_id: user.id,
+                        title: lead.title,
+                        subreddit: lead.subreddit,
+                        url: lead.url,
+                        status: 'scanner',
+                        match_score: 95, // Scanner leads are high-intent
+                        is_saved: false
+                    }));
+
+                    if (leadsToSave.length > 0) {
+                        const { error: insertError } = await supabase
+                            .from('monitored_leads')
+                            .insert(leadsToSave);
+                        
+                        if (insertError) {
+                            console.error('[Scanner API] Persistence failed:', insertError.message);
+                        } else {
+                            console.log(`[Scanner API] Persisted ${leadsToSave.length} leads to monitored_leads.`);
+                        }
+                    }
+                } catch (persistErr: any) {
+                    console.error('[Scanner API] Lead persistence catch:', persistErr.message);
+                }
             }
 
-            console.log(`[Scanner API] Scan completed. Found ${scanResult.leads?.length || 0} leads.`);
             return NextResponse.json(scanResult);
         }
 

@@ -30,11 +30,11 @@ export async function performScan(url: string, options: ScannerOptions): Promise
             Focus Subreddits: ${subreddits?.join(', ') || 'General Reddit'}
             
             Generate 1 ADVANCED and HIGH-INTENT search query for "site:reddit.com" that a professional lead hunter would use.
-            The query MUST include the current year "2025" or "2024" to ensure results are RECENT.
+            The query MUST include the current year "2026" or "2025" to ensure results are RECENT.
             Combine intent signals like (recommend OR "best" OR "alternative to" OR "how to" OR "problem with").
             If focus subreddits are provided, try to target them using "site:reddit.com/r/subredditname".
             
-            Example: site:reddit.com/r/SaaS "outreach" (recommend OR "best" OR "tool") 2025
+            Example: site:reddit.com/r/SaaS "outreach" (recommend OR "best" OR "tool") 2026
             
             ONLY return the query string, nothing else. No quotes, no intro text.
         `;

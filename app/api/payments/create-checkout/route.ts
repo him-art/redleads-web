@@ -52,7 +52,46 @@ export async function POST(req: Request) {
 
         const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
-        // 5. Create Dodo Checkout Session
+        // 5. Public Beta Mode Logic
+        if (require('@/lib/dodo').BETA_MODE) {
+            // Check current beta user count
+            const { count } = await supabase
+                .from('profiles')
+                .select('*', { count: 'exact', head: true })
+                .eq('is_beta_user', true);
+
+            const limit = require('@/lib/dodo').BETA_SEAT_LIMIT;
+            
+            if (count !== null && count >= limit) {
+                return NextResponse.json({ error: 'Beta is full! Sign up for the waitlist.' }, { status: 403 });
+            }
+
+            // Parse survey responses
+            const body = await req.json().catch(() => ({}));
+            const { surveyResponses } = body;
+
+            if (!surveyResponses || Object.keys(surveyResponses).length === 0) {
+                return NextResponse.json({ error: 'Please complete the survey to unlock Beta access.' }, { status: 400 });
+            }
+
+            // Upgrade user to Pro for free and save survey data
+            await supabase
+                .from('profiles')
+                .update({ 
+                    subscription_tier: 'pro',
+                    is_beta_user: true,
+                    beta_survey_responses: surveyResponses
+                })
+                .eq('id', user.id);
+
+            return NextResponse.json({ 
+                beta_success: true,
+                message: 'Welcome to the inner circle! You are officially in the Beta.',
+                redirect_url: `${siteUrl}/dashboard?payment=success&beta=true`
+            });
+        }
+
+        // 6. Create Dodo Checkout Session (Standard Flow)
         const session = await dodo.subscriptions.create({
             billing: {
                 city: 'Unknown',

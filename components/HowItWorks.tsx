@@ -44,9 +44,9 @@ const HowItWorks = () => {
               </div>
 
               <div className="mt-auto">
-                <h3 className="text-xl font-bold text-white mb-3">Upload your Website</h3>
+                <h3 className="text-xl font-bold text-white mb-3">Upload your project</h3>
                 <p className="text-gray-300 text-sm leading-relaxed">
-                  Type in your website and RedLeads will instantly learn your brand, tone of voice and key offering.
+                  Type in your website and description. RedLeads finds relevent subreddits and keywords for you.
                 </p>
               </div>
             </div>
@@ -69,7 +69,7 @@ const HowItWorks = () => {
               </div>
 
               <div className="mt-auto">
-                <h3 className="text-xl font-bold text-white mb-3">We Prepare Content</h3>
+                <h3 className="text-xl font-bold text-white mb-3">We Find Content</h3>
                 <p className="text-gray-300 text-sm leading-relaxed">
                   RedLeads finds the best leads, pain points and opportunities for your SaaS.
                 </p>

@@ -1,8 +1,6 @@
-'use client';
-
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Radar, ExternalLink, Clock, MoreHorizontal, Bookmark } from 'lucide-react';
+import { Activity, ExternalLink, Clock, Navigation, Bookmark, ChevronRight } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 interface MonitoredLead {
@@ -22,7 +20,6 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
     const supabase = createClient();
 
     useEffect(() => {
-        // 1. Initial Fetch
         const fetchLeads = async () => {
             const { data, error } = await supabase
                 .from('monitored_leads')
@@ -39,7 +36,6 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
 
         fetchLeads();
 
-        // 2. Real-time Subscription
         const channel = supabase
             .channel('live-leads')
             .on(
@@ -64,73 +60,94 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
 
     if (isLoading) {
         return (
-            <div className="flex flex-col items-center justify-center py-20 space-y-4">
-                <Radar className="animate-spin text-orange-500/20" size={48} />
-                <p className="text-gray-500 font-medium animate-pulse">Scanning the horizon...</p>
+            <div className="flex flex-col items-center justify-center py-24 space-y-6">
+                <div className="relative">
+                    <div className="w-12 h-12 border border-orange-500/10 border-t-orange-500 rounded-full animate-spin" />
+                    <Activity className="absolute inset-0 m-auto text-orange-500/50 animate-pulse" size={16} />
+                </div>
+                <p className="text-[9px] font-black uppercase tracking-[0.4em] text-gray-500">Syncing Stream</p>
             </div>
         );
     }
 
     return (
-        <div className="space-y-6">
-            <div className="border border-white/10 rounded-[2rem] overflow-hidden bg-black/40">
-                {/* Attached Header */}
-                <div className="flex items-center justify-between p-6 bg-white/[0.02] border-b border-white/5">
-                    <div className="flex items-center gap-3">
-                        <Radar className="text-orange-500" size={18} />
-                        <h3 className="text-sm font-black uppercase tracking-widest text-white">Live Lead Stream</h3>
-                        <span className="bg-white/10 text-[10px] px-2 py-0.5 rounded-full text-gray-500 font-bold">RECENT</span>
-                    </div>
-                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
-                </div>
-
-                <div className="bg-black/20">
-                    <AnimatePresence mode="popLayout">
-                        {leads.length > 0 ? (
-                            leads.map((lead) => (
+        <div className="space-y-4">
+            <div className="rounded-3xl overflow-hidden border border-white/5 bg-white/[0.02] backdrop-blur-md relative">
+                {/* Subtle Edge Glow */}
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none" />
+                
+                {leads.length > 0 ? (
+                    <div className="divide-y divide-white/[0.03]">
+                        <AnimatePresence mode="popLayout" initial={false}>
+                            {leads.map((lead) => (
                                 <motion.div
                                     key={lead.id}
                                     layout
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, scale: 0.9 }}
-                                    className="p-5 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors flex gap-4 group"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.98 }}
+                                    transition={{ type: "spring", stiffness: 500, damping: 40 }}
+                                    className="relative group flex items-start gap-5 p-6 hover:bg-white/[0.03] transition-all duration-300"
                                 >
-                                    <div className="flex-grow space-y-1 overflow-hidden">
-                                        <div className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-500">
-                                            <span className="text-orange-500">r/{lead.subreddit}</span>
-                                            <span>•</span>
-                                            <span className="flex items-center gap-1">
+                                    {/* Minimal Match Score Track */}
+                                    <div className="flex flex-col items-center gap-2 pt-1 h-full">
+                                        <div className="w-1.5 h-10 bg-white/5 rounded-full overflow-hidden relative">
+                                            <motion.div 
+                                                initial={{ height: 0 }}
+                                                animate={{ height: `${lead.match_score * 100}%` }}
+                                                className={`absolute bottom-0 w-full rounded-full transition-colors duration-500 ${
+                                                    lead.match_score > 0.8 ? 'bg-orange-500/60' : lead.match_score > 0.5 ? 'bg-orange-500/30' : 'bg-gray-700'
+                                                }`}
+                                            />
+                                        </div>
+                                        <span className="text-[8px] font-mono font-bold text-gray-700 group-hover:text-orange-500/40 transition-colors">
+                                            {Math.round(lead.match_score * 100)}%
+                                        </span>
+                                    </div>
+
+                                    <div className="flex-grow space-y-2.5 overflow-hidden">
+                                        <div className="flex items-center gap-2.5">
+                                            <span className="text-[9px] font-black text-orange-500/80 bg-orange-500/5 px-2.5 py-1 rounded-full uppercase tracking-widest border border-orange-500/10">
+                                                r/{lead.subreddit}
+                                            </span>
+                                            <div className="flex items-center gap-1.5 text-[9px] font-bold text-gray-600 uppercase tracking-widest">
                                                 <Clock size={10} />
                                                 {new Date(lead.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                            </span>
+                                            </div>
                                         </div>
+                                        
                                         <a 
                                             href={lead.url} 
                                             target="_blank" 
                                             rel="noopener noreferrer" 
-                                            className="block text-sm font-medium text-gray-200 group-hover:text-white leading-snug line-clamp-2"
+                                            className="block text-sm font-bold text-gray-300 group-hover:text-white leading-relaxed tracking-tight transition-all"
                                         >
                                             {lead.title}
                                         </a>
+
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex items-center gap-1.5">
+                                                <div className="w-1 h-1 rounded-full bg-green-500/40" />
+                                                <span className="text-[8px] font-black text-gray-700 uppercase tracking-widest leading-none">High Intent</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center gap-2 shrink-0">
+
+                                    <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300">
                                         <button 
-                                            onClick={async () => {
+                                            onClick={async (e) => {
+                                                e.preventDefault();
                                                 const newStatus = !lead.is_saved;
-                                                // Optimistic UI update
                                                 setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, is_saved: newStatus } : l));
                                                 const { error } = await supabase.from('monitored_leads').update({ is_saved: newStatus }).eq('id', lead.id);
                                                 if (error) {
-                                                    console.error('Error saving lead:', error);
                                                     setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, is_saved: !newStatus } : l));
-                                                    alert('Failed to save lead. Check console for details.');
                                                 }
                                             }}
-                                            className={`p-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 ${
+                                            className={`p-2.5 rounded-xl transition-all duration-200 ${
                                                 lead.is_saved 
-                                                    ? 'opacity-100 bg-orange-500 text-white' 
-                                                    : 'bg-white/5 text-gray-500 hover:text-white hover:bg-orange-500/20'
+                                                    ? 'bg-orange-500 text-black shadow-lg shadow-orange-500/20 scale-105' 
+                                                    : 'bg-white/5 text-gray-500 hover:text-white hover:bg-white/10'
                                             }`}
                                         >
                                             <Bookmark size={14} fill={lead.is_saved ? "currentColor" : "none"} />
@@ -139,33 +156,39 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
                                             href={lead.url} 
                                             target="_blank" 
                                             rel="noopener noreferrer"
-                                            className="p-2 rounded-lg bg-white/5 text-gray-500 hover:text-white hover:bg-orange-500 transition-all opacity-0 group-hover:opacity-100"
+                                            className="p-2.5 rounded-xl bg-white/5 text-gray-500 hover:text-white hover:bg-white/10 transition-all duration-200"
                                         >
                                             <ExternalLink size={14} />
                                         </a>
                                     </div>
                                 </motion.div>
-                            ))
-                        ) : (
-                            <div className="py-20 text-center">
-                                <Radar className="mx-auto text-gray-700 mb-4 animate-pulse" size={40} />
-                                <h4 className="text-gray-400 font-bold mb-1">Scanning for leads...</h4>
-                                <p className="text-xs text-gray-600 max-w-[200px] mx-auto">
-                                    Your Sentinel is active and looking for matches.
-                                </p>
-                            </div>
-                        )}
-                    </AnimatePresence>
-                </div>
+                            ))}
+                        </AnimatePresence>
+                    </div>
+                ) : (
+                    <div className="py-24 text-center space-y-4">
+                        <div className="relative inline-block">
+                            <Activity className="mx-auto text-gray-800/50" size={32} />
+                            <div className="absolute inset-0 bg-orange-500/5 blur-xl rounded-full" />
+                        </div>
+                        <div className="space-y-1">
+                            <h4 className="text-gray-500 font-black text-xs tracking-[0.2em] uppercase">Stream Standby</h4>
+                            <p className="text-[9px] text-gray-600 max-w-[240px] mx-auto leading-relaxed uppercase font-black tracking-widest">
+                                System monitoring communities
+                            </p>
+                        </div>
+                    </div>
+                )}
             </div>
 
             {leads.length > 0 && (
                 <button 
                     onClick={onViewArchive}
-                    className="w-full py-4 bg-white/[0.02] border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white hover:bg-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"
+                    className="w-full py-4 group flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-widest text-gray-600 hover:text-white transition-all border border-white/5 rounded-2xl hover:bg-white/[0.02]"
                 >
-                    <MoreHorizontal size={14} />
-                    View Archived History
+                    <Navigation size={12} className="rotate-90 text-gray-700 group-hover:text-orange-500 transition-colors" />
+                    Open Observation Archive
+                    <ChevronRight size={12} className="opacity-0 group-hover:opacity-100 transition-all -translate-x-1 group-hover:translate-x-0" />
                 </button>
             )}
         </div>

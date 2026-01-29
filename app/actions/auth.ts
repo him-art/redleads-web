@@ -20,7 +20,7 @@ export async function signInWithEmail(formData: FormData): Promise<{ error: stri
   }
 
   revalidatePath('/', 'layout');
-  redirect('/scanner');
+  redirect('/dashboard');
 }
 
 export async function signUpWithEmail(formData: FormData): Promise<{ error?: string; success?: string }> {
@@ -47,7 +47,7 @@ export async function signUpWithEmail(formData: FormData): Promise<{ error?: str
   // With "Confirm Email" disabled, data.user or data.session will be present immediately.
   console.log('Signup successful, redirecting to scanner');
   revalidatePath('/', 'layout');
-  redirect('/scanner');
+  redirect('/dashboard');
 }
 
 export async function signInWithGoogle() {
