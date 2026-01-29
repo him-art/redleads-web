@@ -44,9 +44,9 @@ const HowItWorks = () => {
               </div>
 
               <div className="mt-auto">
-                <h3 className="text-xl font-bold text-white mb-3">Upload your project</h3>
+                <h3 className="text-xl font-bold text-white mb-3">Define Your Target</h3>
                 <p className="text-gray-300 text-sm leading-relaxed">
-                  Type in your website and description. RedLeads finds relevent subreddits and keywords for you.
+                  Enter your website and target audience. RedLeads automatically maps out highly relevant subreddits and potential customer keywords.
                 </p>
               </div>
             </div>
@@ -69,9 +69,9 @@ const HowItWorks = () => {
               </div>
 
               <div className="mt-auto">
-                <h3 className="text-xl font-bold text-white mb-3">We Find Content</h3>
+                <h3 className="text-xl font-bold text-white mb-3">AI Identifies Leads</h3>
                 <p className="text-gray-300 text-sm leading-relaxed">
-                  RedLeads finds the best leads, pain points and opportunities for your SaaS.
+                  Our advanced AI monitors 24/7 to find high-intent conversations, surface pain points, and score every lead based on buying signals.
                 </p>
               </div>
             </div>

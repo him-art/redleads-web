@@ -9,7 +9,7 @@ const features = [
   {
     icon: Target,
     title: "Intent Scoring",
-    description: "Stop guessing. Every lead is scored on a 1-10 scale based on purchase intent, so you can prioritize your outreach.",
+    description: "Every lead is analyzed and scored on a 1-10 scale based on actual purchase intent and buying signals, not just keywords.",
   },
   {
     icon: Bot,
@@ -23,8 +23,8 @@ const features = [
   },
   {
     icon: Zap,
-    title: "Real-Time Monitoring",
-    description: "Be the first to reply. We monitor subreddits 24/7 and alert you the moment a relevant conversation starts.",
+    title: "24/7 Monitoring",
+    description: "Be the first to reply. We monitor subreddits around the clock and alert you the second a relevant conversation starts.",
   },
   {
     icon: User,

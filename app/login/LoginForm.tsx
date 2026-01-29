@@ -5,13 +5,21 @@ import Link from 'next/link';
 import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import { signInWithEmail, signUpWithEmail, signInWithGoogle } from '../actions/auth';
 
-export default function LoginForm() {
+export default function LoginForm({ 
+  next = '/dashboard', 
+  search = '' 
+}: { 
+  next?: string; 
+  search?: string; 
+}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  const redirectTo = search ? `${next}?search=${encodeURIComponent(search)}` : next;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,6 +30,7 @@ export default function LoginForm() {
     const formData = new FormData();
     formData.append('email', email);
     formData.append('password', password);
+    formData.append('redirectTo', redirectTo);
 
     let result;
     try {
@@ -54,7 +63,7 @@ export default function LoginForm() {
     setLoading(true);
     setError(null);
     try {
-      await signInWithGoogle();
+      await signInWithGoogle(redirectTo);
     } catch (err: any) {
       if (err?.message === 'NEXT_REDIRECT') {
         return;

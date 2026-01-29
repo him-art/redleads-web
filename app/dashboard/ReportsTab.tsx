@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Calendar, ChevronDown, ExternalLink, Clock, Radar, Bookmark, Trash2 } from 'lucide-react';
+import { Calendar, ChevronDown, ExternalLink, Clock, Radar, Bookmark, Trash2, Brain, Sparkles } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 interface MonitoredLead {
@@ -15,9 +15,17 @@ interface MonitoredLead {
     is_saved?: boolean;
 }
 
+interface LeadAnalysis {
+    id: string;
+    content: string;
+    created_at: string;
+    lead_ids: string[];
+}
+
 export default function ReportsTab({ reports, profile }: { reports: any[], profile: any }) {
     const [filter, setFilter] = useState<'all' | 'saved'>('all');
     const [historyLeads, setHistoryLeads] = useState<MonitoredLead[]>([]);
+    const [leadAnalyses, setLeadAnalyses] = useState<LeadAnalysis[]>([]);
     const [expandedDay, setExpandedDay] = useState<string | null>(null);
 
     const supabase = createClient();
@@ -34,8 +42,22 @@ export default function ReportsTab({ reports, profile }: { reports: any[], profi
             
             if (data) setHistoryLeads(data);
         };
+
+        const fetchAnalyses = async () => {
+            const { data } = await supabase
+                .from('lead_analyses')
+                .select('*')
+                .eq('user_id', profile.id)
+                .order('created_at', { ascending: false })
+                .limit(5);
+            
+            if (data) setLeadAnalyses(data);
+        };
         
-        if (profile?.id) fetchHistory();
+        if (profile?.id) {
+            fetchHistory();
+            fetchAnalyses();
+        }
     }, [profile, supabase]);
 
     // Filter and Group leads by date
@@ -104,6 +126,47 @@ export default function ReportsTab({ reports, profile }: { reports: any[], profi
                         <div className="w-px h-4 bg-white/10" />
                         <div>Focusing on <b>{profile?.keywords?.length || 0}</b> keywords</div>
                      </div>
+                )}
+
+                {/* SaaS 2.0: Actionable Intelligence Section */}
+                {leadAnalyses.length > 0 && (
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-2 px-2">
+                            <Sparkles size={14} className="text-orange-500" />
+                            <h3 className="text-[10px] font-black uppercase tracking-widest text-gray-500">High-Intent Intelligence</h3>
+                        </div>
+                        <div className="grid grid-cols-1 gap-4">
+                            {leadAnalyses.map((analysis) => (
+                                <div key={analysis.id} className="relative overflow-hidden bg-white/[0.02] border border-white/10 rounded-3xl p-6 group transition-all hover:border-orange-500/30">
+                                    <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-10 transition-opacity">
+                                        <Brain size={80} className="text-white" />
+                                    </div>
+                                    <div className="relative z-10 space-y-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-2xl bg-orange-500/10 flex items-center justify-center border border-orange-500/20">
+                                                <Brain size={20} className="text-orange-500" />
+                                            </div>
+                                            <div>
+                                                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-orange-500/60">Neural Synthesis</p>
+                                                <h4 className="text-sm font-black text-white uppercase tracking-tight">Pattern Analysis</h4>
+                                            </div>
+                                        </div>
+                                        <div className="text-sm text-gray-300 leading-relaxed font-medium whitespace-pre-wrap">
+                                            {analysis.content}
+                                        </div>
+                                        <div className="flex items-center gap-3 pt-2">
+                                            <div className="px-3 py-1.5 rounded-full bg-white/5 border border-white/5 text-[9px] font-black text-gray-500 uppercase tracking-widest">
+                                                {analysis.lead_ids.length} Leads Analyzed
+                                            </div>
+                                            <div className="px-3 py-1.5 rounded-full bg-white/5 border border-white/5 text-[9px] font-black text-gray-500 uppercase tracking-widest">
+                                                {new Date(analysis.created_at).toLocaleDateString()}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 )}
 
                 {Object.keys(groupedLeads).length === 0 ? (

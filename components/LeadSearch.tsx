@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Globe, Search, Compass, ExternalLink, Lock, Loader2, ChevronDown, Activity } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { type User as SupabaseUser } from '@supabase/supabase-js';
 
@@ -19,9 +20,10 @@ interface LeadSearchProps {
     isDashboardView?: boolean;
     initialUrl?: string;
     onShowModal?: () => void;
+    onResultsFound?: (count: number) => void;
 }
 
-export default function LeadSearch({ user, isDashboardView = false, initialUrl = '', onShowModal }: LeadSearchProps) {
+export default function LeadSearch({ user, isDashboardView = false, initialUrl = '', onShowModal, onResultsFound }: LeadSearchProps) {
     const [url, setUrl] = useState(initialUrl);
     const [isScanning, setIsScanning] = useState(false);
     const [scanStep, setScanStep] = useState(0);
@@ -29,6 +31,21 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
     const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
     const [teaserInfo, setTeaserInfo] = useState<{ isTeaser: boolean, totalFound: number } | null>(null);
     const supabase = createClient();
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
+    // Auto-scan if initialUrl is provided
+    useEffect(() => {
+        if (initialUrl && !isScanning && results.length === 0) {
+            handleScan(null as any);
+            
+            // Consume the URL parameter so it doesn't re-trigger on refresh
+            const params = new URLSearchParams(searchParams.toString());
+            params.delete('search');
+            const newQuery = params.toString();
+            router.replace(`/dashboard${newQuery ? `?${newQuery}` : ''}`, { scroll: false });
+        }
+    }, [initialUrl]);
 
     const scanSteps = [
         "Analyzing target business model...",
@@ -57,6 +74,38 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
         setIsScanning(true);
         setScanStep(0);
         setResults([]);
+
+        // 1. Check Cache
+        const CACHE_KEY = `rl_cache_${normalizedUrl}`;
+        const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+        const cached = localStorage.getItem(CACHE_KEY);
+        
+        if (cached) {
+            try {
+                const { timestamp, data } = JSON.parse(cached);
+                if (Date.now() - timestamp < CACHE_TTL) {
+                    console.log(`[Cache] Using cached results for ${normalizedUrl}`);
+                    
+                    // Simulate a short "smart" analysis feel even with cache
+                    setScanStep(0);
+                    setTimeout(() => setScanStep(2), 400);
+                    setTimeout(() => setScanStep(4), 800);
+                    
+                    setTimeout(() => {
+                        setResults(data.leads || []);
+                        setTeaserInfo(data.isTeaser ? { isTeaser: true, totalFound: data.totalFound } : null);
+                        onResultsFound?.(data.leads?.length || 0);
+                        if (data.leads?.length > 0) {
+                            setOpenGroups({ 'High': true, 'Medium': true });
+                        }
+                        setIsScanning(false);
+                    }, 1200);
+                    return;
+                }
+            } catch (e) {
+                localStorage.removeItem(CACHE_KEY);
+            }
+        }
 
         const scannerPromise = fetch('/api/scanner', {
             method: 'POST',
@@ -90,9 +139,19 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                     relevance: Math.random() > 0.4 ? 'High' : 'Medium',
                 }));
                 setResults(enrichedLeads);
+                onResultsFound?.(enrichedLeads.length);
                 if (enrichedLeads.length > 0) {
                     setOpenGroups({ 'High': true, 'Medium': true });
                 }
+
+                // Store in Cache
+                localStorage.setItem(CACHE_KEY, JSON.stringify({
+                    timestamp: Date.now(),
+                    data: {
+                        ...data,
+                        leads: enrichedLeads
+                    }
+                }));
             }
         } catch (error: any) {
             console.error(error);

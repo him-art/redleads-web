@@ -20,7 +20,8 @@ export async function signInWithEmail(formData: FormData): Promise<{ error: stri
   }
 
   revalidatePath('/', 'layout');
-  redirect('/dashboard');
+  const redirectTo = formData.get('redirectTo') as string || '/dashboard';
+  redirect(redirectTo);
 }
 
 export async function signUpWithEmail(formData: FormData): Promise<{ error?: string; success?: string }> {
@@ -47,17 +48,18 @@ export async function signUpWithEmail(formData: FormData): Promise<{ error?: str
   // With "Confirm Email" disabled, data.user or data.session will be present immediately.
   console.log('Signup successful, redirecting to scanner');
   revalidatePath('/', 'layout');
-  redirect('/dashboard');
+  const redirectTo = formData.get('redirectTo') as string || '/dashboard';
+  redirect(redirectTo);
 }
 
-export async function signInWithGoogle() {
+export async function signInWithGoogle(redirectTo?: string) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || (await headers()).get('origin');
   const supabase = await createClient();
   
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${siteUrl}/auth/callback`,
+      redirectTo: `${siteUrl}/auth/callback${redirectTo ? `?next=${encodeURIComponent(redirectTo)}` : ''}`,
     },
   });
 

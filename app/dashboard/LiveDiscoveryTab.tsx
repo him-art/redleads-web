@@ -21,6 +21,7 @@ export default function LiveDiscoveryTab({
     const [isUpgrading, setIsUpgrading] = useState(false);
     const supabase = createClient();
     const router = useRouter();
+    const [hasResults, setHasResults] = useState(false);
     
     const isPro = profile?.subscription_tier === 'pro' || profile?.effective_tier === 'pro';
     const trialEndsAt = profile?.trial_ends_at;
@@ -77,43 +78,12 @@ export default function LiveDiscoveryTab({
     };
 
     return (
-        <section className="space-y-12 max-w-6xl mx-auto">
+        <section className="space-y-4 max-w-6xl mx-auto">
             {/* 1. Header Area with Sentinel Status & Actions */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/5 pb-10">
-                <div className="space-y-1">
-                    <div className="flex items-center gap-2 mb-2">
-                        <Navigation className="text-orange-500" size={18} />
-                        <h1 className="text-3xl font-bold tracking-tight text-white">Command Center</h1>
-                    </div>
-                    <p className="text-gray-500 text-sm max-w-md leading-relaxed font-medium">
-                        Autonomous monitoring activity across your target communities. 
-                        Live leads are surfaced as they happen.
-                    </p>
-                </div>
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/5 pb-4">
+                
 
                 <div className="flex flex-wrap items-center gap-3">
-                    {/* Sentinel Status Pill */}
-                    <div className={`px-4 py-2 rounded-full border flex items-center gap-2 transition-all duration-500 font-black uppercase tracking-widest text-[10px] ${
-                        canSeeLiveFeed && isSetupComplete 
-                            ? 'bg-orange-500/10 border-orange-500/20 text-orange-500' 
-                            : !isSetupComplete && canSeeLiveFeed
-                                ? 'bg-white/5 border-orange-500/30 text-orange-500 animate-pulse'
-                                : 'bg-white/5 border-white/10 text-gray-400'
-                    }`}>
-                        <div className={`w-1.5 h-1.5 rounded-full ${
-                            canSeeLiveFeed && isSetupComplete 
-                                ? 'bg-orange-500 animate-pulse' 
-                                : !isSetupComplete && canSeeLiveFeed
-                                    ? 'bg-orange-500'
-                                    : 'bg-gray-600'
-                        }`} />
-                        <span>
-                            {canSeeLiveFeed 
-                                ? isSetupComplete ? 'Sentinel Active' : 'Setup Required' 
-                                : 'Sentinel Standby'}
-                        </span>
-                    </div>
-
                     {!isSetupComplete && canSeeLiveFeed && (
                         <button 
                             onClick={() => onNavigate('settings')}
@@ -131,9 +101,10 @@ export default function LiveDiscoveryTab({
                 </div>
             </div>
 
-            {/* 2. Spotlight Quick Scan */}
             <div className="relative group">
-                <div className="relative bg-white/[0.02] border border-white/5 rounded-[2.5rem] p-1 lg:p-2 transition-all hover:bg-white/[0.04]">
+                <div className={`relative bg-white/[0.02] border rounded-[2.5rem] p-1 lg:p-2 transition-all hover:bg-white/[0.04] ${
+                    hasResults ? 'border-orange-500/50 shadow-[0_0_30px_rgba(249,115,22,0.1)]' : 'border-white/5'
+                }`}>
                     <div className="px-8 py-4 border-b border-white/5 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <Compass className="text-gray-500" size={18} />
@@ -153,7 +124,12 @@ export default function LiveDiscoveryTab({
                         )}
                     </div>
                     <div className="p-4 lg:p-6">
-                        <LeadSearch user={user} isDashboardView={true} initialUrl={initialSearch} />
+                        <LeadSearch 
+                            user={user} 
+                            isDashboardView={true} 
+                            initialUrl={initialSearch} 
+                            onResultsFound={(count) => setHasResults(count > 0)}
+                        />
                     </div>
                 </div>
             </div>

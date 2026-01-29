@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, MessageCircle, Users, X } from 'lucide-react';
+import { Zap, MessageCircle, X } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { BETA_SEAT_LIMIT } from '@/lib/constants';
 
@@ -13,19 +13,14 @@ export default function BetaBanner() {
 
     useEffect(() => {
         const fetchSeats = async () => {
-            const { count } = await supabase
-                .from('profiles')
-                .select('*', { count: 'exact', head: true })
-                .eq('is_beta_user', true);
+            const { data: count, error } = await supabase.rpc('get_beta_user_count');
             
-            if (count !== null) {
-                setSeatsLeft(Math.max(0, BETA_SEAT_LIMIT - count));
+            if (!error && count !== null) {
+                setSeatsLeft(Math.max(0, BETA_SEAT_LIMIT - Number(count)));
             }
         };
 
         fetchSeats();
-        
-        // Polling for seat updates every 30 seconds
         const interval = setInterval(fetchSeats, 30000);
         return () => clearInterval(interval);
     }, []);
@@ -38,54 +33,40 @@ export default function BetaBanner() {
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                className="mb-8 overflow-hidden"
+                className="mb-8 overflow-hidden px-4 sm:px-0"
             >
-                <div className="relative p-6 rounded-[2rem] bg-gradient-to-r from-orange-500/10 via-orange-500/5 to-transparent border border-orange-500/20 group">
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                        <div className="flex items-center gap-5">
-                            <div className="w-12 h-12 rounded-2xl bg-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/20">
-                                <Sparkles size={24} className="text-black" />
-                            </div>
-                            <div>
-                                <h3 className="text-white font-black text-lg flex items-center gap-2">
-                                    Public Beta is Live
-                                    <span className="text-[10px] font-black uppercase tracking-widest bg-orange-500/20 text-orange-500 px-2 py-0.5 rounded-full border border-orange-500/20">
-                                        Limited
-                                    </span>
-                                </h3>
-                                <p className="text-gray-400 text-sm">Join the inner circle. Shape the future of autonomous lead generation.</p>
-                            </div>
-                        </div>
-
-                        <div className="flex items-center gap-4">
-                            <div className="flex items-center gap-2 px-4 py-2 bg-white/[0.03] border border-white/5 rounded-xl">
-                                <Users size={16} className="text-orange-500" />
-                                <span className="text-sm font-bold text-white">
-                                    {seatsLeft !== null ? `${seatsLeft} seats left` : 'Loading seats...'}
-                                </span>
-                            </div>
-                            
-                            <a 
-                                href="https://tally.so/r/npxuec" // Use a placeholder link if user hasn't provided one
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-2 px-6 py-3 bg-orange-500 text-black font-black text-sm rounded-xl hover:bg-orange-400 transition-all shadow-lg active:scale-95 whitespace-nowrap"
-                            >
-                                <MessageCircle size={18} fill="currentColor" />
-                                Give Feedback
-                            </a>
-
-                            <button 
-                                onClick={() => setIsVisible(false)}
-                                className="p-2 text-gray-500 hover:text-white transition-colors"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
+                <div className="relative flex flex-col sm:flex-row items-center justify-between gap-4 px-6 py-3 rounded-full bg-white/[0.03] border border-white/20 backdrop-blur-md shadow-2xl">
+                    <div className="flex items-center gap-3">
+                        <Zap size={14} className="text-orange-500 fill-orange-500" />
+                        <p className="text-sm font-medium text-slate-400">
+                            <span className="text-white font-bold">Public Beta is Live.</span> Shape the future of autonomous lead generation.
+                        </p>
                     </div>
 
-                    {/* Subtle grain overlay */}
-                    <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
+                    <div className="flex items-center gap-5">
+                        <div className="flex items-center gap-2">
+                            <div className="w-1 h-1 rounded-full bg-green-500" />
+                            <span className="text-xs font-bold text-slate-500 whitespace-nowrap">
+                                {seatsLeft !== null ? `${seatsLeft} seats left` : 'Checking...'}
+                            </span>
+                        </div>
+                        
+                        <a 
+                            href="https://tally.so/r/npxuec"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs font-bold text-white hover:text-orange-500 transition-colors flex items-center gap-1.5 py-1"
+                        >
+                            Give Feedback <MessageCircle size={14} />
+                        </a>
+
+                        <button 
+                            onClick={() => setIsVisible(false)}
+                            className="p-1 text-slate-600 hover:text-white transition-colors"
+                        >
+                            <X size={14} />
+                        </button>
+                    </div>
                 </div>
             </motion.div>
         </AnimatePresence>

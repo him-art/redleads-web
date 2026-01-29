@@ -65,17 +65,18 @@ export async function POST(req: Request) {
 
             const { data: profile } = await supabase
                 .from('user_access_status')
-                .select('scan_count, last_scan_at, effective_tier, trial_ends_at')
+                .select('scan_count, last_scan_at, effective_tier, trial_ends_at, scan_allowance')
                 .eq('id', user.id)
                 .single();
             
-            isPro = profile?.effective_tier === 'pro';
+            const tier = profile?.effective_tier;
+            const isPaid = tier === 'pro' || tier === 'scout' || tier === 'growth';
             
             // Get trial status from profile
             const trialEndsAt = profile?.trial_ends_at;
             isInTrial = trialEndsAt ? new Date(trialEndsAt) > new Date() : false;
 
-            if (!(isPro || isInTrial)) {
+            if (!(isPaid || isInTrial)) {
                 return NextResponse.json({ 
                     error: 'Your trial has ended. Please upgrade to Pro to continue finding leads.', 
                     code: 'PAYWALL_REQUIRED' 
@@ -85,17 +86,19 @@ export async function POST(req: Request) {
             const today = new Date().toDateString();
             const lastDay = profile?.last_scan_at ? new Date(profile.last_scan_at).toDateString() : '';
             
-            // PRO = 5 per day | TRIAL = 5 total
+            // Usage Guardrails (SaaS 2.0)
             let currentCount = profile?.scan_count || 0;
-            if (isPro) {
-                // If Pro, reset if it's a new day
+            const dailyLimit = profile?.scan_allowance || 5; // Default to 5
+
+            if (isPaid) {
+                // If Paid, reset if it's a new day
                 currentCount = (today === lastDay) ? (profile?.scan_count || 0) : 0;
             }
             
-            if (currentCount >= 5) {
-                const msg = isPro 
-                    ? 'Daily scan limit (5) reached. Check back tomorrow!' 
-                    : 'You have used all 5 trial scans. Upgrade to Pro for 5 fresh scans every day!';
+            if (currentCount >= dailyLimit) {
+                const msg = isPaid 
+                    ? `Daily scan limit (${dailyLimit}) reached. Check back tomorrow!` 
+                    : `You have used all ${dailyLimit} trial scans. Upgrade to Pro for fresh scans every day!`;
                 return NextResponse.json({ error: msg, code: 'DAILY_LIMIT_REACHED' }, { status: 403 });
             }
 

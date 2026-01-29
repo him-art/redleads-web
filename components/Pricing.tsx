@@ -45,8 +45,8 @@ const Pricing = () => {
                      </h2>
                      <p className="text-base text-gray-500 max-w-xl mx-auto font-medium leading-relaxed">
                          {require('@/lib/constants').BETA_MODE 
-                            ? 'The first 20 founders get full Pro access for free in exchange for feedback. Help us shape the future.' 
-                            : 'One transparent plan designed for autonomous lead generation. Full intelligence suite included.'}
+                            ? 'Get full access to our AI lead intelligence suite for free in exchange for your feedback. Early adopters only.' 
+                            : 'One transparent plan for autonomous lead generation. AI intelligence, custom subreddits, and real-time alerts included.'}
                      </p>
                  </div>
  

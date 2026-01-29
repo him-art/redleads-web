@@ -131,6 +131,14 @@ interface UserProfile {
     full_name?: string;
 }
 
+interface SummaryAccumulator {
+    [userId: string]: {
+        profileId: string;
+        description: string;
+        leads: { id: string, title: string, snippet: string }[];
+    }
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // HELPER FUNCTIONS
 // ═══════════════════════════════════════════════════════════════════════════
@@ -292,9 +300,9 @@ async function getBatchMatchScores(posts: { title: string, snippet: string }[], 
 /**
  * Store a lead for a specific user with a personalized match score.
  */
-async function storePersonalizedLead(postData: RSSPost, userId: string, score: number): Promise<void> {
+async function storePersonalizedLead(postData: RSSPost, userId: string, score: number): Promise<string | null> {
     try {
-        const { error } = await supabase.from('monitored_leads').insert({
+        const { data, error } = await supabase.from('monitored_leads').insert({
             user_id: userId,
             title: postData.title,
             body_text: postData.snippet,
@@ -305,13 +313,70 @@ async function storePersonalizedLead(postData: RSSPost, userId: string, score: n
             comment_count: 0,
             match_score: score,
             status: 'new',
-        });
+        }).select('id').single();
 
         if (error && !error.message.includes('duplicate')) {
             console.error(`[RSS] Failed to insert lead for user ${userId}:`, error.message);
+            return null;
         }
+        return data?.id || null;
     } catch (e) {
         console.error('[RSS] storePersonalizedLead error:', e);
+        return null;
+    }
+}/**
+ * Generate a single batched intelligence report for a user based on multiple high-intent leads.
+ */
+async function generateActionableIntelligence(userId: string, userDesc: string, leads: { id: string, title: string, snippet: string }[]): Promise<void> {
+    if (leads.length === 0) return;
+
+    try {
+        console.log(`[RSS] 🧠 Generating Actionable Intelligence for user ${userId.slice(0, 8)} (${leads.length} leads)...`);
+        
+        const { AIManager } = await import('../../lib/ai');
+        const ai = new AIManager();
+
+        const leadsBlock = leads.map((l, i) => `[LEAD ${i+1}]\nTitle: ${l.title}\nSnippet: ${l.snippet}`).join('\n\n');
+
+        const response = await ai.call({
+            model: 'llama-3.1-70b-versatile',
+            messages: [
+                {
+                    role: 'system',
+                    content: `You are an expert sales analyst. Given a user's business description and a set of high-intent Reddit leads, generate a concise "Actionable Intelligence" report.
+                    
+                    Identify 1-2 core trends, suggest a specific outreach angle, and explain WHY these leads are high-value.
+                    
+                    Format: Markdown, professional but snappy. Max 150 words.
+                    
+                    Business: ${userDesc}`
+                },
+                {
+                    role: 'user',
+                    content: leadsBlock
+                }
+            ],
+            temperature: 0.3,
+            max_tokens: 300,
+        });
+
+        const report = response.choices?.[0]?.message?.content?.trim();
+
+        if (report) {
+            const { error } = await supabase.from('lead_analyses').insert({
+                user_id: userId,
+                content: report,
+                lead_ids: leads.map(l => l.id)
+            });
+
+            if (error) {
+                console.error(`[RSS] Failed to store lead analysis for ${userId}:`, error.message);
+            } else {
+                console.log(`[RSS] ✨ Intelligence report stored for user ${userId.slice(0, 8)}`);
+            }
+        }
+    } catch (e) {
+        console.error('[RSS] generateActionableIntelligence error:', e);
     }
 }
 
@@ -352,7 +417,7 @@ async function fetchRSSFeed(subName: string): Promise<RSSPost[]> {
  * Process a single subreddit: fetch RSS, filter new posts, score, and process.
  * Returns true on success, false on failure.
  */
-async function processSubreddit(sub: UniqueSubreddit): Promise<boolean> {
+async function processSubreddit(sub: UniqueSubreddit, accumulator: SummaryAccumulator): Promise<boolean> {
     if (!isRunning) return false;
     
     const startTime = Date.now();
@@ -392,7 +457,6 @@ async function processSubreddit(sub: UniqueSubreddit): Promise<boolean> {
         console.log(`[RSS] Processing ${newPosts.length} new posts for ${relevantUsers.length} users in r/${sub.name}`);
 
         // 4. Group posts by user keywords
-        let totalLeadsFound = 0;
         const userMatches: Map<string, RSSPost[]> = new Map();
 
         for (const post of newPosts) {
@@ -412,6 +476,16 @@ async function processSubreddit(sub: UniqueSubreddit): Promise<boolean> {
             if (!isRunning) break;
             
             const user = relevantUsers.find(u => u.id === userId)!;
+            
+            // Re-initialize accumulator entry if needed
+            if (!accumulator[userId]) {
+                accumulator[userId] = {
+                    profileId: user.id, // In profiles table, id is user_id
+                    description: user.description,
+                    leads: []
+                };
+            }
+
             console.log(`[RSS] 🎯 Scoring ${matchingPosts.length} matches for user ${userId.slice(0, 8)}`);
 
             // Split into batches of 5 for efficiency
@@ -423,8 +497,16 @@ async function processSubreddit(sub: UniqueSubreddit): Promise<boolean> {
                     const score = scores[j] || 0;
                     if (score >= QUICK_SCORE_THRESHOLD) {
                         // 7. Store Lead
-                        await storePersonalizedLead(batch[j], userId, score);
-                        totalLeadsFound++;
+                        const leadId = await storePersonalizedLead(batch[j], userId, score);
+                        
+                        // Accumulate for AI Intelligence if score is high (>= 0.85)
+                        if (leadId && score >= 0.85) {
+                            accumulator[userId].leads.push({
+                                id: leadId,
+                                title: batch[j].title,
+                                snippet: batch[j].snippet
+                            });
+                        }
 
                         // 8. Trigger Email Alert for high-intent matches (>0.9)
                         if (score >= 0.9 && user.email) {
@@ -458,28 +540,13 @@ async function processSubreddit(sub: UniqueSubreddit): Promise<boolean> {
         // 7. Update last_pubdate and reset error streak
         await updateLastPubdate(sub.name, latestPubdate);
         await resetErrorStreak(sub.name);
-
-        const durationSec = ((Date.now() - startTime) / 1000).toFixed(1);
-        console.log(`[RSS] ✅ r/${sub.name} complete: ${totalLeadsFound} leads found in ${durationSec}s`);
         
+        const duration = ((Date.now() - startTime) / 1000).toFixed(1);
+        console.log(`[RSS] ✅ r/${sub.name} processed in ${duration}s`);
         return true;
-
-    } catch (error) {
-        const axiosError = error as AxiosError;
-        const status = axiosError.response?.status;
-        const message = axiosError.message;
-
-        console.error(`[RSS] ❌ r/${sub.name} failed: ${status || message}`);
-
-        // Handle specific error types
-        if (status === 403 || status === 429 || message.includes('blocked')) {
-            await handleSubError(sub.name, sub.error_streak);
-        } else {
-            // Transient error - increment but don't pause immediately
-            await handleSubError(sub.name, Math.max(0, sub.error_streak - 1));
-        }
-
-        return false;
+    } catch (e: any) {
+        console.error(`[RSS] ❌ Failed to process r/${sub.name}:`, e.message);
+        return await handleSubError(sub.name, sub.error_streak || 0);
     }
 }
 
@@ -515,6 +582,9 @@ async function pollCycle(): Promise<void> {
 
     console.log(`[RSS] Monitoring ${subreddits.length} unique subreddits`);
 
+    // Accumulator for Actionable Intelligence
+    const summaryAccumulator: SummaryAccumulator = {};
+
     // Process sequentially with rate limiting and health tracking
     let successCount = 0;
     let failedCount = 0;
@@ -525,7 +595,7 @@ async function pollCycle(): Promise<void> {
             break;
         }
         
-        const success = await limit(() => processSubreddit(sub));
+        const success = await limit(() => processSubreddit(sub, summaryAccumulator));
         
         if (success) {
             successCount++;
@@ -537,10 +607,19 @@ async function pollCycle(): Promise<void> {
         await delay(DELAY_BETWEEN_REQ_MS);
     }
 
+    // 3. Generate Actionable Intelligence for users with new high-intent leads
+    if (isRunning) {
+        console.log(`[RSS] 📊 Processing summaries for ${Object.keys(summaryAccumulator).length} users...`);
+        for (const [userId, data] of Object.entries(summaryAccumulator)) {
+            if (data.leads.length >= 2) { // Only summarize if we have multiple leads to connect patterns
+                await generateActionableIntelligence(userId, data.description, data.leads);
+            }
+        }
+    }
+
     // Health monitoring - alert on high failure rate
     if (subreddits.length > 0 && failedCount / subreddits.length > FAILURE_RATE_THRESHOLD) {
         console.warn(`[RSS] 🚨 HIGH FAILURE RATE: ${failedCount}/${subreddits.length} subreddits failed this cycle — potential Reddit blocking. Consider increasing delay or checking logs.`);
-        // TODO: Integrate Slack/email alert here for production monitoring
     }
 
     const cycleDuration = ((Date.now() - cycleStart) / 1000 / 60).toFixed(1);
