@@ -1,13 +1,16 @@
 import * as React from 'react';
 
 interface WelcomeEmailProps {
-  fullName: string;
+  fullName?: string;
+  websiteUrl?: string;
 }
 
-export default function WelcomeEmail({ fullName }: WelcomeEmailProps) {
+export default function WelcomeEmail({ fullName, websiteUrl }: WelcomeEmailProps) {
   return (
     <div style={{ fontFamily: 'sans-serif', lineHeight: '1.6', color: '#1a1a1a', maxWidth: '600px', margin: '0 auto' }}>
-      <h1 style={{ color: '#f25e36', fontSize: '24px', fontWeight: 'black', letterSpacing: '-0.02em' }}>Welcome to RedLeads, {fullName}!</h1>
+      <h1 style={{ color: '#f25e36', fontSize: '24px', fontWeight: 'black', letterSpacing: '-0.02em' }}>
+        {fullName ? `Welcome to RedLeads, ${fullName}!` : 'Welcome to RedLeads!'}
+      </h1>
       <p>Your 3-day full access trial is now active.</p>
       
       <p>
