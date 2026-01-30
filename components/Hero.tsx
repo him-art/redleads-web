@@ -157,7 +157,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                   {/* Subtitle and CTAs */}
                   <div className="mt-8 flex flex-col items-center gap-8 px-4 w-full">
                     <p className="text-xl sm:text-2xl text-[#1a1a1a] italic max-w-2xl text-center leading-relaxed">
-                      Watch who is seeking your solution on Reddit
+                      Watch who is seeking your solution across 100+ communities
                     </p>
                     
                     <form 
@@ -185,8 +185,8 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
 
                      <div className="flex items-center gap-4 text-sm font-medium text-slate-500">
                         <span className="flex items-center gap-1.5">
-                            <CheckCircle2 className={`w-4 h-4 ${require('@/lib/constants').BETA_MODE ? 'text-orange-500' : 'text-green-500'}`} /> 
-                            {require('@/lib/constants').BETA_MODE ? 'Join 20 Founders in Public Beta' : '3-Day Full Trial Access'}
+                            <CheckCircle2 className="w-4 h-4 text-green-500" /> 
+                            3-Day Full Trial Access
                         </span>
                         <span className="w-1 h-1 bg-slate-300 rounded-full" />
                         <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-green-500" /> No Card Required</span>

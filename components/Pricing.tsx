@@ -21,11 +21,12 @@ const Pricing = () => {
             } else if (data.error === 'Unauthorized') {
                 window.location.href = '/login?next=/pricing';
             } else {
-                alert(data.error || 'Failed to create checkout session');
+                // Payment system not yet configured
+                alert('Pro plan coming soon! Stay tuned for the launch.');
             }
         } catch (error) {
             console.error('Checkout error:', error);
-            alert('Something went wrong. Please try again.');
+            alert('Pro plan coming soon! Stay tuned for the launch.');
         } finally {
             setIsLoading(false);
         }
@@ -41,13 +42,11 @@ const Pricing = () => {
                          Pricing
                      </div>
                      <h2 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight">
-                         {require('@/lib/constants').BETA_MODE ? 'Public Beta now ' : 'Scale your '}<span className="text-orange-500 italic font-serif">{require('@/lib/constants').BETA_MODE ? 'Open' : 'Red-Hot'}</span>{require('@/lib/constants').BETA_MODE ? '.' : ' growth.'}
+                         Scale your <span className="text-orange-500 italic font-serif">Red-Hot</span> growth.
                      </h2>
                      <p className="text-base text-gray-500 max-w-xl mx-auto font-medium leading-relaxed">
-                         {require('@/lib/constants').BETA_MODE 
-                            ? 'Get full access to our AI lead intelligence suite for free in exchange for your feedback. Early adopters only.' 
-                            : 'One transparent plan for autonomous lead generation. AI intelligence, custom subreddits, and real-time alerts included.'}
-                     </p>
+                          One transparent plan for autonomous lead generation. AI intelligence, Global Monitoring, and real-time alerts included.
+                      </p>
                  </div>
  
                  {/* Single Pricing Card */}
@@ -95,9 +94,9 @@ const Pricing = () => {
                                  <ul className="space-y-6">
                                      {[
                                          "24/7 Autonomous Monitoring",
-                                         "5 Daily Deep Signal Scans",
-                                         "Track 10 Active Subreddits",
-                                         "Monitor 15 High-Intent Keywords",
+                                         "Daily AI Intelligence Digest",
+                                         "Monitor Top 100+ Communities",
+                                         "Monitor 10 High-Intent Keywords",
                                          "Priority System Access"
                                      ].map((feature) => (
                                          <li key={feature} className="flex items-start gap-4 group/item">

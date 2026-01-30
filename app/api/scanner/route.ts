@@ -64,17 +64,18 @@ export async function POST(req: Request) {
             }
 
             const { data: profile } = await supabase
-                .from('user_access_status')
-                .select('scan_count, last_scan_at, effective_tier, trial_ends_at, scan_allowance')
+                .from('profiles')
+                .select('scan_count, last_scan_at, subscription_tier, trial_ends_at, scan_allowance, created_at')
                 .eq('id', user.id)
                 .single();
             
-            const tier = profile?.effective_tier;
-            const isPaid = tier === 'pro' || tier === 'scout' || tier === 'growth';
+            const isPaid = profile?.subscription_tier === 'pro';
             
-            // Get trial status from profile
-            const trialEndsAt = profile?.trial_ends_at;
-            isInTrial = trialEndsAt ? new Date(trialEndsAt) > new Date() : false;
+            // Get trial status - auto-calculate if trial_ends_at is not set
+            const trialEndsAt = profile?.trial_ends_at 
+                ? new Date(profile.trial_ends_at) 
+                : (profile?.created_at ? new Date(new Date(profile.created_at).getTime() + 3 * 24 * 60 * 60 * 1000) : null);
+            isInTrial = trialEndsAt ? trialEndsAt > new Date() : false;
 
             if (!(isPaid || isInTrial)) {
                 return NextResponse.json({ 

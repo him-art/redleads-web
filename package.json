@@ -8,6 +8,7 @@
     "start": "next start",
     "worker": "npx ts-node --transpile-only --project worker/tsconfig.json worker/src/rss-hybrid-monitor.ts",
     "worker:ingestion": "npx ts-node --transpile-only --project worker/tsconfig.json worker/src/rss-hybrid-monitor.ts",
+    "worker:digest": "npx ts-node --transpile-only --project worker/tsconfig.json worker/src/daily-digest.ts",
     "lint": "eslint"
   },
   "dependencies": {
@@ -15,7 +16,7 @@
     "@supabase/supabase-js": "^2.91.0",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.36.1",
-    "axios": "^1.13.3",
+    "axios": "^1.13.4",
     "dodopayments": "^2.17.1",
     "dotenv": "^17.2.3",
     "firebase": "^12.7.0",

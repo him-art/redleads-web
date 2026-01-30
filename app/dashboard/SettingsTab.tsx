@@ -12,20 +12,24 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
     
     const [description, setDescription] = useState(profile?.description || '');
     const [keywords, setKeywords] = useState<string[]>(profile?.keywords || []);
-    const [subreddits, setSubreddits] = useState<string[]>(profile?.subreddits || []);
+    const [keywords, setKeywords] = useState<string[]>(profile?.keywords || []);
+    // Subreddits are now global, but we keep the state incase of rollback/migration needs
+    // const [subreddits, setSubreddits] = useState<string[]>(profile?.subreddits || []);
 
     // Sync state if profile prop updates (e.g. after router.refresh)
     useEffect(() => {
         if (profile) {
             setDescription(profile.description || '');
             setKeywords(profile.keywords || []);
-            setSubreddits(profile.subreddits || []);
+            setKeywords(profile.keywords || []);
+            // setSubreddits(profile.subreddits || []);
         }
     }, [profile]);
     
     // Inputs for adding new items
     const [newKeyword, setNewKeyword] = useState('');
-    const [newSubreddit, setNewSubreddit] = useState('');
+    const [newKeyword, setNewKeyword] = useState('');
+    // const [newSubreddit, setNewSubreddit] = useState('');
 
     const [saving, setSaving] = useState(false);
     const [autofilling, setAutofilling] = useState(false);
@@ -46,7 +50,9 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                     email: user.email,
                     description: description,
                     keywords: keywords,
-                    subreddits: subreddits
+                    description: description,
+                    keywords: keywords,
+                    // subreddits: subreddits -- Deprecated in favor of global monitoring
                 });
 
             if (error) throw error;
@@ -86,7 +92,8 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                 // 1. REPLACE INSTEAD OF APPEND
                 // Clear existing before setting new
                 setKeywords(data.keywords || []);
-                setSubreddits(data.subreddits || []);
+                setKeywords(data.keywords || []);
+                // setSubreddits(data.subreddits || []);
                 
                 // 2. SUCCESS FEEDBACK
                 setWasAiGenerated(true);
@@ -110,8 +117,8 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
         const input = newKeyword.trim();
         if (!input) return;
 
-        if (keywords.length >= 15) {
-            setStatusMsg({ type: 'error', text: 'Maximum of 15 keywords allowed. Remove some to add more.' });
+        if (keywords.length >= 10) {
+            setStatusMsg({ type: 'error', text: 'Maximum of 10 keywords allowed. Remove some to add more.' });
             return;
         }
 
@@ -121,19 +128,20 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
             .filter(k => k && !keywords.includes(k));
 
         if (newItems.length > 0) {
-            // Respect the 15 limit even in bulk entry
-            const spaceLeft = 15 - keywords.length;
+            // Respect the 10 limit even in bulk entry
+            const spaceLeft = 10 - keywords.length;
             const toAdd = newItems.slice(0, spaceLeft);
             
             setKeywords([...keywords, ...toAdd]);
             setNewKeyword('');
             
             if (newItems.length > spaceLeft) {
-                setStatusMsg({ type: 'error', text: `Only added ${spaceLeft} keywords. Limit of 15 reached.` });
+                setStatusMsg({ type: 'error', text: `Only added ${spaceLeft} keywords. Limit of 10 reached.` });
             }
         }
     };
 
+    /*
     const addSubreddit = () => {
         if (subreddits.length >= 10) {
             setStatusMsg({ type: 'error', text: 'Maximum of 10 subreddits allowed. Remove some to add more.' });
@@ -147,14 +155,11 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
             setNewSubreddit('');
         }
     };
-
-    const removeKeyword = (index: number) => {
-        setKeywords(keywords.filter((_, i) => i !== index));
-    };
-
+    
     const removeSubreddit = (index: number) => {
         setSubreddits(subreddits.filter((_, i) => i !== index));
     };
+    */
 
     return (
         <div className="space-y-8 max-w-2xl">
@@ -209,14 +214,12 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                                 </span>
                             )}
                         </div>
-                        <span className={`text-[10px] font-bold ${keywords.length >= 15 ? 'text-orange-500' : 'text-gray-600'}`}>
-                            {keywords.length}/15
+                        <span className={`text-[10px] font-bold ${keywords.length >= 10 ? 'text-orange-500' : 'text-gray-600'}`}>
+                            {keywords.length}/10
                         </span>
                     </div>
                     <p className="text-xs text-gray-500/80 mb-3 leading-relaxed">
-                        {wasAiGenerated 
-                            ? "AI selected these keywords — add or remove as needed" 
-                            : "Enter keywords and phrases (separated by commas) that describe your business, solutions, and pain points your ICP discusses"}
+                        We scan 100+ active SaaS & Tech subreddits for these keywords.
                     </p>
                     <div className="flex gap-2 mb-3">
                         <input
@@ -246,57 +249,15 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                     </div>
                 </div>
 
-                {/* Subreddits */}
-                <div className="rounded-2xl -m-4 p-4 transition-colors duration-500 mt-2">
-                    <div className="flex items-center justify-between mb-1.5">
-                        <div className="flex items-center gap-2">
-                            <label className="block text-sm font-bold text-gray-300">Target Subreddits</label>
-                            {wasAiGenerated && (
-                                <span className="text-[11px] font-medium text-gray-500 flex items-center gap-1 animate-in fade-in zoom-in duration-500">
-                                    <Sparkles size={10} className="text-orange-500/50" />
-                                    AI selected
-                                </span>
-                            )}
-                        </div>
-                        <span className={`text-[10px] font-bold ${subreddits.length >= 10 ? 'text-orange-500' : 'text-gray-600'}`}>
-                            {subreddits.length}/10
-                        </span>
+                {/* Subreddits Section Removed - Global Monitoring Active */}
+                <div className="rounded-2xl -m-4 p-4 mt-2 opacity-50 pointer-events-none grayscale">
+                    <div className="flex items-center gap-2 mb-1.5">
+                        <label className="block text-sm font-bold text-gray-500">Global Monitoring Active</label>
+                        <span className="text-[10px] bg-green-500/10 text-green-500 px-2 py-0.5 rounded-full border border-green-500/20">100+ Communities</span>
                     </div>
-                    <p className="text-xs text-gray-500/80 mb-3 leading-relaxed">
-                        {wasAiGenerated 
-                            ? "AI selected these communities — add or remove as needed" 
-                            : "Communities where your ideal customers and competitors are active"}
+                     <p className="text-xs text-gray-600/80 leading-relaxed">
+                        We now automatically scan the top 100 communities for founders and SaaS. No manual selection needed.
                     </p>
-                    <div className="flex gap-2 mb-3">
-                        <div className="relative flex-grow">
-                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-bold">r/</div>
-                            <input
-                                type="text"
-                                value={newSubreddit}
-                                onChange={(e) => setNewSubreddit(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && addSubreddit()}
-                                placeholder="solopreneur"
-                                className="w-full bg-black/50 border border-white/10 rounded-xl p-3 pl-8 text-white focus:border-orange-500 outline-none placeholder:text-gray-700"
-                            />
-                        </div>
-                        <button 
-                            onClick={addSubreddit}
-                            className="bg-white/10 hover:bg-white/20 text-white p-3 rounded-xl transition-colors"
-                        >
-                            <Plus size={20} />
-                        </button>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                        {subreddits.map((sub, i) => (
-                            <div key={i} className="flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full text-sm">
-                                <span className="text-gray-500 font-bold">r/</span>
-                                <span>{sub}</span>
-                                <button onClick={() => removeSubreddit(i)} className="text-gray-500 hover:text-red-500 ml-1">
-                                    <X size={14} />
-                                </button>
-                            </div>
-                        ))}
-                    </div>
                 </div>
 
                 <div className="pt-4 border-t border-white/5 space-y-4">

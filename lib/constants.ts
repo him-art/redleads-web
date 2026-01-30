@@ -1,2 +1,3 @@
-export const BETA_MODE = process.env.NEXT_PUBLIC_BETA_MODE === 'true';
-export const BETA_SEAT_LIMIT = 20;
+// Simplified constants - Beta mode removed
+// All users now get automatic 3-day trials
+export const TRIAL_DAYS = 3;

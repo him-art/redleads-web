@@ -8,7 +8,6 @@ import ReportsTab from './ReportsTab';
 import SettingsTab from './SettingsTab';
 import BillingTab from './BillingTab';
 import LiveDiscoveryTab from './LiveDiscoveryTab';
-import BetaBanner from '@/components/BetaBanner';
 
 interface DashboardClientProps {
     profile: any;
@@ -20,16 +19,6 @@ interface DashboardClientProps {
 export default function DashboardClient({ profile, reports, user, initialSearch = '' }: DashboardClientProps) {
     const [activeTab, setActiveTab] = useState<'reports' | 'discovery' | 'live' | 'settings' | 'billing'>(initialSearch ? 'live' : 'live'); 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [showSuccess, setShowSuccess] = useState(false);
-
-    useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('beta') === 'true') {
-            setShowSuccess(true);
-            const timer = setTimeout(() => setShowSuccess(false), 8000);
-            return () => clearTimeout(timer);
-        }
-    }, []);
 
     const tabs = [
         { id: 'live', label: 'Command Center', icon: Navigation },
@@ -118,25 +107,6 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
 
             {/* Main Content Area */}
             <main className="flex-grow bg-white/[0.02] rounded-[2.5rem] border border-white/5 p-6 lg:p-12 overflow-hidden relative group">
-                <AnimatePresence>
-                    {showSuccess && (
-                        <motion.div 
-                            initial={{ y: -20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            exit={{ y: -20, opacity: 0 }}
-                            className="bg-orange-500 text-black px-6 py-4 rounded-2xl font-black text-sm flex items-center justify-between mb-8 shadow-xl shadow-orange-500/20"
-                        >
-                            <div className="flex items-center gap-3">
-                                <Sparkles size={18} />
-                                <span>Welcome to the Beta, Founder! You now have full Pro access.</span>
-                            </div>
-                            <button onClick={() => setShowSuccess(false)} className="opacity-50 hover:opacity-100 italic text-xs">dismiss</button>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-
-                {require('@/lib/constants').BETA_MODE && <BetaBanner />}
-                
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={activeTab}

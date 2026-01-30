@@ -23,20 +23,18 @@ export async function POST(req: Request) {
             Analyze this business description to generate tracking configuration:
             Business Description: ${userDescription}
             
-            Based on this information, identify a mix of EXACTLY 15 high-intent keywords and phrases:
+            Based on this information, identify a mix of EXACTLY 10 high-intent keywords and phrases:
             1. Product/Service terms (e.g., "CRM software", "sales tools")
             2. Pain points (e.g., "low conversion rates", "manual data entry")
             3. Competitor indicators (e.g., brand names if relevant)
             4. Industry terms (e.g., "B2B SaaS", "go-to-market")
 
             Requirements for output:
-            - Keywords/Phrases: Provide EXACTLY 15 relevant items total. Mixture of single words and multi-word phrases.
-            - Subreddits: Provide EXACTLY 10 most relevant Reddit subreddits. Do not include r/ prefix.
+            - Keywords/Phrases: Provide EXACTLY 10 relevant items total. Mixture of single words and multi-word phrases.
             
             Return the result as a STRICT JSON object in this format:
             {
-                "keywords": ["phrase or word 1", "phrase or word 2", ...],
-                "subreddits": ["subreddit1", "subreddit2", ...]
+                "keywords": ["phrase or word 1", "phrase or word 2", ...]
             }
             
             ONLY return the JSON object, nothing else.

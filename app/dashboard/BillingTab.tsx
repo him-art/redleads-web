@@ -2,47 +2,13 @@
 
 import { CheckCircle2, Zap, Loader2 } from 'lucide-react';
 import { useState } from 'react';
-import { AnimatePresence } from 'framer-motion';
-import BetaSurvey from '@/components/BetaSurvey';
 
 export default function BillingTab({ profile }: { profile: any }) {
     const isPro = profile?.subscription_tier === 'pro';
     const [isLoading, setIsLoading] = useState(false);
     const [isManaging, setIsManaging] = useState(false);
-    const [showSurvey, setShowSurvey] = useState(false);
-
-    const handleSurveyComplete = async (surveyResponses: any) => {
-        setShowSurvey(false);
-        setIsLoading(true);
-        try {
-            const res = await fetch('/api/payments/create-checkout', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ surveyResponses }),
-            });
-            
-            const data = await res.json();
-            
-            if (data.beta_success) {
-                window.location.href = data.redirect_url;
-            } else {
-                alert(data.error || 'Failed to join Beta');
-            }
-        } catch (error) {
-            console.error('Beta join error:', error);
-            alert('Something went wrong. Please try again.');
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     const handleUpgrade = async () => {
-        const isBetaMode = require('@/lib/constants').BETA_MODE;
-        if (isBetaMode) {
-            setShowSurvey(true);
-            return;
-        }
-
         setIsLoading(true);
         try {
             const res = await fetch('/api/payments/create-checkout', {
@@ -55,21 +21,18 @@ export default function BillingTab({ profile }: { profile: any }) {
             if (data.checkout_url) {
                 window.location.href = data.checkout_url;
             } else {
-                alert(data.error || 'Failed to create checkout session');
+                // Payment system not yet configured - show coming soon message
+                alert('Pro plan coming soon! Stay tuned for the launch.');
             }
         } catch (error) {
             console.error('Checkout error:', error);
-            alert('Something went wrong. Please try again.');
+            alert('Pro plan coming soon! Stay tuned for the launch.');
         } finally {
             setIsLoading(false);
         }
     };
     
     const handleManageSubscription = async () => {
-        if (profile?.is_beta_user) {
-            alert("You are on a Beta plan. Billing management will be available after the public launch!");
-            return;
-        }
         setIsManaging(true);
         try {
             const res = await fetch('/api/payments/manage-subscription');
@@ -88,7 +51,13 @@ export default function BillingTab({ profile }: { profile: any }) {
         }
     };
 
-    const isBetaMode = require('@/lib/dodo').BETA_MODE;
+    // Calculate trial status
+    const trialEndsAt = profile?.trial_ends_at 
+        ? new Date(profile.trial_ends_at) 
+        : (profile?.created_at ? new Date(new Date(profile.created_at).getTime() + 3 * 24 * 60 * 60 * 1000) : null);
+    const isInTrial = trialEndsAt ? trialEndsAt > new Date() : false;
+    const trialExpired = trialEndsAt && trialEndsAt <= new Date() && !isPro;
+    const daysRemaining = trialEndsAt ? Math.max(0, Math.ceil((trialEndsAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24))) : 0;
 
     return (
         <div className="max-w-2xl space-y-8">
@@ -105,11 +74,17 @@ export default function BillingTab({ profile }: { profile: any }) {
                         <div>
                             <p className="text-sm font-mono text-gray-500 uppercase mb-1">Current Plan</p>
                             <h3 className="text-3xl font-black">
-                                {isPro ? (profile?.is_beta_user ? 'Founder Beta' : 'Pro Plan') : 'Free Tier'}
+                                {isPro ? 'Pro Plan' : (isInTrial ? '3-Day Trial' : 'Free Tier')}
                             </h3>
                         </div>
-                        <div className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest border ${isPro ? 'bg-orange-500/10 text-orange-500 border-orange-500/20' : 'bg-white/10 text-gray-400 border-white/10'}`}>
-                            {isPro ? (profile?.is_beta_user ? 'Early Access' : 'Active') : 'Limited'}
+                        <div className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest border ${
+                            isPro 
+                                ? 'bg-orange-500/10 text-orange-500 border-orange-500/20' 
+                                : isInTrial 
+                                    ? 'bg-green-500/10 text-green-500 border-green-500/20'
+                                    : 'bg-white/10 text-gray-400 border-white/10'
+                        }`}>
+                            {isPro ? 'Active' : (isInTrial ? `${daysRemaining} Days Left` : 'Expired')}
                         </div>
                     </div>
 
@@ -133,15 +108,30 @@ export default function BillingTab({ profile }: { profile: any }) {
                                     <span>Monitor up to 15 Keywords</span>
                                 </li>
                             </>
+                        ) : isInTrial ? (
+                            <>
+                                <li className="flex items-center gap-3 text-gray-300">
+                                    <CheckCircle2 size={18} className="text-green-500" />
+                                    <span>Full Pro Features for {daysRemaining} more days</span>
+                                </li>
+                                <li className="flex items-center gap-3 text-gray-300">
+                                    <CheckCircle2 size={18} className="text-green-500" />
+                                    <span>5 Reddit Scans</span>
+                                </li>
+                                <li className="flex items-center gap-3 text-gray-300">
+                                    <CheckCircle2 size={18} className="text-green-500" />
+                                    <span>Live Lead Discovery</span>
+                                </li>
+                            </>
                         ) : (
                             <>
                                 <li className="flex items-center gap-3 text-gray-300">
                                     <CheckCircle2 size={18} className="text-gray-500" />
-                                    <span>5 total trial scans</span>
+                                    <span>Trial period ended</span>
                                 </li>
                                 <li className="flex items-center gap-3 text-gray-300">
                                     <CheckCircle2 size={18} className="text-gray-500" />
-                                    <span>Limited Lead Discovery</span>
+                                    <span>Upgrade to Pro for full access</span>
                                 </li>
                             </>
                         )}
@@ -158,11 +148,11 @@ export default function BillingTab({ profile }: { profile: any }) {
                             ) : (
                                 <Zap size={20} fill="currentColor" />
                             )}
-                            {isLoading ? 'Processing...' : (isBetaMode ? 'Join Founder Beta (Free)' : 'Upgrade to Pro')}
+                            {isLoading ? 'Processing...' : 'Upgrade to Pro'}
                         </button>
                     )}
                     
-                    {isPro && !profile?.is_beta_user && (
+                    {isPro && (
                         <button 
                             onClick={handleManageSubscription}
                             disabled={isManaging}
@@ -172,29 +162,12 @@ export default function BillingTab({ profile }: { profile: any }) {
                             {isManaging ? 'Opening Portal...' : 'Manage Subscription'}
                         </button>
                     )}
-
-                    {isPro && profile?.is_beta_user && (
-                        <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-xl">
-                            <p className="text-xs font-bold text-orange-500 uppercase tracking-widest text-center">
-                                You have Early Founder Status! Enjoy full access during Beta.
-                            </p>
-                        </div>
-                    )}
                 </div>
             </div>
             
             <p className="text-xs text-gray-500 text-center">
-                {isBetaMode ? 'Join 20 founders helping build the future of RedLeads.' : 'Secure payments processed by Dodo Payments. You can cancel anytime.'}
+                Secure payments processed by Dodo Payments. You can cancel anytime.
             </p>
-
-            <AnimatePresence>
-                {showSurvey && (
-                    <BetaSurvey 
-                        onComplete={handleSurveyComplete} 
-                        onClose={() => setShowSurvey(false)} 
-                    />
-                )}
-            </AnimatePresence>
         </div>
     );
 }

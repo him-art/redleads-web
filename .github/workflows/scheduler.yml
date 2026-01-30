@@ -2,31 +2,42 @@ name: RedLeads Worker Scheduler
 
 on:
   schedule:
-    # Ingestion: Run every 30 minutes
-    - cron: '*/30 * * * *'
-  workflow_dispatch: # Allow manual trigger
+    # 1. Ingestion: Run every 15 minutes
+    - cron: '*/15 * * * *'
+    # 2. Daily Digest: Run at 8:00 AM UTC daily
+    - cron: '0 8 * * *'
+  workflow_dispatch:
 
 jobs:
   ingestion:
-    name: Run Ingestion Worker (Hourly)
-    if: github.event.schedule == '*/30 * * * *' || github.event_name == 'workflow_dispatch'
+    name: Run Ingestion (Every 15m)
+    if: github.event.schedule == '*/15 * * * *' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Run Ingestion Worker
+      - run: npm ci
+      - run: npm run worker:ingestion -- --once
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          AI_API_KEY: ${{ secrets.AI_API_KEY }}
-          AI_API_KEY_2: ${{ secrets.AI_API_KEY_2 }}
-        run: npm run worker:ingestion -- --once
+
+  digest:
+    name: Run Daily Digest (8AM UTC)
+    if: github.event.schedule == '0 8 * * *' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run worker:digest
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Navigation, Activity, Lock, ArrowRight, Compass, ShieldCheck, ChevronRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Navigation, Activity, Lock, ArrowRight, Compass, ShieldCheck, ChevronRight, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import LiveFeed from './LiveFeed';
 import LeadSearch from '@/components/LeadSearch';
@@ -17,42 +17,27 @@ export default function LiveDiscoveryTab({
     initialSearch?: string, 
     onNavigate: (tab: string) => void 
 }) {
-    const [isStartingTrial, setIsStartingTrial] = useState(false);
     const [isUpgrading, setIsUpgrading] = useState(false);
     const supabase = createClient();
     const router = useRouter();
     const [hasResults, setHasResults] = useState(false);
     
     const isPro = profile?.subscription_tier === 'pro' || profile?.effective_tier === 'pro';
-    const trialEndsAt = profile?.trial_ends_at;
-    const isInTrial = trialEndsAt ? new Date(trialEndsAt) > new Date() : false;
+    
+    // Auto-calculate trial status from profile.created_at or trial_ends_at
+    const trialEndsAt = profile?.trial_ends_at 
+        ? new Date(profile.trial_ends_at) 
+        : (profile?.created_at ? new Date(new Date(profile.created_at).getTime() + 3 * 24 * 60 * 60 * 1000) : null);
+    
+    const isInTrial = trialEndsAt ? trialEndsAt > new Date() : false;
     const canSeeLiveFeed = isPro || isInTrial;
+    const trialExpired = trialEndsAt && trialEndsAt <= new Date() && !isPro;
 
     const isSetupComplete = !!(
         profile?.description?.length > 10 && 
         profile?.keywords?.length > 0 && 
         profile?.subreddits?.length > 0
     );
-
-    const handleStartTrial = async () => {
-        try {
-            setIsStartingTrial(true);
-            const trialEnd = new Date();
-            trialEnd.setDate(trialEnd.getDate() + 3);
-
-            const { error } = await supabase
-                .from('profiles')
-                .update({ trial_ends_at: trialEnd.toISOString() })
-                .eq('id', user.id);
-
-            if (error) throw error;
-            router.refresh();
-        } catch (err: any) {
-            console.error('Failed to start trial:', err.message);
-        } finally {
-            setIsStartingTrial(false);
-        }
-    };
 
     const handleUpgrade = async () => {
         try {
@@ -71,11 +56,14 @@ export default function LiveDiscoveryTab({
             }
         } catch (err: any) {
             console.error('Upgrade failed:', err.message);
-            alert('Payment system is currently being configured. Please check back in a few minutes!');
+            alert('Full access will be available soon. Stay tuned!');
         } finally {
             setIsUpgrading(false);
         }
     };
+
+    // Calculate days remaining in trial
+    const daysRemaining = trialEndsAt ? Math.max(0, Math.ceil((trialEndsAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24))) : 0;
 
     return (
         <section className="space-y-4 max-w-6xl mx-auto">
@@ -95,7 +83,7 @@ export default function LiveDiscoveryTab({
 
                     {isInTrial && (
                         <div className="px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-full text-[10px] font-black uppercase tracking-widest text-green-500 flex items-center gap-2">
-                            <ShieldCheck size={12} /> Trial Period
+                            <ShieldCheck size={12} /> Trial Active ({daysRemaining} days left)
                         </div>
                     )}
                 </div>
@@ -112,9 +100,9 @@ export default function LiveDiscoveryTab({
                         </div>
                         {profile?.scan_count !== undefined && (canSeeLiveFeed) && (
                             <div className="flex items-center gap-3">
-                                {profile?.trial_ends_at && profile?.subscription_tier !== 'pro' && (
+                                {isInTrial && (
                                     <span className="px-2 py-1 rounded-full bg-orange-500/10 text-orange-500 text-xs font-bold border border-orange-500/20 animate-pulse">
-                                        Trial Ends in {Math.max(0, Math.ceil((new Date(profile.trial_ends_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))} days
+                                        Trial Ends in {daysRemaining} days
                                     </span>
                                 )}
                                 <span className="text-xs font-mono text-gray-600">
@@ -158,7 +146,8 @@ export default function LiveDiscoveryTab({
                     <div className="relative">
                         <LiveFeed userId={user.id} onViewArchive={() => onNavigate('reports')} />
                         
-                        {!canSeeLiveFeed && (
+                        {/* Trial Expired Overlay */}
+                        {trialExpired && (
                             <div className="absolute inset-0 z-20 bg-black/80 rounded-[2rem] flex items-center justify-center p-8 text-center border border-white/10">
                                 <motion.div 
                                     initial={{ opacity: 0, scale: 0.95 }}
@@ -166,39 +155,25 @@ export default function LiveDiscoveryTab({
                                     className="max-w-sm space-y-8"
                                 >
                                     <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center mx-auto rotate-3">
-                                        <Lock size={32} className="text-black" />
+                                        <Clock size={32} className="text-black" />
                                     </div>
                                     <div className="space-y-3">
-                                        <h3 className="text-2xl font-black leading-tight text-white">Unlock Live Intel</h3>
+                                        <h3 className="text-2xl font-black leading-tight text-white">Trial Access Ended</h3>
                                         <p className="text-gray-400 text-sm leading-relaxed font-medium">
-                                            Watch high-intent conversations appear in real-time. 
-                                            Free users get scans; Pros get the whole feed.
+                                            Full access will be made available soon. Stay tuned for our Pro plan launch!
                                         </p>
                                     </div>
                                     <div className="space-y-3">
-                                        {!profile?.trial_ends_at ? (
-                                            <button 
-                                                onClick={handleStartTrial}
-                                                disabled={isStartingTrial}
-                                                className="w-full py-5 bg-white hover:bg-gray-100 text-black font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50"
-                                            >
-                                                {isStartingTrial ? 'Initializing...' : 'Start 3-Day Free Trial'}
-                                            </button>
-                                        ) : (
-                                            <button 
-                                                onClick={handleUpgrade}
-                                                disabled={isUpgrading}
-                                                className="w-full py-5 bg-white hover:bg-gray-100 text-black font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
-                                            >
-                                                {isUpgrading ? 'Redirecting...' : 'Upgrade to Pro'}
-                                            </button>
-                                        )}
-
-                                        {!isPro && profile?.trial_ends_at && (
-                                            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
-                                                Trial {new Date(profile.trial_ends_at) > new Date() ? 'Ends' : 'Expired'} {new Date(profile.trial_ends_at).toLocaleDateString()}
-                                            </p>
-                                        )}
+                                        <button 
+                                            onClick={handleUpgrade}
+                                            disabled={isUpgrading}
+                                            className="w-full py-5 bg-white hover:bg-gray-100 text-black font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
+                                        >
+                                            {isUpgrading ? 'Loading...' : 'Notify Me When Pro Launches'}
+                                        </button>
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+                                            Trial Ended {trialEndsAt?.toLocaleDateString()}
+                                        </p>
                                     </div>
                                 </motion.div>
                             </div>
@@ -249,10 +224,10 @@ export default function LiveDiscoveryTab({
                         </div>
                     </div>
 
-                    {!isPro && !isInTrial && (
+                    {trialExpired && (
                         <div className="p-6 bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl text-black shadow-xl shadow-orange-500/20 relative overflow-hidden group">
                            <div className="relative z-10 space-y-4">
-                                <h3 className="font-black text-lg leading-tight">Go Unlimited</h3>
+                                <h3 className="font-black text-lg leading-tight">Pro Coming Soon</h3>
                                 <p className="text-xs font-bold opacity-80 leading-relaxed">
                                     Unlock the full live stream and find every customer searching for you right now.
                                 </p>
@@ -261,7 +236,7 @@ export default function LiveDiscoveryTab({
                                     disabled={isUpgrading}
                                     className="w-full py-3 bg-black text-white rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-gray-900 transition-all flex items-center justify-center gap-2"
                                 >
-                                    {isUpgrading ? 'Redirecting...' : 'Upgrade to Pro'}
+                                    {isUpgrading ? 'Loading...' : 'Get Notified'}
                                 </button>
                            </div>
                            <Compass size={80} className="absolute -right-4 -bottom-4 text-black/10 transition-transform group-hover:scale-110" />

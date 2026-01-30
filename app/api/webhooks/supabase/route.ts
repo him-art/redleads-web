@@ -45,7 +45,7 @@ export async function POST(req: Request) {
                 console.log(`[Supabase Webhook] Sending Trial Activated Email to ${email}`);
                 await sendEmail({
                     to: email,
-                    subject: 'Your 7-Day Trial is Active! 🚀',
+                    subject: 'Your 3-Day Trial is Active! 🚀',
                     react: TrialActivatedEmail({ fullName: full_name || email.split('@')[0] })
                 });
             }

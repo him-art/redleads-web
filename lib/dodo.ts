@@ -1,5 +1,4 @@
 import DodoPayments from 'dodopayments';
-import { BETA_MODE, BETA_SEAT_LIMIT } from './constants';
 
 /**
  * Dodo Payments Client
@@ -12,5 +11,3 @@ export const dodo = typeof window === 'undefined' ? new DodoPayments({
 
 // Test mode flag - set to true for development
 export const isTestMode = process.env.NODE_ENV !== 'production';
-
-export { BETA_MODE, BETA_SEAT_LIMIT };
