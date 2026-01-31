@@ -249,8 +249,28 @@ async function runPollCycle() {
                 totalMatches += matchedUserIds.length;
                 console.log(`[RSS] 🎯 Match in r/${subreddit}: "${post.title.slice(0, 30)}..." -> ${matchedUserIds.length} users`);
                 
+                // DEDUPLICATION: Check which users already have this title
+                // This prevents spam/crossposts/restarts from creating duplicates
+                const { data: existing } = await supabase
+                    .from('monitored_leads')
+                    .select('user_id')
+                    .eq('title', post.title)
+                    .in('user_id', matchedUserIds);
+                
+                const existingUserIds = new Set(existing?.map(x => x.user_id) || []);
+                const newUserIds = matchedUserIds.filter(uid => !existingUserIds.has(uid));
+
+                if (newUserIds.length === 0) {
+                    console.log(`[RSS] ⏭️  Skipping duplicates for all matched users.`);
+                    continue;
+                }
+
+                if (newUserIds.length < matchedUserIds.length) {
+                    console.log(`[RSS] 📉 Filtered ${matchedUserIds.length - newUserIds.length} duplicates.`);
+                }
+
                 // Bulk insert leads
-                const leadsToInsert = matchedUserIds.map(uid => ({
+                const leadsToInsert = newUserIds.map(uid => ({
                     user_id: uid,
                     title: post.title,
                     body_text: post.snippet.slice(0, 1000), // Truncate for DB

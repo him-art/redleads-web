@@ -12,7 +12,6 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
     
     const [description, setDescription] = useState(profile?.description || '');
     const [keywords, setKeywords] = useState<string[]>(profile?.keywords || []);
-    const [keywords, setKeywords] = useState<string[]>(profile?.keywords || []);
     // Subreddits are now global, but we keep the state incase of rollback/migration needs
     // const [subreddits, setSubreddits] = useState<string[]>(profile?.subreddits || []);
 
@@ -21,13 +20,11 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
         if (profile) {
             setDescription(profile.description || '');
             setKeywords(profile.keywords || []);
-            setKeywords(profile.keywords || []);
             // setSubreddits(profile.subreddits || []);
         }
     }, [profile]);
     
     // Inputs for adding new items
-    const [newKeyword, setNewKeyword] = useState('');
     const [newKeyword, setNewKeyword] = useState('');
     // const [newSubreddit, setNewSubreddit] = useState('');
 
@@ -48,8 +45,6 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                 .upsert({
                     id: user.id,
                     email: user.email,
-                    description: description,
-                    keywords: keywords,
                     description: description,
                     keywords: keywords,
                     // subreddits: subreddits -- Deprecated in favor of global monitoring
@@ -91,7 +86,6 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
             if (data.keywords || data.subreddits) {
                 // 1. REPLACE INSTEAD OF APPEND
                 // Clear existing before setting new
-                setKeywords(data.keywords || []);
                 setKeywords(data.keywords || []);
                 // setSubreddits(data.subreddits || []);
                 
@@ -139,6 +133,10 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                 setStatusMsg({ type: 'error', text: `Only added ${spaceLeft} keywords. Limit of 10 reached.` });
             }
         }
+    };
+
+    const removeKeyword = (index: number) => {
+        setKeywords(keywords.filter((_, i) => i !== index));
     };
 
     /*

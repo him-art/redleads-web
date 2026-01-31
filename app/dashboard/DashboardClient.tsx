@@ -65,6 +65,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                     const isActive = activeTab === tab.id;
                     return (
                         <button
+                            suppressHydrationWarning
                             key={tab.id}
                             onClick={() => {
                                 setActiveTab(tab.id as any);

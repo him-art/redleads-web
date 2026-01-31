@@ -38,7 +38,8 @@ export default function ReportsTab({ reports, profile }: { reports: any[], profi
                 .from('monitored_leads')
                 .select('*')
                 .eq('user_id', profile.id)
-                .order('created_at', { ascending: false });
+                .order('created_at', { ascending: false })
+                .range(20, 1000);
             
             if (data) setHistoryLeads(data);
         };
@@ -172,8 +173,11 @@ export default function ReportsTab({ reports, profile }: { reports: any[], profi
                 {Object.keys(groupedLeads).length === 0 ? (
                     <div className="text-center py-20 bg-black/20 rounded-2xl border border-dashed border-white/5">
                         <Radar className="mx-auto text-gray-600 mb-4" size={40} />
-                        <h3 className="text-lg font-bold text-gray-300">No History Yet</h3>
-                        <p className="text-sm text-gray-500">Leads will be archived here safely.</p>
+                        <h3 className="text-lg font-bold text-gray-300">No Archived Leads Yet</h3>
+                        <p className="text-sm text-gray-500 max-w-xs mx-auto">
+                            The most recent 20 leads appear in your Command Center. 
+                            Older leads will effectively be archived here.
+                        </p>
                     </div>
                 ) : (
                     <div className="space-y-4">

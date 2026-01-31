@@ -188,6 +188,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                             value={url}
                             onChange={(e) => setUrl(e.target.value)}
                             disabled={isScanning}
+                            suppressHydrationWarning
                             className="w-full bg-white/[0.03] border border-white/5 rounded-2xl py-6 pl-16 pr-32 text-lg focus:outline-none focus:bg-white/[0.05] focus:border-white/10 transition-all placeholder:text-gray-600 font-medium tracking-tight"
                         />
                         <button 

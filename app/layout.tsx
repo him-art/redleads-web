@@ -17,13 +17,13 @@ const ebGaramond = EB_Garamond({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://redleads.app'),
-  title: "RedLeads | Find High-Intent Customers on Reddit",
-  description: "AI-powered lead discovery that monitors Reddit 24/7 for high-intent conversations. Turn Reddit into your #1 customer acquisition channel.",
+  title: "RedLeads - Stop Searching for Customers. Let Them Find You.",
+  description: "Your customers are already looking for you on Reddit. RedLeads alerts you the moment they ask for your solution. 10x your leads without ads.",
   
   // Open Graph (Facebook, LinkedIn, general social)
   openGraph: {
-    title: "RedLeads | Find High-Intent Customers on Reddit",
-    description: "AI-powered lead discovery that monitors Reddit 24/7. First 10 get lifetime beta pricing.",
+    title: "RedLeads - Stop Searching for Customers. Let Them Find You.",
+    description: "Your customers are already looking for you on Reddit. RedLeads alerts you the moment they ask for your solution. 10x your leads without ads.",
     url: "https://redleads.app",
     siteName: "RedLeads",
     images: [
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "RedLeads - Turn Reddit Conversations Into Paying Customers",
+        alt: "RedLeads - Stop Searching for Customers. Let Them Find You.",
       },
     ],
     locale: "en_US",
@@ -41,13 +41,13 @@ export const metadata: Metadata = {
   // Twitter Card
   twitter: {
     card: "summary_large_image",
-    title: "RedLeads | Find High-Intent Customers on Reddit",
-    description: "AI-powered lead discovery that monitors Reddit 24/7. First 10 get lifetime beta pricing.",
+    title: "RedLeads - Stop Searching for Customers. Let Them Find You.",
+    description: "Your customers are already looking for you on Reddit. RedLeads alerts you the moment they ask for your solution. 10x your leads without ads.",
     images: ["/og-image.png"],
   },
   
   // Additional SEO metadata
-  keywords: ["Reddit marketing", "lead generation", "Reddit leads", "customer acquisition", "SaaS marketing", "Reddit automation"],
+  keywords: ["Reddit marketing", "lead generation", "Reddit leads", "customer acquisition", "SaaS marketing", "Reddit automation", "growth hacking"],
   authors: [{ name: "RedLeads" }],
   robots: {
     index: true,

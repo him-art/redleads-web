@@ -179,7 +179,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                         className="absolute right-2 top-2 bottom-2 px-10 bg-[#f25e36] text-white rounded-full text-xl font-bold hover:bg-[#d94a24] transition-all flex items-center gap-3 hover:scale-105 active:scale-95 shadow-xl shadow-orange-500/20"
                       >
                         <Search size={22} />
-                        <span className="hidden sm:inline">Scan</span>
+                        <span className="hidden sm:inline">Start For Free</span>
                       </button>
                     </form>
 
