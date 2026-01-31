@@ -22,7 +22,7 @@ interface LeadAnalysis {
     lead_ids: string[];
 }
 
-export default function ReportsTab({ reports, profile }: { reports: any[], profile: any }) {
+export default function ReportsTab({ reports, profile, user }: { reports: any[], profile: any, user: any }) {
     const [filter, setFilter] = useState<'all' | 'saved'>('all');
     const [historyLeads, setHistoryLeads] = useState<MonitoredLead[]>([]);
     const [leadAnalyses, setLeadAnalyses] = useState<LeadAnalysis[]>([]);
@@ -34,12 +34,16 @@ export default function ReportsTab({ reports, profile }: { reports: any[], profi
 
     useEffect(() => {
         const fetchHistory = async () => {
-            const { data } = await supabase
+            const { data, error } = await supabase
                 .from('monitored_leads')
                 .select('*')
-                .eq('user_id', profile.id)
+                .eq('user_id', user.id)
                 .order('created_at', { ascending: false })
-                .range(20, 1000);
+                .range(0, 1000);
+            
+            if (error) {
+                console.error("ReportsTab Fetch Error:", error);
+            }
             
             if (data) setHistoryLeads(data);
         };
@@ -48,21 +52,28 @@ export default function ReportsTab({ reports, profile }: { reports: any[], profi
             const { data } = await supabase
                 .from('lead_analyses')
                 .select('*')
-                .eq('user_id', profile.id)
+                .eq('user_id', user.id)
                 .order('created_at', { ascending: false })
                 .limit(5);
             
             if (data) setLeadAnalyses(data);
         };
         
-        if (profile?.id) {
+        if (user?.id) {
             fetchHistory();
             fetchAnalyses();
         }
-    }, [profile, supabase]);
+    }, [profile, user, supabase]);
 
     // Filter and Group leads by date
-    const filteredLeads = historyLeads.filter(l => filter === 'all' || (filter === 'saved' && l.is_saved));
+    let filteredLeads: MonitoredLead[] = [];
+    if (filter === 'all') {
+        // Show leads older than top 20
+        filteredLeads = historyLeads.slice(20);
+    } else {
+        // Show ALL saved leads (even if recent)
+        filteredLeads = historyLeads.filter(l => l.is_saved);
+    }
     const groupedLeads = filteredLeads.reduce((groups, lead) => {
         const date = new Date(lead.created_at).toLocaleDateString(undefined, {
             weekday: 'long', 
@@ -125,9 +136,11 @@ export default function ReportsTab({ reports, profile }: { reports: any[], profi
                         <div className="w-px h-4 bg-white/10" />
                         <div>Tracking <b>{profile?.subreddits?.length || 0}</b> subreddits</div>
                         <div className="w-px h-4 bg-white/10" />
+                        <div className="w-px h-4 bg-white/10" />
                         <div>Focusing on <b>{profile?.keywords?.length || 0}</b> keywords</div>
                      </div>
                 )}
+
 
                 {/* SaaS 2.0: Actionable Intelligence Section */}
                 {leadAnalyses.length > 0 && (

@@ -117,7 +117,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                         transition={{ duration: 0.2, ease: "easeOut" }}
                         className="h-full"
                     >
-                        {activeTab === 'reports' && <ReportsTab reports={reports} profile={profile} />}
+                        {activeTab === 'reports' && <ReportsTab reports={reports} profile={profile} user={user} />}
                         {activeTab === 'live' && <LiveDiscoveryTab user={user} profile={profile} initialSearch={initialSearch} onNavigate={(tab) => setActiveTab(tab as any)} />}
                         {activeTab === 'settings' && <SettingsTab profile={profile} user={user} />}
                         {activeTab === 'billing' && <BillingTab profile={profile} />}
