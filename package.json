@@ -9,6 +9,7 @@
     "worker": "npx ts-node --transpile-only --project worker/tsconfig.json worker/src/rss-hybrid-monitor.ts",
     "worker:ingestion": "npx ts-node --transpile-only --project worker/tsconfig.json worker/src/rss-hybrid-monitor.ts",
     "worker:digest": "npx ts-node --transpile-only --project worker/tsconfig.json worker/src/daily-digest.ts",
+    "worker:cleanup": "npx ts-node --transpile-only --project worker/tsconfig.json worker/src/cleanup.ts",
     "lint": "eslint"
   },
   "dependencies": {
