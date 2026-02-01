@@ -69,10 +69,13 @@ export default function BillingTab({ profile, isPro, isAdmin }: { profile: any; 
     const isActuallyExpired = !isEffectivePro && (trialExpired || (trialEndsAt && daysRemaining <= 0));
     const isInTrial = !isEffectivePro && !isActuallyExpired && daysRemaining > 0;
 
+    const [refundError, setRefundError] = useState('');
+
     const submitFeedbackAndRedirect = async () => {
         setSubmittingFeedback(true);
+        setRefundError('');
         try {
-            // Log cancellation feedback to Supabase
+            // 1. Log cancellation feedback to Supabase
             const { createClient } = await import('@/lib/supabase/client');
             const supabase = createClient();
             await supabase.from('cancellation_feedback').insert({
@@ -81,16 +84,82 @@ export default function BillingTab({ profile, isPro, isAdmin }: { profile: any; 
                 reason: feedbackReason,
                 plan_at_cancellation: 'pro'
             });
+
+            // 2. Trigger Auto-Refund if within 7-day window
+            if (isWithinGuarantee) {
+                const refundRes = await fetch('/api/payments/refund-subscription', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ reason: `7-day guarantee: ${feedbackReason}` })
+                });
+                
+                if (!refundRes.ok) {
+                    const errorData = await refundRes.json();
+                    console.error('Auto-refund failed:', errorData.error);
+                    // We'll still proceed to Step 3 but note the issue in logs
+                }
+            }
             
-            // Redirect to Dodo portal
-            await handleManageSubscription();
+            // 3. Move to Confirmation Screen (Step 3)
+            setGuardStep(3);
         } catch (err) {
-            console.error('Feedback error:', err);
-            handleManageSubscription(); // Still redirect even if feedback fails
+            console.error('Cancellation process error:', err);
+            // Fallback to direct redirect if something breaks catastrophically
+            handleManageSubscription();
         } finally {
             setSubmittingFeedback(false);
         }
     };
+
+    if (guardStep === 3) {
+        return (
+            <div className="max-w-2xl space-y-8 animate-in fade-in zoom-in-95 duration-500">
+                <div className="bg-[#141414] border border-white/5 rounded-[2.5rem] p-8 md:p-12 text-center">
+                    <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-8">
+                        <CheckCircle2 size={40} className="text-green-500" />
+                    </div>
+                    
+                    <h3 className="text-3xl font-black mb-4">Subscription Cancelled</h3>
+                    
+                    {isWithinGuarantee ? (
+                        <div className="bg-white/5 rounded-2xl p-6 mb-8 text-left">
+                            <p className="text-gray-300 font-bold mb-2">💰 Refund Initiated</p>
+                            <p className="text-gray-400 text-sm leading-relaxed">
+                                Your full refund has been triggered. You should see it in your account within **2-4 business days**, depending on your bank.
+                            </p>
+                        </div>
+                    ) : (
+                        <p className="text-gray-400 mb-8">
+                            Your subscription has been stopped. You will not be charged again.
+                        </p>
+                    )}
+
+                    <div className="space-y-6 mb-12">
+                        <p className="text-sm text-gray-500 uppercase tracking-widest font-black">Need manual help?</p>
+                        <div className="flex flex-col items-center gap-2">
+                            <a href="mailto:redleads.app@gmail.com" className="text-orange-500 hover:text-orange-400 transition-colors font-bold">
+                                redleads.app@gmail.com
+                            </a>
+                            <a href="https://x.com/redleadsapp" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors text-sm">
+                                DM us on X @redleadsapp
+                            </a>
+                        </div>
+                    </div>
+
+                    <p className="text-xs text-gray-600 mb-8 max-w-sm mx-auto">
+                        Final Step: You will now be redirected to the secure portal to finalize the cycle closure on the payment network.
+                    </p>
+
+                    <button 
+                        onClick={handleManageSubscription}
+                        className="w-full py-4 bg-white text-black font-black rounded-xl hover:bg-gray-200 transition-all flex items-center justify-center gap-2"
+                    >
+                        Finalize in Portal
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     if (guardStep === 1) {
         return (
@@ -124,20 +193,6 @@ export default function BillingTab({ profile, isPro, isAdmin }: { profile: any; 
                         >
                             Keep Pro Access
                         </button>
-                        <div className="grid grid-cols-2 gap-3">
-                            <button 
-                                onClick={() => setGuardStep(2)}
-                                className="py-4 bg-white/5 text-gray-400 font-bold rounded-xl hover:bg-white/10 transition-all text-sm"
-                            >
-                                Pause for 30 Days
-                            </button>
-                            <button 
-                                onClick={() => setGuardStep(2)}
-                                className="py-4 bg-white/5 text-gray-400 font-bold rounded-xl hover:bg-white/10 transition-all text-sm"
-                            >
-                                Downgrade to $9
-                            </button>
-                        </div>
                     </div>
 
                     <button 
