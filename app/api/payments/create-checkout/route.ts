@@ -62,20 +62,17 @@ export async function POST(req: Request) {
 
         const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
-        const session = await dodo.subscriptions.create({
-            billing: {
-                city: 'Unknown',
-                country: 'US',
-                state: 'Unknown',
-                street: 'Unknown',
-                zipcode: '00000',
-            },
+        const session = await dodo.checkoutSessions.create({
             customer: {
                 email: profile?.email || user.email || '',
                 name: profile?.email?.split('@')[0] || 'Customer',
             },
-            product_id: productId,
-            quantity: 1,
+            product_cart: [
+                {
+                    product_id: productId,
+                    quantity: 1,
+                }
+            ],
             return_url: `${siteUrl}/dashboard?payment=success&plan=${plan}`,
             metadata: {
                 user_id: user.id,
@@ -84,23 +81,23 @@ export async function POST(req: Request) {
         });
 
         console.log('[Checkout] Session created:', {
-            id: session.subscription_id,
-            has_link: !!session.payment_link,
+            id: session.session_id,
+            has_url: !!session.checkout_url,
             raw_session: JSON.stringify(session)
         });
 
-        const checkoutUrl = session.payment_link;
+        const checkoutUrl = session.checkout_url;
 
         if (!checkoutUrl) {
-            console.error('[Checkout] FAILED: Dodo did not return a payment_link', session);
+            console.error('[Checkout] FAILED: Dodo did not return a checkout_url', session);
             return NextResponse.json({ 
-                error: 'Dodo Payments did not return a checkout link. Please verify your product identifier is valid for subscriptions.' 
+                error: 'Dodo Payments did not return a checkout link. Please verify your product identifier is valid.' 
             }, { status: 500 });
         }
 
         return NextResponse.json({ 
             checkout_url: checkoutUrl,
-            subscription_id: session.subscription_id,
+            session_id: session.session_id,
         });
 
     } catch (error: any) {
