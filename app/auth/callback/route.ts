@@ -6,7 +6,10 @@ export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
   const next = searchParams.get('next') ?? '/dashboard'
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || origin
+  
+  // Use origin for local dev (localhost), but respect NEXT_PUBLIC_SITE_URL in production
+  const isLocalhost = origin.includes('localhost') || origin.includes('127.0.0.1')
+  const siteUrl = isLocalhost ? origin : (process.env.NEXT_PUBLIC_SITE_URL || origin)
 
   if (code) {
     const cookieStore = await cookies()

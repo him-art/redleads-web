@@ -21,12 +21,12 @@ export default function BillingTab({ profile }: { profile: any }) {
             if (data.checkout_url) {
                 window.location.href = data.checkout_url;
             } else {
-                // Payment system not yet configured - show coming soon message
-                alert('Pro plan coming soon! Stay tuned for the launch.');
+                // Show the specific error from API
+                alert(data.error || 'Failed to create checkout session. Please check your configuration.');
             }
         } catch (error) {
             console.error('Checkout error:', error);
-            alert('Pro plan coming soon! Stay tuned for the launch.');
+            alert('Something went wrong. Please try again later.');
         } finally {
             setIsLoading(false);
         }

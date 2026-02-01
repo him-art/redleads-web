@@ -19,6 +19,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
 
   // Responsive donut positioning - scales with screen size and text
   const [scale, setScale] = useState(1);
+  const [hasMounted, setHasMounted] = useState(false);
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [urlInput, setUrlInput] = useState('');
   const router = useRouter();
@@ -35,6 +36,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
     };
     
     handleResize();
+    setHasMounted(true);
     window.addEventListener('resize', handleResize);
 
     const getUser = async () => {
@@ -100,7 +102,11 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
 
         {/* Hero Content (Floating on top) */}
         <motion.div 
-            style={{ opacity: heroOpacity, y: yText, scale }}
+            style={{ 
+              opacity: heroOpacity, 
+              y: yText, 
+              scale: hasMounted ? scale : 1 
+            }}
             className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none px-4 pt-10" 
         >
              <div className="relative pointer-events-auto">
@@ -157,7 +163,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                   {/* Subtitle and CTAs */}
                   <div className="mt-8 flex flex-col items-center gap-8 px-4 w-full">
                     <p className="text-xl sm:text-2xl text-[#1a1a1a] italic max-w-2xl text-center leading-relaxed">
-                      Watch who is seeking your solution across 100+ communities
+                      Find people actively looking for your solution
                     </p>
                     
                     <form 
@@ -172,6 +178,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                         placeholder="yourwebsite.com"
                         value={urlInput}
                         onChange={(e) => setUrlInput(e.target.value)}
+                        suppressHydrationWarning
                         className="w-full bg-white border-2 border-orange-500 rounded-full py-6 pl-20 pr-48 text-2xl text-slate-900 focus:outline-none focus:ring-8 focus:ring-orange-500/5 transition-all shadow-2xl shadow-black/5 placeholder:text-slate-300"
                       />
                       <button 

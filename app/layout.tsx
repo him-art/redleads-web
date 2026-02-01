@@ -19,6 +19,10 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://redleads.app'),
   title: "RedLeads - Stop Searching for Customers. Let Them Find You.",
   description: "Your customers are already looking for you on Reddit. RedLeads alerts you the moment they ask for your solution. 10x your leads without ads.",
+  icons: {
+    icon: '/favicon.png',
+    apple: '/apple-touch-icon.png',
+  },
   
   // Open Graph (Facebook, LinkedIn, general social)
   openGraph: {

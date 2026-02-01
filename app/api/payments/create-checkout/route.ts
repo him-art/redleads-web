@@ -43,17 +43,19 @@ export async function POST(req: Request) {
         }
 
         // 4. Standard Flow (Dodo Payments)
-        const productId = plan === 'scout' 
-            ? process.env.DODO_PRODUCT_ID_SCOUT 
-            : process.env.DODO_PRODUCT_ID;
-
-        const finalProductId = productId || process.env.DODO_PRODUCT_ID;
+        const productId = process.env.DODO_PRODUCT_ID;
         
-        if (!finalProductId) {
-            // Payment system not yet configured - return friendly message
+        if (!productId) {
+            console.error('[Checkout] DODO_PRODUCT_ID is not set');
             return NextResponse.json({ 
-                error: 'Pro plan coming soon! Stay tuned for the launch.',
-                coming_soon: true 
+                error: 'Payment system not configured. Please contact support.',
+            }, { status: 503 });
+        }
+
+        if (!dodo) {
+            console.error('[Checkout] Dodo client not initialized - likely missing DODO_API_KEY');
+            return NextResponse.json({ 
+                error: 'Payment system not configured. Please contact support.',
             }, { status: 503 });
         }
 
@@ -71,7 +73,7 @@ export async function POST(req: Request) {
                 email: profile?.email || user.email || '',
                 name: profile?.email?.split('@')[0] || 'Customer',
             },
-            product_id: finalProductId,
+            product_id: productId,
             quantity: 1,
             return_url: `${siteUrl}/dashboard?payment=success&plan=${plan}`,
             metadata: {

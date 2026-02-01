@@ -25,7 +25,16 @@ export async function signInWithEmail(formData: FormData): Promise<{ error: stri
 }
 
 export async function signUpWithEmail(formData: FormData): Promise<{ error?: string; success?: string }> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || (await headers()).get('origin');
+  const headersList = await headers();
+  const host = headersList.get('host') || '';
+  const protocol = headersList.get('x-forwarded-proto') || 'http';
+  
+  // Use localhost origin for local development, production URL otherwise
+  const isLocalhost = host.includes('localhost') || host.includes('127.0.0.1');
+  const siteUrl = isLocalhost 
+    ? `http://${host}` 
+    : (process.env.NEXT_PUBLIC_SITE_URL || `${protocol}://${host}`);
+
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
   const supabase = await createClient();
@@ -53,7 +62,16 @@ export async function signUpWithEmail(formData: FormData): Promise<{ error?: str
 }
 
 export async function signInWithGoogle(redirectTo?: string) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || (await headers()).get('origin');
+  const headersList = await headers();
+  const host = headersList.get('host') || '';
+  const protocol = headersList.get('x-forwarded-proto') || 'http';
+  
+  // Use localhost origin for local development, production URL otherwise
+  const isLocalhost = host.includes('localhost') || host.includes('127.0.0.1');
+  const siteUrl = isLocalhost 
+    ? `http://${host}` 
+    : (process.env.NEXT_PUBLIC_SITE_URL || `${protocol}://${host}`);
+  
   const supabase = await createClient();
   
   const { data, error } = await supabase.auth.signInWithOAuth({

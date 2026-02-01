@@ -8,6 +8,7 @@ import ReportsTab from './ReportsTab';
 import SettingsTab from './SettingsTab';
 import BillingTab from './BillingTab';
 import LiveDiscoveryTab from './LiveDiscoveryTab';
+import PaywallModal from '@/components/PaywallModal';
 
 interface DashboardClientProps {
     profile: any;
@@ -20,6 +21,28 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
     const [activeTab, setActiveTab] = useState<'reports' | 'discovery' | 'live' | 'settings' | 'billing'>(initialSearch ? 'live' : 'live'); 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+    // Trial expiration check
+    const isPro = profile?.subscription_tier === 'pro';
+    const isAdmin = profile?.is_admin === true;
+    const trialEndsAt = profile?.trial_ends_at 
+        ? new Date(profile.trial_ends_at) 
+        : (profile?.created_at ? new Date(new Date(profile.created_at).getTime() + 3 * 24 * 60 * 60 * 1000) : null);
+    const trialExpired = trialEndsAt ? trialEndsAt <= new Date() : false;
+    const showPaywall = trialExpired && !isPro && !isAdmin;
+
+    const handleCheckout = async () => {
+        const res = await fetch('/api/payments/create-checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+        });
+        const data = await res.json();
+        if (data.checkout_url) {
+            window.location.href = data.checkout_url;
+        } else {
+            throw new Error(data.error || 'Failed to create checkout session');
+        }
+    };
+
     const tabs = [
         { id: 'live', label: 'Command Center', icon: Navigation },
         { id: 'reports', label: 'Leads Archive', icon: Archive },
@@ -28,7 +51,9 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
     ];
 
     return (
-        <div className="flex flex-col lg:flex-row min-h-[calc(100vh-12rem)] relative">
+        <>
+            {showPaywall && <PaywallModal onCheckout={handleCheckout} />}
+            <div className="flex flex-col lg:flex-row min-h-[calc(100vh-12rem)] relative">
             {/* Mobile Header Toggle */}
             <div className="lg:hidden flex items-center justify-between mb-6 p-4 bg-white/[0.02] border border-white/5 rounded-2xl">
                 <div className="flex items-center gap-3">
@@ -125,5 +150,6 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                 </AnimatePresence>
             </main>
         </div>
+        </>
     );
 }

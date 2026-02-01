@@ -19,14 +19,14 @@ const Pricing = () => {
             if (data.checkout_url) {
                 window.location.href = data.checkout_url;
             } else if (data.error === 'Unauthorized') {
-                window.location.href = '/login?next=/pricing';
+                window.location.href = '/login?next=/#pricing';
             } else {
-                // Payment system not yet configured
-                alert('Pro plan coming soon! Stay tuned for the launch.');
+                // Show the specific error from API
+                alert(data.error || 'Failed to create checkout session. Please check your configuration.');
             }
         } catch (error) {
             console.error('Checkout error:', error);
-            alert('Pro plan coming soon! Stay tuned for the launch.');
+            alert('Something went wrong. Please try again later.');
         } finally {
             setIsLoading(false);
         }

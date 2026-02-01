@@ -60,6 +60,7 @@ const Navbar = () => {
             {user && (
               <Link href="/dashboard" className="text-[#f25e36] hover:text-[#d94a24] transition-colors">Dashboard</Link>
             )}
+            <Link href="#pricing" className="hover:text-slate-900 transition-colors">Pricing</Link>
             <Link href="#faq" className="hover:text-slate-900 transition-colors">FAQ</Link>
           </div>
           
@@ -138,6 +139,14 @@ const Navbar = () => {
                       Dashboard
                     </Link>
                   )}
+                  
+                  <Link 
+                    href="#pricing" 
+                    className="block text-lg font-bold text-slate-800 hover:text-[#f25e36] transition-colors py-2"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Pricing
+                  </Link>
                   
                   <Link 
                     href="#faq" 

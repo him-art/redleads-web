@@ -56,7 +56,7 @@ export default function LiveDiscoveryTab({
             }
         } catch (err: any) {
             console.error('Upgrade failed:', err.message);
-            alert('Full access will be available soon. Stay tuned!');
+            alert(err.message || 'Something went wrong. Please try again.');
         } finally {
             setIsUpgrading(false);
         }
@@ -154,22 +154,22 @@ export default function LiveDiscoveryTab({
                                     animate={{ opacity: 1, scale: 1 }}
                                     className="max-w-sm space-y-8"
                                 >
-                                    <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center mx-auto rotate-3">
-                                        <Clock size={32} className="text-black" />
+                                    <div className="w-20 h-20 bg-orange-500 rounded-3xl flex items-center justify-center mx-auto rotate-3">
+                                        <Lock size={32} className="text-black" />
                                     </div>
                                     <div className="space-y-3">
                                         <h3 className="text-2xl font-black leading-tight text-white">Trial Access Ended</h3>
                                         <p className="text-gray-400 text-sm leading-relaxed font-medium">
-                                            Full access will be made available soon. Stay tuned for our Pro plan launch!
+                                            Upgrade to Pro to unlock unlimited access to high-intent leads.
                                         </p>
                                     </div>
                                     <div className="space-y-3">
                                         <button 
                                             onClick={handleUpgrade}
                                             disabled={isUpgrading}
-                                            className="w-full py-5 bg-white hover:bg-gray-100 text-black font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
+                                            className="w-full py-5 bg-orange-500 hover:bg-orange-400 text-black font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
-                                            {isUpgrading ? 'Loading...' : 'Notify Me When Pro Launches'}
+                                            {isUpgrading ? 'Loading...' : 'Upgrade to Pro — $25/mo'}
                                         </button>
                                         <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
                                             Trial Ended {trialEndsAt?.toLocaleDateString()}
@@ -227,7 +227,7 @@ export default function LiveDiscoveryTab({
                     {trialExpired && (
                         <div className="p-6 bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl text-black shadow-xl shadow-orange-500/20 relative overflow-hidden group">
                            <div className="relative z-10 space-y-4">
-                                <h3 className="font-black text-lg leading-tight">Pro Coming Soon</h3>
+                                <h3 className="font-black text-lg leading-tight">Upgrade to Pro</h3>
                                 <p className="text-xs font-bold opacity-80 leading-relaxed">
                                     Unlock the full live stream and find every customer searching for you right now.
                                 </p>
@@ -236,7 +236,7 @@ export default function LiveDiscoveryTab({
                                     disabled={isUpgrading}
                                     className="w-full py-3 bg-black text-white rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-gray-900 transition-all flex items-center justify-center gap-2"
                                 >
-                                    {isUpgrading ? 'Loading...' : 'Get Notified'}
+                                    {isUpgrading ? 'Loading...' : 'Unlock Pro — $25/mo'}
                                 </button>
                            </div>
                            <Compass size={80} className="absolute -right-4 -bottom-4 text-black/10 transition-transform group-hover:scale-110" />
