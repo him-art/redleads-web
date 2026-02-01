@@ -125,7 +125,7 @@ export default function BillingTab({ profile, isPro, isAdmin }: { profile: any; 
                         <div className="bg-white/5 rounded-2xl p-6 mb-8 text-left">
                             <p className="text-gray-300 font-bold mb-2">💰 Refund Initiated</p>
                             <p className="text-gray-400 text-sm leading-relaxed">
-                                Your full refund has been triggered. You should see it in your account within **2-4 business days**, depending on your bank.
+                                Your full refund has been triggered. You should see it in your account within 2-4 business days, depending on your bank.
                             </p>
                         </div>
                     ) : (

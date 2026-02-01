@@ -30,32 +30,24 @@ export async function GET(req: Request) {
             }, { status: 404 });
         }
 
-        // 3. Create Dodo Customer Portal Session
-        // Note: The Dodo SDK might have a different method name or we might need a direct fetch 
-        // if it's not in the SDK yet. Based on research, it's a POST to /customers/{id}/customer-portal/session
-        
-        // Let's try to use the SDK if available, or fetch as fallback
+        // 3. Create Dodo Customer Portal Session using the SDK
         try {
-            // Check if portal sessions are in the SDK (hypothetical SDK structure)
-            // If not, we use the standard fetch against the Dodo API
-            const response = await fetch(`https://${process.env.NODE_ENV === 'production' ? 'live' : 'test'}.dodopayments.com/customers/${profile.dodo_customer_id}/customer-portal/session`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${process.env.DODO_API_KEY}`,
-                    'Content-Type': 'application/json'
-                }
-            });
+            if (!dodo) {
+                throw new Error('Dodo client not initialized');
+            }
 
-            const data = await response.json();
+            const portalSession = await dodo.customers.customerPortal.create(profile.dodo_customer_id);
 
-            if (data.link) {
-                return NextResponse.json({ url: data.link });
+            if (portalSession.link) {
+                return NextResponse.json({ url: portalSession.link });
             } else {
-                throw new Error(data.message || 'Failed to generate portal link');
+                throw new Error('Failed to generate portal link via SDK');
             }
         } catch (apiErr: any) {
-            console.error('[Dodo Portal API Error]', apiErr);
-            return NextResponse.json({ error: 'Failed to access billing portal. Please try again later.' }, { status: 500 });
+            console.error('[Dodo Portal SDK Error]', apiErr);
+            return NextResponse.json({ 
+                error: 'Failed to access billing portal. Please ensure you have an active subscription and try again.' 
+            }, { status: 500 });
         }
 
     } catch (error: any) {
