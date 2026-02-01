@@ -19,16 +19,10 @@ export default async function DashboardPage(props: { searchParams: Promise<{ sea
     // Fetch Profile (Settings + Billing + Effective Admin/Pro status)
     const { data: profile } = await supabase
         .from('user_access_status')
-        .select('*, subscription_tier:effective_tier, is_admin:is_dev')
+        .select('*, subscription_tier:effective_tier')
         .eq('id', user.id)
         .single();
     
-    console.log('[Server Dashboard] Fetch result:', {
-        userId: user.id,
-        email: user.email,
-        profile
-    });
-
     // Fetch Reports (Drafts + Sent) - Removed as Daily Reports feature is decommissioned
     const reports: any[] = [];
 

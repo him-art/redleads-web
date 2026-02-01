@@ -9,29 +9,38 @@ import { useRouter } from 'next/navigation';
 export default function LiveDiscoveryTab({ 
     user, 
     profile, 
+    isPro,
+    isAdmin,
     initialSearch = '', 
     onNavigate 
 }: { 
     user: any, 
     profile: any, 
+    isPro: boolean,
+    isAdmin: boolean,
     initialSearch?: string, 
     onNavigate: (tab: string) => void 
 }) {
+    const isEffectivePro = isPro || isAdmin;
     const [isUpgrading, setIsUpgrading] = useState(false);
     const supabase = createClient();
     const router = useRouter();
     const [hasResults, setHasResults] = useState(false);
     
-    const isPro = profile?.subscription_tier === 'pro' || profile?.effective_tier === 'pro';
+    // Logic moved to props, but keeping local variable for backwards compatibility if needed
+    // const isPro = profile?.subscription_tier === 'pro' || profile?.effective_tier === 'pro';
     
     // Auto-calculate trial status from profile.created_at or trial_ends_at
-    const trialEndsAt = profile?.trial_ends_at 
-        ? new Date(profile.trial_ends_at) 
-        : (profile?.created_at ? new Date(new Date(profile.created_at).getTime() + 3 * 24 * 60 * 60 * 1000) : null);
+    const trialEndsAtString = profile?.trial_ends_at || (profile?.created_at ? new Date(new Date(profile.created_at).getTime() + 3 * 24 * 60 * 60 * 1000).toISOString() : null);
+    const trialEndsAt = trialEndsAtString ? new Date(trialEndsAtString) : null;
     
-    const isInTrial = trialEndsAt ? trialEndsAt > new Date() : false;
-    const canSeeLiveFeed = isPro || isInTrial;
-    const trialExpired = trialEndsAt && trialEndsAt <= new Date() && !isPro;
+    const now = new Date();
+    const trialExpired = trialEndsAt ? trialEndsAt <= now : false; 
+    const daysRemaining = trialEndsAt ? Math.max(0, Math.ceil((trialEndsAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))) : 0;
+    
+    const isActuallyExpired = !isEffectivePro && (trialExpired || (trialEndsAt && daysRemaining <= 0));
+    const isInTrial = !isEffectivePro && !isActuallyExpired && daysRemaining > 0;
+    const canSeeLiveFeed = isEffectivePro || isInTrial;
 
     const isSetupComplete = !!(
         profile?.description?.length > 10 && 
@@ -62,8 +71,7 @@ export default function LiveDiscoveryTab({
         }
     };
 
-    // Calculate days remaining in trial
-    const daysRemaining = trialEndsAt ? Math.max(0, Math.ceil((trialEndsAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24))) : 0;
+    // Unified trial logic is now at the top
 
     return (
         <section className="space-y-4 max-w-6xl mx-auto">
@@ -106,7 +114,7 @@ export default function LiveDiscoveryTab({
                                     </span>
                                 )}
                                 <span className="text-xs font-mono text-gray-600">
-                                    Usage: {isPro && profile?.last_scan_at && (new Date(profile.last_scan_at).toDateString() !== new Date().toDateString()) ? 0 : profile?.scan_count || 0}/5 {isPro ? 'Today' : 'Total'}
+                                    Usage: {isEffectivePro && profile?.last_scan_at && (new Date(profile.last_scan_at).toDateString() !== new Date().toDateString()) ? 0 : profile?.scan_count || 0}/5 {isEffectivePro ? 'Today' : 'Total'}
                                 </span>
                             </div>
                         )}
@@ -147,7 +155,7 @@ export default function LiveDiscoveryTab({
                         <LiveFeed userId={user.id} onViewArchive={() => onNavigate('reports')} />
                         
                         {/* Trial Expired Overlay */}
-                        {trialExpired && (
+                        {isActuallyExpired && (
                             <div className="absolute inset-0 z-20 bg-black/80 rounded-[2rem] flex items-center justify-center p-8 text-center border border-white/10">
                                 <motion.div 
                                     initial={{ opacity: 0, scale: 0.95 }}
@@ -224,7 +232,7 @@ export default function LiveDiscoveryTab({
                         </div>
                     </div>
 
-                    {trialExpired && (
+                    {isActuallyExpired && (
                         <div className="p-6 bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl text-black shadow-xl shadow-orange-500/20 relative overflow-hidden group">
                            <div className="relative z-10 space-y-4">
                                 <h3 className="font-black text-lg leading-tight">Upgrade to Pro</h3>

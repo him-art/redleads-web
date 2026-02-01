@@ -18,19 +18,24 @@ interface DashboardClientProps {
 }
 
 export default function DashboardClient({ profile, reports, user, initialSearch = '' }: DashboardClientProps) {
-    console.log('[Dashboard] Profile:', profile);
     const [activeTab, setActiveTab] = useState<'reports' | 'discovery' | 'live' | 'settings' | 'billing'>(initialSearch ? 'live' : 'live'); 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // Trial expiration check
     const isPro = profile?.subscription_tier === 'pro' || profile?.effective_tier === 'pro';
     const isAdmin = profile?.is_admin === true || user?.email === 'hjayaswar@gmail.com';
-    const trialEndsAt = profile?.trial_ends_at 
-        ? new Date(profile.trial_ends_at) 
-        : (profile?.created_at ? new Date(new Date(profile.created_at).getTime() + 3 * 24 * 60 * 60 * 1000) : null);
-    const trialExpired = trialEndsAt ? trialEndsAt <= new Date() : false;
-    const daysRemaining = trialEndsAt ? Math.max(0, Math.ceil((trialEndsAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24))) : 0;
-    const showPaywall = trialExpired && !isPro && !isAdmin;
+    
+    // Explicitly use trial_ends_at or fallback to created_at + 3 days
+    const trialEndsAtString = profile?.trial_ends_at || (profile?.created_at ? new Date(new Date(profile.created_at).getTime() + 3 * 24 * 60 * 60 * 1000).toISOString() : null);
+    const trialEndsAt = trialEndsAtString ? new Date(trialEndsAtString) : null;
+    
+    const now = new Date();
+    const trialExpired = trialEndsAt ? trialEndsAt <= now : false; // Default to NOT expired if loading
+    const daysRemaining = trialEndsAt ? Math.max(0, Math.ceil((trialEndsAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))) : 0;
+    
+    // Final status override
+    const isActuallyExpired = !isPro && !isAdmin && (trialExpired || (trialEndsAt && daysRemaining <= 0));
+    const showPaywall = isActuallyExpired && !isPro && !isAdmin;
 
     const handleCheckout = async () => {
         const res = await fetch('/api/payments/create-checkout', {
@@ -97,7 +102,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                     <p className="text-sm font-bold text-green-500">Pro Plan Active</p>
                                 </div>
                             </div>
-                        ) : trialExpired ? (
+                        ) : isActuallyExpired ? (
                             <div className="flex items-center gap-3 p-3 bg-red-500/10 border border-red-500/20 rounded-2xl group/status">
                                 <div className="p-2 bg-red-500/20 rounded-xl text-red-500 group-hover/status:scale-110 transition-transform">
                                     <AlertTriangle size={16} />
@@ -179,10 +184,10 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                         transition={{ duration: 0.2, ease: "easeOut" }}
                         className="h-full"
                     >
-                        {activeTab === 'reports' && <ReportsTab reports={reports} profile={profile} user={user} />}
-                        {activeTab === 'live' && <LiveDiscoveryTab user={user} profile={profile} initialSearch={initialSearch} onNavigate={(tab) => setActiveTab(tab as any)} />}
+                        {activeTab === 'reports' && <ReportsTab reports={reports} profile={profile} user={user} isPro={isPro} isAdmin={isAdmin} />}
+                        {activeTab === 'live' && <LiveDiscoveryTab user={user} profile={profile} isPro={isPro} isAdmin={isAdmin} initialSearch={initialSearch} onNavigate={(tab) => setActiveTab(tab as any)} />}
                         {activeTab === 'settings' && <SettingsTab profile={profile} user={user} />}
-                        {activeTab === 'billing' && <BillingTab profile={profile} />}
+                        {activeTab === 'billing' && <BillingTab profile={profile} isPro={isPro} isAdmin={isAdmin} />}
                     </motion.div>
                 </AnimatePresence>
             </main>

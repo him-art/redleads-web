@@ -22,7 +22,7 @@ interface LeadAnalysis {
     lead_ids: string[];
 }
 
-export default function ReportsTab({ reports, profile, user }: { reports: any[], profile: any, user: any }) {
+export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: { reports: any[], profile: any, user: any, isPro: boolean, isAdmin: boolean }) {
     const [filter, setFilter] = useState<'all' | 'saved'>('all');
     const [historyLeads, setHistoryLeads] = useState<MonitoredLead[]>([]);
     const [leadAnalyses, setLeadAnalyses] = useState<LeadAnalysis[]>([]);

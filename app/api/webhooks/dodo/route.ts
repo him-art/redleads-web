@@ -45,40 +45,71 @@ export async function POST(req: Request) {
 
         console.log(`[Dodo Webhook] Received event: ${eventType}`);
 
-        // Extract user_id from metadata
-        const userId = data?.metadata?.user_id;
+        // 1. Log the receipt of the webhook for debugging
+        await supabase.from('webhook_logs').insert({
+            event_type: eventType,
+            payload: payload,
+            status: 'received'
+        });
+
+        // Determine user to update
+        let userId = data?.metadata?.user_id;
+        const customerEmail = data?.customer?.email || data?.customer?.customer_email;
+
+        // ... (rest of the identification logic) ...
+        if (!userId && customerEmail) {
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('id')
+                .eq('email', customerEmail)
+                .single();
+            
+            if (profile) userId = profile.id;
+        }
+
         if (!userId) {
-            console.warn('[Dodo Webhook] No user_id in metadata, skipping.');
+            await supabase.from('webhook_logs').update({ status: 'unidentified_user' }).eq('event_type', eventType).order('created_at', { ascending: false }).limit(1);
             return NextResponse.json({ received: true });
         }
 
-        switch (eventType) {
-            case 'subscription.active':
-            case 'payment.succeeded':
-                // Upgrade user to Pro
-                await supabase
-                    .from('profiles')
-                    .update({ 
-                        subscription_tier: 'pro',
-                        dodo_customer_id: data.customer?.customer_id || null,
-                    })
-                    .eq('id', userId);
-                console.log(`[Dodo Webhook] Upgraded user ${userId} to Pro`);
-                break;
+        try {
+            switch (eventType) {
+                case 'subscription.active':
+                case 'subscription.activated':
+                case 'subscription.created':
+                case 'payment.succeeded':
+                case 'payment.captured':
+                    await supabase
+                        .from('profiles')
+                        .update({ 
+                            subscription_tier: 'pro',
+                            subscription_started_at: new Date().toISOString(),
+                            dodo_customer_id: data.customer?.customer_id || data.customer_id || null,
+                        })
+                        .eq('id', userId);
+                    
+                    await supabase.from('webhook_logs').update({ status: 'success' }).eq('event_type', eventType).order('created_at', { ascending: false }).limit(1);
+                    break;
 
-            case 'subscription.cancelled':
-            case 'subscription.failed':
-            case 'subscription.expired':
-                // Downgrade user to Free
-                await supabase
-                    .from('profiles')
-                    .update({ subscription_tier: 'free' })
-                    .eq('id', userId);
-                console.log(`[Dodo Webhook] Downgraded user ${userId} to Free`);
-                break;
+                case 'subscription.cancelled':
+                case 'subscription.failed':
+                case 'subscription.expired':
+                case 'subscription.deactivated':
+                    await supabase
+                        .from('profiles')
+                        .update({ subscription_tier: 'free' })
+                        .eq('id', userId);
+                    
+                    await supabase.from('webhook_logs').update({ status: 'downgraded' }).eq('event_type', eventType).order('created_at', { ascending: false }).limit(1);
+                    break;
 
-            default:
-                console.log(`[Dodo Webhook] Unhandled event type: ${eventType}`);
+                default:
+                    await supabase.from('webhook_logs').update({ status: 'unhandled_event' }).eq('event_type', eventType).order('created_at', { ascending: false }).limit(1);
+            }
+        } catch (dbError) {
+            console.error('[Dodo Webhook DB Error]', dbError);
+            await supabase.from('webhook_logs').update({ status: 'error' }).eq('event_type', eventType).order('created_at', { ascending: false }).limit(1);
+            throw dbError;
         }
 
         return NextResponse.json({ received: true });
