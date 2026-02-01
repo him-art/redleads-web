@@ -4,14 +4,13 @@ import DodoPayments from 'dodopayments';
  * Dodo Payments Client
  * Initialize the SDK with your API key from environment variables.
  * Only instantiated on the server to prevent client-side evaluation errors.
- * 
- * Set DODO_TEST_MODE=true for test mode, or leave unset for live mode.
  */
+const apiKey = process.env.DODO_API_KEY;
 const isTestMode = process.env.DODO_TEST_MODE === 'true';
 
-export const dodo = typeof window === 'undefined' ? new DodoPayments({
-    bearerToken: process.env.DODO_API_KEY,
+export const dodo = (typeof window === 'undefined' && apiKey) ? new DodoPayments({
+    bearerToken: apiKey,
     environment: isTestMode ? 'test_mode' : 'live_mode',
-}) : null as unknown as DodoPayments;
+}) : null;
 
 export { isTestMode };

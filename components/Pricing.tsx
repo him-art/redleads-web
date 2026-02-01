@@ -14,19 +14,20 @@ const Pricing = () => {
                 headers: { 'Content-Type': 'application/json' },
             });
             
-            const data = await res.json();
+            const data = await res.json().catch(() => ({}));
             
-            if (data.checkout_url) {
+            if (res.ok && data.checkout_url) {
                 window.location.href = data.checkout_url;
-            } else if (data.error === 'Unauthorized') {
+            } else if (res.status === 401) {
                 window.location.href = '/login?next=/#pricing';
             } else {
-                // Show the specific error from API
-                alert(data.error || 'Failed to create checkout session. Please check your configuration.');
+                // Show the specific error from API or status code
+                const errorMsg = data.error || `Error ${res.status}: Failed to initiate checkout`;
+                alert(errorMsg);
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Checkout error:', error);
-            alert('Something went wrong. Please try again later.');
+            alert(`Network error: ${error.message || 'Something went wrong. Please try again later.'}`);
         } finally {
             setIsLoading(false);
         }

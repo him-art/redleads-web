@@ -53,9 +53,10 @@ export async function POST(req: Request) {
         }
 
         if (!dodo) {
-            console.error('[Checkout] Dodo client not initialized - likely missing DODO_API_KEY');
+            const hasKey = !!process.env.DODO_API_KEY;
+            console.error('[Checkout] Dodo client not initialized.', { hasKey });
             return NextResponse.json({ 
-                error: 'Payment system not configured. Please contact support.',
+                error: hasKey ? 'Payment system initialization failed.' : 'DODO_API_KEY is missing in environment.',
             }, { status: 503 });
         }
 
