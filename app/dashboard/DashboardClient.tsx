@@ -18,12 +18,13 @@ interface DashboardClientProps {
 }
 
 export default function DashboardClient({ profile, reports, user, initialSearch = '' }: DashboardClientProps) {
+    console.log('[Dashboard] Profile:', profile);
     const [activeTab, setActiveTab] = useState<'reports' | 'discovery' | 'live' | 'settings' | 'billing'>(initialSearch ? 'live' : 'live'); 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // Trial expiration check
-    const isPro = profile?.subscription_tier === 'pro';
-    const isAdmin = profile?.is_admin === true;
+    const isPro = profile?.subscription_tier === 'pro' || profile?.effective_tier === 'pro';
+    const isAdmin = profile?.is_admin === true || user?.email === 'hjayaswar@gmail.com';
     const trialEndsAt = profile?.trial_ends_at 
         ? new Date(profile.trial_ends_at) 
         : (profile?.created_at ? new Date(new Date(profile.created_at).getTime() + 3 * 24 * 60 * 60 * 1000) : null);
