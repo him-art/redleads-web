@@ -83,8 +83,23 @@ export async function POST(req: Request) {
             },
         });
 
+        console.log('[Checkout] Session created:', {
+            id: session.subscription_id,
+            has_link: !!session.payment_link,
+            raw_session: JSON.stringify(session)
+        });
+
+        const checkoutUrl = session.payment_link;
+
+        if (!checkoutUrl) {
+            console.error('[Checkout] FAILED: Dodo did not return a payment_link', session);
+            return NextResponse.json({ 
+                error: 'Dodo Payments did not return a checkout link. Please verify your product identifier is valid for subscriptions.' 
+            }, { status: 500 });
+        }
+
         return NextResponse.json({ 
-            checkout_url: session.payment_link,
+            checkout_url: checkoutUrl,
             subscription_id: session.subscription_id,
         });
 
