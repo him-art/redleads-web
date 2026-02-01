@@ -89,6 +89,21 @@ export async function POST(req: Request) {
 
     } catch (error: any) {
         console.error('[Checkout Error]', error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        
+        // Extract more details from the error
+        const errorMessage = error?.message || 'Unknown error';
+        const statusCode = error?.status || error?.statusCode || 500;
+        
+        // Log full error for debugging
+        console.error('[Checkout Error Details]', {
+            message: errorMessage,
+            status: statusCode,
+            body: error?.body,
+            response: error?.response,
+        });
+        
+        return NextResponse.json({ 
+            error: `${statusCode} ${errorMessage}` 
+        }, { status: 500 });
     }
 }
