@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Archive, Sliders, ShieldCheck, Navigation, Layout, Search, Menu, X, Sparkles } from 'lucide-react';
+import { Archive, Sliders, ShieldCheck, Navigation, Layout, Search, Menu, X, Sparkles, Clock, AlertTriangle, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 import ReportsTab from './ReportsTab';
@@ -28,6 +28,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
         ? new Date(profile.trial_ends_at) 
         : (profile?.created_at ? new Date(new Date(profile.created_at).getTime() + 3 * 24 * 60 * 60 * 1000) : null);
     const trialExpired = trialEndsAt ? trialEndsAt <= new Date() : false;
+    const daysRemaining = trialEndsAt ? Math.max(0, Math.ceil((trialEndsAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24))) : 0;
     const showPaywall = trialExpired && !isPro && !isAdmin;
 
     const handleCheckout = async () => {
@@ -83,6 +84,41 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                 p-4 lg:p-0 border lg:border-0 border-white/5 rounded-3xl lg:rounded-none
             `}>
                 <div className="px-4 mb-6 hidden lg:block">
+                    {/* Subscription Status Badge */}
+                    <div className="mb-8">
+                        {isPro || isAdmin ? (
+                            <div className="flex items-center gap-3 p-3 bg-green-500/10 border border-green-500/20 rounded-2xl group/status">
+                                <div className="p-2 bg-green-500/20 rounded-xl text-green-500 group-hover/status:scale-110 transition-transform">
+                                    <Zap size={16} fill="currentColor" />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-green-500/60">Subscription</p>
+                                    <p className="text-sm font-bold text-green-500">Pro Plan Active</p>
+                                </div>
+                            </div>
+                        ) : trialExpired ? (
+                            <div className="flex items-center gap-3 p-3 bg-red-500/10 border border-red-500/20 rounded-2xl group/status">
+                                <div className="p-2 bg-red-500/20 rounded-xl text-red-500 group-hover/status:scale-110 transition-transform">
+                                    <AlertTriangle size={16} />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-red-500/60">Subscription</p>
+                                    <p className="text-sm font-bold text-red-400">Trial Expired</p>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-3 p-3 bg-orange-500/10 border border-orange-500/20 rounded-2xl group/status">
+                                <div className="p-2 bg-orange-500/20 rounded-xl text-orange-500 group-hover/status:scale-110 transition-transform">
+                                    <Clock size={16} />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-500/60">Free Trial</p>
+                                    <p className="text-sm font-bold text-orange-500">{daysRemaining} Days Left</p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
                     <h3 className="text-xs font-black uppercase tracking-[0.2em] text-gray-500 mb-4">Workspace</h3>
                 </div>
                 {tabs.map((tab) => {
