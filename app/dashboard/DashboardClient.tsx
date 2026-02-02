@@ -89,14 +89,12 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
             {showPaywall && <PaywallModal onCheckout={handleCheckout} />}
             
             {/* Main Layout Container - Full Dark Theme */}
-            <div className="flex h-screen bg-[#050505] text-white overflow-hidden font-sans selection:bg-orange-500/30">
+            <div className="flex h-screen bg-[#1a1a1a] text-white overflow-hidden font-sans selection:bg-[#ff9053]/30">
                 
                 {/* Mobile Header Toggle */}
-                <div className="lg:hidden absolute top-0 left-0 right-0 z-50 p-4 bg-[#050505]/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between">
+                <div className="lg:hidden absolute top-0 left-0 right-0 z-50 p-4 bg-[#1a1a1a]/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center">
-                            <Zap size={18} className="text-black fill-black" />
-                        </div>
+                        <img src="/redleads-logo-white.png" alt="RedLeads Logo" className="w-8 h-8 object-contain" />
                         <span className="font-bold text-lg tracking-tight">RedLeads</span>
                     </div>
                     <button 
@@ -112,7 +110,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                     initial={false}
                     animate={isMobileMenuOpen ? { x: 0 } : { x: 0 }}
                     className={`
-                        fixed inset-y-0 left-0 z-40 w-72 bg-[#050505] border-r border-white/5
+                        fixed inset-y-0 left-0 z-40 w-72 bg-[#1a1a1a] border-r border-white/5
                         transform lg:transform-none transition-transform duration-300 ease-in-out
                         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
                         flex flex-col p-6
@@ -120,12 +118,12 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                 >
                     {/* Brand Header */}
                     <div className="flex items-center gap-3 px-2 mb-10 mt-2">
-                        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/20">
-                            <Zap size={18} className="text-white fill-white" />
+                        <div className="w-10 h-10 flex items-center justify-center">
+                            <img src="/redleads-logo-white.png" alt="RedLeads Logo" className="w-full h-full object-contain" />
                         </div>
                         <div>
-                            <h1 className="font-bold text-lg tracking-tight leading-none">RedLeads</h1>
-                            <span className="text-[10px] font-medium text-gray-500 uppercase tracking-widest pl-0.5">Intelligence</span>
+                            <h1 className="font-bold text-xl tracking-tight leading-none text-white">RedLeads</h1>
+                            <span className="text-[10px] font-medium text-gray-500 uppercase tracking-widest">Intelligence</span>
                         </div>
                     </div>
 
@@ -151,9 +149,9 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                     }`}
                                 >
                                     {isActive && (
-                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-orange-500 rounded-r-full" />
+                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#ff9053] rounded-r-full" />
                                     )}
-                                    <Icon size={18} className={`relative z-10 transition-colors ${isActive ? 'text-orange-500' : 'group-hover:text-gray-300'}`} />
+                                    <Icon size={18} className={`relative z-10 transition-colors ${isActive ? 'text-[#ff9053]' : 'group-hover:text-gray-300'}`} />
                                     <span className={`relative z-10 text-sm font-medium tracking-wide ${isActive ? 'text-white' : ''}`}>
                                         {tab.label}
                                     </span>
@@ -181,7 +179,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                 </motion.aside>
 
                 {/* Main Content Area */}
-                <main className="flex-1 lg:pl-72 relative flex flex-col min-w-0 bg-[#050505]">
+                <main className="flex-1 lg:pl-72 relative flex flex-col min-w-0 bg-[#1a1a1a]">
                      {/* Scrollable Content Container */}
                     <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 lg:p-10 scrollbar-hide">
                          {/* Content Wrapper limit width */}

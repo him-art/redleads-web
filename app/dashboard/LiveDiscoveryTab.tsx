@@ -98,9 +98,9 @@ export default function LiveDiscoveryTab({
             {/* 1. Status Cards Grid (Skeleton Style) */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 {/* Card 1: Plan Status */}
-                <div className="relative overflow-hidden rounded-3xl bg-[#0F0F0F] border border-white/5 p-6 flex flex-col justify-between h-32 md:h-40 group hover:border-white/10 transition-colors">
+                <div className="relative overflow-hidden rounded-3xl bg-[#262626] border border-white/5 p-6 flex flex-col justify-between h-32 md:h-40 group hover:border-white/10 transition-colors">
                     <div className="flex justify-between items-start">
-                        <div className="p-2 bg-orange-500/10 rounded-xl text-orange-500">
+                        <div className="p-2 bg-[#ff9053]/10 rounded-xl text-[#ff9053]">
                              {isActuallySubscribed ? <ShieldCheck size={20} /> : <Clock size={20} />}
                         </div>
                         <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Plan Status</span>
@@ -120,7 +120,7 @@ export default function LiveDiscoveryTab({
                 </div>
 
                 {/* Card 2: Usage Stats */}
-                <div className="relative overflow-hidden rounded-3xl bg-[#0F0F0F] border border-white/5 p-6 flex flex-col justify-between h-32 md:h-40 group hover:border-white/10 transition-colors">
+                <div className="relative overflow-hidden rounded-3xl bg-[#262626] border border-white/5 p-6 flex flex-col justify-between h-32 md:h-40 group hover:border-white/10 transition-colors">
                      <div className="flex justify-between items-start">
                         <div className="p-2 bg-blue-500/10 rounded-xl text-blue-500">
                              <Activity size={20} />
@@ -145,7 +145,7 @@ export default function LiveDiscoveryTab({
                 </div>
 
                 {/* Card 3: Keywords / Setup */}
-                <div className="relative overflow-hidden rounded-3xl bg-[#0F0F0F] border border-white/5 p-6 flex flex-col justify-between h-32 md:h-40 group hover:border-white/10 transition-colors cursor-pointer" onClick={() => onNavigate('settings')}>
+                <div className="relative overflow-hidden rounded-3xl bg-[#262626] border border-white/5 p-6 flex flex-col justify-between h-32 md:h-40 group hover:border-white/10 transition-colors cursor-pointer" onClick={() => onNavigate('settings')}>
                      <div className="flex justify-between items-start">
                         <div className="p-2 bg-purple-500/10 rounded-xl text-purple-500">
                              <Compass size={20} />
@@ -160,8 +160,8 @@ export default function LiveDiscoveryTab({
                             <p className="text-xs text-gray-500 font-medium">Active Keywords</p>
                             {!isSetupComplete && (
                                 <span className="flex h-2 w-2 relative">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ff9053] opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#ff9053]"></span>
                                 </span>
                             )}
                         </div>
@@ -175,12 +175,12 @@ export default function LiveDiscoveryTab({
 
             {/* 2. Main Search Area */}
             <div className="relative group mb-8">
-                <div className={`relative bg-[#0F0F0F] border rounded-3xl p-1 transition-all ${
-                    hasResults ? 'border-orange-500/50 shadow-[0_0_30px_rgba(249,115,22,0.1)]' : 'border-white/5'
+                <div className={`relative bg-[#262626] border rounded-3xl p-1 transition-all ${
+                    hasResults ? 'border-[#ff9053]/50 shadow-[0_0_30px_rgba(255,144,83,0.1)]' : 'border-white/5'
                 }`}>
                     <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+                            <div className="w-2 h-2 rounded-full bg-[#ff9053] animate-pulse" />
                             <span className="text-xs font-bold uppercase tracking-widest text-gray-400">Live Spotlight</span>
                         </div>
                     </div>
@@ -202,8 +202,8 @@ export default function LiveDiscoveryTab({
                     <div className="flex items-center justify-between px-2">
                         <div className="flex items-center gap-3">
                             <div className="relative">
-                                <Activity className="text-orange-500" size={18} />
-                                <div className="absolute inset-0 bg-orange-500/20 blur-md animate-pulse rounded-full" />
+                                <Activity className="text-[#ff9053]" size={18} />
+                                <div className="absolute inset-0 bg-[#ff9053]/20 blur-md animate-pulse rounded-full" />
                             </div>
                             <div className="space-y-0.5">
                                 <h2 className="text-[10px] font-black tracking-[0.2em] text-gray-500 uppercase">Neural Stream</h2>
@@ -240,7 +240,7 @@ export default function LiveDiscoveryTab({
                                         <button 
                                             onClick={() => handleUpgrade('pro')}
                                             disabled={isUpgrading}
-                                            className="w-full py-5 bg-orange-500 hover:bg-orange-400 text-black font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
+                                            className="w-full py-5 bg-[#ff9053] hover:bg-[#e67e45] text-black font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
                                             {isUpgrading ? 'Loading...' : 'Get Pro Access — $29/mo'}
                                         </button>
@@ -281,7 +281,7 @@ export default function LiveDiscoveryTab({
                                     <button 
                                         onClick={() => handleUpgrade('pro')}
                                         disabled={isUpgrading}
-                                        className="w-full py-3 bg-orange-500 text-black rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-orange-400 transition-all flex items-center justify-center gap-2"
+                                        className="w-full py-3 bg-[#ff9053] text-black rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-[#e67e45] transition-all flex items-center justify-center gap-2"
                                     >
                                         Pro ($29)
                                     </button>
