@@ -210,9 +210,22 @@ export default function LiveDiscoveryTab({
                                 <p className="text-sm font-bold text-white tracking-tight">Live Intelligence</p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-3 px-4 py-1.5 bg-green-500/5 border border-green-500/10 rounded-full">
-                            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-[pulse_2s_infinite]" />
-                            <span className="text-[9px] font-black text-green-500/60 uppercase tracking-widest">System Online</span>
+                        <div className={`flex items-center gap-3 px-4 py-1.5 rounded-full border ${
+                            isSetupComplete 
+                                ? 'bg-green-500/5 border-green-500/10' 
+                                : 'bg-red-500/5 border-red-500/10'
+                        }`}>
+                            <div className={`w-1.5 h-1.5 rounded-full animate-[pulse_2s_infinite] ${
+                                isSetupComplete ? 'bg-green-500' : 'bg-red-500'
+                            }`} />
+                            <span className={`text-[9px] font-black uppercase tracking-widest ${
+                                isSetupComplete ? 'text-green-500/60' : 'text-red-500/60'
+                            }`}>
+                                {isSetupComplete 
+                                    ? 'System Online' 
+                                    : 'System Offline - Complete Tracking Set-up'
+                                }
+                            </span>
                         </div>
                     </div>
 
