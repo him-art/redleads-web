@@ -12,14 +12,17 @@ interface MonitoredLead {
     match_score: number;
     created_at: string;
     is_saved?: boolean;
+    match_category?: string;
 }
 
 export default function LiveFeed({ userId, onViewArchive }: { userId: string, onViewArchive: () => void }) {
     const [leads, setLeads] = useState<MonitoredLead[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isMounted, setIsMounted] = useState(false);
     const supabase = createClient();
 
     useEffect(() => {
+        setIsMounted(true);
         const fetchLeads = async () => {
             const { data, error } = await supabase
                 .from('monitored_leads')
@@ -87,22 +90,14 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, scale: 0.98 }}
                                     transition={{ type: "spring", stiffness: 500, damping: 40 }}
-                                    className="relative group flex items-start gap-5 p-6 hover:bg-white/[0.03] transition-all duration-300"
+                                    className="relative group flex items-start gap-3 sm:gap-5 p-4 sm:p-6 hover:bg-white/[0.03] transition-all duration-300"
                                 >
-                                    {/* Minimal Match Score Track */}
-                                    <div className="flex flex-col items-center gap-2 pt-1 h-full">
-                                        <div className="w-1.5 h-10 bg-white/5 rounded-full overflow-hidden relative">
-                                            <motion.div 
-                                                initial={{ height: 0 }}
-                                                animate={{ height: `${lead.match_score * 100}%` }}
-                                                className={`absolute bottom-0 w-full rounded-full transition-colors duration-500 ${
-                                                    lead.match_score > 0.8 ? 'bg-orange-500/60' : lead.match_score > 0.5 ? 'bg-orange-500/30' : 'bg-gray-700'
-                                                }`}
-                                            />
+                                    <div className="flex flex-col items-center gap-2 pt-1 h-full min-w-[60px]">
+                                        <div className="px-2 py-0.5 rounded bg-white/5 border border-white/5">
+                                            <span className="text-[9px] font-black uppercase tracking-widest text-gray-500 whitespace-nowrap">
+                                                {lead.match_category || 'Medium'} Match
+                                            </span>
                                         </div>
-                                        <span className="text-[8px] font-mono font-bold text-gray-700 group-hover:text-orange-500/40 transition-colors">
-                                            {Math.round(lead.match_score * 100)}%
-                                        </span>
                                     </div>
 
                                     <div className="flex-grow space-y-2.5 overflow-hidden">
@@ -110,9 +105,18 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
                                             <span className="text-[9px] font-black text-orange-500/80 bg-orange-500/5 px-2.5 py-1 rounded-full uppercase tracking-widest border border-orange-500/10">
                                                 r/{lead.subreddit}
                                             </span>
-                                            <div className="flex items-center gap-1.5 text-[9px] font-bold text-gray-600 uppercase tracking-widest">
+                                             <div className="flex items-center gap-1.5 text-[9px] font-bold text-gray-600 uppercase tracking-widest">
                                                 <Clock size={10} />
-                                                {new Date(lead.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                {(() => {
+                                                    try {
+                                                        if (!isMounted) return '--:--';
+                                                        const d = new Date(lead.created_at);
+                                                        if (isNaN(d.getTime())) return '--:--';
+                                                        return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                                                    } catch (e) {
+                                                        return '--:--';
+                                                    }
+                                                })()}
                                             </div>
                                         </div>
                                         
@@ -120,46 +124,39 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
                                             href={lead.url} 
                                             target="_blank" 
                                             rel="noopener noreferrer" 
-                                            className="block text-sm font-bold text-gray-300 group-hover:text-white leading-relaxed tracking-tight transition-all"
+                                            className="block text-xs sm:text-sm font-bold text-gray-300 group-hover:text-white leading-relaxed tracking-tight transition-all"
                                         >
                                             {lead.title}
                                         </a>
 
-                                        <div className="flex items-center gap-3">
-                                            <div className="flex items-center gap-1.5">
-                                                <div className="w-1 h-1 rounded-full bg-green-500/40" />
-                                                <span className="text-[8px] font-black text-gray-700 uppercase tracking-widest leading-none">High Intent</span>
-                                            </div>
+                                        <div className="flex items-center gap-1.5 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-all duration-300">
+                                            <button 
+                                                onClick={async (e) => {
+                                                    e.preventDefault();
+                                                    const newStatus = !lead.is_saved;
+                                                    setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, is_saved: newStatus } : l));
+                                                    const { error } = await supabase.from('monitored_leads').update({ is_saved: newStatus }).eq('id', lead.id);
+                                                    if (error) {
+                                                        setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, is_saved: !newStatus } : l));
+                                                    }
+                                                }}
+                                                className={`p-2 sm:p-2.5 rounded-xl transition-all duration-200 ${
+                                                    lead.is_saved 
+                                                        ? 'bg-orange-500 text-black shadow-lg shadow-orange-500/20 scale-105' 
+                                                        : 'bg-white/5 text-gray-500 hover:text-white hover:bg-white/10'
+                                                }`}
+                                            >
+                                                <Bookmark size={14} fill={lead.is_saved ? "currentColor" : "none"} />
+                                            </button>
+                                            <a 
+                                                href={lead.url} 
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                                className="p-2 sm:p-2.5 rounded-xl bg-white/5 text-gray-500 hover:text-white hover:bg-white/10 transition-all duration-200"
+                                            >
+                                                <ExternalLink size={14} />
+                                            </a>
                                         </div>
-                                    </div>
-
-                                    <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                                        <button 
-                                            onClick={async (e) => {
-                                                e.preventDefault();
-                                                const newStatus = !lead.is_saved;
-                                                setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, is_saved: newStatus } : l));
-                                                const { error } = await supabase.from('monitored_leads').update({ is_saved: newStatus }).eq('id', lead.id);
-                                                if (error) {
-                                                    setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, is_saved: !newStatus } : l));
-                                                }
-                                            }}
-                                            className={`p-2.5 rounded-xl transition-all duration-200 ${
-                                                lead.is_saved 
-                                                    ? 'bg-orange-500 text-black shadow-lg shadow-orange-500/20 scale-105' 
-                                                    : 'bg-white/5 text-gray-500 hover:text-white hover:bg-white/10'
-                                            }`}
-                                        >
-                                            <Bookmark size={14} fill={lead.is_saved ? "currentColor" : "none"} />
-                                        </button>
-                                        <a 
-                                            href={lead.url} 
-                                            target="_blank" 
-                                            rel="noopener noreferrer"
-                                            className="p-2.5 rounded-xl bg-white/5 text-gray-500 hover:text-white hover:bg-white/10 transition-all duration-200"
-                                        >
-                                            <ExternalLink size={14} />
-                                        </a>
                                     </div>
                                 </motion.div>
                             ))}

@@ -65,11 +65,11 @@ export async function POST(req: Request) {
 
             const { data: profile } = await supabase
                 .from('profiles')
-                .select('scan_count, last_scan_at, subscription_tier, trial_ends_at, scan_allowance, created_at')
+                .select('scan_count, last_scan_at, subscription_tier, trial_ends_at, scan_allowance, created_at, keywords, subreddits, description')
                 .eq('id', user.id)
                 .single();
             
-            const isPaid = profile?.subscription_tier === 'pro';
+            const isPaid = profile?.subscription_tier === 'pro' || profile?.subscription_tier === 'scout';
             
             // Get trial status - auto-calculate if trial_ends_at is not set
             const trialEndsAt = profile?.trial_ends_at 
@@ -79,7 +79,7 @@ export async function POST(req: Request) {
 
             if (!(isPaid || isInTrial)) {
                 return NextResponse.json({ 
-                    error: 'Your trial has ended. Please upgrade to Pro to continue finding leads.', 
+                    error: 'Your trial has ended. Please upgrade to a paid plan to continue finding leads.', 
                     code: 'PAYWALL_REQUIRED' 
                 }, { status: 403 });
             }
@@ -89,7 +89,7 @@ export async function POST(req: Request) {
             
             // Usage Guardrails (SaaS 2.0)
             let currentCount = profile?.scan_count || 0;
-            const dailyLimit = profile?.scan_allowance || 5; // Default to 5
+            const dailyLimit = profile?.scan_allowance || (profile?.subscription_tier === 'pro' ? 5 : profile?.subscription_tier === 'scout' ? 2 : 5);
 
             if (isPaid) {
                 // If Paid, reset if it's a new day
@@ -98,8 +98,8 @@ export async function POST(req: Request) {
             
             if (currentCount >= dailyLimit) {
                 const msg = isPaid 
-                    ? `Daily scan limit (${dailyLimit}) reached. Check back tomorrow!` 
-                    : `You have used all ${dailyLimit} trial scans. Upgrade to Pro for fresh scans every day!`;
+                    ? `Daily scan limit (${dailyLimit}) reached. Upgrade to increase your limit or check back tomorrow!` 
+                    : `You have used your ${dailyLimit} daily trial scans. Upgrade for fresh scans every day!`;
                 return NextResponse.json({ error: msg, code: 'DAILY_LIMIT_REACHED' }, { status: 403 });
             }
 
@@ -109,7 +109,10 @@ export async function POST(req: Request) {
             }).eq('id', user.id);
 
             const scanResult = await performScan(url, {
-                tavilyApiKey: process.env.TAVILY_API_KEY
+                tavilyApiKey: process.env.TAVILY_API_KEY,
+                keywords: profile?.keywords,
+                subreddits: profile?.subreddits,
+                description: profile?.description
             });
 
             if (scanResult.error) {
@@ -119,8 +122,8 @@ export async function POST(req: Request) {
 
             console.log(`[Scanner API] Scan completed. Found ${scanResult.leads?.length || 0} leads.`);
 
-            // PERSISTENCE LOGIC: If the user is Pro or in Trial, save these leads to their dashboard!
-            if (user && (isPro || isInTrial)) {
+            // PERSISTENCE LOGIC: If the user is Paid (Scout/Pro) or in Trial, save these leads!
+            if (user && (isPaid || isInTrial)) {
                 try {
                     const leadsToSave = scanResult.leads.map((lead: any) => ({
                         user_id: user.id,
@@ -128,7 +131,8 @@ export async function POST(req: Request) {
                         subreddit: lead.subreddit,
                         url: lead.url,
                         status: 'scanner',
-                        match_score: 95, // Scanner leads are high-intent
+                        match_score: lead.match_category === 'High' ? 0.95 : lead.match_category === 'Medium' ? 0.75 : 0.45,
+                        match_category: lead.match_category || 'Medium',
                         is_saved: false
                     }));
 

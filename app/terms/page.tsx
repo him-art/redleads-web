@@ -22,7 +22,7 @@ export default function TermsOfService() {
           <section className="space-y-4">
             <h2 className="text-white font-medium">1. Description of RedLeads</h2>
             <p>
-              RedLeads is a platform that helps businesses discover marketing opportunities on Reddit. Our service monitors subreddits for relevant posts based on your keywords, uses AI to score relevance, and helps you identify leads to engage with potential customers.
+              RedLeads is a platform that helps product discover marketing opportunities on Reddit. Our service monitors subreddits for relevant posts based on your keywords, uses AI to score relevance, and helps you identify leads to engage with potential customers.
             </p>
           </section>
 
@@ -54,7 +54,7 @@ export default function TermsOfService() {
           <section className="space-y-4">
             <h2 className="text-white font-medium">5. Reddit Usage and Compliance</h2>
             <p>
-              RedLeads is designed to help you find genuine marketing opportunities. You agree to use the service for legitimate business purposes only and to follow Reddit&apos;s rules and community guidelines. We are not affiliated with Reddit, Inc.
+              RedLeads is designed to help you find genuine marketing opportunities. You agree to use the service for legitimate product purposes only and to follow Reddit&apos;s rules and community guidelines. We are not affiliated with Reddit, Inc.
             </p>
           </section>
 

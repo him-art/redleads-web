@@ -4,12 +4,12 @@ import { dodo } from '@/lib/dodo';
 import { z } from 'zod';
 
 const checkoutSchema = z.object({
-    plan: z.enum(['scout', 'growth']).optional(),
+    plan: z.enum(['scout', 'pro']).optional(),
 });
 
 /**
  * Creates a Dodo Payments checkout session for subscription upgrade.
- * Supports both Scout ($9/mo) and Growth ($19/mo) plans.
+ * Supports both Scout ($15/mo) and Pro ($29/mo) plans.
  */
 export async function POST(req: Request) {
     try {
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        // 2. Parse request body ONCE
+        // 2. Parse request body
         const body = await req.json().catch(() => ({}));
         const result = checkoutSchema.safeParse(body);
         
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Invalid request data' }, { status: 400 });
         }
         
-        const { plan = 'growth' } = result.data;
+        const { plan = 'pro' } = result.data;
 
         // 3. Get user profile
         const { data: profile } = await supabase
@@ -38,26 +38,25 @@ export async function POST(req: Request) {
             .eq('id', user.id)
             .single();
 
-        if (profile?.subscription_tier === 'pro' || profile?.subscription_tier === 'growth') {
-            return NextResponse.json({ error: 'Already subscribed' }, { status: 400 });
+        if (profile?.subscription_tier === plan) {
+            return NextResponse.json({ error: 'Already on this plan' }, { status: 400 });
         }
 
-        // 4. Standard Flow (Dodo Payments)
-        const productId = process.env.DODO_PRODUCT_ID;
+        // 4. Select Product ID
+        const productId = plan === 'scout' 
+            ? process.env.DODO_PRODUCT_ID_SCOUT 
+            : process.env.DODO_PRODUCT_ID_PRO || process.env.DODO_PRODUCT_ID;
         
         if (!productId) {
-            console.error('[Checkout] DODO_PRODUCT_ID is not set');
+            console.error(`[Checkout] Product ID for ${plan} is not set`);
             return NextResponse.json({ 
-                error: 'Payment system not configured. Please contact support.',
+                error: 'This plan is currently unavailable. Please contact support.',
             }, { status: 503 });
         }
 
         if (!dodo) {
-            const hasKey = !!process.env.DODO_API_KEY;
-            console.error('[Checkout] Dodo client not initialized.', { hasKey });
-            return NextResponse.json({ 
-                error: hasKey ? 'Payment system initialization failed.' : 'DODO_API_KEY is missing in environment.',
-            }, { status: 503 });
+            console.error('[Checkout] Dodo client not initialized.');
+            return NextResponse.json({ error: 'Payment system error' }, { status: 503 });
         }
 
         const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
@@ -76,7 +75,7 @@ export async function POST(req: Request) {
             return_url: `${siteUrl}/dashboard?payment=success&plan=${plan}`,
             metadata: {
                 user_id: user.id,
-                plan: plan || 'growth',
+                plan: plan,
             },
         });
 

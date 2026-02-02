@@ -23,6 +23,7 @@ import cron from 'node-cron';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
+import { ai as AI } from '../../lib/ai';
 
 dotenv.config({ path: '.env.local' });
 
@@ -106,17 +107,18 @@ function loadMasterSubreddits(): string[] {
 async function buildKeywordIndex(): Promise<{ 
     index: Map<string, string[]>, 
     userCount: number,
-    keywordCount: number 
+    keywordCount: number,
+    profiles: any[]
 }> {
     // 1. Fetch profiles with keywords
     const { data: profiles, error } = await supabase
         .from('profiles')
-        .select('id, keywords')
+        .select('id, keywords, description')
         .not('keywords', 'is', null);
 
     if (error) {
         console.error('[RSS] Failed to fetch profiles:', error);
-        return { index: new Map(), userCount: 0, keywordCount: 0 };
+        return { index: new Map(), userCount: 0, keywordCount: 0, profiles: [] };
     }
 
     const index = new Map<string, string[]>();
@@ -139,7 +141,7 @@ async function buildKeywordIndex(): Promise<{
         });
     });
 
-    return { index, userCount: profiles.length, keywordCount };
+    return { index, userCount: profiles.length, keywordCount, profiles };
 }
 
 /**
@@ -190,15 +192,45 @@ function findMatchingUsers(post: RSSPost, keywordIndex: Map<string, string[]>): 
     const matchedUsers = new Set<string>();
 
     for (const [keyword, userIds] of keywordIndex.entries()) {
-        // Exact phrase match (more accurate than simple includes for short words)
-        // For production, regex word boundary checks are better: /\bkeyword\b/
-        // But for speed/MVP, includes() is often sufficient if keywords are distinct phrases.
         if (text.includes(keyword)) {
             userIds.forEach(uid => matchedUsers.add(uid));
         }
     }
 
     return Array.from(matchedUsers);
+}
+
+/**
+ * Categorize a lead for a user using AI
+ */
+async function getLeadCategory(post: RSSPost, businessDescription: string): Promise<string> {
+    if (!businessDescription) return 'Medium';
+    
+    try {
+        const prompt = `
+            Analyze this Reddit post for business relevance:
+            Business Description: "${businessDescription}"
+            Post Title: "${post.title}"
+            Post Snippet: "${post.snippet.slice(0, 500)}"
+            
+            Categorize as "High", "Medium", or "Low" based on lead intent.
+            Return ONLY the word: High, Medium, or Low.
+        `;
+
+        const res = await AI.call({
+            model: "llama-3.3-70b-versatile",
+            messages: [{ role: "user", content: prompt }],
+            temperature: 0.1,
+            max_tokens: 10
+        });
+
+        const content = res.choices?.[0]?.message?.content?.trim();
+        if (content?.includes('High')) return 'High';
+        if (content?.includes('Low')) return 'Low';
+        return 'Medium';
+    } catch (e) {
+        return 'Medium';
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -212,7 +244,7 @@ async function runPollCycle() {
     console.log('[RSS] 🚀 Starting Global Keyword Scan...');
     
     // 1. Build Index
-    const { index, userCount, keywordCount } = await buildKeywordIndex();
+    const { index, userCount, keywordCount, profiles } = await buildKeywordIndex();
     console.log(`[RSS] 🧠 Loaded ${keywordCount} keywords for ${userCount} users.`);
     
     // 2. Load Subreddits
@@ -270,17 +302,23 @@ async function runPollCycle() {
                 }
 
                 // Bulk insert leads
-                const leadsToInsert = newUserIds.map(uid => ({
-                    user_id: uid,
-                    title: post.title,
-                    body_text: post.snippet.slice(0, 1000), // Truncate for DB
-                    subreddit: post.subreddit,
-                    url: post.link,
-                    author: post.author,
-                    status: 'new', // For inbox
-                    match_score: 1.0, // Keyword match = high confidence (can refine with AI later)
-                    reddit_score: 0,
-                    comment_count: 0
+                const leadsToInsert = await Promise.all(newUserIds.map(async (uid) => {
+                    const prof = profiles?.find(p => p.id === uid);
+                    const category = await getLeadCategory(post, prof?.description || '');
+                    
+                    return {
+                        user_id: uid,
+                        title: post.title,
+                        body_text: post.snippet.slice(0, 1000), 
+                        subreddit: post.subreddit,
+                        url: post.link,
+                        author: post.author,
+                        status: 'new',
+                        match_score: category === 'High' ? 0.95 : category === 'Medium' ? 0.75 : 0.45,
+                        match_category: category,
+                        reddit_score: 0,
+                        comment_count: 0
+                    };
                 }));
                 
                 const { error } = await supabase.from('monitored_leads').insert(leadsToInsert);

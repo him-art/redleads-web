@@ -79,16 +79,20 @@ export async function POST(req: Request) {
                 case 'subscription.created':
                 case 'payment.succeeded':
                 case 'payment.captured':
+                    const planType = data?.metadata?.plan || 'pro';
+                    const keywordLimit = planType === 'pro' ? 15 : 5;
+                    
                     await supabase
                         .from('profiles')
                         .update({ 
-                            subscription_tier: 'pro',
+                            subscription_tier: planType,
+                            keyword_limit: keywordLimit,
                             subscription_started_at: new Date().toISOString(),
                             dodo_customer_id: data.customer?.customer_id || data.customer_id || null,
                         })
                         .eq('id', userId);
                     
-                    await supabase.from('webhook_logs').update({ status: 'success' }).eq('event_type', eventType).order('created_at', { ascending: false }).limit(1);
+                    await supabase.from('webhook_logs').update({ status: 'success', status_detail: `Updated to ${planType}` }).eq('event_type', eventType).order('created_at', { ascending: false }).limit(1);
                     break;
 
                 case 'subscription.cancelled':

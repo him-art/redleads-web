@@ -6,6 +6,7 @@ import { z } from 'zod';
 
 const autofillSchema = z.object({
     description: z.string().min(10, "Description must be at least 10 characters long"),
+    limit: z.number().min(1).max(20).optional().default(10),
 });
 
 export async function POST(req: Request) {
@@ -17,20 +18,20 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Invalid Input', details: result.error.format() }, { status: 400 });
         }
 
-        const { description: userDescription } = result.data;
+        const { description: userDescription, limit: keywordLimit } = result.data;
 
         const prompt = `
-            Analyze this business description to generate tracking configuration:
-            Business Description: ${userDescription}
+            Analyze this product description to generate tracking configuration:
+            product Description: ${userDescription}
             
-            Based on this information, identify a mix of EXACTLY 10 high-intent keywords and phrases:
+            Based on this information, identify a mix of EXACTLY ${keywordLimit} high-intent keywords and phrases:
             1. Product/Service terms (e.g., "CRM software", "sales tools")
             2. Pain points (e.g., "low conversion rates", "manual data entry")
             3. Competitor indicators (e.g., brand names if relevant)
             4. Industry terms (e.g., "B2B SaaS", "go-to-market")
 
             Requirements for output:
-            - Keywords/Phrases: Provide EXACTLY 10 relevant items total. Mixture of single words and multi-word phrases.
+            - Keywords/Phrases: Provide EXACTLY ${keywordLimit} relevant items total. **IMPORTANT: Favor concise 2-word phrases** (e.g., "sales automation" instead of just "sales" or long complex sentences).
             
             Return the result as a STRICT JSON object in this format:
             {

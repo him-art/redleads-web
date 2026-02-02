@@ -39,8 +39,8 @@ export default function DailyDigestEmail({ fullName, leads }: DailyDigestEmailPr
                         <span style={{ fontSize: '10px', fontWeight: 'bold', textTransform: 'uppercase', color: '#f25e36', backgroundColor: 'rgba(242, 94, 54, 0.1)', padding: '2px 8px', borderRadius: '4px' }}>
                             r/{lead.subreddit}
                         </span>
-                        <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#666' }}>
-                           {Math.round(lead.match_score * 100)}% Match
+                        <span style={{ fontSize: '10px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.1em', color: lead.match_score >= 0.9 ? '#f25e36' : '#999' }}>
+                           {lead.match_score >= 0.9 ? '🔥 High Intent' : lead.match_score >= 0.6 ? '⚖️ Medium Intent' : '❄️ Low Intent'}
                         </span>
                     </div>
                     <a 

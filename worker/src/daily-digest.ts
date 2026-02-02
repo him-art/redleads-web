@@ -132,13 +132,13 @@ async function runDailyDigest() {
                 const prompt = `
                     You are an expert Lead Qualifier.
                     
-                    Business Description: "${description}"
+                    product Description: "${description}"
                     
                     Task: Analyze the following ${candidates.length} potential leads from Reddit.
-                    Identify the top 10 MOST RELEVANT leads for this business.
+                    Identify the top 10 MOST RELEVANT leads for this product.
                     
                     Criteria:
-                    - High Intent: Validates a problem the business solves.
+                    - High Intent: Validates a problem the product solves.
                     - Relevance: Matches the specific niche/industry.
                     - Recency/Context: Looks like a genuine opportunity, not spam.
                     
@@ -149,8 +149,11 @@ async function runDailyDigest() {
                         snippet: l.subreddit + ": " + (l.body_text || '').slice(0, 200) // Truncate for tokens
                     })))}
                     
-                    Return a JSON object with a single array "top_ids" containing the IDs of the top 10 matches, ordered by relevance.
-                    Example: { "top_ids": ["id1", "id2", ...] }
+                    Return a JSON object:
+                    {
+                      "top_ids": ["id1", "id2", ...],
+                      "categories": { "id1": "High", "id2": "Medium", ... }
+                    }
                     ONLY return JSON.
                 `;
 
@@ -168,17 +171,25 @@ async function runDailyDigest() {
                         // Filter and sort final leads based on AI return
                         const aiSelected = candidates.filter(l => result.top_ids.includes(l.id));
                         
+                        // Map categories to scores if available
+                        const finalScored = aiSelected.map(l => ({
+                            ...l,
+                            match_score: result.categories?.[l.id] === 'High' ? 0.95 : result.categories?.[l.id] === 'Medium' ? 0.75 : 0.45
+                        }));
+
                         // Sort by AI order
-                        aiSelected.sort((a, b) => {
+                        finalScored.sort((a, b) => {
                             return result.top_ids.indexOf(a.id) - result.top_ids.indexOf(b.id);
                         });
                         
                         // Fallback: If AI returned < 10, fill with keyword matches
-                        if (aiSelected.length < 10) {
-                            const remaining = candidates.filter(l => !result.top_ids.includes(l.id));
-                            finalLeads = [...aiSelected, ...remaining].slice(0, 10);
+                        if (finalScored.length < 10) {
+                            const remaining = candidates
+                                .filter(l => !result.top_ids.includes(l.id))
+                                .map(l => ({ ...l, match_score: 50 })); // Default Medium-low for non-AI picks
+                            finalLeads = [...finalScored, ...remaining].slice(0, 10);
                         } else {
-                            finalLeads = aiSelected.slice(0, 10);
+                            finalLeads = finalScored.slice(0, 10);
                         }
                         console.log(`[Digest] ✨ AI successfully selected ${finalLeads.length} leads.`);
                     }

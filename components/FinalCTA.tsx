@@ -15,15 +15,15 @@ const WaitlistCTA = () => {
           Stop Wasting Hours on Reddit.<br /><span className="text-orange-500 italic font-serif font-light">Start Finding Customers Today.</span>
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-400">
-          We are opening limited early access spots to ensure we can provide 1-on-1 support. Secure your spot now.
+          Join 100+ founders using RedLeads to turn social conversations into growth. Start your 3-day full access trial now.
         </p>
 
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Link
-            href="/join"
+            href="/login"
             className="group flex w-full items-center justify-center gap-2 rounded-full bg-orange-600 px-8 py-4 font-semibold text-white shadow-xl shadow-amber-900/20 transition-all hover:bg-amber-700 hover:scale-105 sm:w-auto"
           >
-            Get started
+            Get started for free
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>

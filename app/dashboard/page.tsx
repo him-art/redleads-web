@@ -2,6 +2,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import DashboardClient from './DashboardClient';
+import { Suspense } from 'react';
+import { Loader2 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
@@ -36,12 +38,19 @@ export default async function DashboardPage(props: { searchParams: Promise<{ sea
                         <p className="text-gray-500">Manage your tracking settings and view lead history.</p>
                     </header>
                     
-                    <DashboardClient 
-                        profile={profile} 
-                        reports={reports || []} 
-                        user={user}
-                        initialSearch={initialSearch}
-                    />
+                    <Suspense fallback={
+                        <div className="flex flex-col items-center justify-center min-h-[400px] bg-white/[0.02] border border-white/5 rounded-[2.5rem]">
+                            <Loader2 className="animate-spin text-orange-500 mb-4" size={40} />
+                            <p className="text-gray-500 font-bold uppercase tracking-widest text-xs">Initializing Terminal...</p>
+                        </div>
+                    }>
+                        <DashboardClient 
+                            profile={profile} 
+                            reports={reports || []} 
+                            user={user}
+                            initialSearch={initialSearch}
+                        />
+                    </Suspense>
                 </div>
             </div>
             <Footer />

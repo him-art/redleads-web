@@ -23,7 +23,7 @@ export async function performScan(url: string, options: ScannerOptions): Promise
     // B. STEP A: Let AI Generate Search Queries
     try {
         const prompt = `
-            Analyze this business:
+            Analyze this product:
             URL: ${url}
             Description: ${description || 'Not provided'}
             Key Target Words: ${keywords?.join(', ') || 'Not provided'}
@@ -88,16 +88,50 @@ export async function performScan(url: string, options: ScannerOptions): Promise
         }
     }
 
-    // D. STEP C: FALLBACK SEARCH (Reddit Search Disabled - Pure RSS Only)
-    if (leads.length === 0) {
-        console.log(`[ScannerLib] FALLBACK: Reddit JSON Search is DISABLED. (Pure RSS Mode Active)`);
-        // We do not use search.json per user requirements.
-        // Future: could implement subreddit-specific RSS feed checking here.
-    }
+    // D. STEP D: Categorize with AI (New Requirement)
+    if (leads.length > 0 && description) {
+        try {
+            console.log(`[ScannerLib] Categorizing ${leads.length} leads with AI...`);
+            const categorizationPrompt = `
+                You are an expert Lead Qualifier.
+                
+                product Context: "${description}"
+                
+                Task: Categorize these ${leads.length} Reddit leads as "High", "Medium", or "Low" based on their relevance to the product.
+                
+                Leads to analyze:
+                ${JSON.stringify(leads.map((l, i) => ({ id: i, title: l.title })))}
+                
+                Return a JSON object mapping the lead index to its category.
+                Output format: { "categories": { "0": "High", "1": "Medium", ... } }
+                ONLY return the JSON.
+            `;
 
-    // E. FINAL FALLBACK: Mock Data
-    if (leads.length === 0) {
-        leads = getMockLeads(url);
+            const aiRes = await AI.call({
+                model: "llama-3.3-70b-versatile",
+                messages: [{ role: "user", content: categorizationPrompt }],
+                response_format: { type: "json_object" },
+                temperature: 0.1,
+            });
+
+            const content = aiRes.choices?.[0]?.message?.content;
+            if (content) {
+                const parsed = JSON.parse(content);
+                if (parsed.categories) {
+                    leads = leads.map((l, i) => ({
+                        ...l,
+                        match_category: parsed.categories[i.toString()] || 'Medium'
+                    }));
+                }
+            }
+        } catch (catError) {
+            console.error('[ScannerLib] Categorization failed:', catError);
+            // Default to Medium if AI fails
+            leads = leads.map(l => ({ ...l, match_category: 'Medium' }));
+        }
+    } else if (leads.length > 0) {
+        // Fallback if no description
+        leads = leads.map(l => ({ ...l, match_category: 'Medium' }));
     }
 
     return { leads };
@@ -127,9 +161,9 @@ function getMockLeads(url: string) {
             url: 'https://reddit.com/r/startup' 
         },
         { 
-            subreddit: 'business', 
+            subreddit: 'product', 
             title: 'What is the best way to handle lead generation on a budget?', 
-            url: 'https://reddit.com/r/business' 
+            url: 'https://reddit.com/r/product' 
         }
     ];
 }

@@ -13,6 +13,7 @@ interface MonitoredLead {
     match_score: number;
     created_at: string;
     is_saved?: boolean;
+    match_category?: string;
 }
 
 interface LeadAnalysis {
@@ -27,6 +28,8 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
     const [historyLeads, setHistoryLeads] = useState<MonitoredLead[]>([]);
     const [leadAnalyses, setLeadAnalyses] = useState<LeadAnalysis[]>([]);
     const [expandedDay, setExpandedDay] = useState<string | null>(null);
+    const [isMounted, setIsMounted] = useState(false);
+    useEffect(() => { setIsMounted(true); }, []);
 
     const supabase = createClient();
     
@@ -75,12 +78,21 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
         filteredLeads = historyLeads.filter(l => l.is_saved);
     }
     const groupedLeads = filteredLeads.reduce((groups, lead) => {
-        const date = new Date(lead.created_at).toLocaleDateString(undefined, {
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric'
-        });
+        const date = (() => {
+            try {
+                if (!isMounted) return 'Loading date...';
+                const d = new Date(lead.created_at);
+                if (isNaN(d.getTime())) return 'Archive';
+                return d.toLocaleDateString(undefined, {
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric'
+                });
+            } catch (e) {
+                return 'Archive';
+            }
+        })();
         if (!groups[date]) groups[date] = [];
         groups[date].push(lead);
         return groups;
@@ -125,7 +137,7 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
             <div className="space-y-6">
                 {/* Active Config Summary */}
                 {hasConfig && (
-                     <div className="flex items-center gap-4 text-xs text-gray-400 bg-white/5 p-4 rounded-xl border border-white/5">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-[10px] sm:text-xs text-gray-400 bg-white/5 p-3 sm:p-4 rounded-xl border border-white/5">
                         <div className="flex items-center gap-2">
                             <span className="relative flex h-2 w-2">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -133,12 +145,11 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
                             </span>
                             Monitoring Active
                         </div>
-                        <div className="w-px h-4 bg-white/10" />
+                        <div className="hidden sm:block w-px h-4 bg-white/10" />
                         <div>Tracking <b>{profile?.subreddits?.length || 0}</b> subreddits</div>
-                        <div className="w-px h-4 bg-white/10" />
-                        <div className="w-px h-4 bg-white/10" />
+                        <div className="hidden sm:block w-px h-4 bg-white/10" />
                         <div>Focusing on <b>{profile?.keywords?.length || 0}</b> keywords</div>
-                     </div>
+                      </div>
                 )}
 
 
@@ -157,23 +168,32 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
                                     </div>
                                     <div className="relative z-10 space-y-4">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-2xl bg-orange-500/10 flex items-center justify-center border border-orange-500/20">
-                                                <Brain size={20} className="text-orange-500" />
+                                             <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-orange-500/10 flex items-center justify-center border border-orange-500/20">
+                                                <Brain size={16} className="text-orange-500" />
                                             </div>
                                             <div>
-                                                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-orange-500/60">Neural Synthesis</p>
-                                                <h4 className="text-sm font-black text-white uppercase tracking-tight">Pattern Analysis</h4>
+                                                <p className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] text-orange-500/60 leading-none mb-1">Neural Synthesis</p>
+                                                <h4 className="text-xs sm:text-sm font-black text-white uppercase tracking-tight">Pattern Analysis</h4>
                                             </div>
                                         </div>
-                                        <div className="text-sm text-gray-300 leading-relaxed font-medium whitespace-pre-wrap">
+                                         <div className="text-xs sm:text-sm text-gray-300 leading-relaxed font-medium whitespace-pre-wrap">
                                             {analysis.content}
                                         </div>
-                                        <div className="flex items-center gap-3 pt-2">
-                                            <div className="px-3 py-1.5 rounded-full bg-white/5 border border-white/5 text-[9px] font-black text-gray-500 uppercase tracking-widest">
+                                        <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-2">
+                                            <div className="px-2 py-1 sm:px-3 sm:py-1.5 rounded-full bg-white/5 border border-white/5 text-[8px] sm:text-[9px] font-black text-gray-500 uppercase tracking-widest">
                                                 {analysis.lead_ids.length} Leads Analyzed
                                             </div>
-                                            <div className="px-3 py-1.5 rounded-full bg-white/5 border border-white/5 text-[9px] font-black text-gray-500 uppercase tracking-widest">
-                                                {new Date(analysis.created_at).toLocaleDateString()}
+                                             <div className="px-2 py-1 sm:px-3 sm:py-1.5 rounded-full bg-white/5 border border-white/5 text-[8px] sm:text-[9px] font-black text-gray-500 uppercase tracking-widest">
+                                                {(() => {
+                                                    try {
+                                                        if (!isMounted) return '...';
+                                                        const d = new Date(analysis.created_at);
+                                                        if (isNaN(d.getTime())) return '...';
+                                                        return d.toLocaleDateString();
+                                                    } catch (e) {
+                                                        return '...';
+                                                    }
+                                                })()}
                                             </div>
                                         </div>
                                     </div>
@@ -208,24 +228,37 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
                                     <ChevronDown size={16} className={`text-gray-500 transition-transform ${expandedDay === date ? 'rotate-180' : ''}`} />
                                 </button>
 
-                                {expandedDay === date && (
+                                 {expandedDay === date && (
                                     <div className="border-t border-white/5 bg-black/40">
                                         {leads.map((lead) => (
-                                            <div key={lead.id} className="p-4 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors flex gap-4 group">
+                                            <div key={lead.id} className="p-3 sm:p-4 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors flex gap-3 sm:gap-4 group">
                                                 <div className="flex-grow space-y-1">
                                                     <div className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-500">
                                                         <span className="text-orange-500">r/{lead.subreddit}</span>
                                                         <span>•</span>
-                                                        <span className="flex items-center gap-1">
+                                                         <span className="flex items-center gap-1">
                                                             <Clock size={10} />
-                                                            {new Date(lead.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                                                        </span>
+                                                            {(() => {
+                                                                try {
+                                                                    if (!isMounted) return '--:--';
+                                                                    const d = new Date(lead.created_at);
+                                                                    if (isNaN(d.getTime())) return '--:--';
+                                                                    return d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                                                                } catch (e) {
+                                                                    return '--:--';
+                                                                }
+                                                                })()}
+                                                         </span>
+                                                         <span>•</span>
+                                                         <span className="text-gray-600 italic">
+                                                            {lead.match_category || 'Medium'} Match
+                                                         </span>
                                                     </div>
                                                     <a href={lead.url} target="_blank" rel="noreferrer" className="block text-sm font-medium text-gray-200 group-hover:text-white leading-snug">
                                                         {lead.title}
                                                     </a>
                                                 </div>
-                                                <div className="flex items-center gap-2">
+                                                 <div className="flex items-center gap-1.5 sm:gap-2">
                                                     <button 
                                                         onClick={async () => {
                                                             const newStatus = !lead.is_saved;
@@ -239,7 +272,7 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
                                                                 alert('Failed to save lead.');
                                                             }
                                                         }}
-                                                        className={`p-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 ${
+                                                        className={`p-2 rounded-lg transition-all opacity-100 sm:opacity-0 group-hover:opacity-100 ${
                                                             lead.is_saved 
                                                                 ? 'opacity-100 bg-orange-500 text-white' 
                                                                 : 'bg-white/5 text-gray-500 hover:text-white hover:bg-orange-500/20'

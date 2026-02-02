@@ -33,22 +33,28 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
     const supabase = createClient();
     const router = useRouter();
     const searchParams = useSearchParams();
+    const hasAutoScanned = useRef(false);
 
     // Auto-scan if initialUrl is provided
     useEffect(() => {
-        if (initialUrl && !isScanning && results.length === 0) {
+        if (initialUrl && !isScanning && results.length === 0 && !hasAutoScanned.current) {
+            hasAutoScanned.current = true;
             handleScan(null as any);
             
             // Consume the URL parameter so it doesn't re-trigger on refresh
-            const params = new URLSearchParams(searchParams.toString());
-            params.delete('search');
-            const newQuery = params.toString();
-            router.replace(`/dashboard${newQuery ? `?${newQuery}` : ''}`, { scroll: false });
+            try {
+                const params = new URLSearchParams(searchParams.toString());
+                params.delete('search');
+                const newQuery = params.toString();
+                router.replace(`/dashboard${newQuery ? `?${newQuery}` : ''}`, { scroll: false });
+            } catch (e) {
+                console.warn('Router replace failed:', e);
+            }
         }
     }, [initialUrl]);
 
     const scanSteps = [
-        "Analyzing target business model...",
+        "Analyzing target product model...",
         "Identifying high-intent keywords...",
         "Querying global Reddit communities...",
         "Filtering for social selling signals...",
@@ -75,35 +81,41 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
         setScanStep(0);
         setResults([]);
 
-        // 1. Check Cache
+        // 1. Check Cache (Safe check for SSR/Mobile)
+        if (typeof window === 'undefined') return;
         const CACHE_KEY = `rl_cache_${normalizedUrl}`;
         const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
-        const cached = localStorage.getItem(CACHE_KEY);
+        const cached = window.localStorage.getItem(CACHE_KEY);
         
         if (cached) {
             try {
-                const { timestamp, data } = JSON.parse(cached);
-                if (Date.now() - timestamp < CACHE_TTL) {
-                    console.log(`[Cache] Using cached results for ${normalizedUrl}`);
-                    
-                    // Simulate a short "smart" analysis feel even with cache
-                    setScanStep(0);
-                    setTimeout(() => setScanStep(2), 400);
-                    setTimeout(() => setScanStep(4), 800);
-                    
-                    setTimeout(() => {
-                        setResults(data.leads || []);
-                        setTeaserInfo(data.isTeaser ? { isTeaser: true, totalFound: data.totalFound } : null);
-                        onResultsFound?.(data.leads?.length || 0);
-                        if (data.leads?.length > 0) {
-                            setOpenGroups({ 'High': true, 'Medium': true });
-                        }
-                        setIsScanning(false);
-                    }, 1200);
-                    return;
+                const parsed = JSON.parse(cached);
+                if (parsed && typeof parsed === 'object' && parsed.timestamp && parsed.data) {
+                    const { timestamp, data } = parsed;
+                    if (Date.now() - timestamp < CACHE_TTL) {
+                        console.log(`[Cache] Using cached results for ${normalizedUrl}`);
+                        
+                        setScanStep(0);
+                        setTimeout(() => setScanStep(2), 400);
+                        setTimeout(() => setScanStep(4), 800);
+                        
+                        setTimeout(() => {
+                            setResults(data.leads || []);
+                            setTeaserInfo(data.isTeaser ? { isTeaser: true, totalFound: data.totalFound } : null);
+                            onResultsFound?.(data.leads?.length || 0);
+                            if (data.leads?.length > 0) {
+                                setOpenGroups({ 'High': true, 'Medium': true });
+                            }
+                            setIsScanning(false);
+                        }, 1200);
+                        return;
+                    }
+                } else {
+                    window.localStorage.removeItem(CACHE_KEY);
                 }
             } catch (e) {
-                localStorage.removeItem(CACHE_KEY);
+                console.warn('[Cache] Corruption detected, clearing...');
+                try { window.localStorage.removeItem(CACHE_KEY); } catch(err) {}
             }
         }
 
@@ -124,34 +136,33 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
             
             clearInterval(interval);
 
-            if (!response.ok) {
-                if (data.code === 'DAILY_LIMIT_REACHED') {
-                    onShowModal?.();
-                    return;
-                }
-                throw new Error(data.error || 'Scan failed');
+            if (response.status === 403 && data.code === 'DAILY_LIMIT_REACHED') {
+                onShowModal?.();
+                return;
             }
 
             if (data.leads) {
                 setTeaserInfo(data.isTeaser ? { isTeaser: true, totalFound: data.totalFound } : null);
                 const enrichedLeads = data.leads.map((lead: any) => ({
                     ...lead,
-                    relevance: Math.random() > 0.4 ? 'High' : 'Medium',
+                    relevance: lead.match_category || 'Medium',
                 }));
                 setResults(enrichedLeads);
                 onResultsFound?.(enrichedLeads.length);
                 if (enrichedLeads.length > 0) {
-                    setOpenGroups({ 'High': true, 'Medium': true });
+                    setOpenGroups({ 'High': true, 'Medium': true, 'Low': true });
                 }
 
                 // Store in Cache
-                localStorage.setItem(CACHE_KEY, JSON.stringify({
-                    timestamp: Date.now(),
-                    data: {
-                        ...data,
-                        leads: enrichedLeads
-                    }
-                }));
+                if (typeof window !== 'undefined') {
+                    localStorage.setItem(CACHE_KEY, JSON.stringify({
+                        timestamp: Date.now(),
+                        data: {
+                            ...data,
+                            leads: enrichedLeads
+                        }
+                    }));
+                }
             }
         } catch (error: any) {
             console.error(error);
@@ -179,22 +190,24 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                     )}
 
                     <div className="relative flex items-center">
-                        <div className="absolute left-6 text-gray-500 group-focus-within:text-orange-500 transition-colors">
-                            {isScanning ? <Loader2 size={20} className="animate-spin" /> : <Globe size={20} />}
+                        <div className="absolute left-4 sm:left-6 text-gray-500 group-focus-within:text-orange-500 transition-colors">
+                            {isScanning ? <Loader2 size={18} className="animate-spin" /> : <Globe size={18} />}
                         </div>
                         <input 
+                            id="product-url-search"
+                            name="product-url"
                             type="text" 
-                            placeholder="Type business URL to scan..."
+                            placeholder="Type product URL to scan..."
                             value={url}
                             onChange={(e) => setUrl(e.target.value)}
                             disabled={isScanning}
                             suppressHydrationWarning
-                            className="w-full bg-white/[0.03] border border-white/5 rounded-2xl py-6 pl-16 pr-32 text-lg focus:outline-none focus:bg-white/[0.05] focus:border-white/10 transition-all placeholder:text-gray-600 font-medium tracking-tight"
+                            className="w-full bg-white/[0.03] border border-white/5 rounded-2xl py-4 sm:py-6 pl-12 sm:pl-16 pr-24 sm:pr-32 text-base sm:text-lg focus:outline-none focus:bg-white/[0.05] focus:border-white/10 transition-all placeholder:text-gray-600 font-medium tracking-tight"
                         />
                         <button 
                             type="submit"
                             disabled={isScanning || url.trim().length < 3}
-                            className={`absolute right-3 px-6 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all ${
+                            className={`absolute right-2 sm:right-3 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-black uppercase text-[9px] sm:text-[10px] tracking-widest transition-all ${
                                 !isScanning && url.trim().length >= 3 
                                     ? 'bg-orange-500 text-black' 
                                     : 'bg-white/5 text-gray-600 cursor-not-allowed opacity-50'
@@ -228,7 +241,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                 <motion.div 
                     initial={{ opacity: 0, y: 20 }} 
                     animate={{ opacity: 1, y: 0 }} 
-                    className="mt-16 space-y-12"
+                    className="mt-8 sm:mt-16 space-y-8 sm:space-y-12"
                 >
                     <div className="flex items-center justify-between px-2">
                         <div className="space-y-1">

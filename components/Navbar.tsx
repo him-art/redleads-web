@@ -82,7 +82,7 @@ const Navbar = () => {
               href="/login"
               className="bg-[#f25e36] text-white text-sm font-bold px-6 py-2.5 rounded-full hover:bg-[#d94a24] hover:scale-105 active:scale-95 transition-all shadow-lg shadow-orange-500/30"
             >
-              Join Here
+              Get Started
             </Link>
           )}
         </div>
@@ -180,7 +180,7 @@ const Navbar = () => {
                       className="block w-full text-center bg-[#f25e36] text-white text-lg font-bold px-6 py-4 rounded-full hover:bg-[#d94a24] active:scale-95 transition-all shadow-xl shadow-orange-500/30"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      Join Here
+                      Get Started
                     </Link>
                   )}
                 </div>

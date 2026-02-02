@@ -33,6 +33,8 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
     const [statusMsg, setStatusMsg] = useState<{ type: 'success' | 'error', text: string } | null>(null);
     const [wasAiGenerated, setWasAiGenerated] = useState(false);
     const [pulseSections, setPulseSections] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
+    useEffect(() => { setIsMounted(true); }, []);
     const supabase = createClient();
 
     const handleSave = async () => {
@@ -64,7 +66,7 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
 
     const handleAutofill = async () => {
         if (!description || description.length < 10) {
-            setStatusMsg({ type: 'error', text: 'Please provide a more detailed business description (at least 10 characters).' });
+            setStatusMsg({ type: 'error', text: 'Please provide a more detailed product description (at least 10 characters).' });
             return;
         }
 
@@ -75,7 +77,8 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    description: description
+                    description: description,
+                    limit: keywordLimit
                 }),
             });
             
@@ -107,12 +110,19 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
         }
     };
 
+    // Determine keyword limit
+    const getKeywordLimit = () => {
+        if (profile?.subscription_tier === 'scout') return 5;
+        return 15; // Pro & Trial limit
+    };
+    const keywordLimit = getKeywordLimit();
+
     const addKeyword = () => {
         const input = newKeyword.trim();
         if (!input) return;
 
-        if (keywords.length >= 10) {
-            setStatusMsg({ type: 'error', text: 'Maximum of 10 keywords allowed. Remove some to add more.' });
+        if (keywords.length >= keywordLimit) {
+            setStatusMsg({ type: 'error', text: `Maximum of ${keywordLimit} keywords allowed for your plan. Upgrade for more.` });
             return;
         }
 
@@ -122,15 +132,15 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
             .filter(k => k && !keywords.includes(k));
 
         if (newItems.length > 0) {
-            // Respect the 10 limit even in bulk entry
-            const spaceLeft = 10 - keywords.length;
+            // Respect the limit even in bulk entry
+            const spaceLeft = keywordLimit - keywords.length;
             const toAdd = newItems.slice(0, spaceLeft);
             
             setKeywords([...keywords, ...toAdd]);
             setNewKeyword('');
             
             if (newItems.length > spaceLeft) {
-                setStatusMsg({ type: 'error', text: `Only added ${spaceLeft} keywords. Limit of 10 reached.` });
+                setStatusMsg({ type: 'error', text: `Only added ${toAdd.length} keywords. Limit of ${keywordLimit} reached.` });
             }
         }
     };
@@ -162,29 +172,43 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
     return (
         <div className="space-y-8 max-w-2xl">
             <div>
-                <h2 className="text-2xl font-bold mb-2">Tracking Configuration</h2>
-                <p className="text-gray-400">Tell us what to scan for. We use this to fine-tune your daily reports.</p>
+                <h2 className="text-xl sm:text-2xl font-bold mb-2">Tracking Configuration</h2>
+                <p className="text-xs sm:text-sm text-gray-400">Tell us what to scan for. We use this to fine-tune your daily reports.</p>
             </div>
 
             <div className="space-y-6">
                 {/* Website URL */}
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm font-bold text-gray-300 mb-2">Business Description</label>
+                        <div className="flex items-center justify-between mb-2">
+                            <label htmlFor="product-description" className="block text-sm font-bold text-gray-300">product Description</label>
+                            <span className={`text-[10px] font-bold ${description.split(/\s+/).filter(Boolean).length > 150 ? 'text-red-500' : 'text-gray-500'}`}>
+                                {description.split(/\s+/).filter(Boolean).length}/150 words
+                            </span>
+                        </div>
                         <textarea
+                            id="product-description"
+                            name="description"
                             value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            placeholder="e.g., B2B SaaS platform that helps sales teams automate outreach and track leads"
+                            onChange={(e) => {
+                                const words = e.target.value.split(/\s+/).filter(Boolean);
+                                if (words.length <= 150 || e.target.value.length < description.length) {
+                                    setDescription(e.target.value);
+                                }
+                            }}
+                            placeholder="[Brand Name] is a [Product Type] that helps [Target Audience] solve [Problem] by [Value Proposition]."
                             rows={5}
-                            className="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-white focus:border-orange-500 outline-none transition-colors resize-none"
+                            className="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-white focus:border-orange-500 outline-none transition-colors resize-none placeholder:text-gray-700"
                         />
-                        <p className="text-xs text-gray-500 mt-2">Describe your business, target customers, and what problems you solve</p>
+                        <p className="text-xs text-gray-500 mt-2">
+                            <span className="text-orange-500/80 font-bold">Pro Tip:</span> Being highly specific (mentioning exact target customers and their specific pain points) helps the AI find much higher quality leads.
+                        </p>
                     </div>
 
                     <button
                         onClick={handleAutofill}
                         disabled={autofilling || !description || description.length < 10}
-                        className="w-full py-4 bg-orange-500 text-black rounded-xl text-sm font-black uppercase tracking-widest hover:bg-orange-600 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        className="w-full py-4 bg-orange-500 text-black rounded-xl text-[10px] sm:text-sm font-black uppercase tracking-widest hover:bg-orange-600 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                         {autofilling ? (
                             <>
@@ -193,8 +217,8 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                             </>
                         ) : (
                             <>
-                                <Sparkles size={20} />
-                                <span>Generate Configuration with AI</span>
+                                <Sparkles size={18} />
+                                <span>Generate with AI</span>
                             </>
                         )}
                     </button>
@@ -205,15 +229,15 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                     <div className="flex items-center justify-between mb-1.5">
                         <div className="flex items-center gap-2">
                             <label className="block text-sm font-bold text-gray-300">Priority Keywords</label>
-                            {wasAiGenerated && (
+                            {isMounted && wasAiGenerated && (
                                 <span className="text-[11px] font-medium text-gray-500 flex items-center gap-1 animate-in fade-in zoom-in duration-500">
                                     <Sparkles size={10} className="text-orange-500/50" />
                                     AI selected
                                 </span>
                             )}
                         </div>
-                        <span className={`text-[10px] font-bold ${keywords.length >= 10 ? 'text-orange-500' : 'text-gray-600'}`}>
-                            {keywords.length}/10
+                        <span className={`text-[10px] font-bold ${keywords.length >= keywordLimit ? 'text-orange-500' : 'text-gray-600'}`}>
+                            {keywords.length}/{keywordLimit}
                         </span>
                     </div>
                     <p className="text-xs text-gray-500/80 mb-3 leading-relaxed">
@@ -221,12 +245,14 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                     </p>
                     <div className="flex gap-2 mb-3">
                         <input
+                            id="new-keyword-input"
+                            name="new-keyword"
                             type="text"
                             value={newKeyword}
                             onChange={(e) => setNewKeyword(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && addKeyword()}
                             placeholder="e.g. 'lead generation', 'sales automation', 'cold email outreach', 'B2B SaaS'"
-                            className="flex-grow bg-black/50 border border-white/10 rounded-xl p-3 text-white focus:border-orange-500 outline-none placeholder:text-gray-700"
+                            className="flex-grow bg-black/50 border border-white/10 rounded-xl p-3 text-sm sm:text-base text-white focus:border-orange-500 outline-none placeholder:text-gray-700"
                         />
                         <button 
                             onClick={addKeyword}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Archive, Sliders, ShieldCheck, Navigation, Layout, Search, Menu, X, Sparkles, Clock, AlertTriangle, Zap } from 'lucide-react';
+import { Archive, Sliders, ShieldCheck, Navigation, Layout, Search, Menu, X, Sparkles, Clock, AlertTriangle, Zap, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 import ReportsTab from './ReportsTab';
@@ -18,29 +18,56 @@ interface DashboardClientProps {
 }
 
 export default function DashboardClient({ profile, reports, user, initialSearch = '' }: DashboardClientProps) {
-    const [activeTab, setActiveTab] = useState<'reports' | 'discovery' | 'live' | 'settings' | 'billing'>(initialSearch ? 'live' : 'live'); 
+    const [activeTab, setActiveTab] = useState<'reports' | 'live' | 'settings' | 'billing'>(initialSearch ? 'live' : 'live'); 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    // Trial expiration check
+    const [isMounted, setIsMounted] = useState(false);
+    useEffect(() => { setIsMounted(true); }, []);
+
+    // Prevent ANY rendering until mounted to ensure 100% hydration sync on mobile
+    if (!isMounted) {
+        return (
+            <div className="flex items-center justify-center min-h-[calc(100vh-12rem)]">
+                <Loader2 className="animate-spin text-orange-500" size={40} />
+            </div>
+        );
+    }
+
+    // Trial expiration check - ONLY RUNS ON CLIENT NOW
     const isPro = profile?.subscription_tier === 'pro' || profile?.effective_tier === 'pro';
+    const isScout = profile?.subscription_tier === 'scout' || profile?.effective_tier === 'scout';
     const isAdmin = profile?.is_admin === true || user?.email === 'hjayaswar@gmail.com';
     
     // Explicitly use trial_ends_at or fallback to created_at + 3 days
-    const trialEndsAtString = profile?.trial_ends_at || (profile?.created_at ? new Date(new Date(profile.created_at).getTime() + 3 * 24 * 60 * 60 * 1000).toISOString() : null);
+    const trialEndsAtString = profile?.trial_ends_at || (profile?.created_at ? (() => {
+        const d = new Date(profile.created_at);
+        if (isNaN(d.getTime())) return null;
+        const ends = new Date(d.getTime() + 3 * 24 * 60 * 60 * 1000);
+        return ends.toISOString();
+    })() : null);
     const trialEndsAt = trialEndsAtString ? new Date(trialEndsAtString) : null;
     
     const now = new Date();
-    const trialExpired = trialEndsAt ? trialEndsAt <= now : false; // Default to NOT expired if loading
-    const daysRemaining = trialEndsAt ? Math.max(0, Math.ceil((trialEndsAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))) : 0;
+    const trialExpired = trialEndsAt ? (trialEndsAt.getTime() <= now.getTime()) : false;
+    const daysRemaining = (() => {
+        try {
+            if (!trialEndsAt) return 0;
+            const diff = trialEndsAt.getTime() - now.getTime();
+            return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+        } catch (e) {
+            return 0;
+        }
+    })();
     
     // Final status override
-    const isActuallyExpired = !isPro && !isAdmin && (trialExpired || (trialEndsAt && daysRemaining <= 0));
-    const showPaywall = isActuallyExpired && !isPro && !isAdmin;
+    const isActuallyExpired = !isPro && !isScout && !isAdmin && (trialExpired || (trialEndsAt && daysRemaining <= 0));
+    const showPaywall = isActuallyExpired && !isPro && !isScout && !isAdmin;
 
-    const handleCheckout = async () => {
+    const handleCheckout = async (plan: 'scout' | 'pro' = 'pro') => {
         const res = await fetch('/api/payments/create-checkout', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ plan })
         });
         const data = await res.json();
         if (data.checkout_url) {
@@ -60,19 +87,23 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
     return (
         <>
             {showPaywall && <PaywallModal onCheckout={handleCheckout} />}
-            <div className="flex flex-col lg:flex-row min-h-[calc(100vh-12rem)] relative">
+            <div className="flex flex-col lg:flex-row min-h-[calc(100vh-12rem)] relative p-2 sm:p-0">
             {/* Mobile Header Toggle */}
-            <div className="lg:hidden flex items-center justify-between mb-6 p-4 bg-white/[0.02] border border-white/5 rounded-2xl">
+            <div className="lg:hidden flex items-center justify-between mb-4 p-4 bg-white/[0.03] border border-white/10 rounded-2xl shadow-xl">
                 <div className="flex items-center gap-3">
-                    {tabs.find(t => t.id === activeTab)?.icon && (
-                        <div className="text-orange-500">
-                            {(() => {
-                                const Icon = tabs.find(t => t.id === activeTab)!.icon;
-                                return <Icon size={20} />;
-                            })()}
-                        </div>
-                    )}
-                    <span className="font-bold text-white">{tabs.find(t => t.id === activeTab)?.label}</span>
+                    {(() => {
+                        const activeTabData = tabs.find(t => t.id === activeTab);
+                        if (!activeTabData) return null;
+                        const Icon = activeTabData.icon;
+                        return (
+                            <>
+                                <div className="text-orange-500">
+                                    <Icon size={20} />
+                                </div>
+                                <span className="font-bold text-white">{activeTabData.label}</span>
+                            </>
+                        );
+                    })()}
                 </div>
                 <button 
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -85,21 +116,23 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
             {/* Sidebar Navigation */}
             <nav className={`
                 ${isMobileMenuOpen ? 'flex' : 'hidden'} 
-                lg:flex flex-col w-full lg:w-72 flex-shrink-0 space-y-1 pr-0 lg:pr-8 mb-8 lg:mb-0
-                absolute lg:relative top-16 lg:top-0 left-0 z-50 bg-[#1a1a1a] lg:bg-transparent
-                p-4 lg:p-0 border lg:border-0 border-white/5 rounded-3xl lg:rounded-none
+                lg:flex flex-col w-full lg:w-72 flex-shrink-0 space-y-1 pr-0 lg:pr-8 mb-6 lg:mb-0
+                absolute lg:relative top-20 lg:top-0 left-0 z-50 bg-[#0d0d0d] lg:bg-transparent
+                p-4 lg:p-0 border lg:border-0 border-white/10 rounded-2xl lg:rounded-none shadow-2xl lg:shadow-none
             `}>
                 <div className="px-4 mb-6 hidden lg:block">
                     {/* Subscription Status Badge */}
                     <div className="mb-8">
-                        {isPro || isAdmin ? (
+                        {isPro || isScout || isAdmin ? (
                             <div className="flex items-center gap-3 p-3 bg-green-500/10 border border-green-500/20 rounded-2xl group/status">
                                 <div className="p-2 bg-green-500/20 rounded-xl text-green-500 group-hover/status:scale-110 transition-transform">
                                     <Zap size={16} fill="currentColor" />
                                 </div>
                                 <div>
                                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-green-500/60">Subscription</p>
-                                    <p className="text-sm font-bold text-green-500">Pro Plan Active</p>
+                                    <p className="text-sm font-bold text-green-500">
+                                        {isAdmin ? 'Admin Access' : isPro ? 'Pro Plan Active' : 'Scout Plan Active'}
+                                    </p>
                                 </div>
                             </div>
                         ) : isActuallyExpired ? (
@@ -117,9 +150,18 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                 <div className="p-2 bg-orange-500/20 rounded-xl text-orange-500 group-hover/status:scale-110 transition-transform">
                                     <Clock size={16} />
                                 </div>
-                                <div>
-                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-500/60">Free Trial</p>
-                                    <p className="text-sm font-bold text-orange-500">{daysRemaining} Days Left</p>
+                                 <div className="flex flex-col">
+                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-500/60 leading-none mb-1">Free Trial</p>
+                                    <p className="text-sm font-bold text-orange-500 leading-none">
+                                        {(() => {
+                                            try {
+                                                if (!isMounted) return '...';
+                                                return `${daysRemaining} Days Left`;
+                                            } catch (e) {
+                                                return 'Active';
+                                            }
+                                        })()}
+                                    </p>
                                 </div>
                             </div>
                         )}
@@ -173,23 +215,13 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                 </div>
             </nav>
 
-            {/* Main Content Area */}
-            <main className="flex-grow bg-white/[0.02] rounded-[2.5rem] border border-white/5 p-6 lg:p-12 overflow-hidden relative group">
-                <AnimatePresence mode="wait">
-                    <motion.div
-                        key={activeTab}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.2, ease: "easeOut" }}
-                        className="h-full"
-                    >
-                        {activeTab === 'reports' && <ReportsTab reports={reports} profile={profile} user={user} isPro={isPro} isAdmin={isAdmin} />}
-                        {activeTab === 'live' && <LiveDiscoveryTab user={user} profile={profile} isPro={isPro} isAdmin={isAdmin} initialSearch={initialSearch} onNavigate={(tab) => setActiveTab(tab as any)} />}
-                        {activeTab === 'settings' && <SettingsTab profile={profile} user={user} />}
-                        {activeTab === 'billing' && <BillingTab profile={profile} isPro={isPro} isAdmin={isAdmin} />}
-                    </motion.div>
-                </AnimatePresence>
+            <main className="flex-grow bg-white/[0.02] rounded-3xl lg:rounded-[2.5rem] border border-white/5 p-4 sm:p-6 lg:p-12 overflow-hidden relative group">
+                <div className="h-full">
+                    {activeTab === 'reports' && <ReportsTab reports={reports} profile={profile} user={user} isPro={isPro} isAdmin={isAdmin} />}
+                    {activeTab === 'live' && <LiveDiscoveryTab user={user} profile={profile} isPro={isPro} isScout={isScout} isAdmin={isAdmin} initialSearch={initialSearch} onNavigate={(tab) => setActiveTab(tab as any)} />}
+                    {activeTab === 'settings' && <SettingsTab profile={profile} user={user} />}
+                    {activeTab === 'billing' && <BillingTab profile={profile} isPro={isPro} isAdmin={isAdmin} />}
+                </div>
             </main>
         </div>
         </>

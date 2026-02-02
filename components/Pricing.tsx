@@ -4,14 +4,15 @@ import { useState } from 'react';
 import { Check, Zap, Loader2, ArrowRight } from 'lucide-react';
 
 const Pricing = () => {
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState<string | null>(null);
 
-    const handleCheckout = async () => {
-        setIsLoading(true);
+    const handleCheckout = async (plan: 'scout' | 'pro') => {
+        setIsLoading(plan);
         try {
             const res = await fetch('/api/payments/create-checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ plan })
             });
             
             const data = await res.json().catch(() => ({}));
@@ -19,17 +20,15 @@ const Pricing = () => {
             if (res.ok && data.checkout_url) {
                 window.location.href = data.checkout_url;
             } else if (res.status === 401) {
-                window.location.href = '/login?next=/#pricing';
+                window.location.href = `/login?next=/#pricing`;
             } else {
-                // Show the specific error from API or status code
-                const errorMsg = data.error || `Error ${res.status}: Failed to initiate checkout`;
-                alert(errorMsg);
+                alert(data.error || `Error ${res.status}: Failed to initiate checkout`);
             }
         } catch (error: any) {
             console.error('Checkout error:', error);
-            alert(`Network error: ${error.message || 'Something went wrong. Please try again later.'}`);
+            alert(`Network error: ${error.message || 'Something went wrong.'}`);
         } finally {
-            setIsLoading(false);
+            setIsLoading(null);
         }
     };
 
@@ -46,78 +45,93 @@ const Pricing = () => {
                          Scale your <span className="text-orange-500 italic font-serif">Red-Hot</span> growth.
                      </h2>
                      <p className="text-base text-gray-500 max-w-xl mx-auto font-medium leading-relaxed">
-                          One transparent plan for autonomous lead generation. AI intelligence, Global Monitoring, and real-time alerts included.
+                          Choose the plan that fits your hunting style. 7-Day Money-Back Guarantee included on both plans.
                       </p>
                  </div>
  
-                 {/* Single Pricing Card */}
-                 <div className="max-w-2xl mx-auto">
-                     <div className="relative rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-xl p-12 md:p-16 overflow-hidden group hover:border-orange-500/20 transition-all duration-500">
-                         {/* Subtle Background Elements */}
-                         <div className="absolute top-0 right-0 w-80 h-80 bg-orange-500/5 blur-[120px] -mr-40 -mt-40 pointer-events-none" />
-                         <div className="absolute bottom-0 left-0 w-32 h-px bg-gradient-to-r from-transparent via-orange-500/20 to-transparent w-full pointer-events-none" />
-                         
-                         <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-                             <div className="space-y-10">
-                                 <div>
-                                     <h3 className="text-[12px] font-black uppercase tracking-[0.4em] text-gray-500 mb-2">Growth Suite</h3>
-                                     <div className="flex items-baseline gap-1">
-                                         <span className="text-7xl font-black text-white">$25</span>
-                                         <span className="text-sm font-black uppercase tracking-widest text-gray-600">/mo</span>
-                                     </div>
-                                 </div>
- 
-                                 <button
-                                     onClick={handleCheckout}
-                                     disabled={isLoading}
-                                     className="w-full py-6 rounded-xl bg-orange-500 text-black font-black text-[14px] uppercase tracking-widest hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-2xl shadow-orange-500/10 active:scale-95"
-                                 >
-                                     {isLoading ? (
-                                         <Loader2 size={20} className="animate-spin" />
-                                     ) : (
-                                         <>Pro Plan <ArrowRight size={18} /></>
-                                     )}
-                                 </button>
- 
-                                 <div className="space-y-4">
-                                    <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-green-500/80">
-                                        <Check size={14} className="text-green-500" />
-                                        3-Day Sentinel Trial
-                                    </div>
-                                    <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-gray-600">
-                                        <Check size={14} className="text-green-500/50" />
-                                        Cancel Anytime
-                                    </div>
-                                 </div>
-                             </div>
-                             
-                             <div className="space-y-8 md:border-l md:border-white/5 md:pl-16">
-                                 <ul className="space-y-6">
-                                     {[
-                                         "24/7 Autonomous Monitoring",
-                                         "Daily AI Intelligence Digest",
-                                         "Monitor Top 100+ Communities",
-                                         "Monitor 10 High-Intent Keywords",
-                                         "Priority System Access"
-                                     ].map((feature) => (
-                                         <li key={feature} className="flex items-start gap-4 group/item">
-                                             <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-orange-500/50 group-hover/item:bg-orange-500 transition-colors" />
-                                             <span className="text-[12px] font-bold text-gray-400 group-hover/item:text-white transition-colors uppercase tracking-wider leading-tight">
-                                                 {feature}
-                                             </span>
-                                         </li>
-                                     ))}
-                                 </ul>
-                             </div>
-                         </div>
+                 {/* Pricing Cards */}
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                     {/* Scout Plan */}
+                     <div className="relative rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-xl p-8 md:p-12 overflow-hidden group hover:border-white/20 transition-all duration-500 flex flex-col">
+                        <div className="mb-10">
+                            <h3 className="text-[12px] font-black uppercase tracking-[0.4em] text-gray-500 mb-2">Scout Plan</h3>
+                            <div className="flex items-baseline gap-1">
+                                <span className="text-5xl font-black text-white">$15</span>
+                                <span className="text-sm font-black uppercase tracking-widest text-gray-600">/mo</span>
+                            </div>
+                        </div>
+
+                        <ul className="space-y-4 mb-10 flex-grow">
+                            {[
+                                "2 High-Intent Spotlight Scans",
+                                "5 Strategic Keywords",
+                                "24/7 Monitoring",
+                                "Categorical AI Scoring",
+                                "Continuous Dashboard Inbox",
+                                "Daily Intelligence Email"
+                            ].map((feature) => (
+                                <li key={feature} className="flex items-center gap-3">
+                                    <Check size={14} className="text-orange-500/50" />
+                                    <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest leading-none">{feature}</span>
+                                </li>
+                            ))}
+                        </ul>
+
+                        <button
+                            onClick={() => handleCheckout('scout')}
+                            disabled={!!isLoading}
+                            className="w-full py-5 rounded-xl border border-white/10 bg-white/5 text-white font-black text-[12px] uppercase tracking-widest hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                        >
+                            {isLoading === 'scout' ? <Loader2 size={16} className="animate-spin" /> : <>Start Scout</>}
+                        </button>
                      </div>
-                     
-                     <p className="mt-8 text-center text-[10px] font-black uppercase tracking-[0.2em] text-gray-700">
-                        Secure Transmission & Processing by Dodo Payments
-                     </p>
+
+                     {/* Pro Plan */}
+                     <div className="relative rounded-2xl border border-orange-500/20 bg-orange-500/[0.02] backdrop-blur-xl p-8 md:p-12 overflow-hidden group hover:border-orange-500 transition-all duration-500 flex flex-col ring-1 ring-orange-500/10">
+                        {/* Popular Badge */}
+                        <div className="absolute top-4 right-4 px-2 py-0.5 rounded-full bg-orange-500 text-black text-[8px] font-black uppercase tracking-widest">
+                            Most Popular
+                        </div>
+
+                        <div className="mb-10">
+                            <h3 className="text-[12px] font-black uppercase tracking-[0.4em] text-orange-500 mb-2">Pro Plan</h3>
+                            <div className="flex items-baseline gap-1">
+                                <span className="text-5xl font-black text-white">$29</span>
+                                <span className="text-sm font-black uppercase tracking-widest text-gray-600">/mo</span>
+                            </div>
+                        </div>
+
+                        <ul className="space-y-4 mb-10 flex-grow">
+                            {[
+                                "5 High-Intent Spotlight Scans",
+                                "15 Strategic Keywords",
+                                "24/7 Priority Monitoring",
+                                "Advanced AI Categorization",
+                                "Daily Intelligence Email",
+                                "Priority Intelligence Email"
+                            ].map((feature) => (
+                                <li key={feature} className="flex items-center gap-3">
+                                    <Check size={14} className="text-orange-500" />
+                                    <span className="text-[11px] font-bold text-gray-300 uppercase tracking-widest leading-none">{feature}</span>
+                                </li>
+                            ))}
+                        </ul>
+
+                        <button
+                            onClick={() => handleCheckout('pro')}
+                            disabled={!!isLoading}
+                            className="w-full py-5 rounded-xl bg-orange-500 text-black font-black text-[12px] uppercase tracking-widest hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-xl shadow-orange-500/20"
+                        >
+                            {isLoading === 'pro' ? <Loader2 size={16} className="animate-spin" /> : <>Start Pro <ArrowRight size={16} /></>}
+                        </button>
+                     </div>
                  </div>
+                 
+                 <p className="mt-12 text-center text-[10px] font-black uppercase tracking-[0.2em] text-gray-700">
+                    Secure Transmission & Processing by Dodo Payments
+                 </p>
              </div>
-         </section>
+        </section>
     );
 };
 

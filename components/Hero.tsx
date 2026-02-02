@@ -173,7 +173,10 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                       <div className="absolute inset-y-0 left-8 flex items-center pointer-events-none">
                         <Globe className="text-slate-400 group-focus-within:text-orange-500 transition-colors" size={24} />
                       </div>
+                      <label htmlFor="hero-url-input" className="sr-only">Your Website URL</label>
                       <input 
+                        id="hero-url-input"
+                        name="website-url"
                         type="text" 
                         placeholder="yourwebsite.com"
                         value={urlInput}

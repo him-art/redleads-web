@@ -10,6 +10,7 @@ export default function LiveDiscoveryTab({
     user, 
     profile, 
     isPro,
+    isScout,
     isAdmin,
     initialSearch = '', 
     onNavigate 
@@ -17,44 +18,63 @@ export default function LiveDiscoveryTab({
     user: any, 
     profile: any, 
     isPro: boolean,
+    isScout?: boolean,
     isAdmin: boolean,
     initialSearch?: string, 
     onNavigate: (tab: string) => void 
 }) {
     const isEffectivePro = isPro || isAdmin;
+    const isActuallySubscribed = isEffectivePro || isScout;
     const [isUpgrading, setIsUpgrading] = useState(false);
     const supabase = createClient();
     const router = useRouter();
     const [hasResults, setHasResults] = useState(false);
-    
-    // Logic moved to props, but keeping local variable for backwards compatibility if needed
-    // const isPro = profile?.subscription_tier === 'pro' || profile?.effective_tier === 'pro';
-    
-    // Auto-calculate trial status from profile.created_at or trial_ends_at
-    const trialEndsAtString = profile?.trial_ends_at || (profile?.created_at ? new Date(new Date(profile.created_at).getTime() + 3 * 24 * 60 * 60 * 1000).toISOString() : null);
+    const [isMounted, setIsMounted] = useState(false);
+ 
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+    // Auto-calculate trial status
+    const trialEndsAtString = profile?.trial_ends_at || (profile?.created_at ? (() => {
+        const d = new Date(profile.created_at);
+        if (isNaN(d.getTime())) return null;
+        return new Date(d.getTime() + 3 * 24 * 60 * 60 * 1000).toISOString();
+    })() : null);
     const trialEndsAt = trialEndsAtString ? new Date(trialEndsAtString) : null;
     
     const now = new Date();
     const trialExpired = trialEndsAt ? trialEndsAt <= now : false; 
     const daysRemaining = trialEndsAt ? Math.max(0, Math.ceil((trialEndsAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))) : 0;
     
-    const isActuallyExpired = !isEffectivePro && (trialExpired || (trialEndsAt && daysRemaining <= 0));
-    const isInTrial = !isEffectivePro && !isActuallyExpired && daysRemaining > 0;
-    const canSeeLiveFeed = isEffectivePro || isInTrial;
+    const isActuallyExpired = !isActuallySubscribed && (trialExpired || (trialEndsAt && daysRemaining <= 0));
+    const isInTrial = !isActuallySubscribed && !isActuallyExpired && daysRemaining > 0;
+    const canSeeLiveFeed = isActuallySubscribed || isInTrial;
+
+    const searchLimit = isEffectivePro ? 5 : isScout ? 2 : 5;
+    const currentUsage = (() => {
+        try {
+            if (!isActuallySubscribed || !profile?.last_scan_at) return profile?.scan_count || 0;
+            const lastScan = new Date(profile.last_scan_at);
+            const today = new Date();
+            if (isNaN(lastScan.getTime())) return profile?.scan_count || 0;
+            return (lastScan.toDateString() !== today.toDateString()) ? 0 : (profile?.scan_count || 0);
+        } catch (e) {
+            return profile?.scan_count || 0;
+        }
+    })();
 
     const isSetupComplete = !!(
         profile?.description?.length > 10 && 
-        profile?.keywords?.length > 0 && 
-        profile?.subreddits?.length > 0
+        profile?.keywords?.length > 0
     );
 
-    const handleUpgrade = async () => {
+    const handleUpgrade = async (plan: 'scout' | 'pro' = 'pro') => {
         try {
             setIsUpgrading(true);
             const res = await fetch('/api/payments/create-checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ plan: 'growth' })
+                body: JSON.stringify({ plan })
             });
 
             const data = await res.json();
@@ -94,17 +114,28 @@ export default function LiveDiscoveryTab({
                             <ShieldCheck size={12} /> Trial Active ({daysRemaining} days left)
                         </div>
                     )}
+
+                    {isSetupComplete && (
+                        <div className="px-4 py-2 bg-orange-500/10 border border-orange-500/20 rounded-full text-[10px] font-black uppercase tracking-widest text-orange-500 flex items-center gap-2">
+                           <Activity size={12} /> Tracking {profile?.keywords?.length || 0} Keywords
+                        </div>
+                    )}
                 </div>
             </div>
 
             <div className="relative group">
-                <div className={`relative bg-white/[0.02] border rounded-[2.5rem] p-1 lg:p-2 transition-all hover:bg-white/[0.04] ${
+                <div className={`relative bg-white/[0.02] border rounded-3xl lg:rounded-[2.5rem] p-1 lg:p-2 transition-all hover:bg-white/[0.04] ${
                     hasResults ? 'border-orange-500/50 shadow-[0_0_30px_rgba(249,115,22,0.1)]' : 'border-white/5'
                 }`}>
-                    <div className="px-8 py-4 border-b border-white/5 flex items-center justify-between">
+                    <div className="px-4 sm:px-8 py-4 border-b border-white/5 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <Compass className="text-gray-500" size={18} />
-                            <span className="text-xs font-black uppercase tracking-widest text-gray-500">Spotlight search</span>
+                            <div className="flex flex-col">
+                                <span className="text-xs font-black uppercase tracking-widest text-gray-500">Spotlight search</span>
+                                <span className="text-[10px] font-bold text-orange-500 uppercase tracking-widest">
+                                    Active: {isAdmin ? 'Admin' : isPro ? 'Pro Plan' : isScout ? 'Scout Plan' : 'Free Trial'}
+                                </span>
+                            </div>
                         </div>
                         {profile?.scan_count !== undefined && (canSeeLiveFeed) && (
                             <div className="flex items-center gap-3">
@@ -113,13 +144,13 @@ export default function LiveDiscoveryTab({
                                         Trial Ends in {daysRemaining} days
                                     </span>
                                 )}
-                                <span className="text-xs font-mono text-gray-600">
-                                    Usage: {isEffectivePro && profile?.last_scan_at && (new Date(profile.last_scan_at).toDateString() !== new Date().toDateString()) ? 0 : profile?.scan_count || 0}/5 {isEffectivePro ? 'Today' : 'Total'}
+                                 <span className="text-xs font-mono text-gray-600">
+                                    {isMounted ? `Usage: ${currentUsage}/${searchLimit} ${isActuallySubscribed ? 'Today' : 'Total'}` : 'Loading usage...'}
                                 </span>
                             </div>
                         )}
                     </div>
-                    <div className="p-4 lg:p-6">
+                    <div className="p-2 sm:p-4 lg:p-6">
                         <LeadSearch 
                             user={user} 
                             isDashboardView={true} 
@@ -131,9 +162,9 @@ export default function LiveDiscoveryTab({
             </div>
 
             {/* 3. Main Discovery Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 pt-4">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 pt-4">
                 {/* Live Stream Column */}
-                <div className="lg:col-span-8 space-y-8">
+                <div className={`${isActuallyExpired ? 'lg:col-span-8' : 'lg:col-span-12'} space-y-6 sm:space-y-8`}>
                     <div className="flex items-center justify-between px-2">
                         <div className="flex items-center gap-3">
                             <div className="relative">
@@ -156,7 +187,7 @@ export default function LiveDiscoveryTab({
                         
                         {/* Trial Expired Overlay */}
                         {isActuallyExpired && (
-                            <div className="absolute inset-0 z-20 bg-black/80 rounded-[2rem] flex items-center justify-center p-8 text-center border border-white/10">
+                            <div className="absolute inset-0 z-20 bg-black/80 rounded-3xl lg:rounded-[2rem] flex items-center justify-center p-4 sm:p-8 text-center border border-white/10">
                                 <motion.div 
                                     initial={{ opacity: 0, scale: 0.95 }}
                                     animate={{ opacity: 1, scale: 1 }}
@@ -173,14 +204,21 @@ export default function LiveDiscoveryTab({
                                     </div>
                                     <div className="space-y-3">
                                         <button 
-                                            onClick={handleUpgrade}
+                                            onClick={() => handleUpgrade('pro')}
                                             disabled={isUpgrading}
                                             className="w-full py-5 bg-orange-500 hover:bg-orange-400 text-black font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
-                                            {isUpgrading ? 'Loading...' : 'Upgrade to Pro — $25/mo'}
+                                            {isUpgrading ? 'Loading...' : 'Get Pro Access — $29/mo'}
                                         </button>
-                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
-                                            Trial Ended {trialEndsAt?.toLocaleDateString()}
+                                        <button 
+                                            onClick={() => handleUpgrade('scout')}
+                                            disabled={isUpgrading}
+                                            className="w-full py-5 bg-white/10 hover:bg-white/20 text-white font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
+                                        >
+                                            {isUpgrading ? 'Loading...' : 'Get Scout Access — $15/mo'}
+                                        </button>
+                                         <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+                                            Trial Ended {isMounted && trialEndsAt ? trialEndsAt.toLocaleDateString() : '...'}
                                         </p>
                                     </div>
                                 </motion.div>
@@ -190,67 +228,35 @@ export default function LiveDiscoveryTab({
                 </div>
 
                 {/* Info / Sidebar Column */}
-                <div className="lg:col-span-4 space-y-8">
-                    <div className="space-y-2 px-2">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Monitor Insights</h3>
-                        <p className="text-xs text-gray-600 font-medium">Real-time performance of your automated sentinel.</p>
-                    </div>
-
-                    <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-6 space-y-6">
-                        <div className="space-y-4">
-                            <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-gray-500">
-                                <span>Scanning efficiency</span>
-                                <span className="text-orange-500">92%</span>
-                            </div>
-                            <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                                <div className="h-full w-[92%] bg-orange-500/40 rounded-full" />
-                            </div>
-                        </div>
-
-                        <div className="pt-4 space-y-4">
-                            <div className="flex items-start gap-3">
-                                <div className="p-2 rounded-xl bg-white/5 text-gray-400">
-                                    <Compass size={14} />
-                                </div>
-                                <div className="space-y-1">
-                                    <p className="text-xs font-bold text-gray-200">Autonomous Mode</p>
-                                    <p className="text-[10px] text-gray-500 leading-relaxed">System checking subreddits every 30 mins for matches.</p>
-                                </div>
-                            </div>
-
-                            {canSeeLiveFeed && (
-                                <div className="flex items-start gap-3">
-                                    <div className="p-2 rounded-xl bg-orange-500/10 text-orange-500">
-                                        <ShieldCheck size={14} />
-                                    </div>
-                                    <div className="space-y-1">
-                                        <p className="text-xs font-bold text-white">Lead Verification</p>
-                                        <p className="text-[10px] text-gray-500 leading-relaxed">AI scoring each lead to ensure relevancy.</p>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {isActuallyExpired && (
-                        <div className="p-6 bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl text-black shadow-xl shadow-orange-500/20 relative overflow-hidden group">
+                {isActuallyExpired && (
+                    <div className="lg:col-span-4 space-y-8">
+                        <div className="p-6 bg-gradient-to-br from-white/10 to-white/5 rounded-3xl text-white border border-white/5 shadow-xl relative overflow-hidden group">
                            <div className="relative z-10 space-y-4">
-                                <h3 className="font-black text-lg leading-tight">Upgrade to Pro</h3>
-                                <p className="text-xs font-bold opacity-80 leading-relaxed">
-                                    Unlock the full live stream and find every customer searching for you right now.
+                                <h3 className="font-black text-lg leading-tight">Pick Your Plan</h3>
+                                <p className="text-xs font-bold opacity-80 leading-relaxed text-gray-400">
+                                    Unlock the full intelligence radar and find every customer searching for you.
                                 </p>
-                                <button 
-                                    onClick={handleUpgrade}
-                                    disabled={isUpgrading}
-                                    className="w-full py-3 bg-black text-white rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-gray-900 transition-all flex items-center justify-center gap-2"
-                                >
-                                    {isUpgrading ? 'Loading...' : 'Unlock Pro — $25/mo'}
-                                </button>
+                                <div className="space-y-2">
+                                    <button 
+                                        onClick={() => handleUpgrade('scout')}
+                                        disabled={isUpgrading}
+                                        className="w-full py-3 bg-white/10 text-white border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-white/20 transition-all flex items-center justify-center gap-2"
+                                    >
+                                        Scout ($15)
+                                    </button>
+                                    <button 
+                                        onClick={() => handleUpgrade('pro')}
+                                        disabled={isUpgrading}
+                                        className="w-full py-3 bg-orange-500 text-black rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-orange-400 transition-all flex items-center justify-center gap-2"
+                                    >
+                                        Pro ($29)
+                                    </button>
+                                </div>
                            </div>
-                           <Compass size={80} className="absolute -right-4 -bottom-4 text-black/10 transition-transform group-hover:scale-110" />
+                           <Compass size={80} className="absolute -right-4 -bottom-4 text-white/5 transition-transform group-hover:scale-110" />
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
         </section>
     );
