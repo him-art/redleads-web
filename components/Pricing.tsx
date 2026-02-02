@@ -78,6 +78,7 @@ const Pricing = () => {
                         </ul>
 
                         <button
+                            suppressHydrationWarning
                             onClick={() => handleCheckout('scout')}
                             disabled={!!isLoading}
                             className="w-full py-5 rounded-xl border border-white/10 bg-white/5 text-white font-black text-[12px] uppercase tracking-widest hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2 disabled:opacity-50"
@@ -118,6 +119,7 @@ const Pricing = () => {
                         </ul>
 
                         <button
+                            suppressHydrationWarning
                             onClick={() => handleCheckout('pro')}
                             disabled={!!isLoading}
                             className="w-full py-5 rounded-xl bg-orange-500 text-black font-black text-[12px] uppercase tracking-widest hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-xl shadow-orange-500/20"

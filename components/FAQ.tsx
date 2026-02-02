@@ -36,6 +36,7 @@ const FAQ = () => {
           {faqs.map((faq, index) => (
             <div key={index} className="overflow-hidden rounded-xl border border-white/5 bg-[#222]">
               <button
+                suppressHydrationWarning
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
                 className="flex w-full items-center justify-between p-6 text-left"
               >

@@ -93,6 +93,7 @@ export default function LoginForm({
 
         <div className="space-y-4">
           <button
+            suppressHydrationWarning
             onClick={handleGoogleLogin}
             disabled={loading}
             className="w-full py-3 px-4 bg-white hover:bg-gray-100 text-black rounded-xl font-bold flex items-center justify-center gap-3 transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
@@ -148,6 +149,7 @@ export default function LoginForm({
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                 <input
+                  suppressHydrationWarning
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -163,6 +165,7 @@ export default function LoginForm({
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                 <input
+                  suppressHydrationWarning
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -174,6 +177,7 @@ export default function LoginForm({
             </div>
 
             <button
+              suppressHydrationWarning
               type="submit"
               disabled={loading}
               className="w-full py-4 bg-[#f25e36] hover:bg-[#d94a24] text-white rounded-xl font-black text-lg shadow-lg shadow-orange-500/20 transition-all transform hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -191,6 +195,7 @@ export default function LoginForm({
 
           <div className="text-center mt-8">
             <button
+              suppressHydrationWarning
               onClick={() => {
                   setIsSignUp(!isSignUp);
                   setError(null);

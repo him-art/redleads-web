@@ -94,63 +94,97 @@ export default function LiveDiscoveryTab({
     // Unified trial logic is now at the top
 
     return (
-        <section className="space-y-4 max-w-6xl mx-auto">
-            {/* 1. Header Area with Sentinel Status & Actions */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/5 pb-4">
-                
-
-                <div className="flex flex-wrap items-center gap-3">
-                    {!isSetupComplete && canSeeLiveFeed && (
-                        <button 
-                            onClick={() => onNavigate('settings')}
-                            className="px-5 py-2.5 bg-orange-500 text-black border border-orange-500 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-orange-600 transition-all flex items-center gap-2"
-                        >
-                            Configure Tracking <ChevronRight size={12} />
-                        </button>
-                    )}
-
-                    {isInTrial && (
-                        <div className="px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-full text-[10px] font-black uppercase tracking-widest text-green-500 flex items-center gap-2">
-                            <ShieldCheck size={12} /> Trial Active ({daysRemaining} days left)
+        <section className="space-y-6 max-w-7xl mx-auto">
+            {/* 1. Status Cards Grid (Skeleton Style) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                {/* Card 1: Plan Status */}
+                <div className="relative overflow-hidden rounded-3xl bg-[#0F0F0F] border border-white/5 p-6 flex flex-col justify-between h-32 md:h-40 group hover:border-white/10 transition-colors">
+                    <div className="flex justify-between items-start">
+                        <div className="p-2 bg-orange-500/10 rounded-xl text-orange-500">
+                             {isActuallySubscribed ? <ShieldCheck size={20} /> : <Clock size={20} />}
                         </div>
-                    )}
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Plan Status</span>
+                    </div>
+                    <div>
+                        <h3 className="text-2xl font-bold text-white mb-1">
+                            {isAdmin ? 'Admin' : isPro ? 'Pro Plan' : isScout ? 'Scout Plan' : 'Free Trial'}
+                        </h3>
+                        <p className="text-xs text-gray-500 font-medium">
+                            {isInTrial 
+                                ? `${daysRemaining} Days Remaining` 
+                                : isActuallySubscribed 
+                                    ? 'Active Subscription' 
+                                    : 'Trial Expired'}
+                        </p>
+                    </div>
+                </div>
 
-                    {isSetupComplete && (
-                        <div className="px-4 py-2 bg-orange-500/10 border border-orange-500/20 rounded-full text-[10px] font-black uppercase tracking-widest text-orange-500 flex items-center gap-2">
-                           <Activity size={12} /> Tracking {profile?.keywords?.length || 0} Keywords
+                {/* Card 2: Usage Stats */}
+                <div className="relative overflow-hidden rounded-3xl bg-[#0F0F0F] border border-white/5 p-6 flex flex-col justify-between h-32 md:h-40 group hover:border-white/10 transition-colors">
+                     <div className="flex justify-between items-start">
+                        <div className="p-2 bg-blue-500/10 rounded-xl text-blue-500">
+                             <Activity size={20} />
                         </div>
-                    )}
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Usage</span>
+                    </div>
+                    <div>
+                        <h3 className="text-2xl font-bold text-white mb-1">
+                            {isMounted ? `${currentUsage}/${searchLimit}` : '...'}
+                        </h3>
+                        <p className="text-xs text-gray-500 font-medium">
+                            Daily Scans Used
+                        </p>
+                    </div>
+                    {/* Progress Bar background */}
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/5">
+                        <div 
+                            className="h-full bg-blue-500" 
+                            style={{ width: `${Math.min(100, (currentUsage / searchLimit) * 100)}%` }} 
+                        />
+                    </div>
+                </div>
+
+                {/* Card 3: Keywords / Setup */}
+                <div className="relative overflow-hidden rounded-3xl bg-[#0F0F0F] border border-white/5 p-6 flex flex-col justify-between h-32 md:h-40 group hover:border-white/10 transition-colors cursor-pointer" onClick={() => onNavigate('settings')}>
+                     <div className="flex justify-between items-start">
+                        <div className="p-2 bg-purple-500/10 rounded-xl text-purple-500">
+                             <Compass size={20} />
+                        </div>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Tracking</span>
+                    </div>
+                    <div>
+                        <h3 className="text-2xl font-bold text-white mb-1">
+                            {profile?.keywords?.length || 0}
+                        </h3>
+                        <div className="flex items-center gap-2">
+                            <p className="text-xs text-gray-500 font-medium">Active Keywords</p>
+                            {!isSetupComplete && (
+                                <span className="flex h-2 w-2 relative">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                    {/* Hover Hint */}
+                     <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <ArrowRight size={16} className="text-gray-500" />
+                    </div>
                 </div>
             </div>
 
-            <div className="relative group">
-                <div className={`relative bg-white/[0.02] border rounded-3xl lg:rounded-[2.5rem] p-1 lg:p-2 transition-all hover:bg-white/[0.04] ${
+            {/* 2. Main Search Area */}
+            <div className="relative group mb-8">
+                <div className={`relative bg-[#0F0F0F] border rounded-3xl p-1 transition-all ${
                     hasResults ? 'border-orange-500/50 shadow-[0_0_30px_rgba(249,115,22,0.1)]' : 'border-white/5'
                 }`}>
-                    <div className="px-4 sm:px-8 py-4 border-b border-white/5 flex items-center justify-between">
+                    <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <Compass className="text-gray-500" size={18} />
-                            <div className="flex flex-col">
-                                <span className="text-xs font-black uppercase tracking-widest text-gray-500">Spotlight search</span>
-                                <span className="text-[10px] font-bold text-orange-500 uppercase tracking-widest">
-                                    Active: {isAdmin ? 'Admin' : isPro ? 'Pro Plan' : isScout ? 'Scout Plan' : 'Free Trial'}
-                                </span>
-                            </div>
+                            <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+                            <span className="text-xs font-bold uppercase tracking-widest text-gray-400">Live Spotlight</span>
                         </div>
-                        {profile?.scan_count !== undefined && (canSeeLiveFeed) && (
-                            <div className="flex items-center gap-3">
-                                {isInTrial && (
-                                    <span className="px-2 py-1 rounded-full bg-orange-500/10 text-orange-500 text-xs font-bold border border-orange-500/20 animate-pulse">
-                                        Trial Ends in {daysRemaining} days
-                                    </span>
-                                )}
-                                 <span className="text-xs font-mono text-gray-600">
-                                    {isMounted ? `Usage: ${currentUsage}/${searchLimit} ${isActuallySubscribed ? 'Today' : 'Total'}` : 'Loading usage...'}
-                                </span>
-                            </div>
-                        )}
                     </div>
-                    <div className="p-2 sm:p-4 lg:p-6">
+                    <div className="p-4 sm:p-6">
                         <LeadSearch 
                             user={user} 
                             isDashboardView={true} 
@@ -218,7 +252,7 @@ export default function LiveDiscoveryTab({
                                             {isUpgrading ? 'Loading...' : 'Get Scout Access — $15/mo'}
                                         </button>
                                          <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
-                                            Trial Ended {isMounted && trialEndsAt ? trialEndsAt.toLocaleDateString() : '...'}
+                                            Trial Ended {isMounted && trialEndsAt ? trialEndsAt?.toLocaleDateString() : '...'}
                                         </p>
                                     </div>
                                 </motion.div>

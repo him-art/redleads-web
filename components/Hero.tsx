@@ -1,44 +1,19 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, useWillChange } from 'framer-motion';
-import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { Search, ArrowRight, Globe, CheckCircle2 } from 'lucide-react';
+import { Search, Globe, CheckCircle2, Zap, ArrowRight } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { type User as SupabaseUser } from '@supabase/supabase-js';
 
 export default function Hero({ children }: { children?: React.ReactNode }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end'],
-  });
-
-  const willChange = useWillChange();
-
-  // Responsive donut positioning - scales with screen size and text
-  const [scale, setScale] = useState(1);
-  const [hasMounted, setHasMounted] = useState(false);
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [urlInput, setUrlInput] = useState('');
   const router = useRouter();
   const supabase = createClient();
   
   useEffect(() => {
-    const handleResize = () => {
-      // Calculate scale factor based on screen width
-      // Base design at 1440px width
-      const baseWidth = 1440;
-      const currentScale = window.innerWidth / baseWidth;
-      const scaleValue = Math.max(0.5, Math.min(currentScale, 1));
-      setScale(scaleValue);
-    };
-    
-    handleResize();
-    setHasMounted(true);
-    window.addEventListener('resize', handleResize);
-
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
@@ -50,7 +25,6 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
     });
 
     return () => {
-      window.removeEventListener('resize', handleResize);
       subscription.unsubscribe();
     };
   }, []);
@@ -59,7 +33,6 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
     e.preventDefault();
     if (!urlInput.trim()) return;
     
-    // Simple normalization
     let domain = urlInput.trim().toLowerCase();
     domain = domain.replace(/^(https?:\/\/)?(www\.)?/, '');
     
@@ -70,152 +43,145 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
     }
   };
 
-  // "The Giant Donut" Logic:
-  // We use a div with a massive border to act as the "Light Overlay".
-  // The "Hole" is the inner content box of this div.
-  // We scale this div up. 
-  // - Because the border scales with the div, it maintains coverage ratio.
-  // - Transform is cheap (GPU).
-  
-  // Scale range:
-  // Start: 1 (Hole size = ~47px to cover just the "o")
-  // End: 50 (Hole size = ~2500px, clearing the screen)
-  const scaleTransform = useTransform(scrollYProgress, [0, 0.4, 0.9], [1, 5, 50]);
-  
-  // Opacity for the mask to fade it completely at the end
-  const maskOpacity = useTransform(scrollYProgress, [0.85, 0.9], [1, 0]);
-  
-  // Keep hero text fully visible and static (no opacity fade, no movement)
-  const heroOpacity = 1; // Always visible
-  const yText = useTransform(scrollYProgress, [0, 1], [0, 0]); // No movement
-
   return (
-    <div ref={containerRef} className="relative h-[250vh]">
-      <div className="sticky top-0 h-screen overflow-hidden bg-gradient-to-br from-[#1a1a1a] via-[#1a1a1a] to-[#1a1a1a]">
+    <div className="relative min-h-[100vh] overflow-hidden bg-[#1a1a1a] selection:bg-orange-500/30">
+      {/* Flattened Background - No Gradients */}
+      <div className="absolute inset-0 bg-[#1a1a1a]" />
+
+      <div className="relative z-10 container mx-auto px-4 pt-32 pb-20 md:pt-40 md:pb-32 flex flex-col items-center text-center">
         
-        {/* The Content to Reveal (Next Section) */}
-        {/* We place the children here. They sit behind the mask. */}
-        <div className="absolute inset-0 flex items-center justify-center z-0">
-           {children}
-        </div>
+        
 
-
-        {/* Hero Content (Floating on top) */}
-        <motion.div 
-            style={{ 
-              opacity: heroOpacity, 
-              y: yText, 
-              scale: hasMounted ? scale : 1 
-            }}
-            className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none px-4 pt-10" 
+        {/* Main Headline - Serif & Minimal */}
+        <motion.h1 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1, ease: [0.2, 0.65, 0.3, 0.9] }}
+          className="max-w-7xl mx-auto text-4xl md:text-6xl lg:text-7xl font-serif font-medium tracking-tight text-[#f5f5f5] mb-8 leading-[1.1]"
         >
-             <div className="relative pointer-events-auto">
+          Turn Reddit Conversations <br />
+          <span>Into</span> <span className="text-slate-400 italic">Paying Customers</span>
+        </motion.h1>
 
-                  {/* Main headline - Fixed layout that scales */}
-                  <div className="flex flex-col items-center justify-center text-center leading-tight gap-2">
-                       <div>
-                           <span className="text-[72px] font-bold tracking-tight text-[#1a1a1a] flex items-center justify-center gap-6 whitespace-nowrap">
-                             <span>Turn</span>
-                             <span className="font-serif italic font-light">Reddit</span>
-                             <span>Conversations</span>
-                           </span>
-                       </div>
+        {/* Subheadline - Clean Sans */}
+        <motion.p 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.2, 0.65, 0.3, 0.9] }}
+          className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-12 leading-relaxed font-light"
+        >
+          Stop checking Reddit manually. We monitor millions of discussions to find people explicitly asking for your solution.
+        </motion.p>
 
-                      {/* Line 2: Into (centered with the donut acting as the 'o') */}
-                      <div className="flex justify-center relative items-center">
-                          <span 
-                            style={{ marginRight: '56px' }}
-                            className="text-[72px] font-bold tracking-tight text-[#1a1a1a]"
-                          >
-                            Int
-                          </span>
-                          
-                          {/* The Giant Donut (The Mask) - Positioned relative to "Int" */}
-                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                              <motion.div
-                                style={{ 
-                                  scale: scaleTransform, 
-                                  opacity: maskOpacity, 
-                                  willChange, 
-                                  x: 38, // Precise offset to align with "Int"
-                                  y: 8, // Micro-adjustment for baseline
-                                  width: 38, // Unscaled base size
-                                  height: 38
-                                }}
-                                className="rounded-full shadow-[0_0_0_5000px_#f5f5f5] z-[-1]"
-                              />
-                          </div>
-                      </div>
+        {/* Search/CTA Component - Card Style */}
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3, ease: [0.2, 0.65, 0.3, 0.9] }}
+          className="w-full max-w-xl mx-auto mb-20"
+        >
+          <div className="p-2 bg-white/5 border border-white/10 rounded-2xl">
+            <form 
+              onSubmit={handleSearch}
+              className="relative flex items-center bg-[#1a1a1a] rounded-xl overflow-hidden border border-white/5"
+            >
+              <div className="pl-4 pr-3 text-slate-500">
+                <Globe size={20} />
+              </div>
+              
+              <input 
+                name="website-url"
+                type="text" 
+                placeholder="yourwebsite.com"
+                value={urlInput}
+                onChange={(e) => setUrlInput(e.target.value)}
+                suppressHydrationWarning
+                className="flex-1 bg-transparent border-none text-lg text-white placeholder:text-slate-600 focus:ring-0 focus:outline-none h-12 w-full font-light"
+              />
+              
+              <button 
+                suppressHydrationWarning
+                type="submit"
+                className="m-1 px-6 py-2.5 bg-white text-black hover:bg-slate-200 rounded-lg font-medium text-sm transition-all flex items-center gap-2"
+              >
+                Start Free <ArrowRight size={14} />
+              </button>
+            </form>
+          </div>
 
-                      {/* Line 3: Paying Customers */}
-                      <div>
-                          <span className="text-[88px] font-bold tracking-tight font-serif italic inline-block">
-                            <span className="text-orange-500 relative whitespace-nowrap">
-                              Paying Customers
-                              <span 
-                                className="absolute -bottom-2 left-0 right-0 h-[10px] bg-gradient-to-r from-orange-400 to-orange-600 rounded-full"
-                              ></span>
-                            </span>
-                          </span>
-                      </div>
-                  </div>
-
-                  {/* Subtitle and CTAs */}
-                  <div className="mt-8 flex flex-col items-center gap-8 px-4 w-full">
-                    <p className="text-xl sm:text-2xl text-[#1a1a1a] italic max-w-2xl text-center leading-relaxed">
-                      Find people actively looking for your solution
-                    </p>
-                    
-                    <form 
-                      onSubmit={handleSearch}
-                      className="w-full max-w-4xl relative group pointer-events-auto"
-                    >
-                      <div className="absolute inset-y-0 left-8 flex items-center pointer-events-none">
-                        <Globe className="text-slate-400 group-focus-within:text-orange-500 transition-colors" size={24} />
-                      </div>
-                      <label htmlFor="hero-url-input" className="sr-only">Your Website URL</label>
-                      <input 
-                        id="hero-url-input"
-                        name="website-url"
-                        type="text" 
-                        placeholder="yourwebsite.com"
-                        value={urlInput}
-                        onChange={(e) => setUrlInput(e.target.value)}
-                        suppressHydrationWarning
-                        className="w-full bg-white border-2 border-orange-500 rounded-full py-6 pl-20 pr-48 text-2xl text-slate-900 focus:outline-none focus:ring-8 focus:ring-orange-500/5 transition-all shadow-2xl shadow-black/5 placeholder:text-slate-300"
-                      />
-                      <button 
-                        type="submit"
-                        className="absolute right-2 top-2 bottom-2 px-10 bg-[#f25e36] text-white rounded-full text-xl font-bold hover:bg-[#d94a24] transition-all flex items-center gap-3 hover:scale-105 active:scale-95 shadow-xl shadow-orange-500/20"
-                      >
-                        <Search size={22} />
-                        <span className="hidden sm:inline">Start For Free</span>
-                      </button>
-                    </form>
-
-                     <div className="flex items-center gap-4 text-sm font-medium text-slate-500">
-                        <span className="flex items-center gap-1.5">
-                            <CheckCircle2 className="w-4 h-4 text-green-500" /> 
-                            3-Day Full Trial Access
-                        </span>
-                        <span className="w-1 h-1 bg-slate-300 rounded-full" />
-                        <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-green-500" /> No Card Required</span>
-                     </div>
-                  </div>
+          <div className="mt-6 flex items-center justify-center gap-6 opacity-60">
+             <div className="flex items-center gap-2 text-xs text-slate-400 uppercase tracking-wider font-medium">
+                <CheckCircle2 className="w-3 h-3" /> No Card Required
              </div>
+             <div className="flex items-center gap-2 text-xs text-slate-400 uppercase tracking-wider font-medium">
+                <CheckCircle2 className="w-3 h-3" /> 3-Day Free Trial
+             </div>
+          </div>
         </motion.div>
 
-        {/* Fixed Icon in the center (The Target) */}
-        {/* This icon sits INSIDE the hole initially and fades out */}
-        <div className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none">
-           <motion.div 
-             style={{ opacity: heroOpacity }}
-             className="text-6xl"
-           >
-             
-           </motion.div>
-        </div>
+        {/* Abstract "Product" Visual or Placeholder for scroll transition */}
+        <motion.div
+           initial={{ opacity: 0, scale: 0.9 }}
+           animate={{ opacity: 1, scale: 1 }}
+           transition={{ duration: 1, delay: 0.5 }}
+           className="relative w-full max-w-5xl mx-auto"
+        >
+            <div className="relative rounded-t-xl md:rounded-t-2xl border border-white/10 bg-[#0A0A0A]/90 backdrop-blur-xl overflow-hidden shadow-2xl mx-4 md:mx-0">
+               <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+               
+               {/* Browser Header */}
+               <div className="h-8 md:h-10 border-b border-white/5 flex items-center px-4 gap-2">
+                  <div className="flex gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/20" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/20" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-500/20" />
+                  </div>
+               </div>
 
+               {/* Mock Dashboard Content */}
+               <div className="p-4 md:p-8 grid grid-cols-12 gap-4 md:gap-6 h-[300px] md:h-[400px] overflow-hidden opacity-50">
+                  {/* Sidebar */}
+                  <div className="hidden md:block col-span-2 space-y-3">
+                     <div className="h-2 w-20 bg-white/10 rounded-full mb-6" />
+                     <div className="h-8 w-full bg-white/5 rounded-lg" />
+                     <div className="h-4 w-16 bg-white/5 rounded-lg" />
+                     <div className="h-4 w-20 bg-white/5 rounded-lg" />
+                     <div className="h-4 w-14 bg-white/5 rounded-lg" />
+                  </div>
+                  
+                  {/* Main Content */}
+                  <div className="col-span-12 md:col-span-10 space-y-4">
+                     {/* Header */}
+                     <div className="flex justify-between items-center mb-6">
+                        <div className="h-6 w-32 bg-white/10 rounded-lg" />
+                        <div className="h-8 w-24 bg-orange-500/20 rounded-lg" />
+                     </div>
+                     
+                     {/* Cards */}
+                     <div className="grid grid-cols-3 gap-4">
+                        <div className="h-24 bg-white/5 rounded-xl border border-white/5" />
+                        <div className="h-24 bg-white/5 rounded-xl border border-white/5" />
+                        <div className="h-24 bg-white/5 rounded-xl border border-white/5" />
+                     </div>
+
+                     {/* List */}
+                     <div className="space-y-3 mt-6">
+                        {[1, 2, 3].map((i) => (
+                          <div key={i} className="h-14 bg-white/5 rounded-xl border border-white/5 flex items-center px-4 justify-between">
+                             <div className="h-2 w-24 bg-white/10 rounded-full" />
+                             <div className="h-2 w-12 bg-white/10 rounded-full" />
+                          </div>
+                        ))}
+                     </div>
+                  </div>
+               </div>
+               
+               {children && <div className="absolute inset-0 z-10">{children}</div>}
+            </div>
+            
+            {/* Fade out at bottom to blend with next section if needed */}
+            <div className="absolute -bottom-1 left-0 right-0 h-24 bg-gradient-to-t from-[#1a1a1a] to-transparent pointer-events-none" />
+        </motion.div>
       </div>
     </div>
   );

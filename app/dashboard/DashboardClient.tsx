@@ -87,143 +87,126 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
     return (
         <>
             {showPaywall && <PaywallModal onCheckout={handleCheckout} />}
-            <div className="flex flex-col lg:flex-row min-h-[calc(100vh-12rem)] relative p-2 sm:p-0">
-            {/* Mobile Header Toggle */}
-            <div className="lg:hidden flex items-center justify-between mb-4 p-4 bg-white/[0.03] border border-white/10 rounded-2xl shadow-xl">
-                <div className="flex items-center gap-3">
-                    {(() => {
-                        const activeTabData = tabs.find(t => t.id === activeTab);
-                        if (!activeTabData) return null;
-                        const Icon = activeTabData.icon;
-                        return (
-                            <>
-                                <div className="text-orange-500">
-                                    <Icon size={20} />
-                                </div>
-                                <span className="font-bold text-white">{activeTabData.label}</span>
-                            </>
-                        );
-                    })()}
-                </div>
-                <button 
-                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    className="p-2 text-gray-400 hover:text-white transition-colors"
-                >
-                    {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                </button>
-            </div>
-
-            {/* Sidebar Navigation */}
-            <nav className={`
-                ${isMobileMenuOpen ? 'flex' : 'hidden'} 
-                lg:flex flex-col w-full lg:w-72 flex-shrink-0 space-y-1 pr-0 lg:pr-8 mb-6 lg:mb-0
-                absolute lg:relative top-20 lg:top-0 left-0 z-50 bg-[#0d0d0d] lg:bg-transparent
-                p-4 lg:p-0 border lg:border-0 border-white/10 rounded-2xl lg:rounded-none shadow-2xl lg:shadow-none
-            `}>
-                <div className="px-4 mb-6 hidden lg:block">
-                    {/* Subscription Status Badge */}
-                    <div className="mb-8">
-                        {isPro || isScout || isAdmin ? (
-                            <div className="flex items-center gap-3 p-3 bg-green-500/10 border border-green-500/20 rounded-2xl group/status">
-                                <div className="p-2 bg-green-500/20 rounded-xl text-green-500 group-hover/status:scale-110 transition-transform">
-                                    <Zap size={16} fill="currentColor" />
-                                </div>
-                                <div>
-                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-green-500/60">Subscription</p>
-                                    <p className="text-sm font-bold text-green-500">
-                                        {isAdmin ? 'Admin Access' : isPro ? 'Pro Plan Active' : 'Scout Plan Active'}
-                                    </p>
-                                </div>
-                            </div>
-                        ) : isActuallyExpired ? (
-                            <div className="flex items-center gap-3 p-3 bg-red-500/10 border border-red-500/20 rounded-2xl group/status">
-                                <div className="p-2 bg-red-500/20 rounded-xl text-red-500 group-hover/status:scale-110 transition-transform">
-                                    <AlertTriangle size={16} />
-                                </div>
-                                <div>
-                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-red-500/60">Subscription</p>
-                                    <p className="text-sm font-bold text-red-400">Trial Expired</p>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="flex items-center gap-3 p-3 bg-orange-500/10 border border-orange-500/20 rounded-2xl group/status">
-                                <div className="p-2 bg-orange-500/20 rounded-xl text-orange-500 group-hover/status:scale-110 transition-transform">
-                                    <Clock size={16} />
-                                </div>
-                                 <div className="flex flex-col">
-                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-500/60 leading-none mb-1">Free Trial</p>
-                                    <p className="text-sm font-bold text-orange-500 leading-none">
-                                        {(() => {
-                                            try {
-                                                if (!isMounted) return '...';
-                                                return `${daysRemaining} Days Left`;
-                                            } catch (e) {
-                                                return 'Active';
-                                            }
-                                        })()}
-                                    </p>
-                                </div>
-                            </div>
-                        )}
+            
+            {/* Main Layout Container - Full Dark Theme */}
+            <div className="flex h-screen bg-[#050505] text-white overflow-hidden font-sans selection:bg-orange-500/30">
+                
+                {/* Mobile Header Toggle */}
+                <div className="lg:hidden absolute top-0 left-0 right-0 z-50 p-4 bg-[#050505]/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center">
+                            <Zap size={18} className="text-black fill-black" />
+                        </div>
+                        <span className="font-bold text-lg tracking-tight">RedLeads</span>
                     </div>
-
-                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-gray-500 mb-4">Workspace</h3>
+                    <button 
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        className="p-2 text-gray-400 hover:text-white transition-colors"
+                    >
+                        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                    </button>
                 </div>
-                {tabs.map((tab) => {
-                    const Icon = tab.icon;
-                    const isActive = activeTab === tab.id;
-                    return (
-                        <button
-                            suppressHydrationWarning
-                            key={tab.id}
-                            onClick={() => {
-                                setActiveTab(tab.id as any);
-                                setIsMobileMenuOpen(false);
-                            }}
-                            className={`group relative w-full flex items-center gap-3 px-5 py-4 rounded-2xl transition-all text-left ${
-                                isActive 
-                                    ? 'bg-white/[0.03] text-white shadow-sm' 
-                                    : 'text-gray-500 hover:text-gray-300'
-                            }`}
-                        >
-                            {/* Active Indicator */}
-                            {isActive && (
-                                <motion.div 
-                                    layoutId="activeTab"
-                                    className="absolute left-0 w-1 h-6 bg-orange-500 rounded-full"
-                                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                                />
-                            )}
-                            <Icon size={20} className={`transition-colors ${isActive ? 'text-orange-500' : 'group-hover:text-gray-300'}`} />
-                            <span className={`text-base font-semibold tracking-tight ${isActive ? 'font-bold' : ''}`}>
-                                {tab.label}
-                            </span>
-                        </button>
-                    );
-                })}
 
-                <div className="mt-auto pt-10 px-4 hidden lg:block">
-                    <div className="p-4 bg-orange-500/5 border border-orange-500/10 rounded-2xl">
-                        <p className="text-xs font-bold text-orange-500/60 uppercase tracking-widest mb-1">System Load</p>
-                        <div className="flex items-center gap-2">
-                            <div className="h-1 flex-grow bg-white/5 rounded-full overflow-hidden">
-                                <div className="h-full w-1/3 bg-orange-500/40 rounded-full" />
-                            </div>
-                            <span className="text-xs font-mono text-gray-500 italic">Optimal</span>
+                {/* Sidebar Navigation - Fixed Left */}
+                <motion.aside 
+                    initial={false}
+                    animate={isMobileMenuOpen ? { x: 0 } : { x: 0 }}
+                    className={`
+                        fixed inset-y-0 left-0 z-40 w-72 bg-[#050505] border-r border-white/5
+                        transform lg:transform-none transition-transform duration-300 ease-in-out
+                        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+                        flex flex-col p-6
+                    `}
+                >
+                    {/* Brand Header */}
+                    <div className="flex items-center gap-3 px-2 mb-10 mt-2">
+                        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/20">
+                            <Zap size={18} className="text-white fill-white" />
+                        </div>
+                        <div>
+                            <h1 className="font-bold text-lg tracking-tight leading-none">RedLeads</h1>
+                            <span className="text-[10px] font-medium text-gray-500 uppercase tracking-widest pl-0.5">Intelligence</span>
                         </div>
                     </div>
-                </div>
-            </nav>
 
-            <main className="flex-grow bg-white/[0.02] rounded-3xl lg:rounded-[2.5rem] border border-white/5 p-4 sm:p-6 lg:p-12 overflow-hidden relative group">
-                <div className="h-full">
-                    {activeTab === 'reports' && <ReportsTab reports={reports} profile={profile} user={user} isPro={isPro} isAdmin={isAdmin} />}
-                    {activeTab === 'live' && <LiveDiscoveryTab user={user} profile={profile} isPro={isPro} isScout={isScout} isAdmin={isAdmin} initialSearch={initialSearch} onNavigate={(tab) => setActiveTab(tab as any)} />}
-                    {activeTab === 'settings' && <SettingsTab profile={profile} user={user} />}
-                    {activeTab === 'billing' && <BillingTab profile={profile} isPro={isPro} isAdmin={isAdmin} />}
-                </div>
-            </main>
-        </div>
+                    {/* Navigation Items */}
+                    <div className="space-y-1 flex-1">
+                        <div className="px-3 mb-2">
+                             <span className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">Menu</span>
+                        </div>
+                        {tabs.map((tab) => {
+                            const Icon = tab.icon;
+                            const isActive = activeTab === tab.id;
+                            return (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => {
+                                        setActiveTab(tab.id as any);
+                                        setIsMobileMenuOpen(false);
+                                    }}
+                                    className={`relative w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group overflow-hidden ${
+                                        isActive 
+                                            ? 'bg-white/[0.08] text-white shadow-inner border border-white/5' 
+                                            : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]'
+                                    }`}
+                                >
+                                    {isActive && (
+                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-orange-500 rounded-r-full" />
+                                    )}
+                                    <Icon size={18} className={`relative z-10 transition-colors ${isActive ? 'text-orange-500' : 'group-hover:text-gray-300'}`} />
+                                    <span className={`relative z-10 text-sm font-medium tracking-wide ${isActive ? 'text-white' : ''}`}>
+                                        {tab.label}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    {/* User Profile / Footer */}
+                    <div className="mt-auto pt-6 border-t border-white/5">
+                        <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center border border-white/10">
+                                <span className="text-xs font-bold text-gray-300">
+                                    {user.email?.[0].toUpperCase()}
+                                </span>
+                            </div>
+                            <div className="overflow-hidden">
+                                <p className="text-xs font-bold text-white truncate">{user.email}</p>
+                                <p className="text-[10px] text-gray-500 truncate">
+                                    {isAdmin ? 'Administrator' : isPro ? 'Pro Member' : 'Scout Member'}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </motion.aside>
+
+                {/* Main Content Area */}
+                <main className="flex-1 lg:pl-72 relative flex flex-col min-w-0 bg-[#050505]">
+                     {/* Scrollable Content Container */}
+                    <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 lg:p-10 scrollbar-hide">
+                         {/* Content Wrapper limit width */}
+                        <div className="max-w-7xl mx-auto space-y-8 mt-14 lg:mt-0">
+                             
+                             {/* Dynamic Tab Content */}
+                             <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={activeTab}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    transition={{ duration: 0.2 }}
+                                >
+                                    {activeTab === 'reports' && <ReportsTab reports={reports} profile={profile} user={user} isPro={isPro} isAdmin={isAdmin} />}
+                                    {activeTab === 'live' && <LiveDiscoveryTab user={user} profile={profile} isPro={isPro} isScout={isScout} isAdmin={isAdmin} initialSearch={initialSearch} onNavigate={(tab) => setActiveTab(tab as any)} />}
+                                    {activeTab === 'settings' && <SettingsTab profile={profile} user={user} />}
+                                    {activeTab === 'billing' && <BillingTab profile={profile} isPro={isPro} isAdmin={isAdmin} />}
+                                </motion.div>
+                             </AnimatePresence>
+                        </div>
+                    </div>
+                </main>
+
+            </div>
         </>
     );
 }
