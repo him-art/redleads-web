@@ -29,9 +29,9 @@ export default async function DashboardPage(props: { searchParams: Promise<{ sea
     const reports: any[] = [];
 
     return (
-        <main className="min-h-screen bg-[#1a1a1a]">
+        <main className="min-h-screen bg-[#050505]">
             <Suspense fallback={
-                <div className="flex h-screen items-center justify-center bg-[#1a1a1a] text-[#ff9053]">
+                <div className="flex h-screen items-center justify-center bg-[#050505] text-orange-500">
                     <Loader2 className="animate-spin" size={40} />
                 </div>
             }>

@@ -184,13 +184,13 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                 initial={{ width: 0 }}
                                 animate={{ width: "100%" }}
                                 transition={{ duration: 6, ease: "linear" }}
-                                className="h-full bg-[#ff9053]"
+                                className="h-full bg-orange-500"
                             />
                         </div>
                     )}
 
                     <div className="relative flex items-center">
-                        <div className="absolute left-4 sm:left-6 text-gray-500 group-focus-within:text-[#ff9053] transition-colors">
+                        <div className="absolute left-4 sm:left-6 text-gray-500 group-focus-within:text-orange-500 transition-colors">
                             {isScanning ? <Loader2 size={18} className="animate-spin" /> : <Globe size={18} />}
                         </div>
                         <input 
@@ -209,7 +209,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                             disabled={isScanning || url.trim().length < 3}
                             className={`absolute right-2 sm:right-3 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-black uppercase text-[9px] sm:text-[10px] tracking-widest transition-all ${
                                 !isScanning && url.trim().length >= 3 
-                                    ? 'bg-[#ff9053] text-black' 
+                                    ? 'bg-orange-500 text-black' 
                                     : 'bg-white/5 text-gray-600 cursor-not-allowed opacity-50'
                             }`}
                         >
@@ -225,7 +225,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                 exit={{ opacity: 0 }}
                                 className="mt-4 flex items-center justify-center gap-2"
                             >
-                                <Activity size={12} className="text-[#ff9053]/50" />
+                                <Activity size={12} className="text-orange-500/50" />
                                 <span className="text-[10px] font-black uppercase tracking-[0.15em] text-gray-600 animate-pulse">
                                     {scanSteps[scanStep]}
                                 </span>
@@ -246,7 +246,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                     <div className="flex items-center justify-between px-2">
                         <div className="space-y-1">
                             <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                                <Search size={18} className="text-[#ff9053]" />
+                                <Search size={18} className="text-orange-500" />
                                 {teaserInfo?.isTeaser ? `Top 3 Sample Leads` : `Intel Report: ${results.length} Matches`}
                             </h2>
                             <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">
@@ -289,7 +289,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                                             <div className="space-y-3">
                                                                 <div className="flex items-center justify-between">
                                                                     <div className="flex items-center gap-2">
-                                                                        <span className="text-[10px] font-black text-[#ff9053] bg-[#ff9053]/10 px-2 py-0.5 rounded-md">r/{lead.subreddit}</span>
+                                                                        <span className="text-[10px] font-black text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded-md">r/{lead.subreddit}</span>
                                                                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider ${
                                                                             lead.relevance === 'High' ? 'bg-green-500/10 text-green-500 border border-green-500/20' :
                                                                             lead.relevance === 'Medium' ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' :

@@ -65,7 +65,7 @@ export async function POST(req: Request) {
 
             const { data: profile } = await supabase
                 .from('profiles')
-                .select('scan_count, last_scan_at, subscription_tier, trial_ends_at, scan_allowance, created_at, keywords, subreddits, description')
+                .select('scan_count, last_scan_at, subscription_tier, trial_ends_at, scan_allowance, created_at, keywords, description')
                 .eq('id', user.id)
                 .single();
             
@@ -111,7 +111,6 @@ export async function POST(req: Request) {
             const scanResult = await performScan(url, {
                 tavilyApiKey: process.env.TAVILY_API_KEY,
                 keywords: profile?.keywords,
-                subreddits: profile?.subreddits,
                 description: profile?.description
             });
 

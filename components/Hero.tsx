@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { Search, Globe, CheckCircle2, Zap, ArrowRight } from 'lucide-react';
+import { Search, Globe, CheckCircle2, Zap, ArrowRight, ExternalLink } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { type User as SupabaseUser } from '@supabase/supabase-js';
 
@@ -48,7 +48,20 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
       {/* Flattened Background - No Gradients */}
       <div className="absolute inset-0 bg-[#1a1a1a]" />
 
-      <div className="relative z-10 container mx-auto px-4 pt-32 pb-20 md:pt-40 md:pb-32 flex flex-col items-center text-center">
+      {/* Floating Elements - Hidden on mobile, visible on large screens */}
+      <div className="absolute inset-0 max-w-[1800px] mx-auto pointer-events-none overflow-hidden z-0">
+         {/* Left Side */}
+         <FloatingBubble className="top-[15%] left-[5%] xl:left-[8%]" delay={0} />
+         <FloatingBubble className="top-[32%] left-[2%] xl:left-[4%]" delay={1.5} scale={1.1} />
+         <FloatingBubble className="top-[50%] left-[8%] xl:left-[10%]" delay={0.8} />
+
+         {/* Right Side */}
+         <FloatingBubble className="top-[18%] right-[5%] xl:right-[8%]" delay={0.5} scale={1.05} />
+         <FloatingBubble className="top-[35%] right-[2%] xl:right-[4%]" delay={2} />
+         <FloatingBubble className="top-[55%] right-[7%] xl:right-[10%]" delay={1.2} scale={0.95} />
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4 pt-32 pb-0 md:pt-40 md:pb-0 flex flex-col items-center text-center">
         
         
 
@@ -60,7 +73,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
           className="max-w-7xl mx-auto text-4xl md:text-6xl lg:text-7xl font-serif font-medium tracking-tight text-[#f5f5f5] mb-8 leading-[1.1]"
         >
           Turn Reddit Conversations <br />
-          <span>Into</span> <span className="text-slate-400 italic">Paying Customers</span>
+          <span>Into</span> <span className="text-orange-500 italic">Paying Customers</span>
         </motion.h1>
 
         {/* Subheadline - Clean Sans */}
@@ -78,7 +91,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3, ease: [0.2, 0.65, 0.3, 0.9] }}
-          className="w-full max-w-xl mx-auto mb-20"
+          className="w-full max-w-xl mx-auto mb-12"
         >
           <div className="p-2 bg-white/5 border border-white/10 rounded-2xl">
             <form 
@@ -119,70 +132,138 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
           </div>
         </motion.div>
 
-        {/* Abstract "Product" Visual or Placeholder for scroll transition */}
-        <motion.div
-           initial={{ opacity: 0, scale: 0.9 }}
-           animate={{ opacity: 1, scale: 1 }}
-           transition={{ duration: 1, delay: 0.5 }}
-           className="relative w-full max-w-5xl mx-auto"
+        {/* Product Visual - Static Demo */}
+        <div
+           className="relative w-full max-w-5xl mx-auto mt-0 md:mt-0"
         >
-            <div className="relative rounded-t-xl md:rounded-t-2xl border border-white/10 bg-[#0A0A0A]/90 backdrop-blur-xl overflow-hidden shadow-2xl mx-4 md:mx-0">
-               <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-               
-               {/* Browser Header */}
-               <div className="h-8 md:h-10 border-b border-white/5 flex items-center px-4 gap-2">
-                  <div className="flex gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/20" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/20" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-green-500/20" />
-                  </div>
-               </div>
+            <div className="relative rounded-t-[2rem] border-x-2 border-t-2 border-b-0 border-orange-500/20 bg-[#050505] overflow-hidden shadow-2xl p-6 md:p-10 text-left">
+                {/* Background Glow */}
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-orange-500/5 rounded-full blur-[100px] pointer-events-none" />
 
-               {/* Mock Dashboard Content */}
-               <div className="p-4 md:p-8 grid grid-cols-12 gap-4 md:gap-6 h-[300px] md:h-[400px] overflow-hidden opacity-50">
-                  {/* Sidebar */}
-                  <div className="hidden md:block col-span-2 space-y-3">
-                     <div className="h-2 w-20 bg-white/10 rounded-full mb-6" />
-                     <div className="h-8 w-full bg-white/5 rounded-lg" />
-                     <div className="h-4 w-16 bg-white/5 rounded-lg" />
-                     <div className="h-4 w-20 bg-white/5 rounded-lg" />
-                     <div className="h-4 w-14 bg-white/5 rounded-lg" />
-                  </div>
-                  
-                  {/* Main Content */}
-                  <div className="col-span-12 md:col-span-10 space-y-4">
-                     {/* Header */}
-                     <div className="flex justify-between items-center mb-6">
-                        <div className="h-6 w-32 bg-white/10 rounded-lg" />
-                        <div className="h-8 w-24 bg-orange-500/20 rounded-lg" />
-                     </div>
-                     
-                     {/* Cards */}
-                     <div className="grid grid-cols-3 gap-4">
-                        <div className="h-24 bg-white/5 rounded-xl border border-white/5" />
-                        <div className="h-24 bg-white/5 rounded-xl border border-white/5" />
-                        <div className="h-24 bg-white/5 rounded-xl border border-white/5" />
-                     </div>
 
-                     {/* List */}
-                     <div className="space-y-3 mt-6">
-                        {[1, 2, 3].map((i) => (
-                          <div key={i} className="h-14 bg-white/5 rounded-xl border border-white/5 flex items-center px-4 justify-between">
-                             <div className="h-2 w-24 bg-white/10 rounded-full" />
-                             <div className="h-2 w-12 bg-white/10 rounded-full" />
-                          </div>
-                        ))}
-                     </div>
-                  </div>
-               </div>
-               
-               {children && <div className="absolute inset-0 z-10">{children}</div>}
+
+                {/* Header: Power Scan */}
+                <div className="relative flex items-center gap-3 mb-8 md:mb-12">
+                    <div className="relative flex h-2.5 w-2.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-500"></span>
+                    </div>
+                    <span className="text-[11px] font-black tracking-[0.2em] text-gray-400 uppercase">Power Scan</span>
+                </div>
+
+                {/* Search Bar */}
+                <div className="relative w-full bg-[#F0F4FF] rounded-2xl h-16 md:h-20 flex items-center justify-between pl-6 pr-2 mb-12 md:mb-16 shadow-[0_0_60px_-15px_rgba(255,255,255,0.1)]">
+                    <div className="flex items-center gap-4">
+                        <Globe className="text-orange-500" size={24} strokeWidth={2} />
+                        <span className="text-xl md:text-2xl font-bold text-black tracking-tight">RedLeads.app</span>
+                    </div>
+                    <button className="bg-[#ff5700] text-white text-[10px] md:text-xs font-black uppercase tracking-widest px-6 md:px-8 py-3 md:py-4 rounded-xl hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20">
+                        Scan
+                    </button>
+                </div>
+
+                {/* Results Header */}
+                <div className="relative mb-8">
+                   <div className="flex items-center gap-3 mb-2">
+                       <Search className="text-orange-500" size={22} strokeWidth={3} />
+                       <h3 className="text-2xl md:text-3xl font-black text-white tracking-tight">
+                           Intel Report: <span className="text-white">18 Matches</span>
+                       </h3>
+                   </div>
+                   <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.15em] pl-0.5">
+                       High-Intent Conversations Identified
+                   </p>
+                </div>
+
+                {/* Relevancy Section */}
+                <div className="relative mb-5 flex items-center gap-2 text-gray-500">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-[#444]">High Relevancy • 8</span>
+                </div>
+
+                {/* Grid */}
+                <div className="relative grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <DemoCard 
+                        subreddit="b2bmarketing" 
+                        title="Reddit > LinkedIn for high-intent B2B leads in 2026 (if you know where to look)"
+                        matchScore="High Match"
+                    />
+                    <DemoCard 
+                        subreddit="webmarketing" 
+                        title="5 Best Reddit Tools for Lead Generation in 2026"
+                         matchScore="High Match"
+                    />
+                    <DemoCard 
+                        subreddit="SaaS" 
+                        title="The 10 Best Reddit Marketing Tools for SaaS Growth in 2026"
+                         matchScore="High Match"
+                    />
+                     <DemoCard 
+                        subreddit="Entrepreneur" 
+                        title="I am trying to find leads for AI lead qualifying, but standard tools aren't working."
+                         matchScore="High Match"
+                    />
+                     <DemoCard 
+                        subreddit="AI_Sales" 
+                        title="How AI is Transforming Lead Generation, What Actually Works?"
+                         matchScore="High Match"
+                    />
+                     <DemoCard 
+                        subreddit="SaaS" 
+                        title="Best Reddit marketing tools in 2025 - what's actually legit?"
+                         matchScore="High Match"
+                    />
+                </div>
             </div>
-            
-            {/* Fade out at bottom to blend with next section if needed */}
-            <div className="absolute -bottom-1 left-0 right-0 h-24 bg-gradient-to-t from-[#1a1a1a] to-transparent pointer-events-none" />
-        </motion.div>
+        </div>
       </div>
     </div>
+  );
+}
+
+function DemoCard({ subreddit, title, matchScore }: { subreddit: string, title: string, matchScore: string }) {
+  return (
+    <div className="relative bg-[#111] border border-white/5 rounded-2xl p-5">
+       <div className="flex items-center gap-2 mb-3">
+          <span className="bg-[#33180b] text-[#ff7826] border border-[#52250d] px-2 py-1 rounded text-[9px] font-black uppercase tracking-wider">
+             r/{subreddit}
+          </span>
+          <span className="bg-[#0b2413] text-[#2ebd59] border border-[#0f3b1e] px-2 py-1 rounded text-[9px] font-black uppercase tracking-wider">
+             {matchScore}
+          </span>
+       </div>
+       
+       <h4 className="text-sm font-bold text-gray-200 leading-snug pr-6">
+          {title}
+       </h4>
+    </div>
+  );
+}
+
+function FloatingBubble({ className, delay = 0, scale = 1 }: { className?: string, delay?: number, scale?: number }) {
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: [0, -15, 0] }}
+      transition={{ 
+        opacity: { duration: 1, delay },
+        y: { duration: 3 + Math.random(), repeat: Infinity, ease: "easeInOut", delay: Math.random() * 2 } 
+      }}
+      className={`absolute hidden xl:flex items-center gap-3 p-3 bg-white/7 border border-white/5 rounded-full w-[180px] shadow-xl shadow-black/5 ${className}`}
+      style={{ scale }}
+    >
+      <div className="w-8 h-8 rounded-full bg-[#FF4500] flex items-center justify-center flex-shrink-0">
+           {/* Minimalist Reddit Snoo Head approximation */}
+          <div className="relative w-5 h-4 bg-white rounded-full">
+               <div className="absolute -top-1.5 right-0 w-2 h-2 border-r-2 border-t-2 border-white rounded-tr-full transform -rotate-12 origin-bottom-left" />
+               <div className="absolute -top-2.5 right-[-2px] w-1 h-1 bg-green-500 rounded-full" />
+               <div className="absolute top-1 left-1.5 w-0.5 h-0.5 bg-[#FF4500] rounded-full" />
+               <div className="absolute top-1 right-1.5 w-0.5 h-0.5 bg-[#FF4500] rounded-full" />
+          </div>
+      </div>
+      <div className="flex-1 space-y-2">
+         <div className="h-1.5 bg-slate-200 rounded-full w-3/4" />
+         <div className="h-1.5 bg-slate-100 rounded-full w-1/2" />
+      </div>
+    </motion.div>
   );
 }

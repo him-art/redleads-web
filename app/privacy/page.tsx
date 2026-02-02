@@ -14,7 +14,7 @@ export default function PrivacyPolicy() {
         <article className="space-y-10 text-[15px] leading-relaxed">
           <section className="space-y-4">
             <p>
-              Thank you for visiting RedLeads (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;). This Privacy Policy outlines how we collect, use, and protect your personal and non-personal information when you use our website located at https://redleads.app (the &quot;Website&quot;).
+              Thank you for visiting RedLeads (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;). This Privacy Policy outlines how we collect, use, and protect your personal and non-personal information when you use our website located at https://RedLeads.app (the &quot;Website&quot;).
             </p>
             <p>
               By accessing or using the Website, you agree to the terms of this Privacy Policy. If you do not agree with the practices described in this policy, please do not use the Website.
@@ -67,14 +67,14 @@ export default function PrivacyPolicy() {
           <section className="space-y-4">
             <h2 className="text-white font-medium">5. Your Rights</h2>
             <p>
-              You have the right to access, correct, or delete your personal data. You can also export your data or opt out of notifications. To exercise these rights, please contact us at redleads.app@gmail.com.
+              You have the right to access, correct, or delete your personal data. You can also export your data or opt out of notifications. To exercise these rights, please contact us at RedLeads.app@gmail.com.
             </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-white font-medium">6. Contact Information</h2>
             <p className="italic text-gray-400">
-              If you have any questions regarding this Privacy Policy, contact us at redleads.app@gmail.com
+              If you have any questions regarding this Privacy Policy, contact us at RedLeads.app@gmail.com
             </p>
           </section>
         </article>

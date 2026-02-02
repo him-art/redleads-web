@@ -15,7 +15,7 @@ export default function TermsOfService() {
           <section className="space-y-4">
             <h2 className="text-white font-medium">Welcome to RedLeads!</h2>
             <p>
-              These Terms of Service (&quot;Terms&quot;) govern your use of the RedLeads website at https://redleads.app (&quot;Website&quot;) and the services provided by RedLeads. By using our Website and services, you agree to these Terms.
+              These Terms of Service (&quot;Terms&quot;) govern your use of the RedLeads website at https://RedLeads.app (&quot;Website&quot;) and the services provided by RedLeads. By using our Website and services, you agree to these Terms.
             </p>
           </section>
 
@@ -36,7 +36,7 @@ export default function TermsOfService() {
           <section className="space-y-4">
             <h2 className="text-white font-medium">3. Refund Policy</h2>
             <p>
-              We offer refunds on a case-by-case basis. If you are not satisfied with our service, please contact us at redleads.app@gmail.com to discuss your situation.
+              We offer refunds on a case-by-case basis. If you are not satisfied with our service, please contact us at RedLeads.app@gmail.com to discuss your situation.
             </p>
           </section>
 
@@ -79,7 +79,7 @@ export default function TermsOfService() {
           <section className="space-y-4 text-gray-400">
             <h2 className="text-white font-medium">8. Contact Information</h2>
             <p>
-              For any questions or concerns regarding these Terms, please contact us at redleads.app@gmail.com.
+              For any questions or concerns regarding these Terms, please contact us at RedLeads.app@gmail.com.
             </p>
           </section>
         </article>

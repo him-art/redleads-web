@@ -122,7 +122,7 @@ export default function BillingTab({ profile, isPro, isAdmin }: { profile: any; 
                         <div className="bg-white/5 rounded-2xl p-6 mb-8 text-left">
                             <p className="text-gray-300 font-bold mb-2">💰 Refund Initiated</p>
                             <p className="text-gray-400 text-sm leading-relaxed">
-                                Your full refund has been successfully initiated. You should see the amount reflected in your account within 2–4 product days. For any questions, feel free to reach out to us directly at redleads.app@gmail.com 
+                                Your full refund has been successfully initiated. You should see the amount reflected in your account within 2–4 product days. For any questions, feel free to reach out to us directly at RedLeads.app@gmail.com 
                             </p>
                         </div>
                     ) : (

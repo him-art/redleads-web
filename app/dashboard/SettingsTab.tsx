@@ -12,21 +12,20 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
     
     const [description, setDescription] = useState(profile?.description || '');
     const [keywords, setKeywords] = useState<string[]>(profile?.keywords || []);
-    // Subreddits are now global, but we keep the state incase of rollback/migration needs
-    // const [subreddits, setSubreddits] = useState<string[]>(profile?.subreddits || []);
+
 
     // Sync state if profile prop updates (e.g. after router.refresh)
     useEffect(() => {
         if (profile) {
             setDescription(profile.description || '');
             setKeywords(profile.keywords || []);
-            // setSubreddits(profile.subreddits || []);
+
         }
     }, [profile]);
     
     // Inputs for adding new items
     const [newKeyword, setNewKeyword] = useState('');
-    // const [newSubreddit, setNewSubreddit] = useState('');
+
 
     const [saving, setSaving] = useState(false);
     const [autofilling, setAutofilling] = useState(false);
@@ -90,7 +89,7 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                 // 1. REPLACE INSTEAD OF APPEND
                 // Clear existing before setting new
                 setKeywords(data.keywords || []);
-                // setSubreddits(data.subreddits || []);
+
                 
                 // 2. SUCCESS FEEDBACK
                 setWasAiGenerated(true);

@@ -46,7 +46,7 @@ const Navbar = () => {
         {/* Left: RedLeads Brand */}
         <Link 
           href="/"
-          className="px-5 sm:px-6 py-2 sm:py-2.5 bg-white/80 backdrop-blur-xl border border-white/40 rounded-full shadow-xl shadow-black/5 hover:scale-[1.02] transition-all duration-300 pointer-events-auto flex items-center"
+          className="px-5 sm:px-6 py-2 sm:py-2.5 bg-white border border-white/40 rounded-full hover:scale-[1.02] transition-all duration-300 pointer-events-auto flex items-center"
         >
           <span className="text-lg sm:text-xl font-extrabold tracking-tighter text-slate-900">
             RedLeads.
@@ -54,7 +54,7 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center gap-8 px-8 py-3 bg-white/80 backdrop-blur-xl border border-white/40 rounded-full shadow-2xl shadow-black/5 pointer-events-auto">
+        <div className="hidden lg:flex items-center gap-8 px-8 py-3 bg-white border border-white/40 rounded-full pointer-events-auto">
           <div className="flex gap-8 text-sm font-bold text-slate-600">
             <Link href="#how-it-works" className="hover:text-slate-900 transition-colors">How it Works</Link>
             {user && (
@@ -67,7 +67,7 @@ const Navbar = () => {
           {loading ? (
             <div className="w-20 h-8 bg-slate-100 animate-pulse rounded-full" />
           ) : user ? (
-            <div className="flex items-center gap-3 px-4 py-1.5 bg-white/80 backdrop-blur-xl border border-white/40 rounded-full shadow-lg shadow-black/5">
+            <div className="flex items-center gap-3 px-4 py-1.5 bg-white border border-white/40 rounded-full">
               <span className="text-xs font-bold text-slate-700">{user.user_metadata?.full_name?.split(' ')[0] || user.email?.split('@')[0] || 'User'}</span>
               <div className="w-px h-3 bg-slate-200 mx-1" />
               <button 
@@ -80,7 +80,7 @@ const Navbar = () => {
           ) : (
             <Link
               href="/login"
-              className="bg-[#f25e36] text-white text-sm font-bold px-6 py-2.5 rounded-full hover:bg-[#d94a24] hover:scale-105 active:scale-95 transition-all shadow-lg shadow-orange-500/30"
+              className="bg-[#f25e36] text-white text-sm font-bold px-6 py-2.5 rounded-full hover:bg-[#d94a24] hover:scale-105 active:scale-95 transition-all"
             >
               Get Started
             </Link>
@@ -90,7 +90,7 @@ const Navbar = () => {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="lg:hidden p-2.5 sm:p-3 bg-white/80 backdrop-blur-xl border border-white/40 rounded-full shadow-lg shadow-black/5 hover:bg-white/90 transition-all duration-300 pointer-events-auto"
+          className="lg:hidden p-2.5 sm:p-3 bg-white border border-white/40 rounded-full hover:bg-white/90 transition-all duration-300 pointer-events-auto"
           aria-label="Toggle menu"
         >
           {isMenuOpen ? (
@@ -119,7 +119,7 @@ const Navbar = () => {
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
               className="fixed top-20 sm:top-24 left-4 right-4 z-50 lg:hidden"
             >
-              <div className="bg-white/95 backdrop-blur-2xl border border-white/40 rounded-3xl shadow-2xl shadow-black/20 p-6 sm:p-8 space-y-6">
+              <div className="bg-white/95 backdrop-blur-2xl border border-white/40 rounded-3xl p-6 sm:p-8 space-y-6">
                 
                 <div className="space-y-4">
                   <Link 
@@ -177,7 +177,7 @@ const Navbar = () => {
                   ) : (
                     <Link 
                       href="/login"
-                      className="block w-full text-center bg-[#f25e36] text-white text-lg font-bold px-6 py-4 rounded-full hover:bg-[#d94a24] active:scale-95 transition-all shadow-xl shadow-orange-500/30"
+                      className="block w-full text-center bg-[#f25e36] text-white text-lg font-bold px-6 py-4 rounded-full hover:bg-[#d94a24] active:scale-95 transition-all"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Get Started

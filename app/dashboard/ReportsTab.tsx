@@ -33,7 +33,7 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
 
     const supabase = createClient();
     
-    const hasConfig = (profile?.keywords?.length > 0) || (profile?.subreddits?.length > 0);
+    const hasConfig = (profile?.keywords?.length > 0);
 
     useEffect(() => {
         const fetchHistory = async () => {
@@ -106,29 +106,29 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
     }, [historyLeads.length, groupedLeads, expandedDay]);
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-white/5 pb-4">
-                <h2 className="text-sm font-bold uppercase tracking-wider text-orange-500">
+            <div className="flex items-center justify-between pb-4">
+                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-orange-500">
                     Lead History
                 </h2>
 
-                <div className="flex bg-white/5 rounded-lg p-1">
+                <div className="flex bg-[#1a1a1a] rounded-xl p-1.5 border border-white/5">
                      <button
                         onClick={() => setFilter('all')}
-                        className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${
-                            filter === 'all' ? 'bg-orange-500 text-black' : 'text-gray-400 hover:text-white'
+                        className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${
+                            filter === 'all' ? 'bg-orange-500 text-black shadow-lg shadow-orange-500/20' : 'text-gray-500 hover:text-white'
                         }`}
                     >
                         All
                     </button>
                     <button
                         onClick={() => setFilter('saved')}
-                        className={`px-3 py-1 text-xs font-bold rounded-md transition-all flex items-center gap-1 ${
-                            filter === 'saved' ? 'bg-orange-500 text-black' : 'text-gray-400 hover:text-white'
+                        className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all flex items-center gap-2 ${
+                            filter === 'saved' ? 'bg-orange-500 text-black shadow-lg shadow-orange-500/20' : 'text-gray-500 hover:text-white'
                         }`}
                     >
-                        <Bookmark size={10} fill={filter === 'saved' ? "currentColor" : "none"} />
+                        <Bookmark size={12} fill={filter === 'saved' ? "currentColor" : "none"} />
                         Saved
                     </button>
                 </div>
@@ -137,18 +137,16 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
             <div className="space-y-6">
                 {/* Active Config Summary */}
                 {hasConfig && (
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-[10px] sm:text-xs text-gray-400 bg-white/5 p-3 sm:p-4 rounded-xl border border-white/5">
-                        <div className="flex items-center gap-2">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 text-[10px] font-bold text-gray-500 bg-white/[0.02] p-4 sm:p-5 rounded-2xl border border-white/5">
+                        <div className="flex items-center gap-3">
                             <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500/50 opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                             </span>
-                            Monitoring Active
+                            <span className="tracking-wide">Monitoring Active</span>
                         </div>
-                        <div className="hidden sm:block w-px h-4 bg-white/10" />
-                        <div>Tracking <b>{profile?.subreddits?.length || 0}</b> subreddits</div>
-                        <div className="hidden sm:block w-px h-4 bg-white/10" />
-                        <div>Focusing on <b>{profile?.keywords?.length || 0}</b> keywords</div>
+                        <div className="hidden sm:block w-px h-6 bg-white/5" />
+                        <div className="tracking-wide">Focusing on <span className="text-gray-300 font-black">{profile?.keywords?.length || 0}</span> keywords</div>
                       </div>
                 )}
 
@@ -215,17 +213,17 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
                 ) : (
                     <div className="space-y-4">
                         {Object.entries(groupedLeads).map(([date, leads]) => (
-                            <div key={date} className="border border-white/10 rounded-2xl overflow-hidden bg-black/20">
+                            <div key={date} className="border border-white/5 rounded-[1.2rem] sm:rounded-[1.5rem] overflow-hidden bg-[#111]/50 mb-4">
                                 <button 
                                     onClick={() => setExpandedDay(expandedDay === date ? null : date)}
-                                    className="w-full flex items-center justify-between p-4 hover:bg-white/5 transition-colors"
+                                    className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-white/[0.02] transition-colors"
                                 >
-                                    <div className="flex items-center gap-3">
-                                        <Calendar size={16} className="text-orange-500" />
-                                        <span className="font-bold text-gray-200">{date}</span>
-                                        <span className="bg-white/10 text-xs px-2 py-0.5 rounded-full text-gray-400">{leads.length} leads</span>
+                                    <div className="flex items-center gap-4">
+                                        <Calendar size={18} className="text-orange-500" />
+                                        <span className="font-black text-xs uppercase tracking-wider text-gray-300">{date}</span>
+                                        <span className="bg-white/5 text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full text-gray-500 border border-white/5">{leads.length} leads</span>
                                     </div>
-                                    <ChevronDown size={16} className={`text-gray-500 transition-transform ${expandedDay === date ? 'rotate-180' : ''}`} />
+                                    <ChevronDown size={14} className={`text-gray-600 transition-transform ${expandedDay === date ? 'rotate-180' : ''}`} />
                                 </button>
 
                                  {expandedDay === date && (
@@ -250,12 +248,13 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
                                                                 })()}
                                                          </span>
                                                          <span>•</span>
-                                                         <span className="text-gray-600 italic">
+                                                         <span className="text-gray-700 italic">
                                                             {lead.match_category || 'Medium'} Match
                                                          </span>
                                                     </div>
-                                                    <a href={lead.url} target="_blank" rel="noreferrer" className="block text-sm font-medium text-gray-200 group-hover:text-white leading-snug">
-                                                        {lead.title}
+                                                    <a href={lead.url} target="_blank" rel="noreferrer" className="flex items-start gap-2 text-sm font-medium text-gray-300 group-hover:text-white leading-snug transition-colors">
+                                                        <span className="mt-0.5">🧠</span>
+                                                        <span className="flex-1">{lead.title}</span>
                                                     </a>
                                                 </div>
                                                  <div className="flex items-center gap-1.5 sm:gap-2">

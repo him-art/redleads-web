@@ -24,7 +24,7 @@ export default function Home() {
         <RedditOpportunity />
         <HowItWorks />
 
-        <SectionCTA title="Stop wasting hours manually searching for best converations that finds your customers" buttonText="Get early access" />
+        
         
 
         <Pricing />

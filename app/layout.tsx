@@ -16,7 +16,7 @@ const ebGaramond = EB_Garamond({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://redleads.app'),
+  metadataBase: new URL('https://RedLeads.app'),
   title: "RedLeads - Stop Searching for Customers. Let Them Find You.",
   description: "Your customers are already looking for you on Reddit. RedLeads alerts you the moment they ask for your solution. 10x your leads without ads.",
   icons: {
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "RedLeads - Stop Searching for Customers. Let Them Find You.",
     description: "Your customers are already looking for you on Reddit. RedLeads alerts you the moment they ask for your solution. 10x your leads without ads.",
-    url: "https://redleads.app",
+    url: "https://RedLeads.app",
     siteName: "RedLeads",
     images: [
       {

@@ -89,10 +89,10 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
             {showPaywall && <PaywallModal onCheckout={handleCheckout} />}
             
             {/* Main Layout Container - Full Dark Theme */}
-            <div className="flex h-screen bg-[#1a1a1a] text-white overflow-hidden font-sans selection:bg-[#ff9053]/30">
+            <div className="flex h-screen bg-[#050505] text-white overflow-hidden font-sans selection:bg-orange-500/30">
                 
                 {/* Mobile Header Toggle */}
-                <div className="lg:hidden absolute top-0 left-0 right-0 z-50 p-4 bg-[#1a1a1a]/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between">
+                <div className="lg:hidden absolute top-0 left-0 right-0 z-50 p-4 bg-[#050505]/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <img src="/redleads-logo-white.png" alt="RedLeads Logo" className="w-8 h-8 object-contain" />
                         <span className="font-bold text-lg tracking-tight">RedLeads</span>
@@ -110,20 +110,23 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                     initial={false}
                     animate={isMobileMenuOpen ? { x: 0 } : { x: 0 }}
                     className={`
-                        fixed inset-y-0 left-0 z-40 w-72 bg-[#1a1a1a] border-r border-white/5
+                        fixed inset-y-0 left-0 z-40 w-72 bg-[#050505]
                         transform lg:transform-none transition-transform duration-300 ease-in-out
                         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-                        flex flex-col p-6
+                        flex flex-col p-8
                     `}
                 >
                     {/* Brand Header */}
-                    <div className="flex items-center gap-3 px-2 mb-10 mt-2">
-                        <div className="w-10 h-10 flex items-center justify-center">
-                            <img src="/redleads-logo-white.png" alt="RedLeads Logo" className="w-full h-full object-contain" />
-                        </div>
-                        <div>
-                            <h1 className="font-bold text-xl tracking-tight leading-none text-white">RedLeads</h1>
-                            <span className="text-[10px] font-medium text-gray-500 uppercase tracking-widest">Intelligence</span>
+                    <div className="flex flex-col mb-12">
+                        <span className="text-[10px] font-black text-gray-700 uppercase tracking-[0.3em] mb-8 px-2">Workspace</span>
+                        <div className="flex items-center gap-3 px-2">
+                            <div className="w-10 h-10 flex items-center justify-center">
+                                <img src="/redleads-logo-white.png" alt="RedLeads Logo" className="w-full h-full object-contain" />
+                            </div>
+                            <div>
+                                <h1 className="font-bold text-xl tracking-tight leading-none text-white">RedLeads</h1>
+                                <span className="text-[10px] font-medium text-gray-500 uppercase tracking-widest">Intelligence</span>
+                            </div>
                         </div>
                     </div>
 
@@ -142,16 +145,16 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                         setActiveTab(tab.id as any);
                                         setIsMobileMenuOpen(false);
                                     }}
-                                    className={`relative w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group overflow-hidden ${
+                                    className={`relative w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 group overflow-hidden ${
                                         isActive 
-                                            ? 'bg-white/[0.08] text-white shadow-inner border border-white/5' 
+                                            ? 'bg-white/[0.05] text-white shadow-inner' 
                                             : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]'
                                     }`}
                                 >
                                     {isActive && (
-                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#ff9053] rounded-r-full" />
+                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-orange-500 rounded-r-full" />
                                     )}
-                                    <Icon size={18} className={`relative z-10 transition-colors ${isActive ? 'text-[#ff9053]' : 'group-hover:text-gray-300'}`} />
+                                    <Icon size={18} className={`relative z-10 transition-colors ${isActive ? 'text-orange-500' : 'group-hover:text-gray-300'}`} />
                                     <span className={`relative z-10 text-sm font-medium tracking-wide ${isActive ? 'text-white' : ''}`}>
                                         {tab.label}
                                     </span>
@@ -179,27 +182,32 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                 </motion.aside>
 
                 {/* Main Content Area */}
-                <main className="flex-1 lg:pl-72 relative flex flex-col min-w-0 bg-[#1a1a1a]">
-                     {/* Scrollable Content Container */}
-                    <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 lg:p-10 scrollbar-hide">
-                         {/* Content Wrapper limit width */}
-                        <div className="max-w-7xl mx-auto space-y-8 mt-14 lg:mt-0">
-                             
-                             {/* Dynamic Tab Content */}
-                             <AnimatePresence mode="wait">
-                                <motion.div
-                                    key={activeTab}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -10 }}
-                                    transition={{ duration: 0.2 }}
-                                >
-                                    {activeTab === 'reports' && <ReportsTab reports={reports} profile={profile} user={user} isPro={isPro} isAdmin={isAdmin} />}
-                                    {activeTab === 'live' && <LiveDiscoveryTab user={user} profile={profile} isPro={isPro} isScout={isScout} isAdmin={isAdmin} initialSearch={initialSearch} onNavigate={(tab) => setActiveTab(tab as any)} />}
-                                    {activeTab === 'settings' && <SettingsTab profile={profile} user={user} />}
-                                    {activeTab === 'billing' && <BillingTab profile={profile} isPro={isPro} isAdmin={isAdmin} />}
-                                </motion.div>
-                             </AnimatePresence>
+                <main className="flex-1 lg:pl-72 relative flex flex-col min-w-0 bg-[#050505]">
+                    {/* Frame Container - Flush on mobile, Framed on desktop */}
+                    <div className="flex-1 p-0 lg:pt-6 lg:px-6 lg:pb-0 overflow-hidden">
+                        <div className="w-full h-full bg-[#0F0F0F] rounded-none lg:rounded-t-[2.5rem] border-0 lg:border-x lg:border-t border-white/5 overflow-hidden relative flex flex-col shadow-none lg:shadow-[0_-20px_50px_rgba(0,0,0,0.5)]">
+                            {/* Scrollable Content Container - Custom Scrollbar */}
+                            <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 lg:p-12 custom-scrollbar scrollbar-hide lg:scrollbar-default">
+                                {/* Content Wrapper limit width */}
+                                <div className="max-w-6xl mx-auto space-y-10 mt-16 lg:mt-0">
+                                    
+                                    {/* Dynamic Tab Content */}
+                                    <AnimatePresence mode="wait">
+                                        <motion.div
+                                            key={activeTab}
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -10 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            {activeTab === 'reports' && <ReportsTab reports={reports} profile={profile} user={user} isPro={isPro} isAdmin={isAdmin} />}
+                                            {activeTab === 'live' && <LiveDiscoveryTab user={user} profile={profile} isPro={isPro} isScout={isScout} isAdmin={isAdmin} initialSearch={initialSearch} onNavigate={(tab) => setActiveTab(tab as any)} />}
+                                            {activeTab === 'settings' && <SettingsTab profile={profile} user={user} />}
+                                            {activeTab === 'billing' && <BillingTab profile={profile} isPro={isPro} isAdmin={isAdmin} />}
+                                        </motion.div>
+                                    </AnimatePresence>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </main>
