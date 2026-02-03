@@ -44,9 +44,17 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 // Network & Pacing
 // "Google-level" robustness: mimic a real browser to avoid 429s/blocking
 const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
-const DELAY_BETWEEN_REQ_MS = 1800; // 1.8s delay = ~33 req/min (Safe limit is ~60)
+let DELAY_BETWEEN_REQ_MS = 2000; // 2s base delay (dynamically adjusted)
+const DELAY_MIN_MS = 1500; // Minimum delay
+const DELAY_MAX_MS = 8000; // Maximum delay when under pressure
 const JITTER_MAX_MS = 1500; // Add noise to avoid pattern detection
 const TIMEOUT_MS = 15000;
+
+// Rate Limiting State
+let consecutive429s = 0; // Track consecutive 429 errors
+let globalCooldownUntil = 0; // Timestamp for global cooldown
+const COOLDOWN_THRESHOLD = 3; // Trigger global cooldown after N consecutive 429s
+const COOLDOWN_DURATION_MS = 60000; // 1 minute global cooldown
 
 const RSS_LIMIT = 25; // Fetch top 25 new posts per sub
 const MAX_KEYWORDS_PER_USER = 10; // Enforced limit
@@ -145,16 +153,29 @@ async function buildKeywordIndex(): Promise<{
 }
 
 /**
- * Fetch RSS Feed with robust error handling
+ * Fetch RSS Feed with robust error handling and exponential backoff
  */
-async function fetchFeed(subreddit: string): Promise<RSSPost[]> {
+async function fetchFeed(subreddit: string, retryCount = 0): Promise<RSSPost[]> {
     const url = `https://www.reddit.com/r/${subreddit}/new/.rss?limit=${RSS_LIMIT}`;
+    
+    // Check for global cooldown
+    if (Date.now() < globalCooldownUntil) {
+        const waitTime = globalCooldownUntil - Date.now();
+        console.log(`[RSS] ⏳ Global cooldown active, waiting ${Math.ceil(waitTime / 1000)}s...`);
+        await delay(waitTime);
+    }
     
     try {
         const res = await axios.get(url, {
             headers: { 'User-Agent': USER_AGENT },
             timeout: TIMEOUT_MS
         });
+
+        // Success - reset consecutive 429 counter and ease up on throttling
+        consecutive429s = 0;
+        if (DELAY_BETWEEN_REQ_MS > DELAY_MIN_MS) {
+            DELAY_BETWEEN_REQ_MS = Math.max(DELAY_MIN_MS, DELAY_BETWEEN_REQ_MS - 100);
+        }
 
         const parsed = await parseStringPromise(res.data, { explicitArray: false });
         const entries = parsed?.feed?.entry;
@@ -166,7 +187,7 @@ async function fetchFeed(subreddit: string): Promise<RSSPost[]> {
             id: item.id || item.link?.$.href,
             title: item.title || '',
             link: item.link?.$.href || '',
-            snippet: (item.content?._ || item.summary || '').replace(/<[^>]*>/g, '').slice(0, 1000), // Larger snippet
+            snippet: (item.content?._ || item.summary || '').replace(/<[^>]*>/g, '').slice(0, 1000),
             pubDate: new Date(item.updated || item.published || Date.now()),
             subreddit: subreddit,
             author: item.author?.name?.replace('/u/', '') || 'unknown'
@@ -174,10 +195,33 @@ async function fetchFeed(subreddit: string): Promise<RSSPost[]> {
 
     } catch (err: any) {
         if (err.response?.status === 429) {
-            console.warn(`[RSS] ⚠️ 429 Too Many Requests on r/${subreddit}. Slowing down.`);
-            await delay(5000); // Extra backoff
+            consecutive429s++;
+            
+            // Exponential backoff: 5s, 10s, 20s, 40s...
+            const backoffMs = Math.min(5000 * Math.pow(2, retryCount), 60000);
+            console.warn(`[RSS] ⚠️ 429 on r/${subreddit} (attempt ${retryCount + 1}). Backoff: ${backoffMs / 1000}s`);
+            
+            // Increase base delay for all subsequent requests
+            DELAY_BETWEEN_REQ_MS = Math.min(DELAY_MAX_MS, DELAY_BETWEEN_REQ_MS + 500);
+            console.log(`[RSS] 📈 Increased base delay to ${DELAY_BETWEEN_REQ_MS}ms`);
+            
+            // Trigger global cooldown if too many consecutive 429s
+            if (consecutive429s >= COOLDOWN_THRESHOLD) {
+                globalCooldownUntil = Date.now() + COOLDOWN_DURATION_MS;
+                console.warn(`[RSS] 🛑 Global cooldown triggered for ${COOLDOWN_DURATION_MS / 1000}s`);
+            }
+            
+            // Retry up to 2 times with exponential backoff
+            if (retryCount < 2) {
+                await delay(backoffMs);
+                return fetchFeed(subreddit, retryCount + 1);
+            }
+            
+            console.warn(`[RSS] ❌ Skipping r/${subreddit} after ${retryCount + 1} failed attempts.`);
         } else if (err.response?.status === 404) {
             console.warn(`[RSS] ❌ r/${subreddit} not found/banned.`);
+        } else if (err.code === 'ECONNABORTED' || err.code === 'ETIMEDOUT') {
+            console.warn(`[RSS] ⏱️ Timeout on r/${subreddit}`);
         }
         return [];
     }
