@@ -255,14 +255,14 @@ export default function LiveDiscoveryTab({
                                             disabled={isUpgrading}
                                             className="w-full py-5 bg-orange-500 hover:bg-orange-400 text-black font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
-                                            {isUpgrading ? 'Loading...' : 'Get Pro Access — $29/mo'}
+                                            {isUpgrading ? 'Loading...' : <>Get Growth Access — $29/mo <span className="line-through opacity-50 ml-1 text-[10px]">$39</span></>}
                                         </button>
                                         <button 
                                             onClick={() => handleUpgrade('scout')}
                                             disabled={isUpgrading}
                                             className="w-full py-5 bg-white/10 hover:bg-white/20 text-white font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
-                                            {isUpgrading ? 'Loading...' : 'Get Scout Access — $15/mo'}
+                                            {isUpgrading ? 'Loading...' : <>Get Starter Access — $15/mo <span className="line-through opacity-50 ml-1 text-[10px]">$19</span></>}
                                         </button>
                                          <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
                                             Trial Ended {isMounted && trialEndsAt ? trialEndsAt?.toLocaleDateString() : '...'}
@@ -289,14 +289,14 @@ export default function LiveDiscoveryTab({
                                         disabled={isUpgrading}
                                         className="w-full py-3 bg-white/10 text-white border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-white/20 transition-all flex items-center justify-center gap-2"
                                     >
-                                        Scout ($15)
+                                        Starter ($15) <span className="line-through text-gray-500">$19</span>
                                     </button>
                                     <button 
                                         onClick={() => handleUpgrade('pro')}
                                         disabled={isUpgrading}
                                         className="w-full py-3 bg-orange-500 text-black rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-orange-400 transition-all flex items-center justify-center gap-2"
                                     >
-                                        Pro ($29)
+                                        Growth ($29) <span className="line-through text-black/40">$39</span>
                                     </button>
                                 </div>
                            </div>

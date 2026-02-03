@@ -28,20 +28,21 @@ const FAQ = () => {
   return (
     <section id="faq" className="bg-[#1a1a1a] py-24 border-t border-white/5">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-center text-[2.5rem] sm:text-[3.5rem] font-black text-white leading-tight">
-          Frequently Asked <span className="text-orange-500 italic font-serif font-light">Questions</span>
+        <h2 className="text-center text-4xl sm:text-[4.5rem] font-black text-white leading-[1.1] tracking-tighter">
+          <span className="block sm:whitespace-nowrap">Frequently Asked</span>
+          <span className="block text-orange-500 font-serif-italic sm:whitespace-nowrap">Questions</span>
         </h2>
         
         <div className="mt-12 space-y-4">
           {faqs.map((faq, index) => (
-            <div key={index} className="overflow-hidden rounded-xl border border-white/5 bg-[#222]">
+            <div key={index} className="overflow-hidden rounded-2xl border border-white/5 bg-[#222]">
               <button
                 suppressHydrationWarning
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="flex w-full items-center justify-between p-6 text-left"
+                className="flex w-full items-center justify-between p-6 text-left hover:bg-[#282828] transition-colors"
               >
-                <span className="font-semibold text-white">{faq.question}</span>
-                <ChevronDown className={`h-5 w-5 text-gray-500 transition-transform ${openIndex === index ? 'rotate-180' : ''}`} />
+                <span className="text-lg font-black text-white tracking-tight">{faq.question}</span>
+                <ChevronDown className={`h-5 w-5 text-gray-600 transition-transform ${openIndex === index ? 'rotate-180 text-orange-500' : ''}`} />
               </button>
               
               <div
@@ -49,7 +50,7 @@ const FAQ = () => {
                   openIndex === index ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
                 }`}
               >
-                <div className="px-6 pb-6 text-gray-400">
+                <div className="px-6 pb-6 text-[13px] font-medium leading-relaxed tracking-wide text-gray-500">
                   {faq.answer}
                 </div>
               </div>

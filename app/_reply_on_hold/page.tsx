@@ -237,7 +237,7 @@ export default function ReplyPage() {
                    </div>
                    
                    {/* Upsell Banner */}
-                   <div className="bg-gradient-to-r from-orange-500 to-amber-500 rounded-[2.5rem] p-10 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left relative overflow-hidden group">
+                   <div className="bg-gradient-to-r from-orange-500 to-orange-500 rounded-[2.5rem] p-10 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left relative overflow-hidden group">
                       <div className="absolute top-0 right-0 p-8 opacity-20 transition-transform group-hover:scale-110">
                           <Zap size={120} fill="white" />
                       </div>

@@ -19,7 +19,7 @@ const Footer = () => {
                  unoptimized={true}
                />
             </div>
-            <p className="text-gray-400 text-lg leading-relaxed max-w-[280px]">
+            <p className="text-gray-500 text-[13px] font-medium leading-relaxed tracking-wide uppercase">
               RedLeads is the home for your automated Reddit growth.
             </p>
           </div>
@@ -30,7 +30,7 @@ const Footer = () => {
             <div className="flex flex-col gap-4">
                <h3 className="font-bold text-gray-500 text-[10px] tracking-widest uppercase">Useful</h3>
                <Link href="/#how-it-works" className="text-gray-400 hover:text-white transition-colors">How it Works</Link>
-                <Link href="/dashboard" className="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5">
+                <Link href="/dashboard" className="text-gray-500 text-[13px] font-medium hover:text-white transition-colors flex items-center gap-1.5 uppercase tracking-widest">
                    Dashboard
                 </Link>
             </div>

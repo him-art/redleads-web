@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Loader2, Zap, Lock, ArrowRight } from 'lucide-react';
+import { Loader2, Zap, Lock, ArrowRight, Search, Globe, Bot, Mail } from 'lucide-react';
 
 interface PaywallModalProps {
     onCheckout: (plan: 'scout' | 'pro') => Promise<void>;
@@ -39,46 +39,66 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                     </p>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
-                        {/* Scout Option */}
-                        <div className="p-6 rounded-2xl bg-white/5 border border-white/5 flex flex-col">
-                            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 mb-2">Scout</h3>
-                            <div className="text-3xl font-black text-white mb-6">$9<span className="text-xs text-gray-600 font-bold tracking-normal">/mo</span></div>
-                            <ul className="space-y-3 mb-8 flex-grow">
-                                <li className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                                    <div className="w-1 h-1 bg-orange-500 rounded-full" /> 5 Keywords
+                        {/* Starter Option */}
+                        <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5 flex flex-col">
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 mb-2">Starter</h3>
+                            <div className="flex items-baseline gap-2 mb-8">
+                                <span className="text-3xl font-black text-white">$15</span>
+                                <span className="text-sm font-bold text-gray-700 line-through decoration-orange-500/50 decoration-1 tracking-tight">$19</span>
+                                <span className="text-xs text-gray-600 font-bold uppercase ml-1">/mo</span>
+                            </div>
+                            <ul className="space-y-4 mb-10 flex-grow">
+                                <li className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-3">
+                                    <Globe size={12} className="text-orange-500/50" /> 2 website power scan per day tracking
                                 </li>
-                                <li className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                                    <div className="w-1 h-1 bg-orange-500 rounded-full" /> Global Scans
+                                <li className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-3">
+                                    <Search size={12} className="text-orange-500/50" /> 10 Active Keywords
+                                </li>
+                                <li className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-3">
+                                    <Bot size={12} className="text-gray-700" /> Unlimited AI replies <span className="text-[7px] bg-[#1a1a1a] px-1 rounded border border-white/5">Soon</span>
+                                </li>
+                                <li className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-3">
+                                    <Mail size={12} className="text-gray-700" /> 30 daily auto DMs <span className="text-[7px] bg-[#1a1a1a] px-1 rounded border border-white/5">Soon</span>
                                 </li>
                             </ul>
                             <button
                                 onClick={() => handleClick('scout')}
                                 disabled={!!isLoading}
-                                className="w-full py-4 rounded-xl bg-white/5 text-white font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all disabled:opacity-50"
+                                className="w-full py-5 rounded-2xl bg-white/5 border border-white/5 text-white font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all disabled:opacity-50"
                             >
-                                {isLoading === 'scout' ? <Loader2 size={14} className="animate-spin mx-auto" /> : 'Start Scout'}
+                                {isLoading === 'scout' ? <Loader2 size={14} className="animate-spin mx-auto" /> : 'Start Starter'}
                             </button>
                         </div>
 
-                        {/* Pro Option */}
-                        <div className="p-6 rounded-2xl bg-orange-500/5 border border-orange-500/20 flex flex-col ring-1 ring-orange-500/10 relative overflow-hidden">
-                            <div className="absolute top-2 right-4 text-[7px] font-black uppercase text-orange-500 tracking-[0.2em]">Popular</div>
-                            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 mb-2">Pro</h3>
-                            <div className="text-3xl font-black text-white mb-6">$19<span className="text-xs text-gray-600 font-bold tracking-normal">/mo</span></div>
-                            <ul className="space-y-3 mb-8 flex-grow">
-                                <li className="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-2 text-orange-500/80">
-                                    <Zap size={10} fill="currentColor" /> 15 Keywords
+                        {/* Growth Option */}
+                        <div className="p-8 rounded-[2rem] bg-orange-500/[0.03] border border-orange-500/20 flex flex-col ring-1 ring-orange-500/10 relative overflow-hidden">
+                            <div className="absolute top-4 right-6 text-[8px] font-black uppercase text-orange-500 tracking-[0.3em]">Popular</div>
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 mb-2">Growth</h3>
+                            <div className="flex items-baseline gap-2 mb-8">
+                                <span className="text-3xl font-black text-white">$29</span>
+                                <span className="text-sm font-bold text-orange-500/30 line-through decoration-orange-500 decoration-1 tracking-tight">$39</span>
+                                <span className="text-xs text-gray-600 font-bold uppercase ml-1">/mo</span>
+                            </div>
+                            <ul className="space-y-4 mb-10 flex-grow">
+                                <li className="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-3">
+                                    <Globe size={12} className="text-orange-500" /> 3 Website tracking
                                 </li>
-                                <li className="text-[10px] font-bold text-gray-300 uppercase tracking-widest flex items-center gap-2 text-orange-500/80">
-                                    <Zap size={10} fill="currentColor" /> Priority Scans
+                                <li className="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-3">
+                                    <Search size={12} className="text-orange-500" /> 30 Active Keywords
+                                </li>
+                                <li className="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-3">
+                                    <Bot size={12} className="text-orange-500/50" /> Unlimited AI replies <span className="text-[7px] bg-[#1a1a1a] px-1 rounded border border-orange-500/20">Soon</span>
+                                </li>
+                                <li className="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-3">
+                                    <Mail size={12} className="text-orange-500/50" /> 100 daily auto DMs <span className="text-[7px] bg-[#1a1a1a] px-1 rounded border border-orange-500/20">Soon</span>
                                 </li>
                             </ul>
                             <button
                                 onClick={() => handleClick('pro')}
                                 disabled={!!isLoading}
-                                className="w-full py-4 rounded-xl bg-orange-500 text-black font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all disabled:opacity-50 shadow-lg shadow-orange-500/10"
+                                className="w-full py-5 rounded-2xl bg-orange-500 text-white font-black text-[10px] uppercase tracking-widest hover:bg-[#ff4d29] transition-all disabled:opacity-50 shadow-2xl shadow-orange-950/20"
                             >
-                                {isLoading === 'pro' ? <Loader2 size={14} className="animate-spin mx-auto" /> : 'Unlock Pro'}
+                                {isLoading === 'pro' ? <Loader2 size={14} className="animate-spin mx-auto" /> : 'Unlock Growth'}
                             </button>
                         </div>
                     </div>

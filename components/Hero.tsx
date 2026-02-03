@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { Search, Globe, CheckCircle2, Zap, ArrowRight, ExternalLink } from 'lucide-react';
+import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 import { type User as SupabaseUser } from '@supabase/supabase-js';
 
@@ -70,10 +71,27 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1, ease: [0.2, 0.65, 0.3, 0.9] }}
-          className="max-w-7xl mx-auto text-4xl md:text-6xl lg:text-7xl font-serif font-medium tracking-tight text-[#f5f5f5] mb-8 leading-[1.1]"
+          className="max-w-[100vw] xl:max-w-none mx-auto text-[1.75rem] sm:text-[2.75rem] md:text-[5rem] lg:text-[7rem] font-medium text-[#f5f5f5] mb-8 leading-[1.05] px-4 font-serif"
         >
-          Turn Reddit Conversations <br />
-          <span>Into</span> <span className="text-orange-500 italic">Paying Customers</span>
+          {/* Forced two lines on all screens - Full Serif Style */}
+          <span className="flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-6 sm:whitespace-nowrap">
+            <span>Turn</span>
+            <span className="inline-flex items-center justify-center w-12 h-12 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32">
+                <Image 
+                  src="/reddit-new-logo.png" 
+                  alt="Reddit" 
+                  width={128} 
+                  height={128} 
+                  className="w-full h-full object-contain"
+                  unoptimized={true}
+                />
+            </span>
+            <span>Conversations</span>
+          </span>
+          <span className="block sm:whitespace-nowrap">
+            <span className="text-[0.6em] font-normal opacity-60 inline-block align-middle mr-3 italic">Into</span>
+            <span className="text-orange-500 font-bold font-serif-italic">Paying Customers</span>
+          </span>
         </motion.h1>
 
         {/* Subheadline - Clean Sans */}
@@ -93,10 +111,10 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
           transition={{ duration: 0.8, delay: 0.3, ease: [0.2, 0.65, 0.3, 0.9] }}
           className="w-full max-w-xl mx-auto mb-12"
         >
-          <div className="p-2 bg-white/5 border border-white/10 rounded-2xl">
+          <div className="p-2 bg-white/5 border border-orange-500/20 rounded-2xl shadow-[0_0_40px_-15px_rgba(242,94,54,0.1)]">
             <form 
               onSubmit={handleSearch}
-              className="relative flex items-center bg-[#1a1a1a] rounded-xl overflow-hidden border border-white/5"
+              className="relative flex items-center bg-[#1a1a1a] rounded-xl overflow-hidden border-2 border-orange-500/30"
             >
               <div className="pl-4 pr-3 text-slate-500">
                 <Globe size={20} />

@@ -48,8 +48,8 @@ const Navbar = () => {
           href="/"
           className="px-5 sm:px-6 py-2 sm:py-2.5 bg-white border border-white/40 rounded-full hover:scale-[1.02] transition-all duration-300 pointer-events-auto flex items-center"
         >
-          <span className="text-lg sm:text-xl font-extrabold tracking-tighter text-slate-900">
-            RedLeads.
+          <span className="text-xl sm:text-2xl font-black tracking-tighter text-slate-900">
+            RedLeads
           </span>
         </Link>
 
@@ -80,7 +80,7 @@ const Navbar = () => {
           ) : (
             <Link
               href="/login"
-              className="bg-[#f25e36] text-white text-sm font-bold px-6 py-2.5 rounded-full hover:bg-[#d94a24] hover:scale-105 active:scale-95 transition-all"
+              className="bg-orange-500 text-white text-[10px] font-black uppercase tracking-widest px-6 py-2.5 rounded-full hover:bg-[#ff4d29] hover:scale-105 active:scale-95 transition-all"
             >
               Get Started
             </Link>
@@ -177,7 +177,7 @@ const Navbar = () => {
                   ) : (
                     <Link 
                       href="/login"
-                      className="block w-full text-center bg-[#f25e36] text-white text-lg font-bold px-6 py-4 rounded-full hover:bg-[#d94a24] active:scale-95 transition-all"
+                      className="block w-full text-center bg-orange-500 text-white text-xs font-black uppercase tracking-widest px-6 py-4 rounded-full hover:bg-[#ff4d29] active:scale-95 transition-all"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Get Started

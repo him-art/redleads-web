@@ -33,17 +33,18 @@ export default function SectionCTA({
           viewport={{ once: true }}
           className="flex flex-col items-center text-center"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-10 max-w-3xl leading-[1.1] tracking-tight">
-            {title}
-          </h2>
+          <h2 className="text-4xl md:text-[5rem] font-black text-white mb-8 tracking-tighter leading-[1.05]">
+          <span className="block sm:whitespace-nowrap">Ready to find your</span>
+          <span className="block text-orange-500 font-serif-italic sm:whitespace-nowrap">paying customers?</span>
+        </h2>
           
           <div className="flex flex-col sm:flex-row items-center justify-center">
             <Link 
               href={user ? "/dashboard" : "/login?next=/dashboard"}
-              className="px-10 py-5 bg-[#f25e36] text-white rounded-3xl text-lg font-bold shadow-2xl shadow-orange-500/40 hover:bg-[#d94a24] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 group text-center min-w-[220px]"
+              className="px-10 py-5 bg-orange-500 text-white rounded-[2rem] text-sm font-black uppercase tracking-widest border border-orange-500/20 hover:bg-[#ff4d29] active:scale-95 transition-all flex items-center justify-center gap-2 group text-center min-w-[220px]"
             >
               Start Free Trial
-              <span className="text-xs px-2 py-0.5 bg-white/10 text-white rounded-full border border-white/20 group-hover:bg-white/20 transition-colors">PRO</span>
+              <span className="text-[10px] px-2 py-0.5 bg-white/10 text-white rounded-full border border-white/20 group-hover:bg-white/20 transition-colors">PRO</span>
             </Link>
           </div>
         </motion.div>

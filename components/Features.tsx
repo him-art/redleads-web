@@ -38,22 +38,23 @@ const Features = () => {
     <section id="features" className="py-24 bg-[#1a1a1a] border-t border-white/5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-orange-500 mb-6 font-mono">CAPABILITIES</p>
+          <h2 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tighter leading-tight">
             Everything You Need to Scale
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-400">
+          <p className="mx-auto mt-4 max-w-2xl text-[13px] font-medium uppercase tracking-widest text-gray-500 leading-relaxed">
             Powerful features built to help you find and convert customers without compromising on security.
           </p>
         </div>
 
         <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, index) => (
-            <div key={index} className="group rounded-2xl border border-white/5 bg-[#222] p-8 transition-colors hover:border-blue-900/50 hover:shadow-lg">
-              <div className="mb-6 inline-block rounded-xl bg-blue-900/20 p-3 text-blue-400">
+            <div key={index} className="group rounded-[2rem] border border-white/5 bg-[#222] p-8 transition-all hover:bg-[#282828] hover:border-white/10">
+              <div className="mb-6 inline-block rounded-xl bg-orange-500/10 p-3 text-orange-500 border border-orange-500/20">
                 <feature.icon className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-bold text-white">{feature.title}</h3>
-              <p className="mt-4 text-gray-400">
+              <h3 className="text-xl font-black text-white tracking-tight">{feature.title}</h3>
+              <p className="mt-4 text-[13px] font-medium leading-relaxed tracking-wide text-gray-500">
                 {feature.description}
               </p>
             </div>

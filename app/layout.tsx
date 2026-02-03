@@ -6,11 +6,14 @@ import ClarityProvider from "@/components/providers/ClarityProvider";
 
 const outfit = Outfit({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
   variable: "--font-outfit",
 });
 
 const ebGaramond = EB_Garamond({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  style: ["normal", "italic"],
   variable: "--font-garamond",
   display: 'swap',
 });

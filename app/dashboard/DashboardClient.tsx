@@ -35,7 +35,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
 
     // Trial expiration check - ONLY RUNS ON CLIENT NOW
     const isPro = profile?.subscription_tier === 'pro' || profile?.effective_tier === 'pro';
-    const isScout = profile?.subscription_tier === 'scout' || profile?.effective_tier === 'scout';
+    const isScout = profile?.subscription_tier === 'scout' || profile?.effective_tier === 'scout' || isPro;
     const isAdmin = profile?.is_admin === true || user?.email === 'hjayaswar@gmail.com';
     
     // Explicitly use trial_ends_at or fallback to created_at + 3 days
@@ -60,10 +60,10 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
     })();
     
     // Final status override
-    const isActuallyExpired = !isPro && !isScout && !isAdmin && (trialExpired || (trialEndsAt && daysRemaining <= 0));
-    const showPaywall = isActuallyExpired && !isPro && !isScout && !isAdmin;
+    const isActuallyExpired = !isScout && !isAdmin && (trialExpired || (trialEndsAt && daysRemaining <= 0));
+    const showPaywall = isActuallyExpired && !isScout && !isAdmin;
 
-    const handleCheckout = async (plan: 'scout' | 'pro' = 'pro') => {
+    const handleCheckout = async (plan: 'scout' | 'pro' | 'professional' = 'pro') => {
         const res = await fetch('/api/payments/create-checkout', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -174,7 +174,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                             <div className="overflow-hidden">
                                 <p className="text-xs font-bold text-white truncate">{user.email}</p>
                                 <p className="text-[10px] text-gray-500 truncate">
-                                    {isAdmin ? 'Administrator' : isPro ? 'Pro Member' : 'Scout Member'}
+                                    {isAdmin ? 'Administrator' : isPro ? 'Growth Member' : isScout ? 'Starter Member' : 'Free Trial'}
                                 </p>
                             </div>
                         </div>

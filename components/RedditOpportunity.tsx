@@ -6,8 +6,8 @@ import { Search, MessageSquare, ArrowBigUp, ArrowBigDown, Share2, MoreHorizontal
 
 const StatItem = ({ value, label }: { value: string, label: string }) => (
   <div className="flex flex-col items-center justify-center p-4">
-    <div className="text-3xl md:text-4xl font-bold text-white mb-1">{value}</div>
-    <div className="text-sm text-gray-400 font-medium uppercase tracking-wide">{label}</div>
+    <div className="text-3xl md:text-5xl font-black text-white mb-1 tracking-tighter">{value}</div>
+    <div className="text-[10px] text-gray-500 font-black uppercase tracking-[0.2em]">{label}</div>
   </div>
 );
 
@@ -17,15 +17,15 @@ const Card = ({ title, description, children, delay }: { title: string, descript
     whileInView={{ opacity: 1, y: 0 }}
     transition={{ delay, duration: 0.5 }}
     viewport={{ once: true }}
-    className="bg-[#2a2a2a] rounded-3xl p-8 border border-white/5 flex flex-col h-full hover:border-white/10 transition-colors group"
+    className="bg-[#2a2a2a] rounded-[2.5rem] p-8 border border-white/5 flex flex-col h-full hover:border-white/10 transition-colors group"
   >
     <div className="flex-grow flex items-center justify-center w-full aspect-video mb-8 relative rounded-2xl bg-[#141414] overflow-hidden border border-white/5">
         {children}
     </div>
     
     <div className="mt-auto">
-        <h3 className="text-xl font-bold text-white mb-3">{title}</h3>
-        <p className="text-gray-300 text-sm leading-relaxed">{description}</p>
+        <h3 className="text-xl font-black text-white mb-4 tracking-tight">{title}</h3>
+        <p className="text-gray-500 text-[13px] font-medium leading-relaxed tracking-wide">{description}</p>
     </div>
   </motion.div>
 );
@@ -38,14 +38,15 @@ export default function RedditOpportunity() {
       <div className="max-w-7xl mx-auto px-6">
         
         {/* Section Heading */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-[2.5rem] sm:text-[3.5rem] font-black text-white leading-tight mb-4">
-                How <span className="text-orange-500 font-serif italic font-bold">Reddit Marketing</span> Helps You Get Customers
+        <div className="text-center max-w-[90vw] mx-auto mb-16 px-4">
+            <h2 className="text-4xl md:text-[5rem] font-black text-white leading-[1.05] tracking-tighter mb-4">
+                <span className="block whitespace-nowrap">How <span className="text-orange-500 font-serif-italic">Reddit Marketing</span></span>
+                <span className="block whitespace-nowrap">Helps You Get Customers</span>
             </h2>
         </div>
 
         {/* Stats Banner */}
-        <div className="bg-[#2a1a1a] rounded-3xl p-8 mb-20 border border-orange-500/10 shadow-[0_0_50px_rgba(234,88,12,0.05)]">
+        <div className="bg-[#1f1614] rounded-[2rem] p-8 mb-20 border border-white/5">
             <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 gap-8 md:gap-0">
                 <div className="flex items-center justify-center gap-4 md:border-r border-white/10">
                     <div className="w-14 h-14 relative">

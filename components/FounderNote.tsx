@@ -11,11 +11,11 @@ export default function FounderNote() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex flex-col md:flex-row gap-12 items-start"
+          className="flex flex-col md:flex-row gap-12 md:gap-20 items-start"
         >
-          {/* Profile Picture */}
-          <div className="flex-shrink-0 relative">
-            <div className="relative w-32 h-32 md:w-36 md:h-36 rounded-2xl overflow-hidden border-4 border-white shadow-2xl">
+          {/* Profile Column */}
+          <div className="flex-shrink-0 flex flex-col items-center gap-4">
+            <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
               <Image 
                 src="/founder.png" 
                 alt="Tim Jayas" 
@@ -24,42 +24,40 @@ export default function FounderNote() {
                 unoptimized={true}
               />
             </div>
-            {/* Handwriting annotation */}
-            <div className="absolute -bottom-10 -right-12 hidden md:block">
-               <div className="flex items-start gap-2">
-                   <span className="font-handwriting text-gray-400 text-sm -rotate-6 mt-2">This is me</span>
-                   <span className="text-2xl">👋</span>
-                   <svg className="w-6 h-6 text-gray-500 -ml-1 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
-                       <path d="M10 20C10 20 15 5 20 0" />
-                   </svg>
-               </div>
+            {/* Handwriting annotation below photo */}
+            <div className="flex items-center gap-2 opacity-60">
+                <span className="font-handwriting text-gray-400 text-xs italic -rotate-3">This is me</span>
+                <span className="text-xl">👋</span>
             </div>
           </div>
 
-          {/* Content */}
-          <div className="flex-1">
-            <div className="mb-4">
-                <span className="text-red-500 font-bold tracking-widest text-xs uppercase">FROM THE FOUNDER</span>
+          {/* Content Column */}
+          <div className="flex-1 text-left">
+            <div className="mb-6">
+                <span className="text-orange-500 font-bold tracking-[0.05em] text-[10px] uppercase">FROM THE FOUNDER</span>
             </div>
             
-            <h2 className="text-[2.5rem] sm:text-[3.5rem] font-black text-white leading-tight mb-8">
-              I built this because I was tired of <span className="text-orange-500 italic font-serif font-light">manually searching for customers.</span>
+            <h2 className="text-3xl md:text-[2.75rem] font-bold text-white leading-tight tracking-tight mb-8">
+              Built by a founder tired of missing <span className="text-orange-500">Reddit opportunities</span>
             </h2>
             
-            <div className="space-y-6 text-gray-400 text-lg leading-relaxed">
+            <div className="space-y-6 text-gray-400 text-sm md:text-[15px] leading-relaxed max-w-2xl">
               <p>
-                As a serial builder, I know Reddit is a goldmine for early user acquisition. But trying to catch every relevant conversation manually? It's a full-time job. I was spending hours scrolling and still missing the best moments to jump in.
+                I've launched multiple SaaS products and know how valuable Reddit can be for finding early customers. But manually searching through subreddits every day? That's exhausting.
               </p>
               <p>
-                I needed a tool that would do the heavy lifting scanning 24/7, filtering out the noise. That tool didn't exist, so I coded RedLeads.
+                I wanted a tool that would monitor Reddit for me, score posts with AI, and deliver the best opportunities to my inbox each morning. So I built RedLeads.
               </p>
-              <p className="text-white font-medium">
-                Today, I spend my mornings replying to high-intent leads instead of searching for them. It completely changed my workflow, and I think it will change yours too.
+              <p className="text-white font-bold">
+                Now I wake up to a curated list of Reddit opportunities, instead of spending hours searching. I hope it helps you too.
               </p>
             </div>
 
-            <div className="mt-8">
-              <p className="text-white font-serif italic text-lg opacity-80">- Tim Jayas</p>
+            {/* Separator Line */}
+            <div className="w-full h-[1px] bg-white/10 mt-10 mb-6" />
+
+            <div>
+              <p className="text-white font-serif-italic italic text-xl opacity-90">- Tim Jayas</p>
             </div>
           </div>
         </motion.div>
