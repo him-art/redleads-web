@@ -229,7 +229,7 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
                                  {expandedDay === date && (
                                     <div className="border-t border-white/5 bg-black/40">
                                         {leads.map((lead) => (
-                                            <div key={lead.id} className="p-3 sm:p-4 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors flex gap-3 sm:gap-4 group">
+                                            <div key={lead.id} className="p-2 sm:p-3 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors flex gap-3 sm:gap-4 group">
                                                 <div className="flex-grow space-y-1">
                                                     <div className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-500">
                                                         <span className="text-orange-500">r/{lead.subreddit}</span>

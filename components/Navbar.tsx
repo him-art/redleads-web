@@ -56,12 +56,12 @@ const Navbar = () => {
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center gap-8 px-8 py-3 bg-white border border-white/40 rounded-full pointer-events-auto">
           <div className="flex gap-8 text-sm font-bold text-slate-600">
-            <Link href="#how-it-works" className="hover:text-slate-900 transition-colors">How it Works</Link>
+            <Link href="/#how-it-works" className="hover:text-slate-900 transition-colors">How it Works</Link>
             {user && (
               <Link href="/dashboard" className="text-[#f25e36] hover:text-[#d94a24] transition-colors">Dashboard</Link>
             )}
-            <Link href="#pricing" className="hover:text-slate-900 transition-colors">Pricing</Link>
-            <Link href="#faq" className="hover:text-slate-900 transition-colors">FAQ</Link>
+            <Link href="/compare" className="hover:text-slate-900 transition-colors">Compare</Link>
+            <Link href="/#pricing" className="hover:text-slate-900 transition-colors">Pricing</Link>
           </div>
           
           {loading ? (
@@ -123,7 +123,7 @@ const Navbar = () => {
                 
                 <div className="space-y-4">
                   <Link 
-                    href="#how-it-works" 
+                    href="/#how-it-works" 
                     className="block text-lg font-bold text-slate-800 hover:text-[#f25e36] transition-colors py-2"
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -141,19 +141,19 @@ const Navbar = () => {
                   )}
                   
                   <Link 
-                    href="#pricing" 
+                    href="/compare" 
+                    className="block text-lg font-bold text-slate-800 hover:text-[#f25e36] transition-colors py-2"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Compare
+                  </Link>
+                  
+                  <Link 
+                    href="/#pricing" 
                     className="block text-lg font-bold text-slate-800 hover:text-[#f25e36] transition-colors py-2"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Pricing
-                  </Link>
-                  
-                  <Link 
-                    href="#faq" 
-                    className="block text-lg font-bold text-slate-800 hover:text-[#f25e36] transition-colors py-2"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    FAQ
                   </Link>
                 </div>
                 

@@ -180,6 +180,7 @@ const Pricing = () => {
                                 <button
                                     onClick={() => handleCheckout(plan.name)}
                                     disabled={!!isLoading}
+                                    suppressHydrationWarning
                                     className={`w-full py-6 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95 ${
                                         plan.highlight 
                                             ? 'bg-orange-500 text-white hover:bg-[#ff4d29] border border-orange-500/20' 
@@ -201,7 +202,7 @@ const Pricing = () => {
                     <div className="absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-orange-500/20 to-transparent" />
                     <h3 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tighter">Start with a 3-day free trial</h3>
                     <p className="text-gray-500 text-[13px] font-medium uppercase tracking-[0.2em] leading-[1.8] max-w-xl mx-auto opacity-70">
-                        We scan thousands of Reddit posts daily to find your opportunities — Get full access for first 3 days for free.
+                        We scan thousands of Reddit posts daily to find your opportunities   Get full access for first 3 days for free.
                     </p>
                 </div>
             </div>

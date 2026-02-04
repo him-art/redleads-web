@@ -11,6 +11,7 @@ import { type User as SupabaseUser } from '@supabase/supabase-js';
 export default function Hero({ children }: { children?: React.ReactNode }) {
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [urlInput, setUrlInput] = useState('');
+  const [isScanning, setIsScanning] = useState(false);
   const router = useRouter();
   const supabase = createClient();
   
@@ -37,6 +38,9 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
     let domain = urlInput.trim().toLowerCase();
     domain = domain.replace(/^(https?:\/\/)?(www\.)?/, '');
     
+    
+    setIsScanning(true);
+    
     if (user) {
       router.push(`/dashboard?search=${encodeURIComponent(domain)}`);
     } else {
@@ -52,14 +56,14 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
       {/* Floating Elements - Hidden on mobile, visible on large screens */}
       <div className="absolute inset-0 max-w-[1800px] mx-auto pointer-events-none overflow-hidden z-0">
          {/* Left Side */}
-         <FloatingBubble className="top-[15%] left-[5%] xl:left-[8%]" delay={0} />
-         <FloatingBubble className="top-[32%] left-[2%] xl:left-[4%]" delay={1.5} scale={1.1} />
-         <FloatingBubble className="top-[50%] left-[8%] xl:left-[10%]" delay={0.8} />
+         <FloatingBubble className="top-[15%] left-[5%] xl:left-[8%]" delay={0} duration={3.2} floatDelay={0} />
+         <FloatingBubble className="top-[32%] left-[2%] xl:left-[4%]" delay={1.5} scale={1.1} duration={3.8} floatDelay={1.2} />
+         <FloatingBubble className="top-[50%] left-[8%] xl:left-[10%]" delay={0.8} duration={3.5} floatDelay={0.5} />
 
          {/* Right Side */}
-         <FloatingBubble className="top-[18%] right-[5%] xl:right-[8%]" delay={0.5} scale={1.05} />
-         <FloatingBubble className="top-[35%] right-[2%] xl:right-[4%]" delay={2} />
-         <FloatingBubble className="top-[55%] right-[7%] xl:right-[10%]" delay={1.2} scale={0.95} />
+         <FloatingBubble className="top-[18%] right-[5%] xl:right-[8%]" delay={0.5} scale={1.05} duration={3.4} floatDelay={0.8} />
+         <FloatingBubble className="top-[35%] right-[2%] xl:right-[4%]" delay={2} duration={3.9} floatDelay={1.5} />
+         <FloatingBubble className="top-[55%] right-[7%] xl:right-[10%]" delay={1.2} scale={0.95} duration={3.3} floatDelay={0.2} />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 pt-32 pb-0 md:pt-40 md:pb-0 flex flex-col items-center text-center">
@@ -67,10 +71,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
         
 
         {/* Main Headline - Serif & Minimal */}
-        <motion.h1 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.2, 0.65, 0.3, 0.9] }}
+        <h1 
           className="max-w-[100vw] xl:max-w-none mx-auto text-[1.75rem] sm:text-[2.75rem] md:text-[5rem] lg:text-[7rem] font-medium text-[#f5f5f5] mb-8 leading-[1.05] px-4 font-serif"
         >
           {/* Forced two lines on all screens - Full Serif Style */}
@@ -83,7 +84,6 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                   width={128} 
                   height={128} 
                   className="w-full h-full object-contain"
-                  unoptimized={true}
                 />
             </span>
             <span>Conversations</span>
@@ -92,17 +92,14 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
             <span className="text-[0.6em] font-normal opacity-60 inline-block align-middle mr-3 italic">Into</span>
             <span className="text-orange-500 font-bold font-serif-italic">Paying Customers</span>
           </span>
-        </motion.h1>
+        </h1>
 
         {/* Subheadline - Clean Sans */}
-        <motion.p 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.2, 0.65, 0.3, 0.9] }}
+        <p 
           className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-12 leading-relaxed font-light"
         >
-          Stop checking Reddit manually. We monitor millions of discussions to find people explicitly asking for your solution.
-        </motion.p>
+          Find your users on Reddit without scanning it manually. We monitor millions of discussions to find people asking for your solution.
+        </p>
 
         {/* Search/CTA Component - Card Style */}
         <motion.div 
@@ -111,7 +108,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
           transition={{ duration: 0.8, delay: 0.3, ease: [0.2, 0.65, 0.3, 0.9] }}
           className="w-full max-w-xl mx-auto mb-12"
         >
-          <div className="p-2 bg-white/5 border border-orange-500/20 rounded-2xl shadow-[0_0_40px_-15px_rgba(242,94,54,0.1)]">
+          <div className="p-2 bg-white/5 border border-orange-500/10 rounded-2xl">
             <form 
               onSubmit={handleSearch}
               className="relative flex items-center bg-[#1a1a1a] rounded-xl overflow-hidden border-2 border-orange-500/30"
@@ -133,9 +130,22 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
               <button 
                 suppressHydrationWarning
                 type="submit"
-                className="m-1 px-6 py-2.5 bg-white text-black hover:bg-slate-200 rounded-lg font-medium text-sm transition-all flex items-center gap-2"
+                disabled={isScanning}
+                className={`m-1 px-6 py-2.5 rounded-lg font-black text-[10px] uppercase tracking-[0.2em] transition-all flex items-center gap-2 active:scale-95 disabled:opacity-80 ${
+                  isScanning 
+                    ? 'bg-orange-500 text-white' 
+                    : 'bg-white text-black hover:bg-slate-200'
+                }`}
               >
-                Start Free <ArrowRight size={14} />
+                {isScanning ? (
+                  <>
+                    Scanning...
+                  </>
+                ) : (
+                  <>
+                    Start Free <ArrowRight size={14} />
+                  </>
+                )}
               </button>
             </form>
           </div>
@@ -175,7 +185,10 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                         <Globe className="text-orange-500" size={24} strokeWidth={2} />
                         <span className="text-xl md:text-2xl font-bold text-black tracking-tight">RedLeads.app</span>
                     </div>
-                    <button className="bg-[#ff5700] text-white text-[10px] md:text-xs font-black uppercase tracking-widest px-6 md:px-8 py-3 md:py-4 rounded-xl hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20">
+                    <button 
+                        suppressHydrationWarning
+                        className="bg-[#ff5700] text-white text-[10px] md:text-xs font-black uppercase tracking-widest px-6 md:px-8 py-3 md:py-4 rounded-xl hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20"
+                    >
                         Scan
                     </button>
                 </div>
@@ -227,7 +240,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                     />
                      <DemoCard 
                         subreddit="SaaS" 
-                        title="Best Reddit marketing tools in 2025 - what's actually legit?"
+                        title="Best Reddit marketing tools in 2026 - what's actually legit?"
                          matchScore="High Match"
                     />
                 </div>
@@ -257,14 +270,14 @@ function DemoCard({ subreddit, title, matchScore }: { subreddit: string, title: 
   );
 }
 
-function FloatingBubble({ className, delay = 0, scale = 1 }: { className?: string, delay?: number, scale?: number }) {
+function FloatingBubble({ className, delay = 0, scale = 1, duration = 3, floatDelay = 0 }: { className?: string, delay?: number, scale?: number, duration?: number, floatDelay?: number }) {
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: [0, -15, 0] }}
       transition={{ 
         opacity: { duration: 1, delay },
-        y: { duration: 3 + Math.random(), repeat: Infinity, ease: "easeInOut", delay: Math.random() * 2 } 
+        y: { duration, repeat: Infinity, ease: "easeInOut", delay: floatDelay } 
       }}
       className={`absolute hidden xl:flex items-center gap-3 p-3 bg-white/7 border border-white/5 rounded-full w-[180px] shadow-xl shadow-black/5 ${className}`}
       style={{ scale }}

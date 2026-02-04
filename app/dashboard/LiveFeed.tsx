@@ -90,7 +90,7 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, scale: 0.98 }}
                                     transition={{ type: "spring", stiffness: 500, damping: 40 }}
-                                    className="relative group flex items-start gap-3 sm:gap-5 p-4 sm:p-6 hover:bg-white/[0.03] transition-all duration-300"
+                                    className="relative group flex items-start gap-3 sm:gap-5 p-3 sm:p-4 hover:bg-white/[0.03] transition-all duration-300"
                                 >
                                     <div className="flex flex-col items-center gap-2 pt-1 h-full min-w-[60px]">
                                         <div className="px-2 py-0.5 rounded bg-white/5 border border-white/5">
@@ -100,7 +100,7 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
                                         </div>
                                     </div>
 
-                                    <div className="flex-grow space-y-2.5 overflow-hidden">
+                                    <div className="flex-grow space-y-1 overflow-hidden">
                                         <div className="flex items-center gap-2.5">
                                             <span className="text-[9px] font-black text-orange-500/80 bg-orange-500/5 px-2.5 py-1 rounded-full uppercase tracking-widest border border-orange-500/10">
                                                 r/{lead.subreddit}

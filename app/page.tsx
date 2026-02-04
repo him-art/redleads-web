@@ -19,10 +19,10 @@ export default function Home() {
       <div className="relative">
         <Navbar />
         <Hero />
+        <HowItWorks />
 
 
         <RedditOpportunity />
-        <HowItWorks />
 
         
         

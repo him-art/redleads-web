@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Archive, Sliders, ShieldCheck, Navigation, Layout, Search, Menu, X, Sparkles, Clock, AlertTriangle, Zap, Loader2 } from 'lucide-react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 import ReportsTab from './ReportsTab';
@@ -94,7 +95,14 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                 {/* Mobile Header Toggle */}
                 <div className="lg:hidden absolute top-0 left-0 right-0 z-50 p-4 bg-[#050505]/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <img src="/redleads-logo-white.png" alt="RedLeads Logo" className="w-8 h-8 object-contain" />
+                         <div className="w-8 h-8 relative">
+                            <Image 
+                                src="/redleads-logo-white.png" 
+                                alt="RedLeads Logo" 
+                                fill
+                                className="object-contain" 
+                            />
+                        </div>
                         <span className="font-bold text-lg tracking-tight">RedLeads</span>
                     </div>
                     <button 
@@ -120,8 +128,13 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                     <div className="flex flex-col mb-12">
                         <span className="text-[10px] font-black text-gray-700 uppercase tracking-[0.3em] mb-8 px-2">Workspace</span>
                         <div className="flex items-center gap-3 px-2">
-                            <div className="w-10 h-10 flex items-center justify-center">
-                                <img src="/redleads-logo-white.png" alt="RedLeads Logo" className="w-full h-full object-contain" />
+                            <div className="w-10 h-10 flex items-center justify-center relative">
+                                <Image
+                                    src="/redleads-logo-white.png" 
+                                    alt="RedLeads Logo" 
+                                    fill
+                                    className="object-contain"
+                                />
                             </div>
                             <div>
                                 <h1 className="font-bold text-xl tracking-tight leading-none text-white">RedLeads</h1>

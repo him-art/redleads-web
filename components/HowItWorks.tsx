@@ -39,7 +39,6 @@ const HowItWorks = () => {
                     alt="Scan your website" 
                     fill 
                     className="object-contain"
-                    unoptimized={true}
                   />
               </div>
 
@@ -64,7 +63,6 @@ const HowItWorks = () => {
                     alt="Research threads" 
                     fill 
                     className="object-contain"
-                    unoptimized={true}
                   />
               </div>
 
@@ -89,7 +87,6 @@ const HowItWorks = () => {
                     alt="Engage via comments and DMs" 
                     fill 
                     className="object-contain"
-                    unoptimized={true}
                   />
               </div>
 

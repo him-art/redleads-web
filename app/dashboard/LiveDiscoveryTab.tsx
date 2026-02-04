@@ -255,14 +255,14 @@ export default function LiveDiscoveryTab({
                                             disabled={isUpgrading}
                                             className="w-full py-5 bg-orange-500 hover:bg-orange-400 text-black font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
-                                            {isUpgrading ? 'Loading...' : <>Get Growth Access — $29/mo <span className="line-through opacity-50 ml-1 text-[10px]">$39</span></>}
+                                            {isUpgrading ? 'Loading...' : <>Get Growth Access   $29/mo <span className="line-through opacity-50 ml-1 text-[10px]">$39</span></>}
                                         </button>
                                         <button 
                                             onClick={() => handleUpgrade('scout')}
                                             disabled={isUpgrading}
                                             className="w-full py-5 bg-white/10 hover:bg-white/20 text-white font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
-                                            {isUpgrading ? 'Loading...' : <>Get Starter Access — $15/mo <span className="line-through opacity-50 ml-1 text-[10px]">$19</span></>}
+                                            {isUpgrading ? 'Loading...' : <>Get Starter Access   $15/mo <span className="line-through opacity-50 ml-1 text-[10px]">$19</span></>}
                                         </button>
                                          <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
                                             Trial Ended {isMounted && trialEndsAt ? trialEndsAt?.toLocaleDateString() : '...'}

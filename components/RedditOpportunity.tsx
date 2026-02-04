@@ -50,7 +50,12 @@ export default function RedditOpportunity() {
             <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 gap-8 md:gap-0">
                 <div className="flex items-center justify-center gap-4 md:border-r border-white/10">
                     <div className="w-14 h-14 relative">
-                         <img src="/reddit-logo.png" alt="Reddit Logo" className="w-full h-full object-contain" />
+                         <Image 
+                            src="/reddit-logo.png" 
+                            alt="Reddit Logo" 
+                            fill
+                            className="object-contain" 
+                         />
                     </div>
                     <StatItem value="2B+" label="Monthly Visits" />
                 </div>
@@ -77,7 +82,6 @@ export default function RedditOpportunity() {
                     alt="Reddit discussions example" 
                     fill 
                     className="object-cover"
-                    unoptimized={true}
                 />
             </Card>
 
@@ -92,7 +96,6 @@ export default function RedditOpportunity() {
                     alt="AI Training Funnel" 
                     fill 
                     className="object-cover"
-                    unoptimized={true}
                 />
             </Card>
 
@@ -106,7 +109,6 @@ export default function RedditOpportunity() {
                     alt="Authentic Reddit Conversations" 
                     fill 
                     className="object-cover"
-                    unoptimized={true}
                 />
             </Card>
 

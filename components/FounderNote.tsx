@@ -21,7 +21,6 @@ export default function FounderNote() {
                 alt="Tim Jayas" 
                 fill 
                 className="object-cover"
-                unoptimized={true}
               />
             </div>
             {/* Handwriting annotation below photo */}
