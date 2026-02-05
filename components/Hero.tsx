@@ -75,28 +75,18 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
           className="max-w-[100vw] xl:max-w-none mx-auto text-[1.75rem] sm:text-[2.75rem] md:text-[5rem] lg:text-[7rem] font-medium text-[#f5f5f5] mb-8 leading-[1.05] px-4 font-serif"
         >
           {/* Forced two lines on all screens - Full Serif Style */}
-          <span className="flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-6 sm:whitespace-nowrap">
-            <span>Turn</span>
-            <span className="inline-flex items-center justify-center w-12 h-12 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32">
-                <Image 
-                  src="/reddit-new-logo.png" 
-                  alt="Reddit" 
-                  width={128} 
-                  height={128} 
-                  className="w-full h-full object-contain"
-                />
-            </span>
-            <span>Conversations</span>
+          <span className="flex flex-wrap items-center font-medium justify-center gap-x-3 sm:gap-x-6 sm:whitespace-nowrap">
+            <span>Find your</span>
+            <span className="text-orange-500 font-bold font-serif-italic">first 100</span>
           </span>
-          <span className="block sm:whitespace-nowrap">
-            <span className="text-[0.6em] font-normal opacity-60 inline-block align-middle mr-3 italic">Into</span>
-            <span className="text-orange-500 font-bold font-serif-italic">Paying Customers</span>
+          <span className="block font-medium sm:whitespace-nowrap">
+            <span>users on Reddit</span>
           </span>
         </h1>
 
         {/* Subheadline - Clean Sans */}
         <p 
-          className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-12 leading-relaxed font-light"
+          className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-12 leading-relaxed font-medium"
         >
           Find your users on Reddit without scanning it manually. We monitor millions of discussions to find people asking for your solution.
         </p>
@@ -240,7 +230,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                     />
                      <DemoCard 
                         subreddit="SaaS" 
-                        title="Best Reddit marketing tools in 2026 - what's actually legit?"
+                        title="Best Reddit marketing tools in 2025 - what's actually legit?"
                          matchScore="High Match"
                     />
                 </div>
@@ -282,14 +272,14 @@ function FloatingBubble({ className, delay = 0, scale = 1, duration = 3, floatDe
       className={`absolute hidden xl:flex items-center gap-3 p-3 bg-white/7 border border-white/5 rounded-full w-[180px] shadow-xl shadow-black/5 ${className}`}
       style={{ scale }}
     >
-      <div className="w-8 h-8 rounded-full bg-[#FF4500] flex items-center justify-center flex-shrink-0">
-           {/* Minimalist Reddit Snoo Head approximation */}
-          <div className="relative w-5 h-4 bg-white rounded-full">
-               <div className="absolute -top-1.5 right-0 w-2 h-2 border-r-2 border-t-2 border-white rounded-tr-full transform -rotate-12 origin-bottom-left" />
-               <div className="absolute -top-2.5 right-[-2px] w-1 h-1 bg-green-500 rounded-full" />
-               <div className="absolute top-1 left-1.5 w-0.5 h-0.5 bg-[#FF4500] rounded-full" />
-               <div className="absolute top-1 right-1.5 w-0.5 h-0.5 bg-[#FF4500] rounded-full" />
-          </div>
+      <div className="w-8 h-8 rounded-full bg-transparent flex items-center justify-center flex-shrink-0 overflow-hidden">
+           <Image 
+             src="/reddit-new-logo.png" 
+             alt="Reddit" 
+             width={32} 
+             height={32} 
+             className="w-full h-full object-contain"
+           />
       </div>
       <div className="flex-1 space-y-2">
          <div className="h-1.5 bg-slate-200 rounded-full w-3/4" />

@@ -10,6 +10,8 @@ import SettingsTab from './SettingsTab';
 import BillingTab from './BillingTab';
 import LiveDiscoveryTab from './LiveDiscoveryTab';
 import PaywallModal from '@/components/PaywallModal';
+import OnboardingWizard from './OnboardingWizard';
+import { useRouter } from 'next/navigation';
 
 interface DashboardClientProps {
     profile: any;
@@ -19,8 +21,13 @@ interface DashboardClientProps {
 }
 
 export default function DashboardClient({ profile, reports, user, initialSearch = '' }: DashboardClientProps) {
+    const router = useRouter();
     const [activeTab, setActiveTab] = useState<'reports' | 'live' | 'settings' | 'billing'>(initialSearch ? 'live' : 'live'); 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    
+    // Check onboarding status
+    const hasCompletedOnboarding = profile?.onboarding_completed || (profile?.description && profile?.keywords?.length > 0);
+    const [showOnboarding, setShowOnboarding] = useState(!hasCompletedOnboarding);
 
     const [isMounted, setIsMounted] = useState(false);
     useEffect(() => { setIsMounted(true); }, []);
@@ -87,7 +94,16 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
 
     return (
         <>
-            {showPaywall && <PaywallModal onCheckout={handleCheckout} />}
+            {showOnboarding && (
+                <OnboardingWizard 
+                    userEmail={user.email} 
+                    onComplete={() => {
+                        setShowOnboarding(false);
+                        router.refresh();
+                    }} 
+                />
+            )}
+            {showPaywall && !showOnboarding && <PaywallModal onCheckout={handleCheckout} />}
             
             {/* Main Layout Container - Full Dark Theme */}
             <div className="flex h-screen bg-[#050505] text-white overflow-hidden font-sans selection:bg-orange-500/30">
