@@ -202,9 +202,9 @@ export default function BillingTab({ profile, isPro, isAdmin }: { profile: any; 
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {[
-                            { label: 'Keywords', value: isPro ? '30 Keywords' : isScout ? '10 Keywords' : 'Free Trial (5)', icon: <Search size={16} /> },
+                            { label: 'Keywords', value: isPro ? '15 Keywords' : isScout ? '5 Keywords' : 'Free Trial (5)', icon: <Search size={16} /> },
                             { label: 'Intelligence', value: '24/7 Monitoring', icon: <Zap size={16} /> },
-                            { label: 'Coverage', value: isPro ? '3 Websites' : isScout ? '2 website power scan per day' : 'Limited Sites', icon: <Globe size={16} /> },
+                           
                             { label: 'Support', value: 'Standard Support', icon: <CheckCircle2 size={16} /> }
                         ].map((stat) => (
                             <div key={stat.label} className="p-4 rounded-2xl bg-white/5 border border-white/5">
@@ -233,8 +233,8 @@ export default function BillingTab({ profile, isPro, isAdmin }: { profile: any; 
                 {!isSubscribed && !isAdmin && (
                     <>
                         {[
-                            { id: 'scout', name: 'Starter', price: '$15', oldPrice: '$19', desc: '10 keywords, 1 site', primary: false },
-                            { id: 'pro', name: 'Growth', price: '$29', oldPrice: '$39', desc: '30 keywords, 3 sites', primary: true }
+                            { id: 'scout', name: 'Starter', price: '$15', oldPrice: '$19', desc: '5 keywords, 2 site scans', primary: false },
+                            { id: 'pro', name: 'Growth', price: '$29', oldPrice: '$39', desc: '15 keywords, 5 site scans', primary: true }
                         ].map((plan) => (
                             <div key={plan.id} className={`p-8 rounded-[2rem] border flex flex-col ${plan.primary ? 'bg-orange-500/5 border-orange-500/20' : 'bg-white/5 border-white/5'}`}>
                                 <h4 className={`text-sm font-black uppercase tracking-[0.2em] mb-4 ${plan.primary ? 'text-orange-500' : 'text-gray-500'}`}>{plan.name}</h4>
