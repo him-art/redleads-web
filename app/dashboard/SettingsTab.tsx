@@ -250,7 +250,7 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                             value={newKeyword}
                             onChange={(e) => setNewKeyword(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && addKeyword()}
-                            placeholder="e.g. 'lead generation', 'sales automation', 'cold email outreach', 'B2B SaaS'"
+                            placeholder="Best results with 2-word phrases: 'lead generation', 'sales automation', 'cold outreach'"
                             className="flex-grow bg-black/50 border border-white/10 rounded-xl p-3 text-sm sm:text-base text-white focus:border-orange-500 outline-none placeholder:text-gray-700"
                         />
                         <button 

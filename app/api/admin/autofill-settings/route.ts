@@ -29,9 +29,11 @@ export async function POST(req: Request) {
             2. Pain points (e.g., "low conversion rates", "manual data entry")
             3. Competitor indicators (e.g., brand names if relevant)
             4. Industry terms (e.g., "B2B SaaS", "go-to-market")
-
+ 
             Requirements for output:
-            - Keywords/Phrases: Provide EXACTLY ${keywordLimit} relevant items total. **IMPORTANT: Favor concise 2-word phrases** (e.g., "sales automation" instead of just "sales" or long complex sentences).
+            - Keywords/Phrases: Provide EXACTLY ${keywordLimit} relevant items total. 
+            - **CRITICAL: Every suggested keyword MUST be a 2-word phrase** (e.g., "sales automation" instead of just "sales").
+            - Avoid single words. Avoid phrases longer than 3 words.
             
             Return the result as a STRICT JSON object in this format:
             {
