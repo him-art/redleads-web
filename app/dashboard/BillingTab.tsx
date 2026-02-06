@@ -233,8 +233,8 @@ export default function BillingTab({ profile, isPro, isAdmin }: { profile: any; 
                 {!isSubscribed && !isAdmin && (
                     <>
                         {[
-                            { id: 'scout', name: 'Starter', price: '$15', oldPrice: '$19', desc: '5 keywords, 2 site scans', primary: false },
-                            { id: 'pro', name: 'Growth', price: '$29', oldPrice: '$39', desc: '15 keywords, 5 site scans', primary: true }
+                            { id: 'scout', name: 'Starter', price: '$15', oldPrice: '$19', desc: '5 keywords, 2 site scans per day', primary: false },
+                            { id: 'pro', name: 'Growth', price: '$29', oldPrice: '$39', desc: '15 keywords, 5 site scans per day', primary: true }
                         ].map((plan) => (
                             <div key={plan.id} className={`p-8 rounded-[2rem] border flex flex-col ${plan.primary ? 'bg-orange-500/5 border-orange-500/20' : 'bg-white/5 border-white/5'}`}>
                                 <h4 className={`text-sm font-black uppercase tracking-[0.2em] mb-4 ${plan.primary ? 'text-orange-500' : 'text-gray-500'}`}>{plan.name}</h4>

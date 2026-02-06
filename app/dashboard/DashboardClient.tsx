@@ -97,6 +97,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
             {showOnboarding && (
                 <OnboardingWizard 
                     userEmail={user.email} 
+                    keywordLimit={isScout && !isPro ? 5 : 15}
                     onComplete={(data, onboardingUrl) => {
                         setShowOnboarding(false);
                         const searchParam = onboardingUrl ? `?search=${encodeURIComponent(onboardingUrl)}` : '';

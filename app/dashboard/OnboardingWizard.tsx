@@ -8,9 +8,10 @@ import axios from 'axios';
 interface OnboardingWizardProps {
     onComplete: (data: any, url?: string) => void;
     userEmail?: string;
+    keywordLimit?: number;
 }
 
-export default function OnboardingWizard({ onComplete, userEmail }: OnboardingWizardProps) {
+export default function OnboardingWizard({ onComplete, userEmail, keywordLimit = 15 }: OnboardingWizardProps) {
     const [step, setStep] = useState(0);
     const [url, setUrl] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -141,9 +142,14 @@ export default function OnboardingWizard({ onComplete, userEmail }: OnboardingWi
 
                                 {/* Keywords */}
                                 <div className="space-y-3">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 flex items-center gap-2">
-                                        <Target size={12} /> Target Keywords
-                                    </label>
+                                    <div className="flex items-center justify-between">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 flex items-center gap-2">
+                                            <Target size={12} /> Target Keywords
+                                        </label>
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-gray-600">
+                                            {keywords.length}/{keywordLimit} Limit
+                                        </span>
+                                    </div>
                                     <div className="grid grid-cols-1 gap-2 max-h-[160px] overflow-y-auto pr-2 custom-scrollbar">
                                         {keywords.map((kw, i) => (
                                             <div key={i} className="flex items-center gap-2 group">
@@ -155,9 +161,11 @@ export default function OnboardingWizard({ onComplete, userEmail }: OnboardingWi
                                             </div>
                                         ))}
                                     </div>
-                                    <button onClick={addKeyword} className="text-xs text-orange-500 font-bold hover:underline">
-                                        + Add another keyword
-                                    </button>
+                                    {keywords.length < keywordLimit && (
+                                        <button onClick={addKeyword} className="text-xs text-orange-500 font-bold hover:underline">
+                                            + Add another keyword
+                                        </button>
+                                    )}
                                 </div>
                             </div>
 

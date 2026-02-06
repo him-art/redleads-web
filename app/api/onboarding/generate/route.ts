@@ -44,8 +44,12 @@ export async function POST(req: Request) {
             URL: ${url}
 
             1. Generate a "Pitch Description" (max 2 sentences) that describes what this tool does in plain English.
-            2. Generate 5-8 "High-Intent Search Keywords" that potential customers would search for on Reddit when looking for this solution.
-               - Focus on "problem" keywords (e.g., "fasting app" -> "can't lose weight", "best fasting tracker").
+            2. Generate EXACTLY 6 "High-Intent Search Keywords" that potential customers would search for on Reddit when looking for this solution.
+               
+            Requirements for Keywords:
+            - **CRITICAL: Every suggested keyword MUST be a 2-word phrase** (e.g., "sales automation" instead of "best way to find sales leads").
+            - Focus on "problem" keywords (e.g., "fasting app" -> "lose weight", "fasting tracker").
+            - Avoid single words. Avoid phrases longer than 2 words.
             
             Return JSON:
             {
