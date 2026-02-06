@@ -242,6 +242,20 @@ async function runDailyDigest() {
     }
 
     console.log(`[Digest] ✅ Complete. Sent ${sentCount} digests.`);
+
+    // Update Heartbeat
+    try {
+        await supabase.from('worker_status').upsert({
+            id: 'digest',
+            last_heartbeat: new Date().toISOString(),
+            status: 'online',
+            meta: {
+                last_run_sent_count: sentCount
+            }
+        });
+    } catch (err) {
+        console.error('[Digest] Failed to update heartbeat:', err);
+    }
 }
 
 runDailyDigest().catch(e => {

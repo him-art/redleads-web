@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  redleads-sentinel:
+  redleads-scanner:
     build:
       context: .
       dockerfile: Dockerfile.worker
-    container_name: redleads-sentinel
+    container_name: redleads-scanner
     restart: always
     env_file:
       - .env.local

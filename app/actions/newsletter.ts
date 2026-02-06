@@ -3,7 +3,8 @@
 import { z } from 'zod';
 import { Resend } from 'resend';
 import { createClient } from '@/lib/supabase/server';
-import WelcomeEmail from '@/lib/email-templates/WelcomeEmail';
+import PremiumOnboardingEmail from '@/lib/email-templates/PremiumOnboardingEmail';
+import * as React from 'react';
 
 // Schema for validation
 const formSchema = z.object({
@@ -66,10 +67,15 @@ export async function subscribeToNewsletter(prevState: FormState, formData: Form
 
     // 4. Send Welcome Email via Resend
     const { error: emailError } = await resend.emails.send({
-      from: 'RedLeads <onboarding@resend.dev>', // Update this to your verified domain later
+      from: 'RedLeads <onboarding@redleads.app>', 
       to: [email],
       subject: 'Welcome to RedLeads! Your weekly Reddit leads are coming.',
-      react: WelcomeEmail({ websiteUrl }),
+      react: React.createElement(PremiumOnboardingEmail, { 
+        fullName: email.split('@')[0],
+        websiteUrl,
+        step: 'welcome',
+        daysLeft: 3 // Default for new signups
+      }),
     });
 
     if (emailError) {

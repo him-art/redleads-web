@@ -97,8 +97,10 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
             {showOnboarding && (
                 <OnboardingWizard 
                     userEmail={user.email} 
-                    onComplete={() => {
+                    onComplete={(data, onboardingUrl) => {
                         setShowOnboarding(false);
+                        const searchParam = onboardingUrl ? `?search=${encodeURIComponent(onboardingUrl)}` : '';
+                        router.push(`/dashboard${searchParam}`);
                         router.refresh();
                     }} 
                 />

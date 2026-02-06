@@ -6,7 +6,7 @@ import { ArrowRight, Globe, Loader2, Check, Sparkles, Target, Type } from 'lucid
 import axios from 'axios';
 
 interface OnboardingWizardProps {
-    onComplete: (data: any) => void;
+    onComplete: (data: any, url?: string) => void;
     userEmail?: string;
 }
 
@@ -46,7 +46,7 @@ export default function OnboardingWizard({ onComplete, userEmail }: OnboardingWi
                 description,
                 keywords
             });
-            onComplete(res.data);
+            onComplete(res.data, url);
         } catch (error) {
             console.error(error);
             alert('Something went wrong finishing setup. Please try again.');

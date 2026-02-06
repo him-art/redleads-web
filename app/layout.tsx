@@ -172,7 +172,7 @@ export default function RootLayout({
                       "name": "Can I cancel anytime?",
                       "acceptedAnswer": {
                         "@type": "Answer",
-                        "text": "Absolutely. There are no contracts or lock-in periods. You can cancel your subscription at any time within 7 days.."
+                        "text": "Absolutely. There are no contracts or lock-in periods. You can cancel your subscription at any time within 7 days."
                       }
                     }
                   ]

@@ -374,6 +374,25 @@ async function runPollCycle() {
     }
     
     console.log(`[RSS] ✅ Cycle Complete: Scanned ${totalPosts} posts, Found ${totalMatches} leads.`);
+    
+    // Update Heartbeat
+    try {
+        await supabase.from('worker_status').upsert({
+            id: 'scanner',
+            last_heartbeat: new Date().toISOString(),
+            status: 'online',
+            meta: {
+                last_scan_counts: {
+                    posts: totalPosts,
+                    leads: totalMatches,
+                    success_rate: subreddits.length > 0 ? (successCount / subreddits.length) : 0
+                }
+            }
+        });
+    } catch (err) {
+        console.error('[RSS] Failed to update heartbeat:', err);
+    }
+
     console.log('[RSS] ═══════════════════════════════════════════════════════\n');
 }
 

@@ -6,7 +6,7 @@ import RedditOpportunity from "@/components/RedditOpportunity";
 import HowItWorks from "@/components/HowItWorks";
 import Features from "@/components/Features";
 import FounderNote from "@/components/FounderNote";
-//import SocialProof from "@/components/SocialProof";
+// import SocialProof from "@/components/SocialProof";
 import Pricing from "@/components/Pricing";
 import FAQ from "@/components/FAQ";
 
@@ -19,6 +19,7 @@ export default function Home() {
       <div className="relative">
         <Navbar />
         <Hero />
+        {/* <SocialProof /> */}
         <HowItWorks />
 
 

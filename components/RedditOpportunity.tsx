@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Search, MessageSquare, ArrowBigUp, ArrowBigDown, Share2, MoreHorizontal, Bot, Globe } from 'lucide-react';
+import AnimatedCounter from './AnimatedCounter';
 
 const StatItem = ({ value, label }: { value: string, label: string }) => (
   <div className="flex flex-col items-center justify-center p-4">
@@ -57,13 +58,13 @@ export default function RedditOpportunity() {
                             className="object-contain" 
                          />
                     </div>
-                    <StatItem value="2B+" label="Monthly Visits" />
+                    <AnimatedCounter value={2} suffix="B+" label="Monthly Visits" />
                 </div>
                 <div className="flex justify-center md:border-r border-white/10">
-                    <StatItem value="100K+" label="Active Communities" />
+                    <AnimatedCounter value={100} suffix="K+" label="Active Communities" />
                 </div>
                 <div className="flex justify-center ">
-                    <StatItem value="52M+" label="Daily Active Users" />
+                    <AnimatedCounter value={52} suffix="M+" label="Daily Active Users" />
                 </div>
             </div>
         </div>

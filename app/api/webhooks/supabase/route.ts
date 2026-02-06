@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { sendEmail } from '@/lib/email';
-import WelcomeEmail from '@/lib/email-templates/WelcomeEmail';
-import TrialActivatedEmail from '@/lib/email-templates/TrialActivatedEmail';
+import PremiumOnboardingEmail from '@/lib/email-templates/PremiumOnboardingEmail';
+import * as React from 'react';
 import { createClient } from '@supabase/supabase-js';
 
 // This is the bouncer for the webhook.
@@ -36,7 +36,11 @@ export async function POST(req: Request) {
                 await sendEmail({
                     to: email,
                     subject: 'Welcome to RedLeads! 🚀',
-                    react: WelcomeEmail({ fullName: full_name || email.split('@')[0] })
+                    react: React.createElement(PremiumOnboardingEmail, { 
+                        fullName: full_name || email.split('@')[0],
+                        step: 'welcome',
+                        daysLeft: 3
+                    })
                 });
             }
 
@@ -46,7 +50,11 @@ export async function POST(req: Request) {
                 await sendEmail({
                     to: email,
                     subject: 'Your 3-Day Trial is Active! 🚀',
-                    react: TrialActivatedEmail({ fullName: full_name || email.split('@')[0] })
+                    react: React.createElement(PremiumOnboardingEmail, { 
+                        fullName: full_name || email.split('@')[0],
+                        step: 'welcome', // We'll show the welcome/trial info together
+                        trialExpiryDate: trial_ends_at ? new Date(trial_ends_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) : undefined
+                    })
                 });
             }
         }

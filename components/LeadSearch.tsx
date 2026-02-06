@@ -37,6 +37,9 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
 
     // Auto-scan if initialUrl is provided
     useEffect(() => {
+        if (initialUrl) {
+            setUrl(initialUrl);
+        }
         if (initialUrl && !isScanning && results.length === 0 && !hasAutoScanned.current) {
             hasAutoScanned.current = true;
             handleScan(null as any);
