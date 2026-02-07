@@ -44,7 +44,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 // Network & Pacing
 // "Google-level" robustness: mimic a real browser to avoid 429s/blocking
 const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
-let DELAY_BETWEEN_REQ_MS = 2000; // 2s base delay (dynamically adjusted)
+let DELAY_BETWEEN_REQ_MS = 4000; // 4s base delay (dynamically adjusted)
 const DELAY_MIN_MS = 1500; // Minimum delay
 const DELAY_MAX_MS = 8000; // Maximum delay when under pressure
 const JITTER_MAX_MS = 1500; // Add noise to avoid pattern detection
