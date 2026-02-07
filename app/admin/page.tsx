@@ -15,14 +15,14 @@ export default async function AdminDashboard() {
         return redirect('/login');
     }
 
-    // Server-Side Security Check: Is Dev Admin?
+    // Server-Side Security Check: Is Admin?
     const { data: status } = await supabase
         .from('user_access_status')
-        .select('is_dev')
+        .select('is_admin')
         .eq('id', user.id)
         .single();
     
-    if (!status?.is_dev) {
+    if (!status?.is_admin) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-black text-white">
                 <div className="text-center">
