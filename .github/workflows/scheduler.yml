@@ -2,8 +2,8 @@ name: RedLeads Worker Scheduler
 
 on:
   schedule:
-    # 1. Ingestion: Run every 15 minutes
-    - cron: '*/15 * * * *'
+    # 1. Ingestion: Run every 45 minutes
+    - cron: '*/45 * * * *'
     # 2. Daily Digest: Run at 8:00 AM UTC daily
     - cron: '0 8 * * *'
     # 3. Cleanup: Run at Midnight UTC daily
@@ -12,8 +12,8 @@ on:
 
 jobs:
   ingestion:
-    name: Run Ingestion (Every 15m)
-    if: github.event.schedule == '*/15 * * * *' || github.event_name == 'workflow_dispatch'
+    name: Run Ingestion (Every 45m)
+    if: github.event.schedule == '*/45 * * * *' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
