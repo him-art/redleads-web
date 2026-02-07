@@ -44,12 +44,23 @@ export async function POST(req: Request) {
             URL: ${url}
 
             1. Generate a "Pitch Description" (max 2 sentences) that describes what this tool does in plain English.
-            2. Generate EXACTLY 6 "High-Intent Search Keywords" that potential customers would search for on Reddit when looking for this solution.
+            2. Generate EXACTLY 6 "High-Intent Topic Keywords" for Reddit monitoring.
                
             Requirements for Keywords:
-            - **CRITICAL: Every suggested keyword MUST be a 2-word phrase** (e.g., "sales automation" instead of "best way to find sales leads").
-            - Focus on "problem" keywords (e.g., "fasting app" -> "lose weight", "fasting tracker").
-            - Avoid single words. Avoid phrases longer than 2 words.
+            - **STRICTLY 1-2 words maximum per keyword.**
+            - **NO SENTENCES. NO QUESTIONS.**
+            - **NO VERBS** at the start (e.g., do NOT use "find", "get", "increase", "boost").
+            - Focus on the **core topic** or **competitor name** or **industry term**.
+            
+            Examples:
+            BAD: "how to get more followers" (Too long, sentence)
+            GOOD: "instagram growth"
+            
+            BAD: "best crm for small business"
+            GOOD: "crm software"
+            
+            BAD: "increase website traffic"
+            GOOD: "seo tools"
             
             Return JSON:
             {
