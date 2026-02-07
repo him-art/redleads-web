@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Archive, Sliders, ShieldCheck, Navigation, Layout, Search, Menu, X, Sparkles, Clock, AlertTriangle, Zap, Loader2 } from 'lucide-react';
+import { Archive, Sliders, ShieldCheck, Navigation, Layout, Search, Menu, X, Sparkles, Clock, AlertTriangle, Zap, Loader2, GraduationCap } from 'lucide-react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
@@ -11,6 +11,7 @@ import BillingTab from './BillingTab';
 import LiveDiscoveryTab from './LiveDiscoveryTab';
 import PaywallModal from '@/components/PaywallModal';
 import OnboardingWizard from './OnboardingWizard';
+import RoadmapTab from './RoadmapTab'; // [NEW]
 import { useRouter } from 'next/navigation';
 
 interface DashboardClientProps {
@@ -22,7 +23,7 @@ interface DashboardClientProps {
 
 export default function DashboardClient({ profile, reports, user, initialSearch = '' }: DashboardClientProps) {
     const router = useRouter();
-    const [activeTab, setActiveTab] = useState<'reports' | 'live' | 'settings' | 'billing'>(initialSearch ? 'live' : 'live'); 
+    const [activeTab, setActiveTab] = useState<'reports' | 'live' | 'settings' | 'billing' | 'roadmap'>(initialSearch ? 'live' : 'live'); 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     
     // Check onboarding status
@@ -87,6 +88,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
 
     const tabs = [
         { id: 'live', label: 'Command Center', icon: Navigation },
+        { id: 'roadmap', label: 'Academy (Beta)', icon: GraduationCap }, // [NEW] - Placed second for visibility
         { id: 'reports', label: 'Leads Archive', icon: Archive },
         { id: 'settings', label: 'Tracking Setup', icon: Sliders },
         { id: 'billing', label: 'Billing & Plan', icon: ShieldCheck },
@@ -234,6 +236,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                         >
                                             {activeTab === 'reports' && <ReportsTab reports={reports} profile={profile} user={user} isPro={isPro} isAdmin={isAdmin} />}
                                             {activeTab === 'live' && <LiveDiscoveryTab user={user} profile={profile} isPro={isPro} isScout={isScout} isAdmin={isAdmin} initialSearch={initialSearch} onNavigate={(tab) => setActiveTab(tab as any)} />}
+                                            {activeTab === 'roadmap' && <RoadmapTab user={user} onNavigate={(tab) => setActiveTab(tab as any)} />} 
                                             {activeTab === 'settings' && <SettingsTab profile={profile} user={user} />}
                                             {activeTab === 'billing' && <BillingTab profile={profile} isPro={isPro} isAdmin={isAdmin} />}
                                         </motion.div>

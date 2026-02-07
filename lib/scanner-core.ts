@@ -14,8 +14,21 @@ export interface ScannerOptions {
     description?: string;
 }
 
+const SCAN_CACHE = new Map<string, { result: ScannerResult; timestamp: number }>();
+const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
+
 export async function performScan(url: string, options: ScannerOptions): Promise<ScannerResult> {
     const { tavilyApiKey, keywords, subreddits, description } = options;
+
+    // 1. Check Cache
+    const normalizedUrl = url.toLowerCase().trim().replace(/^https?:\/\//, '').replace(/\/$/, '');
+    const cacheKey = `${normalizedUrl}_${(keywords || []).sort().join(',')}`;
+    const cached = SCAN_CACHE.get(cacheKey);
+    
+    if (cached && (Date.now() - cached.timestamp < CACHE_TTL)) {
+        console.log(`[ScannerLib] Returning CACHED results for: ${normalizedUrl}`);
+        return cached.result;
+    }
 
     console.log(`[ScannerLib] Analyzing site: ${url}`);
 
@@ -135,7 +148,15 @@ export async function performScan(url: string, options: ScannerOptions): Promise
         leads = leads.map(l => ({ ...l, match_category: 'Medium' }));
     }
 
-    return { leads };
+    const result = { leads };
+    
+    // Save to Cache
+    SCAN_CACHE.set(cacheKey, { 
+        result, 
+        timestamp: Date.now() 
+    });
+
+    return result;
 }
 
 // --- Helpers ---

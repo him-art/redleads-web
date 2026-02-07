@@ -416,8 +416,8 @@ async function start() {
     // Schedule: Every 15 minutes
     // 100 subs * 1.8s = 180s = 3 mins. 
     // 15 min interval gives plenty of buffer.
-    cron.schedule('*/15 * * * *', runPollCycle);
-    console.log('[RSS] ⏰ Scheduled cron: */15 * * * *');
+    cron.schedule('*/45 * * * *', runPollCycle);
+    console.log('[RSS] ⏰ Scheduled cron: */45 * * * *');
 }
 
 // Graceful Shutdown

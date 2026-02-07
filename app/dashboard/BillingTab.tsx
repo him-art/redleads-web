@@ -202,7 +202,7 @@ export default function BillingTab({ profile, isPro, isAdmin }: { profile: any; 
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {[
-                            { label: 'Keywords', value: isPro ? '15 Keywords' : isScout ? '5 Keywords' : 'Free Trial (5)', icon: <Search size={16} /> },
+                            { label: 'Keywords', value: isPro ? '15 Keywords' : isScout ? '5 Keywords' : 'Free Trial', icon: <Search size={16} /> },
                             { label: 'Intelligence', value: '24/7 Monitoring', icon: <Zap size={16} /> },
                            
                             { label: 'Support', value: 'Standard Support', icon: <CheckCircle2 size={16} /> }

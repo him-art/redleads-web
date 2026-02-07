@@ -1,10 +1,21 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { performScan } from '@/lib/scanner-core';
+import { onboardingSchema } from '@/lib/validation';
 
 export async function POST(req: Request) {
     try {
-        const { description, keywords, url } = await req.json();
+        const body = await req.json();
+        const validation = onboardingSchema.safeParse(body);
+        
+        if (!validation.success) {
+            return NextResponse.json({ 
+                error: 'Invalid input', 
+                details: validation.error.format() 
+            }, { status: 400 });
+        }
+
+        const { description, keywords, url } = validation.data;
         const supabase = await createClient();
 
         const { data: { user } } = await supabase.auth.getUser();
