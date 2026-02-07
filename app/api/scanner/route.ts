@@ -129,11 +129,14 @@ export async function POST(req: Request) {
                         title: lead.title,
                         subreddit: lead.subreddit,
                         url: lead.url,
+                        body_text: lead.body_text || '',
                         status: 'scanner',
                         match_score: lead.match_category === 'High' ? 0.95 : lead.match_category === 'Medium' ? 0.75 : 0.45,
                         match_category: lead.match_category || 'Medium',
                         is_saved: false
                     }));
+
+                    console.log(`[Scanner API] Saving ${leadsToSave.length} leads for user ${user.id} (Paid: ${isPaid}, Trial: ${isInTrial})`);
 
                     if (leadsToSave.length > 0) {
                         const { error: insertError } = await supabase

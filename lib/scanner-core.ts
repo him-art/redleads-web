@@ -80,7 +80,8 @@ export async function performScan(url: string, options: ScannerOptions): Promise
                     .map((item: any) => ({
                         subreddit: extractSubreddit(item.url),
                         title: item.title,
-                        url: item.url
+                        url: item.url,
+                        body_text: item.content
                     }));
             }
         } catch (tError) {
