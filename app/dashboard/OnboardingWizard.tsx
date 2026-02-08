@@ -17,6 +17,15 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
     const [isLoading, setIsLoading] = useState(false);
     const [description, setDescription] = useState('');
     const [keywords, setKeywords] = useState<string[]>([]);
+
+    const getSanitizedUrl = (input: string) => {
+        let trimmed = input.trim();
+        if (!trimmed) return '';
+        if (!/^https?:\/\//i.test(trimmed)) {
+            trimmed = `https://${trimmed}`;
+        }
+        return trimmed;
+    };
     
     // Step 1: Input URL & Generate Profile
     const handleAnalyze = async (e: React.FormEvent) => {
@@ -25,7 +34,9 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
         
         setIsLoading(true);
         try {
-            const res = await axios.post('/api/onboarding/generate', { url });
+            const sanitizedUrl = getSanitizedUrl(url);
+            setUrl(sanitizedUrl); // Update local state with sanitized version
+            const res = await axios.post('/api/onboarding/generate', { url: sanitizedUrl });
             setDescription(res.data.description);
             setKeywords(res.data.keywords);
             setStep(1); // Move to Review
@@ -42,9 +53,10 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
     const handleComplete = async () => {
         setIsLoading(true);
         try {
-            console.log('[Onboarding] Completing setup for:', url);
+            const sanitizedUrl = getSanitizedUrl(url);
+            console.log('[Onboarding] Completing setup for:', sanitizedUrl);
             const res = await axios.post('/api/onboarding/complete', {
-                url,
+                url: sanitizedUrl,
                 description,
                 keywords
             }, {
@@ -52,14 +64,25 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
             });
             
             if (res.data.success) {
-                onComplete(res.data, url);
+                onComplete(res.data, sanitizedUrl);
             } else {
                 throw new Error(res.data.error || 'Setup failed');
             }
         } catch (error: any) {
             console.error('[Onboarding Error]', error);
-            const message = error.response?.data?.error || error.message || 'Something went wrong finishing setup.';
-            alert(`${message} Please check your connection and try again.`);
+            
+            let message = error.response?.data?.error || error.message || 'Something went wrong finishing setup.';
+            
+            // Extract Zod detailed error if available
+            if (error.response?.data?.details) {
+                const details = error.response.data.details;
+                const firstError = Object.values(details)[0] as any;
+                if (firstError?._errors?.[0]) {
+                    message = firstError._errors[0];
+                }
+            }
+
+            alert(`${message}\n\nPlease check your input and try again.`);
         } finally {
             setIsLoading(false);
         }
@@ -138,8 +161,13 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                             <div className="space-y-6">
                                 {/* Description */}
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 flex items-center gap-2">
-                                        <Type size={12} /> Product Pitch
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 flex items-center justify-between gap-2 w-full">
+                                        <div className="flex items-center gap-2">
+                                            <Type size={12} /> Product Pitch
+                                        </div>
+                                        <span className={`transition-colors ${description.length < 20 ? 'text-orange-500' : 'text-green-500'}`}>
+                                            {description.length}/20 chars
+                                        </span>
                                     </label>
                                     <textarea 
                                         value={description}
