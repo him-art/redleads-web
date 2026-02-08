@@ -42,15 +42,24 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
     const handleComplete = async () => {
         setIsLoading(true);
         try {
+            console.log('[Onboarding] Completing setup for:', url);
             const res = await axios.post('/api/onboarding/complete', {
                 url,
                 description,
                 keywords
+            }, {
+                timeout: 60000 // 60s timeout for initial scan
             });
-            onComplete(res.data, url);
-        } catch (error) {
-            console.error(error);
-            alert('Something went wrong finishing setup. Please try again.');
+            
+            if (res.data.success) {
+                onComplete(res.data, url);
+            } else {
+                throw new Error(res.data.error || 'Setup failed');
+            }
+        } catch (error: any) {
+            console.error('[Onboarding Error]', error);
+            const message = error.response?.data?.error || error.message || 'Something went wrong finishing setup.';
+            alert(`${message} Please check your connection and try again.`);
         } finally {
             setIsLoading(false);
         }

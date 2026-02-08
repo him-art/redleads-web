@@ -44,33 +44,44 @@ export async function POST(req: Request) {
                 .eq('id', user.id);
         }
 
-        // 2. Trigger Immediate Scan (so dashboard isn't empty)
-        // We run this *synchronously* so the user sees results immediately after the loader
+        // 2. Trigger Initial Scan with a strict 15s timeout
         console.log('[Onboarding] Triggering initial scan for:', url);
         
-        const scanResult = await performScan(url, {
-            keywords,
-            description,
-            tavilyApiKey: process.env.TAVILY_API_KEY
-        });
+        try {
+            // We use a timeout to ensure the user isn't stuck if external APIs are slow
+            const scanPromise = performScan(url, {
+                keywords,
+                description,
+                tavilyApiKey: process.env.TAVILY_API_KEY
+            });
 
-        // Persist Leads
-        if (scanResult.leads && scanResult.leads.length > 0) {
-             const leadsToSave = scanResult.leads.map((lead: any) => ({
-                user_id: user.id,
-                title: lead.title,
-                subreddit: lead.subreddit,
-                url: lead.url,
-                status: 'new',
-                match_score: lead.match_category === 'High' ? 0.95 : lead.match_category === 'Medium' ? 0.75 : 0.45,
-                match_category: lead.match_category || 'Medium',
-                is_saved: false
-            }));
+            const timeoutPromise = new Promise<null>((_, reject) => 
+                setTimeout(() => reject(new Error('Scan timeout')), 15000)
+            );
 
-            await supabase.from('monitored_leads').insert(leadsToSave);
+            const scanResult = await Promise.race([scanPromise, timeoutPromise]) as any;
+
+            // Persist Leads if scan finished in time
+            if (scanResult && scanResult.leads && scanResult.leads.length > 0) {
+                 const leadsToSave = scanResult.leads.map((lead: any) => ({
+                    user_id: user.id,
+                    title: lead.title,
+                    subreddit: lead.subreddit,
+                    url: lead.url,
+                    status: 'new',
+                    match_score: lead.match_category === 'High' ? 0.95 : lead.match_category === 'Medium' ? 0.75 : 0.45,
+                    match_category: lead.match_category || 'Medium',
+                    is_saved: false
+                }));
+
+                await supabase.from('monitored_leads').insert(leadsToSave);
+            }
+        } catch (scanError) {
+            console.error('[Onboarding Scan Error/Timeout]', scanError);
+            // We don't fail the whole onboarding if only the scan fails
         }
 
-        return NextResponse.json({ success: true, leadsFound: scanResult.leads?.length || 0 });
+        return NextResponse.json({ success: true });
 
     } catch (error: any) {
         console.error('[Onboarding Complete Error]', error);
