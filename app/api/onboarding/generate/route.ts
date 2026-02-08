@@ -39,28 +39,33 @@ export async function POST(req: Request) {
 
         // 2. AI Analysis
         const prompt = `
-            Analyze this SaaS/Product context:
+            Analyze this product/service context to generate a precise profile for Reddit lead generation.
+            
+            Context from Site:
             ${siteContext}
             URL: ${url}
 
-            1. Generate a "Pitch Description" (max 2 sentences) that describes what this tool does in plain English.
+            Your goal is to be EXTREMELY SPECIFIC. 
+            - If it's a LinkedIn tool, focus on LinkedIn keywords.
+            - If it's a cold email tool, focus on outreach keywords.
+            - AVOID GENERIC CATEGORIES like "CRM", "ERP", or "Marketing Software" unless the site explicitly says it is one of those.
+            - Focus on the PRIMARY platform (e.g., LinkedIn, Reddit, Twitter, Email) and the PRIMARY problem solved (e.g., "reach", "engagement", "hiring").
+
+            1. Generate a "Pitch Description" (max 2 sentences) that describes exactly what this tool does. 
+               Bad: "It is a marketing tool."
+               Good: "Meet Lea helps LinkedIn users triple their reach by finding high-impact posts to comment on via an AI-powered browser extension."
+
             2. Generate EXACTLY 6 "High-Intent Topic Keywords" for Reddit monitoring.
                
             Requirements for Keywords:
             - **STRICTLY 1-2 words maximum per keyword.**
             - **NO SENTENCES. NO QUESTIONS.**
             - **NO VERBS** at the start (e.g., do NOT use "find", "get", "increase", "boost").
-            - Focus on the **core topic** or **competitor name** or **industry term**.
+            - Focus on the **platform name**, **specific niche**, **competitor name**, or **user pain point**.
             
-            Examples:
-            BAD: "how to get more followers" (Too long, sentence)
-            GOOD: "instagram growth"
-            
-            BAD: "best crm for small business"
-            GOOD: "crm software"
-            
-            BAD: "increase website traffic"
-            GOOD: "seo tools"
+            Examples for a LinkedIn tool:
+            GOOD: "linkedin reach", "linkedin engagement", "taplio alternative", "linkedin growth", "social selling", "b2b outreach"
+            BAD: "how to get views", "best linkedin tool", "social media marketing"
             
             Return JSON:
             {
@@ -71,9 +76,15 @@ export async function POST(req: Request) {
 
         const aiResponse = await ai.call({
             model: "llama-3.3-70b-versatile",
-            messages: [{ role: "user", content: prompt }],
+            messages: [
+                { 
+                    role: "system", 
+                    content: "You are a professional Lead Generation Expert. You specialize in identifying niche keywords that capture high-intent users looking for specific solutions." 
+                },
+                { role: "user", content: prompt }
+            ],
             response_format: { type: "json_object" },
-            temperature: 0.2
+            temperature: 0.1
         });
 
         const content = aiResponse.choices[0]?.message?.content;

@@ -45,7 +45,11 @@ export async function performScan(url: string, options: ScannerOptions): Promise
             Generate 1 ADVANCED and HIGH-INTENT search query for "site:reddit.com" that a professional lead hunter would use.
             The query MUST include the current year "2026" or "2025" to ensure results are RECENT.
             Combine intent signals like (recommend OR "best" OR "alternative to" OR "how to" OR "problem with").
-            If focus subreddits are provided, try to target them using "site:reddit.com/r/subredditname".
+            
+            1. If focus subreddits are provided, target them using "site:reddit.com/r/subredditname".
+            2. If no subreddits are provided, use "site:reddit.com".
+            3. Use the Keywords to find people with PAIN POINTS. (e.g. if keyword is "linkedin reach", search for people complaining about low reach).
+            4. EXCLUDE unrelated generic niches.
             
             Example: site:reddit.com/r/SaaS "outreach" (recommend OR "best" OR "tool") 2026
             
@@ -109,12 +113,18 @@ export async function performScan(url: string, options: ScannerOptions): Promise
             const categorizationPrompt = `
                 You are an expert Lead Qualifier.
                 
-                product Context: "${description}"
+                Product Description: "${description}"
+                Target Keywords: "${keywords?.join(', ')}"
                 
                 Task: Categorize these ${leads.length} Reddit leads as "High", "Medium", or "Low" based on their relevance to the product.
                 
+                **Strictness Guidelines:**
+                - **HIGH**: The post is explicitly asking for a tool like yours, or complaining about a specific problem your product solves.
+                - **MEDIUM**: The post is related to the industry or niche but not a direct buying signal (e.g., general discussion).
+                - **LOW**: The post is unrelated, a generic advertisement, or a different industry entirely (e.g., if product is LinkedIn tool and post is about a CRM).
+                
                 Leads to analyze:
-                ${JSON.stringify(leads.map((l, i) => ({ id: i, title: l.title })))}
+                ${JSON.stringify(leads.map((l, i) => ({ id: i, title: l.title, subreddit: l.subreddit })))}
                 
                 Return a JSON object mapping the lead index to its category.
                 Output format: { "categories": { "0": "High", "1": "Medium", ... } }
