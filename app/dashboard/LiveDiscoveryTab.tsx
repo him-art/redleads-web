@@ -188,7 +188,7 @@ export default function LiveDiscoveryTab({
                         <LeadSearch 
                             user={user} 
                             isDashboardView={true} 
-                            initialUrl={initialSearch} 
+                            initialUrl={initialSearch || profile?.website_url || ''} 
                             onResultsFound={(count) => setHasResults(count > 0)}
                         />
                     </div>

@@ -212,11 +212,11 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                             disabled={isScanning || url.trim().length < 3}
                             className={`absolute right-2 sm:right-3 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-black uppercase text-[9px] sm:text-[10px] tracking-widest transition-all ${
                                 !isScanning && url.trim().length >= 3 
-                                    ? 'bg-orange-500 text-black' 
+                                    ? 'bg-orange-500 text-black shadow-[0_0_20px_rgba(249,115,22,0.3)] animate-[pulse_3s_infinite]' 
                                     : 'bg-white/5 text-gray-600 cursor-not-allowed opacity-50'
                             }`}
                         >
-                            {isScanning ? 'Analyzing' : 'Scan'}
+                            {isScanning ? 'Analyzing' : 'Power Scan'}
                         </button>
                     </div>
 
