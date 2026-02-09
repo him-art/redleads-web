@@ -15,7 +15,7 @@ export interface ScannerOptions {
 }
 
 const SCAN_CACHE = new Map<string, { result: ScannerResult; timestamp: number }>();
-const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
+const CACHE_TTL = 2 * 60 * 1000; // 2 minutes
 
 export async function performScan(url: string, options: ScannerOptions): Promise<ScannerResult> {
     const { tavilyApiKey, keywords, subreddits, description } = options;
@@ -86,7 +86,7 @@ export async function performScan(url: string, options: ScannerOptions): Promise
                     query: searchQuery.includes('site:reddit.com') ? searchQuery : `site:reddit.com ${searchQuery}`,
                     search_depth: "advanced",
                     include_domains: ["reddit.com"],
-                    max_results: 21
+                    max_results: 40
                 })
             });
             const tavilyData = await tavilyRes.json();
