@@ -9,7 +9,7 @@ interface LeadAlertEmailProps {
 
 export default function LeadAlertEmail({ fullName, leadTitle, subreddit, matchScore }: LeadAlertEmailProps) {
   const firstName = fullName ? fullName.split(' ')[0] : 'there';
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://redleads.app';
+  const siteUrl = 'https://redleads.app'; // Fixed to production
   const logoUrl = `${siteUrl}/redleads-logo-white.png`;
 
   return (
@@ -17,7 +17,7 @@ export default function LeadAlertEmail({ fullName, leadTitle, subreddit, matchSc
       backgroundColor: '#050505',
       color: '#ffffff',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-      padding: '40px 20px',
+      padding: '40px 10px',
       lineHeight: '1.6'
     }}>
       <div style={{
@@ -30,8 +30,8 @@ export default function LeadAlertEmail({ fullName, leadTitle, subreddit, matchSc
         boxShadow: '0 20px 40px rgba(0,0,0,0.4)'
       }}>
         {/* Header */}
-        <div style={{ padding: '40px 40px 20px 40px', textAlign: 'center' }}>
-          <img src={logoUrl} alt="RedLeads Logo" style={{ height: '32px', marginBottom: '24px' }} />
+        <div style={{ padding: '40px 30px 20px 30px', textAlign: 'center' }}>
+          <img src={logoUrl} alt="RedLeads Logo" style={{ height: '28px', marginBottom: '24px' }} />
           <span style={{ 
             fontSize: '10px', 
             fontWeight: '900', 
@@ -44,7 +44,7 @@ export default function LeadAlertEmail({ fullName, leadTitle, subreddit, matchSc
             Instant Lead Alert
           </span>
           <h1 style={{ 
-            fontSize: '28px', 
+            fontSize: '24px', 
             fontWeight: '900', 
             letterSpacing: '-1px',
             margin: '0 0 12px 0',
@@ -54,46 +54,50 @@ export default function LeadAlertEmail({ fullName, leadTitle, subreddit, matchSc
             New Opportunity Found
           </h1>
           <p style={{ 
-            fontSize: '16px', 
+            fontSize: '14px', 
             color: '#888888', 
             margin: '0',
             fontWeight: '500'
           }}>
-            Hello ${firstName}, your scanner identified a high-intent conversation.
+            Hello {firstName}, your scanner identified a high-intent conversation.
           </p>
         </div>
 
         <div style={{ height: '1px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent)', margin: '0 40px' }}></div>
 
         {/* Lead Details */}
-        <div style={{ padding: '40px' }}>
+        <div style={{ padding: '30px 20px' }}>
           <div style={{ 
             backgroundColor: 'rgba(255,255,255,0.02)', 
-            padding: '32px', 
+            padding: '24px', 
             borderRadius: '20px', 
             border: '1px solid rgba(255,255,255,0.05)',
             marginBottom: '32px'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div style={{ marginBottom: '16px' }}>
               <span style={{ 
                 fontSize: '12px', 
                 fontWeight: 'bold', 
                 color: '#f25e36', 
-                textTransform: 'uppercase'
+                textTransform: 'uppercase',
+                marginRight: '12px'
               }}>
                 r/{subreddit}
               </span>
               <span style={{ 
                 fontSize: '11px', 
                 fontWeight: '900', 
-                color: matchScore >= 90 ? '#22c55e' : '#f25e36'
+                color: matchScore >= 90 ? '#22c55e' : '#f25e36',
+                backgroundColor: 'rgba(255,255,255,0.05)',
+                padding: '2px 8px',
+                borderRadius: '4px'
               }}>
                 🔥 {matchScore}% Match
               </span>
             </div>
             <h2 style={{ 
               color: '#ffffff', 
-              fontSize: '20px', 
+              fontSize: '18px', 
               fontWeight: '800', 
               margin: '0 0 16px 0',
               lineHeight: '1.4'
@@ -110,10 +114,10 @@ export default function LeadAlertEmail({ fullName, leadTitle, subreddit, matchSc
             padding: '24px',
             marginBottom: '32px'
           }}>
-            <h3 style={{ fontSize: '12px', fontWeight: '900', color: '#f25e36', textTransform: 'uppercase', letterSpacing: '2px', margin: '0 0 12px 0' }}>
+            <h3 style={{ fontSize: '11px', fontWeight: '900', color: '#f25e36', textTransform: 'uppercase', letterSpacing: '2px', margin: '0 0 12px 0' }}>
               Reddit Expert Tip
             </h3>
-            <p style={{ fontSize: '14px', color: '#ffffff', fontWeight: '500', margin: 0 }}>
+            <p style={{ fontSize: '14px', color: '#ffffff', fontWeight: '500', margin: 0, fontStyle: 'italic' }}>
               "Timing is everything. High-intent threads peak in the first 2 hours. Jump in now to secure the top comment spot."
             </p>
           </div>
@@ -123,11 +127,12 @@ export default function LeadAlertEmail({ fullName, leadTitle, subreddit, matchSc
               display: 'inline-block',
               backgroundColor: '#f25e36',
               color: '#ffffff',
-              padding: '16px 32px',
+              padding: '16px 40px',
               borderRadius: '12px',
               fontWeight: '900',
               textDecoration: 'none',
-              fontSize: '16px'
+              fontSize: '16px',
+              boxShadow: '0 10px 20px rgba(242, 94, 54, 0.2)'
             }}>
               View Lead Context
             </a>
@@ -136,15 +141,15 @@ export default function LeadAlertEmail({ fullName, leadTitle, subreddit, matchSc
 
         {/* Footer */}
         <div style={{ 
-            padding: '40px', 
+            padding: '40px 20px', 
             backgroundColor: '#0a0a0a', 
             borderTop: '1px solid rgba(255,255,255,0.05)',
             textAlign: 'center'
         }}>
-          <p style={{ fontSize: '13px', color: '#555555', margin: '0 0 12px 0' }}>
+          <p style={{ fontSize: '12px', color: '#555555', margin: '0 0 12px 0' }}>
             Need help? Reach out at <a href="mailto:Redleads.app@gmail.com" style={{ color: '#888888', textDecoration: 'underline' }}>Redleads.app@gmail.com</a>
           </p>
-          <p style={{ fontSize: '11px', color: '#333333', margin: '0' }}>
+          <p style={{ fontSize: '10px', color: '#333333', margin: '0' }}>
             Built for growth focus by <a href="https://x.com/timjayas" style={{ color: '#555555', textDecoration: 'none' }}>Tim Jayas</a>
           </p>
         </div>
@@ -156,7 +161,7 @@ export default function LeadAlertEmail({ fullName, leadTitle, subreddit, matchSc
         color: '#444444', 
         marginTop: '32px' 
       }}>
-        RedLeads.app — The scanner for your First 100 Leads. <br/>
+        RedLeads.app — Get your First 100 Leads on Reddit. <br/>
         You can adjust your alert frequency in your dashboard settings.
       </p>
     </div>

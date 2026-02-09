@@ -29,7 +29,7 @@ const merriweather = Merriweather({
 export const metadata: Metadata = {
   metadataBase: new URL('https://RedLeads.app'),
   title: "RedLeads - Reddit Lead Generation Tool | Find Customers on Reddit",
-  description: "Stop searching, start finding. RedLeads uses AI to scan Reddit for high-intent customers. Monitor subreddits, score leads with neural synthesis, and find users actively seeking your SaaS solution. The ultimate Reddit lead generation tool.",
+  description: "RedLeads uses AI to find high-intent customers on Reddit. Monitor subreddits, score leads, and find users actively seeking your SaaS solution.",
   icons: {
     icon: '/favicon.png',
     apple: '/apple-touch-icon.png',

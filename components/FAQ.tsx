@@ -29,7 +29,7 @@ const faqs = [
   },
   {
     question: "Can I cancel anytime?",
-    answer: "Absolutely. There are no contracts or lock-in periods. You can cancel your subscription at any time within 7 days.."
+    answer: "Absolutely. There are no contracts or lock-in periods. You can cancel your subscription at any time within 7 days."
   }
 ];
 
@@ -52,7 +52,7 @@ const FAQ = () => {
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
                 className="flex w-full items-center justify-between p-6 text-left hover:bg-[#282828] transition-colors"
               >
-                <span className="text-lg font-black text-white tracking-tight">{faq.question}</span>
+                <h3 className="text-lg font-black text-white tracking-tight">{faq.question}</h3>
                 <ChevronDown className={`h-5 w-5 text-gray-600 transition-transform ${openIndex === index ? 'rotate-180 text-orange-500' : ''}`} />
               </button>
               

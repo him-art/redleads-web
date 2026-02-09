@@ -23,25 +23,21 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        // 1. Save Profile
+        // 1. Save or Create Profile
         const { error: updateError } = await supabase
             .from('profiles')
-            .update({
+            .upsert({
+                id: user.id,
+                email: user.email,
                 description,
                 keywords,
                 onboarding_completed: true,
                 website_url: url
-            })
-            .eq('id', user.id);
+            });
 
         if (updateError) {
-            // Fallback: If onboarding_completed column doesn't exist yet, try without it
-            // (This handles the migration gap if I haven't run migration)
-            // But for now, I'll assume users rely on description check
-            await supabase
-                .from('profiles')
-                .update({ description, keywords })
-                .eq('id', user.id);
+            console.error('[Onboarding] Profile save error:', updateError);
+            throw new Error('Failed to save profile');
         }
 
         // 2. Trigger Initial Scan with a strict 15s timeout
