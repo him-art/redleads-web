@@ -35,7 +35,7 @@ export async function updateSession(request: NextRequest) {
   // refreshing the auth token
   const { data: { user } } = await supabase.auth.getUser()
   if (user) {
-    console.log('Middleware: User session found for', user.email);
+    console.log('Middleware: User session found');
   } else {
     console.log('Middleware: No active session');
   }
