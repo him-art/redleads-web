@@ -21,21 +21,48 @@ export async function POST(req: Request) {
         // 2. Fetch Profile for Subscription Tier and Generation Count
         const { data: profile } = await supabase
             .from('profiles')
-            .select('subscription_tier, reply_generation_count')
+            .select('subscription_tier, reply_generation_count, last_reply_at, created_at, trial_ends_at')
             .eq('id', user.id)
             .single();
 
         const tier = profile?.subscription_tier; // 'pro', 'scout', or null/free
-        const genCount = profile?.reply_generation_count || 0;
+        let genCount = profile?.reply_generation_count || 0;
+        const lastReplyAt = profile?.last_reply_at;
+
+        // --- Trial Expiration Check (Free Only) ---
+        const isPaid = tier === 'scout' || tier === 'pro';
+        if (!isPaid) {
+            const trialEndsAt = profile?.trial_ends_at 
+                ? new Date(profile.trial_ends_at) 
+                : (profile?.created_at ? new Date(new Date(profile.created_at).getTime() + 3 * 24 * 60 * 60 * 1000) : null);
+            
+            if (trialEndsAt && trialEndsAt < new Date()) {
+                return NextResponse.json({ 
+                    error: 'Trial expired', 
+                    message: 'Your 3-day free trial has ended. Please upgrade to a paid plan to continue using the Reply Generator.',
+                    code: 'PAYWALL_REQUIRED'
+                }, { status: 403 });
+            }
+        }
+
+        // --- Reset Logic (Monthly for Scout & Pro) ---
+        if (isPaid && lastReplyAt) {
+            const lastDate = new Date(lastReplyAt);
+            const now = new Date();
+            // Reset if different month or different year
+            if (lastDate.getMonth() !== now.getMonth() || lastDate.getFullYear() !== now.getFullYear()) {
+                genCount = 0;
+            }
+        }
 
         // 3. Define Limits (Generations: 1 post = 1 generation = 3 variants)
-        // Trial: 5 generations (15 replies)
-        // Scout: 34 generations (102 replies)
-        // Growth (pro): 170 generations (510 replies)
+        // Trial: 5 generations (Lifetime)
+        // Scout (Starter): 100 generations (Monthly)
+        // Growth (pro): 500 generations (Monthly)
         const limits: Record<string, number> = {
             'free': 5,
-            'scout': 34,
-            'pro': 170
+            'scout': 100,
+            'pro': 500
         };
 
         const currentTierKey = tier || 'free';
@@ -44,7 +71,7 @@ export async function POST(req: Request) {
         if (genCount >= limit) {
             return NextResponse.json({ 
                 error: 'Limit reached', 
-                message: `You have reached your limit of ${limit * 3} generated replies for the ${currentTierKey === 'free' ? 'Trial' : currentTierKey.charAt(0).toUpperCase() + currentTierKey.slice(1)} plan.` 
+                message: `You have reached your monthly limit of ${limit} generated replies for the ${currentTierKey === 'free' ? 'Trial' : currentTierKey.charAt(0).toUpperCase() + currentTierKey.slice(1)} plan.` 
             }, { status: 403 });
         }
 
@@ -106,10 +133,13 @@ export async function POST(req: Request) {
 
         const result = JSON.parse(aiResponse.choices[0]?.message?.content || '{}');
 
-        // 7. Increment Generation Count
+        // 7. Increment Generation Count and Update Timestamp
         await supabase
             .from('profiles')
-            .update({ reply_generation_count: genCount + 1 })
+            .update({ 
+                reply_generation_count: genCount + 1,
+                last_reply_at: new Date().toISOString()
+            })
             .eq('id', user.id);
 
         return NextResponse.json({

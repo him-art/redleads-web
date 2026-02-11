@@ -267,10 +267,10 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
                                                  <div className="flex items-center gap-1.5 sm:gap-2">
                                                     <button 
                                                         onClick={() => setDraftingLead(lead)}
-                                                        className="p-2 rounded-lg bg-orange-500/10 text-orange-500 hover:bg-orange-500 hover:text-black transition-all opacity-100 sm:opacity-0 group-hover:opacity-100 border border-orange-500/20"
-                                                        title="Draft AI Reply"
+                                                        className="p-2 rounded-lg bg-white/[0.03] border border-white/10 text-slate-400 hover:bg-orange-500 hover:text-black hover:border-orange-500 transition-all group/btn"
+                                                        title="Open Reply Generator"
                                                     >
-                                                        <MessageSquarePlus size={14} />
+                                                        <MessageSquarePlus size={14} className="text-orange-500 group-hover/btn:text-black" />
                                                     </button>
                                                     <button 
                                                         onClick={async () => {
@@ -285,7 +285,7 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
                                                                 alert('Failed to save lead.');
                                                             }
                                                         }}
-                                                        className={`p-2 rounded-lg transition-all opacity-100 sm:opacity-0 group-hover:opacity-100 ${
+                                                        className={`p-2 rounded-lg transition-all ${
                                                             lead.is_saved 
                                                                 ? 'opacity-100 bg-orange-500 text-white' 
                                                                 : 'bg-white/5 text-gray-500 hover:text-white hover:bg-orange-500/20'
@@ -312,7 +312,7 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
                                                                 alert('Failed to delete lead.');
                                                             }
                                                         }}
-                                                        className="p-2 rounded-lg bg-white/5 text-gray-500 hover:text-red-500 hover:bg-red-500/10 transition-all opacity-0 group-hover:opacity-100"
+                                                        className="p-2 rounded-lg bg-white/5 text-gray-500 hover:text-red-500 hover:bg-red-500/10 transition-all"
                                                         title="Delete Lead"
                                                     >
                                                         <Trash2 size={14} />
@@ -322,7 +322,7 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
                                                         href={lead.url} 
                                                         target="_blank" 
                                                         rel="noopener noreferrer"
-                                                        className="p-2 rounded-lg bg-white/5 text-gray-500 hover:text-white hover:bg-orange-500 transition-all opacity-0 group-hover:opacity-100"
+                                                        className="p-2 rounded-lg bg-white/5 text-gray-500 hover:text-white hover:bg-orange-500 transition-all"
                                                         title="View on Reddit"
                                                     >
                                                         <ExternalLink size={14} />

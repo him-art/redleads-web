@@ -150,14 +150,15 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
                                             {lead.title}
                                         </a>
 
-                                        <div className="flex items-center gap-1.5 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-all duration-300 pt-1">
+                                        <div className="flex items-center gap-1.5 transition-all duration-300 pt-1">
                                             {/* ACTION: DRAFT REPLY */}
                                             <button
                                                 onClick={() => setDraftingLead(lead)}
-                                                className="px-3 py-1.5 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-500 text-[10px] font-black uppercase tracking-wider hover:bg-orange-500 hover:text-black transition-all flex items-center gap-1.5"
+                                                className="px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/10 text-slate-400 text-[10px] font-black uppercase tracking-wider hover:bg-orange-500 hover:text-black hover:border-orange-500 transition-all flex items-center gap-1.5 group/btn"
+                                                title="Open Reply Generator"
                                             >
-                                                <MessageSquarePlus size={12} />
-                                                Draft Reply
+                                                <MessageSquarePlus size={12} className="text-orange-500 group-hover:text-black" />
+                                                Draft
                                             </button>
 
                                             <button 

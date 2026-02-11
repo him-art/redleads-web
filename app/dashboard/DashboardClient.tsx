@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Archive, Sliders, ShieldCheck, Navigation, Layout, Search, Menu, X, Sparkles, Clock, AlertTriangle, Zap, Loader2, GraduationCap } from 'lucide-react';
+import { Archive, Sliders, ShieldCheck, Navigation, Layout, Search, Menu, X, Sparkles, Clock, AlertTriangle, Zap, Loader2, GraduationCap, Lock } from 'lucide-react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
@@ -24,7 +24,6 @@ interface DashboardClientProps {
 export default function DashboardClient({ profile, reports, user, initialSearch = '' }: DashboardClientProps) {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<'reports' | 'live' | 'settings' | 'billing' | 'roadmap'>(initialSearch ? 'live' : 'live'); 
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     
     // Check onboarding status
     const hasCompletedOnboarding = profile?.onboarding_completed || (profile?.description && profile?.keywords?.length > 0);
@@ -33,21 +32,11 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
     const [isMounted, setIsMounted] = useState(false);
     useEffect(() => { setIsMounted(true); }, []);
 
-    // Prevent ANY rendering until mounted to ensure 100% hydration sync on mobile
-    if (!isMounted) {
-        return (
-            <div className="flex items-center justify-center min-h-[calc(100vh-12rem)]">
-                <Loader2 className="animate-spin text-orange-500" size={40} />
-            </div>
-        );
-    }
-
-    // Trial expiration check - ONLY RUNS ON CLIENT NOW
+    // Trial expiration check - Moved up to use for initialization
     const isPro = profile?.subscription_tier === 'pro' || profile?.effective_tier === 'pro';
     const isScout = profile?.subscription_tier === 'scout' || profile?.effective_tier === 'scout' || isPro;
     const isAdmin = profile?.is_admin === true || user?.email === 'hjayaswar@gmail.com';
     
-    // Explicitly use trial_ends_at or fallback to created_at + 3 days
     const trialEndsAtString = profile?.trial_ends_at || (profile?.created_at ? (() => {
         const d = new Date(profile.created_at);
         if (isNaN(d.getTime())) return null;
@@ -55,7 +44,6 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
         return ends.toISOString();
     })() : null);
     const trialEndsAt = trialEndsAtString ? new Date(trialEndsAtString) : null;
-    
     const now = new Date();
     const trialExpired = trialEndsAt ? (trialEndsAt.getTime() <= now.getTime()) : false;
     const daysRemaining = (() => {
@@ -67,9 +55,15 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
             return 0;
         }
     })();
-    
-    // Final status override
     const isActuallyExpired = !isScout && !isAdmin && (trialExpired || (trialEndsAt && daysRemaining <= 0));
+
+    // Force Billing tab if expired on mount
+    useEffect(() => {
+        if (isActuallyExpired && activeTab !== 'billing') {
+            setActiveTab('billing');
+        }
+    }, [isActuallyExpired]);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const showPaywall = isActuallyExpired && !isScout && !isAdmin;
 
     const handleCheckout = async (plan: 'scout' | 'pro' | 'professional' = 'pro') => {
@@ -87,12 +81,21 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
     };
 
     const tabs = [
-        { id: 'live', label: 'Command Center', icon: Navigation },
-        { id: 'roadmap', label: 'Academy (Beta)', icon: GraduationCap }, // [NEW] - Placed second for visibility
-        { id: 'reports', label: 'Leads Archive', icon: Archive },
-        { id: 'settings', label: 'Tracking Setup', icon: Sliders },
-        { id: 'billing', label: 'Billing & Plan', icon: ShieldCheck },
+        { id: 'live', label: 'Command Center', icon: Navigation, protected: true },
+        { id: 'roadmap', label: 'Academy (Beta)', icon: GraduationCap, protected: true },
+        { id: 'reports', label: 'Leads Archive', icon: Archive, protected: true },
+        { id: 'settings', label: 'Tracking Setup', icon: Sliders, protected: true },
+        { id: 'billing', label: 'Billing & Plan', icon: ShieldCheck, protected: false },
     ];
+
+    // Prevent ANY rendering until mounted to ensure 100% hydration sync on mobile
+    if (!isMounted) {
+        return (
+            <div className="flex items-center justify-center min-h-[calc(100vh-12rem)]">
+                <Loader2 className="animate-spin text-orange-500" size={40} />
+            </div>
+        );
+    }
 
     return (
         <>
@@ -108,7 +111,8 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                     }} 
                 />
             )}
-            {showPaywall && !showOnboarding && <PaywallModal onCheckout={handleCheckout} />}
+            {/* PaywallModal only shows if trial is expired and they aren't on billing yet */}
+            {showPaywall && !showOnboarding && activeTab !== 'billing' && <PaywallModal onCheckout={handleCheckout} />}
             
             {/* Main Layout Container - Full Dark Theme */}
             <div className="flex h-screen bg-[#050505] text-white overflow-hidden font-sans selection:bg-orange-500/30">
@@ -172,26 +176,34 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                         {tabs.map((tab) => {
                             const Icon = tab.icon;
                             const isActive = activeTab === tab.id;
+                            const isLocked = isActuallyExpired && tab.protected;
+
                             return (
                                 <button
                                     key={tab.id}
                                     onClick={() => {
+                                        if (isLocked) return;
                                         setActiveTab(tab.id as any);
                                         setIsMobileMenuOpen(false);
                                     }}
                                     className={`relative w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 group overflow-hidden ${
-                                        isActive 
-                                            ? 'bg-white/[0.05] text-white shadow-inner' 
-                                            : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]'
+                                        isLocked
+                                            ? 'opacity-40 cursor-not-allowed grayscale'
+                                            : isActive 
+                                                ? 'bg-white/[0.05] text-white shadow-inner' 
+                                                : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]'
                                     }`}
                                 >
-                                    {isActive && (
+                                    {isActive && !isLocked && (
                                         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-orange-500 rounded-r-full" />
                                     )}
-                                    <Icon size={18} className={`relative z-10 transition-colors ${isActive ? 'text-orange-500' : 'group-hover:text-gray-300'}`} />
-                                    <span className={`relative z-10 text-sm font-medium tracking-wide ${isActive ? 'text-white' : ''}`}>
+                                    <Icon size={18} className={`relative z-10 transition-colors ${isLocked ? 'text-gray-600' : isActive ? 'text-orange-500' : 'group-hover:text-gray-300'}`} />
+                                    <span className={`relative z-10 text-sm font-medium tracking-wide ${isActive && !isLocked ? 'text-white' : ''}`}>
                                         {tab.label}
                                     </span>
+                                    {isLocked && (
+                                        <Lock size={12} className="ml-auto text-gray-700" />
+                                    )}
                                 </button>
                             );
                         })}

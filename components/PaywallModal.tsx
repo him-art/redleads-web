@@ -49,13 +49,13 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                             </div>
                             <ul className="space-y-4 mb-10 flex-grow">
                                 <li className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-3">
-                                    <Globe size={12} className="text-orange-500/50" /> 2 website power scan per day tracking
+                                    <Globe size={12} className="text-orange-500/50" /> 2 website power scan per day
                                 </li>
                                 <li className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-3">
-                                    <Search size={12} className="text-orange-500/50" /> 10 Active Keywords
+                                    <Search size={12} className="text-orange-500/50" /> 5 Tracked Keywords
                                 </li>
                                 <li className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-3">
-                                    <Bot size={12} className="text-gray-700" /> Unlimited AI replies <span className="text-[7px] bg-[#1a1a1a] px-1 rounded border border-white/5">Soon</span>
+                                    <Bot size={12} className="text-orange-500/50" /> 100 AI Outreach Drafts /mo
                                 </li>
                                 <li className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-3">
                                     <Mail size={12} className="text-gray-700" /> 30 daily auto DMs <span className="text-[7px] bg-[#1a1a1a] px-1 rounded border border-white/5">Soon</span>
@@ -81,13 +81,13 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                             </div>
                             <ul className="space-y-4 mb-10 flex-grow">
                                 <li className="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-3">
-                                    <Globe size={12} className="text-orange-500" /> 3 Website tracking
+                                    <Globe size={12} className="text-orange-500" /> 5 website power scan per day
                                 </li>
                                 <li className="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-3">
-                                    <Search size={12} className="text-orange-500" /> 30 Active Keywords
+                                    <Search size={12} className="text-orange-500" /> 15 Tracked Keywords
                                 </li>
                                 <li className="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-3">
-                                    <Bot size={12} className="text-orange-500/50" /> Unlimited AI replies <span className="text-[7px] bg-[#1a1a1a] px-1 rounded border border-orange-500/20">Soon</span>
+                                    <Bot size={12} className="text-orange-500" /> 500 AI Outreach Drafts /mo
                                 </li>
                                 <li className="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-3">
                                     <Mail size={12} className="text-orange-500/50" /> 100 daily auto DMs <span className="text-[7px] bg-[#1a1a1a] px-1 rounded border border-orange-500/20">Soon</span>
