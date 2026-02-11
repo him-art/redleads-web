@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Calendar, ChevronDown, ExternalLink, Clock, Radar, Bookmark, Trash2, Brain, Sparkles } from 'lucide-react';
+import { Calendar, ChevronDown, ExternalLink, Clock, Radar, Bookmark, Trash2, Brain, Sparkles, MessageSquarePlus } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import ReplyModal from '@/components/dashboard/ReplyModal';
 
 interface MonitoredLead {
     id: string;
@@ -28,6 +29,7 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
     const [historyLeads, setHistoryLeads] = useState<MonitoredLead[]>([]);
     const [leadAnalyses, setLeadAnalyses] = useState<LeadAnalysis[]>([]);
     const [expandedDay, setExpandedDay] = useState<string | null>(null);
+    const [draftingLead, setDraftingLead] = useState<MonitoredLead | null>(null);
     const [isMounted, setIsMounted] = useState(false);
     useEffect(() => { setIsMounted(true); }, []);
 
@@ -107,6 +109,11 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
 
     return (
         <div className="space-y-6 sm:space-y-8">
+            <ReplyModal 
+                lead={draftingLead} 
+                productContext={profile?.description || ''} 
+                onClose={() => setDraftingLead(null)} 
+            />
             {/* Header */}
             <div className="flex items-center justify-between pb-4">
                 <h2 className="text-xs font-black uppercase tracking-[0.2em] text-orange-500">
@@ -258,6 +265,13 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
                                                     </a>
                                                 </div>
                                                  <div className="flex items-center gap-1.5 sm:gap-2">
+                                                    <button 
+                                                        onClick={() => setDraftingLead(lead)}
+                                                        className="p-2 rounded-lg bg-orange-500/10 text-orange-500 hover:bg-orange-500 hover:text-black transition-all opacity-100 sm:opacity-0 group-hover:opacity-100 border border-orange-500/20"
+                                                        title="Draft AI Reply"
+                                                    >
+                                                        <MessageSquarePlus size={14} />
+                                                    </button>
                                                     <button 
                                                         onClick={async () => {
                                                             const newStatus = !lead.is_saved;

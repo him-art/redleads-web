@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Globe, Search, Compass, ExternalLink, Lock, Loader2, ChevronDown, Activity } from 'lucide-react';
+import { Globe, Search, Compass, ExternalLink, Lock, Loader2, ChevronDown, Activity, MessageSquarePlus } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { type User as SupabaseUser } from '@supabase/supabase-js';
+import ReplyModal from './dashboard/ReplyModal';
 
 interface RedditLead {
     subreddit: string;
@@ -30,10 +31,21 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
     const [results, setResults] = useState<RedditLead[]>([]);
     const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
     const [teaserInfo, setTeaserInfo] = useState<{ isTeaser: boolean, totalFound: number } | null>(null);
+    const [draftingLead, setDraftingLead] = useState<any | null>(null);
+    const [productContext, setProductContext] = useState('');
     const supabase = createClient();
     const router = useRouter();
     const searchParams = useSearchParams();
     const hasAutoScanned = useRef(false);
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            if (!user?.id) return;
+            const { data } = await supabase.from('profiles').select('description').eq('id', user.id).single();
+            if (data) setProductContext(data.description);
+        };
+        fetchProfile();
+    }, [user?.id]);
 
     // Auto-scan if initialUrl is provided
     useEffect(() => {
@@ -246,6 +258,11 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                     animate={{ opacity: 1, y: 0 }} 
                     className="mt-8 sm:mt-16 space-y-8 sm:space-y-12"
                 >
+                    <ReplyModal 
+                        lead={draftingLead} 
+                        productContext={productContext} 
+                        onClose={() => setDraftingLead(null)} 
+                    />
                     <div className="flex items-center justify-between px-2">
                         <div className="space-y-1">
                             <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
@@ -300,6 +317,17 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                                                         }`}>
                                                                             {lead.relevance} Match
                                                                         </span>
+                                                                        <button 
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault();
+                                                                                e.stopPropagation();
+                                                                                setDraftingLead(lead);
+                                                                            }}
+                                                                            className="ml-2 p-1.5 rounded-lg bg-orange-500/10 text-orange-500 hover:bg-orange-500 hover:text-black transition-all border border-orange-500/20 group/btn"
+                                                                            title="Draft AI Reply"
+                                                                        >
+                                                                            <MessageSquarePlus size={12} className="group-hover/btn:scale-110 transition-transform" />
+                                                                        </button>
                                                                     </div>
                                                                     <ExternalLink size={12} className="text-gray-600 group-hover:text-white transition-colors" />
                                                                 </div>

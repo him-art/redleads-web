@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
-import { ai } from '@/lib/ai';
+import { AIManager } from '@/lib/ai';
 import { createClient } from '@/lib/supabase/server';
+
+// Forced use of AI_API_KEY_2 for this specific feature as requested
+const replyAi = new AIManager([process.env.AI_API_KEY_2].filter(Boolean) as string[]);
 
 export async function POST(req: Request) {
     try {
@@ -15,7 +18,37 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        // 3. Get User Progress (To adjust AI Safe Levels)
+        // 2. Fetch Profile for Subscription Tier and Generation Count
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('subscription_tier, reply_generation_count')
+            .eq('id', user.id)
+            .single();
+
+        const tier = profile?.subscription_tier; // 'pro', 'scout', or null/free
+        const genCount = profile?.reply_generation_count || 0;
+
+        // 3. Define Limits (Generations: 1 post = 1 generation = 3 variants)
+        // Trial: 5 generations (15 replies)
+        // Scout: 34 generations (102 replies)
+        // Growth (pro): 170 generations (510 replies)
+        const limits: Record<string, number> = {
+            'free': 5,
+            'scout': 34,
+            'pro': 170
+        };
+
+        const currentTierKey = tier || 'free';
+        const limit = limits[currentTierKey] || limits.free;
+
+        if (genCount >= limit) {
+            return NextResponse.json({ 
+                error: 'Limit reached', 
+                message: `You have reached your limit of ${limit * 3} generated replies for the ${currentTierKey === 'free' ? 'Trial' : currentTierKey.charAt(0).toUpperCase() + currentTierKey.slice(1)} plan.` 
+            }, { status: 403 });
+        }
+
+        // 4. Get User Progress (To adjust AI Safe Levels)
         const { count: contactedCount } = await supabase
             .from('monitored_leads')
             .select('*', { count: 'exact', head: true })
@@ -24,7 +57,7 @@ export async function POST(req: Request) {
 
         const level = (contactedCount || 0) < 15 ? 1 : (contactedCount || 0) < 50 ? 2 : 3;
 
-        // 4. Construct Expert Prompt
+        // 5. Construct Expert Prompt
         const prompt = `
             You are an expert Reddit growth marketer and copywriter.
             Your goal is to write authentic, helpful, and non-spammy replies to Reddit posts that subtly introduce a product.
@@ -63,8 +96,8 @@ export async function POST(req: Request) {
             }
         `;
 
-        // 5. Call AI
-        const aiResponse = await ai.call({
+        // 6. Call AI (Using AI_API_KEY_2)
+        const aiResponse = await replyAi.call({
             model: "llama-3.3-70b-versatile",
             messages: [{ role: "user", content: prompt }],
             response_format: { type: "json_object" },
@@ -73,7 +106,17 @@ export async function POST(req: Request) {
 
         const result = JSON.parse(aiResponse.choices[0]?.message?.content || '{}');
 
-        return NextResponse.json(result);
+        // 7. Increment Generation Count
+        await supabase
+            .from('profiles')
+            .update({ reply_generation_count: genCount + 1 })
+            .eq('id', user.id);
+
+        return NextResponse.json({
+            ...result,
+            remaining: limit - (genCount + 1),
+            total_limit: limit
+        });
 
     } catch (error: any) {
         console.error('[Draft Reply API]', error);
