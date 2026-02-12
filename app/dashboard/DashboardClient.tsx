@@ -12,6 +12,7 @@ import LiveDiscoveryTab from './LiveDiscoveryTab';
 import PaywallModal from '@/components/PaywallModal';
 import OnboardingWizard from './OnboardingWizard';
 import RoadmapTab from './RoadmapTab'; // [NEW]
+import { DashboardDataProvider } from '@/app/dashboard/DashboardDataContext';
 import { useRouter } from 'next/navigation';
 
 interface DashboardClientProps {
@@ -82,7 +83,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
 
     const tabs = [
         { id: 'live', label: 'Command Center', icon: Navigation, protected: true },
-        { id: 'roadmap', label: 'Academy (Beta)', icon: GraduationCap, protected: true },
+        { id: 'roadmap', label: 'Roadmap (Beta)', icon: GraduationCap, protected: true },
         { id: 'reports', label: 'Leads Archive', icon: Archive, protected: true },
         { id: 'settings', label: 'Tracking Setup', icon: Sliders, protected: true },
         { id: 'billing', label: 'Billing & Plan', icon: ShieldCheck, protected: false },
@@ -114,7 +115,8 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
             {/* PaywallModal only shows if trial is expired and they aren't on billing yet */}
             {showPaywall && !showOnboarding && activeTab !== 'billing' && <PaywallModal onCheckout={handleCheckout} />}
             
-            {/* Main Layout Container - Full Dark Theme */}
+            <DashboardDataProvider userId={user.id}>
+                {/* Main Layout Container - Full Dark Theme */}
             <div className="flex h-screen bg-[#050505] text-white overflow-hidden font-sans selection:bg-orange-500/30">
                 
                 {/* Mobile Header Toggle */}
@@ -237,21 +239,60 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                 {/* Content Wrapper limit width */}
                                 <div className="max-w-6xl mx-auto space-y-10 mt-16 lg:mt-0">
                                     
-                                    {/* Dynamic Tab Content */}
+                                    {/* Dynamic Tab Content - Hidden but mounted for caching */}
                                     <AnimatePresence mode="wait">
-                                        <motion.div
-                                            key={activeTab}
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 0, y: -10 }}
-                                            transition={{ duration: 0.2 }}
-                                        >
-                                            {activeTab === 'reports' && <ReportsTab reports={reports} profile={profile} user={user} isPro={isPro} isAdmin={isAdmin} />}
-                                            {activeTab === 'live' && <LiveDiscoveryTab user={user} profile={profile} isPro={isPro} isScout={isScout} isAdmin={isAdmin} initialSearch={initialSearch} onNavigate={(tab) => setActiveTab(tab as any)} />}
-                                            {activeTab === 'roadmap' && <RoadmapTab user={user} onNavigate={(tab) => setActiveTab(tab as any)} />} 
-                                            {activeTab === 'settings' && <SettingsTab profile={profile} user={user} />}
-                                            {activeTab === 'billing' && <BillingTab profile={profile} isPro={isPro} isAdmin={isAdmin} />}
-                                        </motion.div>
+                                        <div className="relative">
+                                            {/* Live & Archive share common data */}
+                                            <div style={{ display: activeTab === 'live' ? 'block' : 'none' }}>
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{ duration: 0.2 }}
+                                                >
+                                                    <LiveDiscoveryTab user={user} profile={profile} isPro={isPro} isScout={isScout} isAdmin={isAdmin} initialSearch={initialSearch} onNavigate={(tab) => setActiveTab(tab as any)} />
+                                                </motion.div>
+                                            </div>
+
+                                            <div style={{ display: activeTab === 'reports' ? 'block' : 'none' }}>
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{ duration: 0.2 }}
+                                                >
+                                                    <ReportsTab reports={reports} profile={profile} user={user} isPro={isPro} isAdmin={isAdmin} />
+                                                </motion.div>
+                                            </div>
+
+                                            <div style={{ display: activeTab === 'roadmap' ? 'block' : 'none' }}>
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{ duration: 0.2 }}
+                                                >
+                                                    <RoadmapTab user={user} onNavigate={(tab) => setActiveTab(tab as any)} />
+                                                </motion.div>
+                                            </div>
+
+                                            <div style={{ display: activeTab === 'settings' ? 'block' : 'none' }}>
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{ duration: 0.2 }}
+                                                >
+                                                    <SettingsTab profile={profile} user={user} />
+                                                </motion.div>
+                                            </div>
+
+                                            <div style={{ display: activeTab === 'billing' ? 'block' : 'none' }}>
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{ duration: 0.2 }}
+                                                >
+                                                    <BillingTab profile={profile} isPro={isPro} isAdmin={isAdmin} />
+                                                </motion.div>
+                                            </div>
+                                        </div>
                                     </AnimatePresence>
                                 </div>
                             </div>
@@ -260,6 +301,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                 </main>
 
             </div>
+            </DashboardDataProvider>
         </>
     );
 }

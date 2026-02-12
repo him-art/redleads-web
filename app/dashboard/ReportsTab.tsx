@@ -1,9 +1,8 @@
-'use client';
-
 import { useState, useEffect } from 'react';
 import { Calendar, ChevronDown, ExternalLink, Clock, Radar, Bookmark, Trash2, Brain, Sparkles, MessageSquarePlus } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import ReplyModal from '@/components/dashboard/ReplyModal';
+import { useDashboardData } from '@/app/dashboard/DashboardDataContext';
 
 interface MonitoredLead {
     id: string;
@@ -25,9 +24,8 @@ interface LeadAnalysis {
 }
 
 export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: { reports: any[], profile: any, user: any, isPro: boolean, isAdmin: boolean }) {
+    const { leads: historyLeads, analyses: leadAnalyses, isLoading: isDataLoading, updateLead, deleteLead } = useDashboardData();
     const [filter, setFilter] = useState<'all' | 'saved'>('all');
-    const [historyLeads, setHistoryLeads] = useState<MonitoredLead[]>([]);
-    const [leadAnalyses, setLeadAnalyses] = useState<LeadAnalysis[]>([]);
     const [expandedDay, setExpandedDay] = useState<string | null>(null);
     const [draftingLead, setDraftingLead] = useState<MonitoredLead | null>(null);
     const [isMounted, setIsMounted] = useState(false);
@@ -37,38 +35,13 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
     
     const hasConfig = (profile?.keywords?.length > 0);
 
-    useEffect(() => {
-        const fetchHistory = async () => {
-            const { data, error } = await supabase
-                .from('monitored_leads')
-                .select('*')
-                .eq('user_id', user.id)
-                .order('created_at', { ascending: false })
-                .range(0, 1000);
-            
-            if (error) {
-                console.error("ReportsTab Fetch Error:", error);
-            }
-            
-            if (data) setHistoryLeads(data);
-        };
-
-        const fetchAnalyses = async () => {
-            const { data } = await supabase
-                .from('lead_analyses')
-                .select('*')
-                .eq('user_id', user.id)
-                .order('created_at', { ascending: false })
-                .limit(5);
-            
-            if (data) setLeadAnalyses(data);
-        };
-        
-        if (user?.id) {
-            fetchHistory();
-            fetchAnalyses();
-        }
-    }, [profile, user, supabase]);
+    if (isDataLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center py-24 space-y-6">
+                 <div className="w-12 h-12 border border-orange-500/10 border-t-orange-500 rounded-full animate-spin" />
+            </div>
+        );
+    }
 
     // Filter and Group leads by date
     let filteredLeads: MonitoredLead[] = [];
@@ -77,9 +50,9 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
         filteredLeads = historyLeads.slice(20);
     } else {
         // Show ALL saved leads (even if recent)
-        filteredLeads = historyLeads.filter(l => l.is_saved);
+        filteredLeads = historyLeads.filter((l: MonitoredLead) => l.is_saved);
     }
-    const groupedLeads = filteredLeads.reduce((groups, lead) => {
+    const groupedLeads = filteredLeads.reduce((groups, lead: MonitoredLead) => {
         const date = (() => {
             try {
                 if (!isMounted) return 'Loading date...';
@@ -166,7 +139,7 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
                             <h3 className="text-[10px] font-black uppercase tracking-widest text-gray-500">High-Intent Intelligence</h3>
                         </div>
                         <div className="grid grid-cols-1 gap-4">
-                            {leadAnalyses.map((analysis) => (
+                            {leadAnalyses.map((analysis: LeadAnalysis) => (
                                 <div key={analysis.id} className="relative overflow-hidden bg-white/[0.02] border border-white/10 rounded-3xl p-6 group transition-all hover:border-orange-500/30">
                                     <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-10 transition-opacity">
                                         <Brain size={80} className="text-white" />
@@ -275,13 +248,10 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
                                                     <button 
                                                         onClick={async () => {
                                                             const newStatus = !lead.is_saved;
-                                                            // Optimistic UI update
-                                                            setHistoryLeads(prev => prev.map(l => l.id === lead.id ? { ...l, is_saved: newStatus } : l));
-                                                            const { error } = await supabase.from('monitored_leads').update({ is_saved: newStatus }).eq('id', lead.id);
-                                                            if (error) {
+                                                            try {
+                                                                await updateLead(lead.id, { is_saved: newStatus });
+                                                            } catch (error) {
                                                                 console.error('Error saving lead:', error);
-                                                                // Revert optimistic update
-                                                                setHistoryLeads(prev => prev.map(l => l.id === lead.id ? { ...l, is_saved: !newStatus } : l));
                                                                 alert('Failed to save lead.');
                                                             }
                                                         }}
@@ -299,15 +269,9 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
                                                         onClick={async () => {
                                                             if (!confirm('Permanently delete this lead from history?')) return;
                                                             
-                                                            // Optimistic UI update
-                                                            setHistoryLeads(prev => prev.filter(l => l.id !== lead.id));
-                                                            
-                                                            const { error } = await supabase
-                                                                .from('monitored_leads')
-                                                                .delete()
-                                                                .eq('id', lead.id);
-                                                                
-                                                            if (error) {
+                                                            try {
+                                                                await deleteLead(lead.id);
+                                                            } catch (error) {
                                                                 console.error('Error deleting lead:', error);
                                                                 alert('Failed to delete lead.');
                                                             }

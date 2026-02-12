@@ -52,7 +52,7 @@ const Pricing = () => {
                     { name: 'Daily Email notifications', icon: <Mail size={14} /> }
                 ],
                 engage: [
-                    { name: '100 AI Outreach Drafts /mo', icon: <Bot size={14} /> },
+                    { name: '100 AI Replies /mo', icon: <Bot size={14} /> },
                     { name: '30 daily auto DMs', icon: <MessageSquare size={14} />, soon: true }
                 ]
             }
@@ -71,7 +71,7 @@ const Pricing = () => {
                     { name: 'Daily Email notifications', icon: <Mail size={14} /> }
                 ],
                 engage: [
-                    { name: '500 AI Outreach Drafts /mo', icon: <Bot size={14} /> },
+                    { name: '500 AI Replies /mo', icon: <Bot size={14} /> },
                     { name: '100 daily auto DMs', icon: <MessageSquare size={14} />, soon: true }
                 ]
             }

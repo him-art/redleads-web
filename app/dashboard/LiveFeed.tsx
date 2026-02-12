@@ -3,22 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Activity, ExternalLink, Clock, Navigation, Bookmark, ChevronRight, MessageSquarePlus } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import ReplyModal from '@/components/dashboard/ReplyModal';
-
-interface MonitoredLead {
-    id: string;
-    title: string;
-    subreddit: string;
-    url: string;
-    status: string;
-    match_score: number;
-    created_at: string;
-    is_saved?: boolean;
-    match_category?: string;
-}
+import { useDashboardData, MonitoredLead } from '@/app/dashboard/DashboardDataContext';
 
 export default function LiveFeed({ userId, onViewArchive }: { userId: string, onViewArchive: () => void }) {
+    const { leads: allLeads, isLoading: isDataLoading } = useDashboardData();
     const [leads, setLeads] = useState<MonitoredLead[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
     const [isMounted, setIsMounted] = useState(false);
     
     // Draft Modal State
@@ -29,51 +18,19 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
 
     useEffect(() => {
         setIsMounted(true);
-        const fetchLeads = async () => {
-            const { data, error } = await supabase
-                .from('monitored_leads')
-                .select('*')
-                .eq('user_id', userId)
-                .order('created_at', { ascending: false })
-                .limit(20);
+        // Map top 20 leads from context
+        setLeads(allLeads.slice(0, 20));
+    }, [allLeads]);
 
-            if (!error && data) {
-                setLeads(data);
-            }
-            setIsLoading(false);
-        };
-
+    useEffect(() => {
         const fetchProfile = async () => {
             const { data } = await supabase.from('profiles').select('description').eq('id', userId).single();
             if (data) setProductContext(data.description);
         };
-
-        fetchLeads();
         fetchProfile();
-
-        const channel = supabase
-            .channel('live-leads')
-            .on(
-                'postgres_changes',
-                {
-                    event: 'INSERT',
-                    schema: 'public',
-                    table: 'monitored_leads',
-                    filter: `user_id=eq.${userId}`
-                },
-                (payload) => {
-                    const newLead = payload.new as MonitoredLead;
-                    setLeads((prev) => [newLead, ...prev].slice(0, 20));
-                }
-            )
-            .subscribe();
-
-        return () => {
-            supabase.removeChannel(channel);
-        };
     }, [userId, supabase]);
 
-    if (isLoading) {
+    if (isDataLoading) {
         return (
             <div className="flex flex-col items-center justify-center py-24 space-y-6">
                 <div className="relative">
