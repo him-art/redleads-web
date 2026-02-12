@@ -78,7 +78,7 @@ export function DashboardDataProvider({ children, userId }: { children: React.Re
         if (!error && data) setLeads(data);
     }, [userId]);
 
-    const updateLead = async (id: string, updates: any) => {
+    const updateLead = useCallback(async (id: string, updates: any) => {
         // Optimistic update
         setLeads(prev => prev.map(l => l.id === id ? { ...l, ...updates } : l));
         const { error } = await supabase.from('monitored_leads').update(updates).eq('id', id);
@@ -87,9 +87,9 @@ export function DashboardDataProvider({ children, userId }: { children: React.Re
             fetchLeads();
             throw error;
         }
-    };
+    }, [supabase, fetchLeads]);
 
-    const deleteLead = async (id: string) => {
+    const deleteLead = useCallback(async (id: string) => {
         // Optimistic update
         setLeads(prev => prev.filter(l => l.id !== id));
         const { error } = await supabase.from('monitored_leads').delete().eq('id', id);
@@ -97,7 +97,7 @@ export function DashboardDataProvider({ children, userId }: { children: React.Re
             fetchLeads();
             throw error;
         }
-    };
+    }, [supabase, fetchLeads]);
 
     const fetchRoadmap = useCallback(async () => {
         if (!userId) return;
@@ -145,18 +145,20 @@ export function DashboardDataProvider({ children, userId }: { children: React.Re
         };
     }, [userId, fetchLeads, fetchRoadmap, fetchAnalyses]);
 
+    const value = React.useMemo(() => ({
+          leads,
+          roadmapNodes,
+          roadmapProgress,
+          analyses,
+          isLoading,
+          refreshLeads: fetchLeads,
+          refreshRoadmap: fetchRoadmap,
+          updateLead,
+          deleteLead
+      }), [leads, roadmapNodes, roadmapProgress, analyses, isLoading, fetchLeads, fetchRoadmap, updateLead, deleteLead]);
+
     return (
-        <DashboardDataContext.Provider value={{
-            leads,
-            roadmapNodes,
-            roadmapProgress,
-            analyses,
-            isLoading,
-            refreshLeads: fetchLeads,
-            refreshRoadmap: fetchRoadmap,
-            updateLead,
-            deleteLead
-        }}>
+        <DashboardDataContext.Provider value={value}>
             {children}
         </DashboardDataContext.Provider>
     );

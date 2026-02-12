@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Calendar, ChevronDown, ExternalLink, Clock, Radar, Bookmark, Trash2, Brain, Sparkles, MessageSquarePlus } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import ReplyModal from '@/components/dashboard/ReplyModal';
@@ -12,7 +12,7 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
     const [isMounted, setIsMounted] = useState(false);
     useEffect(() => { setIsMounted(true); }, []);
 
-    const supabase = createClient();
+    const supabase = useMemo(() => createClient(), []);
     
     const hasConfig = (profile?.keywords?.length > 0);
 
@@ -55,11 +55,13 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
     }, {} as Record<string, MonitoredLead[]>);
 
     // Auto-expand the first day ONLY on initial load
+    // NOTE: Do NOT put groupedLeads in deps — it's a new object every render and will cause an infinite loop
     useEffect(() => {
         if (Object.keys(groupedLeads).length > 0 && !expandedDay) {
             setExpandedDay(Object.keys(groupedLeads)[0]);
         }
-    }, [historyLeads.length, groupedLeads, expandedDay]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [historyLeads.length, filter]);
 
     return (
         <div className="space-y-6 sm:space-y-8">

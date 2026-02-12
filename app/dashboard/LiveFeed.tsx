@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Activity, ExternalLink, Clock, Navigation, Bookmark, ChevronRight, MessageSquarePlus } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
@@ -14,7 +14,7 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
     const [draftingLead, setDraftingLead] = useState<MonitoredLead | null>(null);
     const [productContext, setProductContext] = useState('');
 
-    const supabase = createClient();
+    const supabase = useMemo(() => createClient(), []);
 
     useEffect(() => {
         setIsMounted(true);
@@ -28,7 +28,7 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
             if (data) setProductContext(data.description);
         };
         fetchProfile();
-    }, [userId, supabase]);
+    }, [userId]);
 
     if (isDataLoading) {
         return (

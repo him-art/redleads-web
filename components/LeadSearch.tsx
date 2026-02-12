@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Globe, Search, Compass, ExternalLink, Lock, Loader2, ChevronDown, Activity, MessageSquarePlus } from 'lucide-react';
 import Link from 'next/link';
@@ -33,7 +33,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
     const [teaserInfo, setTeaserInfo] = useState<{ isTeaser: boolean, totalFound: number } | null>(null);
     const [draftingLead, setDraftingLead] = useState<any | null>(null);
     const [productContext, setProductContext] = useState('');
-    const supabase = createClient();
+    const supabase = useMemo(() => createClient(), []);
     const router = useRouter();
     const searchParams = useSearchParams();
     const hasAutoScanned = useRef(false);

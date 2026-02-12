@@ -26,7 +26,7 @@ export default function LiveDiscoveryTab({
     const isEffectivePro = isPro || isAdmin;
     const isActuallySubscribed = isEffectivePro || isScout;
     const [isUpgrading, setIsUpgrading] = useState(false);
-    const supabase = createClient();
+
     const router = useRouter();
     const [hasResults, setHasResults] = useState(false);
     const [isMounted, setIsMounted] = useState(false);

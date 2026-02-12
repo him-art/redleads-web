@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Save, Loader2, Plus, X, Sparkles } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
@@ -34,7 +34,7 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
     const [pulseSections, setPulseSections] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
     useEffect(() => { setIsMounted(true); }, []);
-    const supabase = createClient();
+    const supabase = useMemo(() => createClient(), []);
 
     const handleSave = async () => {
         setSaving(true);

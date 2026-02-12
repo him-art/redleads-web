@@ -2,7 +2,7 @@
 
 import { RoadmapNode } from '@/types/roadmap';
 import { createClient } from '@/lib/supabase/client';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Circle, ExternalLink, X } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
@@ -18,7 +18,7 @@ interface NodeDetailProps {
 }
 
 export default function NodeDetail({ node, status, userId, onNavigate, onClose }: NodeDetailProps) {
-    const supabase = createClient();
+    const supabase = useMemo(() => createClient(), []);
     const router = useRouter();
     const [completing, setCompleting] = useState(false);
 
