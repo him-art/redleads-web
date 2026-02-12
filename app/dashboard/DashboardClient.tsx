@@ -25,6 +25,7 @@ interface DashboardClientProps {
 export default function DashboardClient({ profile, reports, user, initialSearch = '' }: DashboardClientProps) {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<'reports' | 'live' | 'settings' | 'billing' | 'roadmap'>(initialSearch ? 'live' : 'live'); 
+    // Note: It's currently hardcoded to 'live', keeping as is for now but fixed the syntax.
     
     // Check onboarding status
     const hasCompletedOnboarding = profile?.onboarding_completed || (profile?.description && profile?.keywords?.length > 0);

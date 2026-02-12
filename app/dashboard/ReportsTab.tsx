@@ -2,26 +2,7 @@ import { useState, useEffect } from 'react';
 import { Calendar, ChevronDown, ExternalLink, Clock, Radar, Bookmark, Trash2, Brain, Sparkles, MessageSquarePlus } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import ReplyModal from '@/components/dashboard/ReplyModal';
-import { useDashboardData } from '@/app/dashboard/DashboardDataContext';
-
-interface MonitoredLead {
-    id: string;
-    title: string;
-    subreddit: string;
-    url: string;
-    status: string;
-    match_score: number;
-    created_at: string;
-    is_saved?: boolean;
-    match_category?: string;
-}
-
-interface LeadAnalysis {
-    id: string;
-    content: string;
-    created_at: string;
-    lead_ids: string[];
-}
+import { useDashboardData, MonitoredLead, LeadAnalysis } from '@/app/dashboard/DashboardDataContext';
 
 export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: { reports: any[], profile: any, user: any, isPro: boolean, isAdmin: boolean }) {
     const { leads: historyLeads, analyses: leadAnalyses, isLoading: isDataLoading, updateLead, deleteLead } = useDashboardData();

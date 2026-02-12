@@ -62,7 +62,9 @@ export function DashboardDataProvider({ children, userId }: { children: React.Re
     const [roadmapProgress, setRoadmapProgress] = useState<RoadmapProgress[]>([]);
     const [analyses, setAnalyses] = useState<LeadAnalysis[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const supabase = createClient();
+    
+    // Use useMemo to ensure the supabase client is stable across renders
+    const supabase = React.useMemo(() => createClient(), []);
 
     const fetchLeads = useCallback(async () => {
         if (!userId) return;
