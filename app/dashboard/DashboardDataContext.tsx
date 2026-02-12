@@ -76,7 +76,7 @@ export function DashboardDataProvider({ children, userId }: { children: React.Re
             .limit(1000);
         
         if (!error && data) setLeads(data);
-    }, [userId, supabase]);
+    }, [userId]);
 
     const updateLead = async (id: string, updates: any) => {
         // Optimistic update
@@ -108,7 +108,7 @@ export function DashboardDataProvider({ children, userId }: { children: React.Re
 
         if (nodesRes.data) setRoadmapNodes(nodesRes.data);
         if (progressRes.data) setRoadmapProgress(progressRes.data);
-    }, [userId, supabase]);
+    }, [userId]);
 
     const fetchAnalyses = useCallback(async () => {
         if (!userId) return;
@@ -119,7 +119,7 @@ export function DashboardDataProvider({ children, userId }: { children: React.Re
             .order('created_at', { ascending: false })
             .limit(5);
         if (data) setAnalyses(data);
-    }, [userId, supabase]);
+    }, [userId]);
 
     useEffect(() => {
         async function init() {
@@ -143,7 +143,7 @@ export function DashboardDataProvider({ children, userId }: { children: React.Re
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [userId, fetchLeads, fetchRoadmap, fetchAnalyses, supabase]);
+    }, [userId, fetchLeads, fetchRoadmap, fetchAnalyses]);
 
     return (
         <DashboardDataContext.Provider value={{
