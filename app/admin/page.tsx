@@ -4,7 +4,9 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 // Daily Reports components removed
 // ConfigToggle removed
-import { CheckCircle, XCircle, Send, Edit, Clock } from 'lucide-react';
+import { CheckCircle, XCircle, Send, Edit, Clock, Users, Activity } from 'lucide-react';
+import TrendGraph from '@/components/admin/TrendGraph';
+
 
 export default async function AdminDashboard() {
     const supabase = await createClient();
@@ -34,7 +36,6 @@ export default async function AdminDashboard() {
         );
     }
 
-    // Parallel Data Fetching
     const [
         { data: allProfiles },
         { data: workerStatuses },
@@ -58,6 +59,34 @@ export default async function AdminDashboard() {
     const isScannerActive = scanner?.last_heartbeat 
         ? (Date.now() - new Date(scanner.last_heartbeat).getTime()) < 1200000 // 20 mins (cron is 15)
         : false;
+
+
+
+    // --- Graph Data Processing ---
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const thirtyDaysAgoStr = thirtyDaysAgo.toISOString();
+
+    const getDaysArray = (start: Date, end: Date) => {
+        const arr = [];
+        for (let dt = new Date(start); dt <= end; dt.setDate(dt.getDate() + 1)) {
+            arr.push(new Date(dt).toISOString().split('T')[0]);
+        }
+        return arr;
+    };
+    const days = getDaysArray(thirtyDaysAgo, new Date());
+
+    const processTrendData = (items: any[], dateKey: string) => {
+        const counts: Record<string, number> = {};
+        items?.forEach(item => {
+            const date = item[dateKey]?.split('T')[0];
+            if (date) counts[date] = (counts[date] || 0) + 1;
+        });
+        return days.map(date => ({ date, value: counts[date] || 0 }));
+    };
+
+    const signupsTrend = processTrendData(allProfiles?.filter(p => p.created_at >= thirtyDaysAgoStr) || [], 'created_at');
+    const totalSignupsPeriod = allProfiles?.filter(p => p.created_at >= thirtyDaysAgoStr).length || 0;
 
     return (
         <main className="min-h-screen bg-[#050505] text-white p-4 md:p-12 font-sans">
@@ -89,6 +118,16 @@ export default async function AdminDashboard() {
                     {/* Left Column: Users & Emails */}
                     <div className="lg:col-span-8 space-y-12">
                         
+                        {/* 0. Trend Graphs */}
+                        <section className="grid grid-cols-1 gap-6">
+                            <TrendGraph 
+                                title="New Users" 
+                                data={signupsTrend} 
+                                total={totalSignupsPeriod} 
+                                color="#3b82f6" // Blue
+                            />
+                        </section>
+
                         {/* 1. User intelligence list */}
                         <section className="space-y-6">
                             <h2 className="text-xs font-black uppercase tracking-[0.3em] text-gray-600 flex items-center gap-2">
@@ -144,7 +183,7 @@ export default async function AdminDashboard() {
                                 </div>
                             </div>
                         </section>
-
+                        
                         {/* 2. Email Transmission Logs */}
                         <section className="space-y-6">
                             <h2 className="text-xs font-black uppercase tracking-[0.3em] text-gray-600 flex items-center gap-2">
@@ -268,9 +307,3 @@ export default async function AdminDashboard() {
         </main>
     );
 }
-
-// Add necessary imports
-import { Users, Activity } from 'lucide-react';
-
-
-

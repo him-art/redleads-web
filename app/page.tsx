@@ -7,7 +7,6 @@ import Comparison from "@/components/Comparison";
 import HowItWorks from "@/components/HowItWorks";
 import Features from "@/components/Features";
 import FounderNote from "@/components/FounderNote";
-// import SocialProof from "@/components/SocialProof";
 import Pricing from "@/components/Pricing";
 import ROI from "@/components/ROI";
 import FAQ from "@/components/FAQ";
@@ -28,13 +27,10 @@ export default function Home() {
         <RedditOpportunity />
         <Comparison />
 
-        
-        
-
-        <Pricing />
         <ROI />
         <FounderNote />
 
+        <Pricing />
         
         <FAQ />
         <Footer />

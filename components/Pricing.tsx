@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Check, Zap, Loader2, ArrowRight, Globe, Search, Activity, ZapIcon, Mail, MessageSquare, Bot } from 'lucide-react';
+import { Check, Zap, Loader2, ArrowRight, Globe, Search, Activity, ZapIcon, Mail, MessageSquare, Bot, ShieldCheck } from 'lucide-react';
 
 const Pricing = () => {
     const [isLoading, setIsLoading] = useState<string | null>(null);
@@ -41,18 +41,18 @@ const Pricing = () => {
             price: 15,
             originalPrice: 19,
             description: 'Perfect for getting started with Reddit marketing',
-            highlight: true,
-            badge: 'LAUNCH OFFER',
             features: {
                 inbound: [
                     { name: '2 website power scan per day', icon: <Globe size={14} /> },
                     { name: '5 tracked keywords', icon: <Search size={14} /> },
                     { name: 'Daily SEO opportunities', icon: <Activity size={14} /> },
                     { name: 'Live Reddit monitoring', icon: <ZapIcon size={14} /> },
+                    { name: 'AI Intent Scoring', icon: <Zap size={14} /> },
                     { name: 'Daily Email notifications', icon: <Mail size={14} /> }
                 ],
                 engage: [
                     { name: '100 AI Replies /mo', icon: <Bot size={14} /> },
+                    { name: 'Anti-Ban Safety Engine', icon: <ShieldCheck size={14} className="text-green-500" /> },
                     { name: '30 daily auto DMs', icon: <MessageSquare size={14} />, soon: true }
                 ]
             }
@@ -62,16 +62,20 @@ const Pricing = () => {
             price: 29,
             originalPrice: 39,
             description: 'For growing startups with multiple products to monitor',
+            highlight: true,
+            badge: 'BEST VALUE',
             features: {
                 inbound: [
                     { name: '5 website power scan per day', icon: <Globe size={14} /> },
                     { name: '15 tracked keywords', icon: <Search size={14} /> },
                     { name: 'Daily SEO opportunities', icon: <Activity size={14} /> },
                     { name: 'Live Reddit monitoring', icon: <ZapIcon size={14} /> },
+                    { name: 'AI Intent Scoring', icon: <Zap size={14} className="text-orange-500" /> },
                     { name: 'Daily Email notifications', icon: <Mail size={14} /> }
                 ],
                 engage: [
                     { name: '500 AI Replies /mo', icon: <Bot size={14} /> },
+                    { name: 'Anti-Ban Safety Engine', icon: <ShieldCheck size={14} className="text-green-500" /> },
                     { name: '100 daily auto DMs', icon: <MessageSquare size={14} />, soon: true }
                 ]
             }
@@ -79,7 +83,7 @@ const Pricing = () => {
     ];
 
     return (
-        <section id="pricing" className="py-32 px-4 bg-[#1a1a1a] relative overflow-hidden border-t border-white/5">
+        <section id="pricing" className="pt-32 pb-10 px-4 bg-[#1a1a1a] relative overflow-hidden border-t border-white/5">
             <div className="max-w-6xl mx-auto relative z-10">
                 {/* Header */}
                 <div className="text-center mb-24">
@@ -124,7 +128,7 @@ const Pricing = () => {
                                     <span className="text-6xl font-black text-white tracking-tighter">${plan.price}</span>
                                     <span className="text-sm font-bold text-gray-600 uppercase tracking-widest ml-1">/mo</span>
                                 </div>
-                                <p className="text-xs font-bold text-gray-500 leading-relaxed max-w-[240px] uppercase tracking-wider">{plan.description}</p>
+                                <p className="text-xs font-bold text-gray-500 leading-relaxed max-w-[240px] uppercase tracking-wider">{plan.description}. API-safe discovery engine.</p>
                             </div>
 
                             <div className="space-y-10 flex-grow mb-14">
@@ -183,7 +187,7 @@ const Pricing = () => {
                                     suppressHydrationWarning
                                     className={`w-full py-6 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95 ${
                                         plan.highlight 
-                                            ? 'bg-orange-500 text-white hover:bg-[#ff4d29] border border-orange-500/20' 
+                                            ? 'bg-orange-500 text-white hover:bg-white hover:text-black border border-orange-500/20' 
                                             : 'bg-white/5 border border-white/5 text-white hover:bg-white hover:text-black'
                                     }`}
                                 >
@@ -201,8 +205,8 @@ const Pricing = () => {
                 <div className="mt-20 max-w-3xl mx-auto rounded-[3rem] bg-[#141414] border border-white/5 p-12 md:p-16 text-center relative overflow-hidden group hover:border-orange-500/10 transition-all">
                     <div className="absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-orange-500/20 to-transparent" />
                     <h3 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tighter">Start with a 3-day free trial</h3>
-                    <p className="text-gray-500 text-[13px] font-medium uppercase tracking-[0.2em] leading-[1.8] max-w-xl mx-auto opacity-70">
-                        We scan thousands of Reddit posts daily to find your opportunities   Get full access for first 3 days for free.
+                    <p className="text-gray-500 text-[15px] font-medium tracking-[0.2em] leading-[1.8] max-w-xl mx-auto opacity-70">
+                        Ads can cost you thousands of dollars. RedLeads discovers hidden opportunities on Reddit and drives organic growth for the fraction of the cost. Literally pays itself if you get a single new customer.
                     </p>
                 </div>
             </div>

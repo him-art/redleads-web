@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 interface Testimonial {
   name: string;
@@ -220,6 +221,9 @@ export default function FounderNote() {
                 <p className="text-white font-bold">
                   Now I wake up to a curated list of Reddit opportunities, instead of spending hours searching. I hope it helps you too.
                 </p>
+                <p className="text-gray-400">
+                  <span className="text-orange-500 font-bold">Important:</span> I built this to be a discovery engine, not a spam bot. Please follow our <Link href="/protocol" className="text-white underline hover:text-orange-500 transition-colors">Reddit Success Protocol</Link> to ensure you engage authentically and safely.
+                </p>
               </div>
 
               {/* Separator Line */}
@@ -240,7 +244,7 @@ export default function FounderNote() {
           transition={{ delay: 0.2 }}
         >
           <div className="text-center mb-24">
-            <span className="text-orange-500 font-bold tracking-[0.3em] text-[10px] uppercase mb-6 block">Early Impressions</span>
+            
             <h3 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tighter leading-tight">Feedback from the community</h3>
             <p className="text-gray-500 text-sm md:text-base font-medium opacity-60">Reactions from the early RedLeads community</p>
           </div>

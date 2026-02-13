@@ -66,7 +66,7 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                                 disabled={!!isLoading}
                                 className="w-full py-5 rounded-2xl bg-white/5 border border-white/5 text-white font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all disabled:opacity-50"
                             >
-                                {isLoading === 'scout' ? <Loader2 size={14} className="animate-spin mx-auto" /> : 'Start Starter'}
+                                {isLoading === 'scout' ? <Loader2 size={14} className="animate-spin mx-auto" /> : 'Unlock Starter'}
                             </button>
                         </div>
 

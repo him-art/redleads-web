@@ -6,7 +6,7 @@ const Footer = () => {
   return (
     <footer className="relative bg-[#1a1a1a] pt-24 overflow-hidden border-t border-white/5">
       <div className="mx-auto max-w-7xl px-6 mb-32 md:mb-40">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 md:gap-8 lg:gap-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-12 md:gap-8 lg:gap-8">
           
           {/* Brand Mission */}
           <div className="flex flex-col gap-6">
@@ -19,13 +19,16 @@ const Footer = () => {
                />
             </div>
             <p className="text-gray-500 text-[13px] font-medium leading-relaxed tracking-wide uppercase max-w-[200px]">
-              RedLeads is the home for your automated Reddit growth.
+              PRECISION AUTOMATION FOR SCALEABLE REDDIT GROWTH.
             </p>
           </div>
 
           {/* USEFUL */}
           <div className="flex flex-col gap-4">
              <h3 className="font-bold text-gray-500 text-[10px] tracking-widest uppercase">Useful</h3>
+             <Link href="/protocol" className="text-orange-500 font-bold hover:text-white transition-colors flex items-center gap-2">
+               Success Protocol
+             </Link>
              <Link href="/#how-it-works" className="text-gray-400 hover:text-white transition-colors">How it Works</Link>
              <Link href="/#pricing" className="text-gray-400 hover:text-white transition-colors">Pricing</Link>
              <Link href="/blog" className="text-gray-400 hover:text-white transition-colors">Blog</Link>
@@ -34,11 +37,17 @@ const Footer = () => {
           {/* COMPARE */}
           <div className="flex flex-col gap-4">
              <h3 className="font-bold text-gray-500 text-[10px] tracking-widest uppercase">Compare</h3>
-             <Link href="/compare/redleads-vs-gummysearch" className="text-gray-400 hover:text-white transition-colors">RedLeads vs GummySearch</Link>
-             <Link href="/compare/redleads-vs-f5bot" className="text-gray-400 hover:text-white transition-colors">RedLeads vs F5Bot</Link>
-             <Link href="/compare/redleads-vs-syften" className="text-gray-400 hover:text-white transition-colors">RedLeads vs Syften</Link>
-             <Link href="/compare/redleads-vs-billybuzz" className="text-gray-400 hover:text-white transition-colors">RedLeads vs BillyBuzz</Link>
-             <Link href="/compare/redleads-vs-replyguy" className="text-gray-400 hover:text-white transition-colors">RedLeads vs ReplyGuy</Link>
+             <Link href="/compare/redleads-vs-gummysearch" className="text-gray-400 hover:text-white transition-colors">vs GummySearch</Link>
+             <Link href="/compare/redleads-vs-f5bot" className="text-gray-400 hover:text-white transition-colors">vs F5Bot</Link>
+             <Link href="/compare" className="text-orange-500 font-bold text-[11px] uppercase tracking-wider mt-2 hover:underline">15+ Comparisons</Link>
+          </div>
+
+          {/* SOLUTIONS / SUBREDDITS */}
+          <div className="flex flex-col gap-4">
+             <h3 className="font-bold text-gray-500 text-[10px] tracking-widest uppercase">Solutions</h3>
+             <Link href="/solutions/saas" className="text-gray-400 hover:text-white transition-colors">Reddit for SaaS</Link>
+             <Link href="/solutions/agencies" className="text-gray-400 hover:text-white transition-colors">Reddit for Agencies</Link>
+             <Link href="/subreddits" className="text-orange-500 font-bold text-[11px] uppercase tracking-wider mt-2 hover:underline">Community Hubs</Link>
           </div>
 
           {/* LEGAL & CONTACT */}

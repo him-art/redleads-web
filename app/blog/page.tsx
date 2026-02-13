@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Blog | RedLeads - Reddit Lead Generation Insights',
-  description: 'Learn how to find customers on Reddit, master Reddit marketing, and generate leads for your SaaS. Expert guides, strategies, and tips.',
+  description: 'Learn how to find customers on Reddit master Reddit marketing, and generate leads for your SaaS. Expert guides, strategies, and tips.',
   keywords: ['Reddit marketing blog', 'lead generation tips', 'SaaS growth', 'find customers Reddit'],
   openGraph: {
     title: 'Blog | RedLeads - Reddit Lead Generation Insights',
@@ -30,7 +30,7 @@ export default function BlogPage() {
             RedLeads <span className="text-orange-500 font-serif italic">Blog</span>
           </h1>
           <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-            Expert guides on how to find customers on Reddit, master Reddit marketing, and grow your SaaS through lead generation.
+            Expert guides on how to find customers on Reddit master Reddit marketing, and grow your SaaS through lead generation.
           </p>
         </div>
 

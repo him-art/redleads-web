@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { Search, Globe, CheckCircle2, Zap, ArrowRight, ExternalLink } from 'lucide-react';
+import { Search, Globe, CheckCircle2, Zap, ArrowRight, ExternalLink, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { type User as SupabaseUser } from '@supabase/supabase-js';
 
@@ -67,8 +68,14 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
       </div>
 
       <div className="relative z-10 container mx-auto px-4 pt-32 pb-0 md:pt-40 md:pb-0 flex flex-col items-center text-center">
-        
-        
+        {/* Trust Badge */}
+        <Link 
+          href="/protocol" 
+          className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full mb-8 hover:bg-white/10 transition-colors group"
+        >
+          <ShieldCheck size={14} className="text-orange-500" />
+          <span className="text-slate-400 text-[10px] font-black uppercase tracking-widest group-hover:text-white transition-colors">Verified Reddit Success Protocol</span>
+        </Link>
 
         {/* Main Headline - Serif & Minimal */}
         <h1 
@@ -77,10 +84,10 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
           {/* Forced two lines on all screens - Full Serif Style */}
           <span className="flex flex-wrap items-center font-medium justify-center gap-x-3 sm:gap-x-6 sm:whitespace-nowrap">
             <span>Find your</span>
-            <span className="text-orange-500 font-bold font-serif-italic">first 100</span>
+            <span className="text-orange-500 font-bold font-serif-italic">first 100 users</span>
           </span>
           <span className="block font-medium sm:whitespace-nowrap">
-            <span>users on Reddit</span>
+            <span>on Reddit</span>
           </span>
         </h1>
 
@@ -88,7 +95,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
         <p 
           className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-12 leading-relaxed font-medium"
         >
-          Find your users on Reddit without scanning it manually. We monitor millions of discussions to find people asking for your solution.
+          Stop manual searching. RedLeads uses AI intent scoring to monitor millions of discussions 24/7, delivering warm buyers straight to your inbox.
         </p>
 
         {/* Search/CTA Component - Card Style */}

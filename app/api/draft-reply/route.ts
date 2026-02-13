@@ -25,7 +25,7 @@ export async function POST(req: Request) {
             .eq('id', user.id)
             .single();
 
-        const tier = profile?.subscription_tier; // 'pro', 'scout', or null/free
+        const tier = profile?.subscription_tier; // 'pro' (Growth), 'scout' (Starter), or null/free
         let genCount = profile?.reply_generation_count || 0;
         const lastReplyAt = profile?.last_reply_at;
 

@@ -107,7 +107,7 @@ export default function LiveDiscoveryTab({
                     </div>
                     <div>
                         <h3 className="text-2xl font-bold text-white mb-1">
-                            {isAdmin ? 'Admin' : isPro ? 'Pro Plan' : isScout ? 'Scout Plan' : 'Free Trial'}
+                            {isAdmin ? 'Admin' : isPro ? 'Growth Plan' : isScout ? 'Starter Plan' : 'Free Trial'}
                         </h3>
                         <p className="text-xs text-gray-500 font-medium">
                             {isInTrial 
@@ -246,7 +246,7 @@ export default function LiveDiscoveryTab({
                                     <div className="space-y-3">
                                         <h3 className="text-2xl font-black leading-tight text-white">Trial Access Ended</h3>
                                         <p className="text-gray-400 text-sm leading-relaxed font-medium">
-                                            Upgrade to Pro to unlock unlimited access to high-intent leads.
+                                            Upgrade to Growth to unlock unlimited access to high-intent leads.
                                         </p>
                                     </div>
                                     <div className="space-y-3">

@@ -121,7 +121,7 @@ export async function POST(req: Request) {
 
             console.log(`[Scanner API] Scan completed. Found ${scanResult.leads?.length || 0} leads.`);
 
-            // PERSISTENCE LOGIC: If the user is Paid (Scout/Pro) or in Trial, save these leads!
+            // PERSISTENCE LOGIC: If the user is Paid (Starter/Growth) or in Trial, save these leads!
             if (user && (isPaid || isInTrial)) {
                 try {
                     const leadsToSave = scanResult.leads.map((lead: any) => ({

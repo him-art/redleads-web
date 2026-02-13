@@ -148,7 +148,7 @@ export default function RootLayout({
                       "name": "How does RedLeads work?",
                       "acceptedAnswer": {
                         "@type": "Answer",
-                        "text": "RedLeads uses AI to monitor relevant subreddits for conversations about your product and competitors which are publicly available. We then analyze these posts for purchase intent and organize high-potential leads in your dashboard."
+                        "text": "RedLeads uses AI to monitor relevant subreddits for conversations about your product and description which are publicly available. We then analyze these posts for purchase intent and organize high-potential leads in your dashboard."
                       }
                     },
                     {

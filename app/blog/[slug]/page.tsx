@@ -62,6 +62,62 @@ export default async function BlogPostPage({ params }: Props) {
     <main className="min-h-screen bg-[#1a1a1a]">
       <Navbar />
       
+      {/* Schema.org markup */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Article",
+                "@id": `https://www.redleads.app/blog/${slug}#article`,
+                "isPartOf": { "@id": `https://www.redleads.app/blog/${slug}` },
+                "author": { "@id": "https://www.redleads.app/#organization" },
+                "headline": post.title,
+                "datePublished": post.date,
+                "dateModified": post.date,
+                "mainEntityOfPage": { "@id": `https://www.redleads.app/blog/${slug}` },
+                "publisher": { "@id": "https://www.redleads.app/#organization" },
+                "description": post.description,
+                "keywords": post.keywords.join(", "),
+                "image": "https://www.redleads.app/og-image.png"
+              },
+              {
+                "@type": "BreadcrumbList",
+                "@id": `https://www.redleads.app/blog/${slug}#breadcrumb`,
+                "itemListElement": [
+                  {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "item": {
+                      "@id": "https://www.redleads.app/",
+                      "name": "Home"
+                    }
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "item": {
+                      "@id": "https://www.redleads.app/blog",
+                      "name": "Blog"
+                    }
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 3,
+                    "item": {
+                      "@id": `https://www.redleads.app/blog/${slug}`,
+                      "name": post.title
+                    }
+                  }
+                ]
+              }
+            ]
+          })
+        }}
+      />
+      
       <article className="container mx-auto px-4 pt-32 pb-24">
         {/* Back Link */}
         <Link 

@@ -4,32 +4,28 @@ import { ChevronDown } from 'lucide-react';
 
 const faqs = [
   {
-    question: "How do I find customers on Reddit?",
-    answer: "RedLeads monitors relevant subreddits and uses AI to identify high-intent conversations where users are actively seeking solutions like yours. When someone asks for recommendations or expresses a need you can solve, you get notified instantly."
+    question: "Will I get banned from Reddit using this?",
+    answer: "Absolutely not. RedLeads is a monitor, not a spammer. We scan public discussions to find opportunities for you to provide value. You control the outreach. We recommend being helpful, not salesy, which Reddit actually loves."
   },
   {
-    question: "What are the best Reddit marketing tools?",
-    answer: "RedLeads is the leading Reddit marketing tool for SaaS and app founders. Unlike basic keyword trackers, it uses AI to understand context and buying intent, helping you find warm leads instead of just mentions."
+    question: "Is this just another AI spam bot?",
+    answer: "No. Our AI doesn't just blast replies. It finds high-intent conversations and helps you draft thoughtful, context-aware responses. The goal is to build relationships, not to clutter subreddits with low-quality noise."
   },
   {
-    question: "How can I find users for my SaaS on Reddit?",
-    answer: "Enter your product description and target keywords into RedLeads. Our AI scans thousands of subreddits daily to find people asking for exactly what you offer whether that's project management, analytics, design tools, or any other SaaS category."
+    question: "How accurate is the AI lead scoring?",
+    answer: "Very. We use advanced LLMs trained to distinguish between someone just 'venting' and someone 'actively looking for a solution.' You'll only spend time on the leads that actually have a high chance of converting."
   },
   {
-    question: "How does RedLeads work?",
-    answer: "RedLeads uses AI to monitor relevant subreddits for conversations about your product and competitors which are publicly available. We then analyze these posts for purchase intent and organize high-potential leads in your dashboard."
+    question: "What happens after the 3-day free trial?",
+    answer: "You'll have full access to all features for 3 days. Use it to find your first few customers. If it doesn't pay for itself by day three, you can cancel with one click in your settings and you won't be charged a cent."
   },
   {
-    question: "What is RedLeads?",
-    answer: "RedLeads is an AI-powered Reddit lead generation tool that helps SaaS founders and app developers find their first customers. It monitors Reddit 24/7 and alerts you when potential users are asking for solutions you provide."
+    question: "Can I really cancel with one click?",
+    answer: "Yes. We hate 'subscription traps' as much as you do. You can cancel directly from your billing dashboard at any time. No emails to send, no phone calls to make, and no questions asked."
   },
   {
-    question: "What makes RedLeads different from other lead generation tools?",
-    answer: "Unlike generic lead generation tools that focus on email lists or LinkedIn, RedLeads specializes in Reddit where users actively discuss problems and seek recommendations. Our AI understands context, not just keywords."
-  },
-  {
-    question: "Can I cancel anytime?",
-    answer: "Absolutely. There are no contracts or lock-in periods. You can cancel your subscription at any time within 7 days."
+    question: "Can I monitor multiple products or competitors?",
+    answer: "Yes. Our Growth plan is designed exactly for that—allowing you to track up to 15 different keywords or competitor names across all of Reddit simultaneously."
   }
 ];
 

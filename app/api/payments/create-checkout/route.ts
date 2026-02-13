@@ -9,7 +9,7 @@ const checkoutSchema = z.object({
 
 /**
  * Creates a Dodo Payments checkout session for subscription upgrade.
- * Supports both Scout ($15/mo) and Pro ($29/mo) plans.
+ * Supports both Starter ($15/mo) and Growth ($29/mo) plans.
  */
 export async function POST(req: Request) {
     try {
