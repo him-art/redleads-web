@@ -242,58 +242,65 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                     
                                     {/* Dynamic Tab Content - Hidden but mounted for caching */}
                                     <AnimatePresence mode="wait">
-                                        <div className="relative">
-                                            {/* Live & Archive share common data */}
-                                            <div style={{ display: activeTab === 'live' ? 'block' : 'none' }}>
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: 10 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ duration: 0.2 }}
-                                                >
-                                                    <LiveDiscoveryTab user={user} profile={profile} isPro={isPro} isScout={isScout} isAdmin={isAdmin} initialSearch={initialSearch} onNavigate={(tab) => setActiveTab(tab as any)} />
-                                                </motion.div>
-                                            </div>
+                                        {activeTab === 'live' && (
+                                            <motion.div
+                                                key="live"
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -10 }}
+                                                transition={{ duration: 0.2 }}
+                                            >
+                                                <LiveDiscoveryTab user={user} profile={profile} isPro={isPro} isScout={isScout} isAdmin={isAdmin} initialSearch={initialSearch} onNavigate={(tab) => setActiveTab(tab as any)} />
+                                            </motion.div>
+                                        )}
 
-                                            <div style={{ display: activeTab === 'reports' ? 'block' : 'none' }}>
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: 10 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ duration: 0.2 }}
-                                                >
-                                                    <ReportsTab reports={reports} profile={profile} user={user} isPro={isPro} isAdmin={isAdmin} />
-                                                </motion.div>
-                                            </div>
+                                        {activeTab === 'reports' && (
+                                            <motion.div
+                                                key="reports"
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -10 }}
+                                                transition={{ duration: 0.2 }}
+                                            >
+                                                <ReportsTab reports={reports} profile={profile} user={user} isPro={isPro} isAdmin={isAdmin} />
+                                            </motion.div>
+                                        )}
 
-                                            <div style={{ display: activeTab === 'roadmap' ? 'block' : 'none' }}>
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: 10 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ duration: 0.2 }}
-                                                >
-                                                    <RoadmapTab user={user} onNavigate={(tab) => setActiveTab(tab as any)} />
-                                                </motion.div>
-                                            </div>
+                                        {activeTab === 'roadmap' && (
+                                            <motion.div
+                                                key="roadmap"
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -10 }}
+                                                transition={{ duration: 0.2 }}
+                                            >
+                                                <RoadmapTab user={user} onNavigate={(tab) => setActiveTab(tab as any)} />
+                                            </motion.div>
+                                        )}
 
-                                            <div style={{ display: activeTab === 'settings' ? 'block' : 'none' }}>
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: 10 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ duration: 0.2 }}
-                                                >
-                                                    <SettingsTab profile={profile} user={user} />
-                                                </motion.div>
-                                            </div>
+                                        {activeTab === 'settings' && (
+                                            <motion.div
+                                                key="settings"
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -10 }}
+                                                transition={{ duration: 0.2 }}
+                                            >
+                                                <SettingsTab profile={profile} user={user} />
+                                            </motion.div>
+                                        )}
 
-                                            <div style={{ display: activeTab === 'billing' ? 'block' : 'none' }}>
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: 10 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ duration: 0.2 }}
-                                                >
-                                                    <BillingTab profile={profile} isPro={isPro} isAdmin={isAdmin} />
-                                                </motion.div>
-                                            </div>
-                                        </div>
+                                        {activeTab === 'billing' && (
+                                            <motion.div
+                                                key="billing"
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -10 }}
+                                                transition={{ duration: 0.2 }}
+                                            >
+                                                <BillingTab profile={profile} isPro={isPro} isAdmin={isAdmin} />
+                                            </motion.div>
+                                        )}
                                     </AnimatePresence>
                                 </div>
                             </div>

@@ -152,7 +152,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
 
         {/* Product Visual - Static Demo */}
         <div
-           className="relative w-full max-w-5xl mx-auto mt-0 md:mt-0"
+           className="relative w-full max-w-5xl mx-auto mt-0 md:mt-0 pointer-events-none select-none"
         >
             <div className="relative rounded-t-[2rem] border-x-2 border-t-2 border-b-0 border-orange-500/20 bg-[#050505] overflow-hidden shadow-2xl p-6 md:p-10 text-left">
                 {/* Background Glow */}
@@ -163,8 +163,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                 {/* Header: Power Scan */}
                 <div className="relative flex items-center gap-3 mb-8 md:mb-12">
                     <div className="relative flex h-2.5 w-2.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-500"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-500 shadow-[0_0_10px_rgba(255,87,0,0.5)]"></span>
                     </div>
                     <span className="text-[11px] font-black tracking-[0.2em] text-gray-400 uppercase">Power Scan</span>
                 </div>
@@ -176,8 +175,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                         <span className="text-xl md:text-2xl font-bold text-black tracking-tight">RedLeads.app</span>
                     </div>
                     <button 
-                        suppressHydrationWarning
-                        className="bg-[#ff5700] text-white text-[10px] md:text-xs font-black uppercase tracking-widest px-6 md:px-8 py-3 md:py-4 rounded-xl hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20"
+                        className="bg-[#ff5700] text-white text-[10px] md:text-xs font-black uppercase tracking-widest px-6 md:px-8 py-3 md:py-4 rounded-xl shadow-lg shadow-orange-500/20"
                     >
                         Scan
                     </button>

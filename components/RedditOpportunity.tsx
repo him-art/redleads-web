@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { Search, MessageSquare, ArrowBigUp, ArrowBigDown, Share2, MoreHorizontal, Bot, Globe } from 'lucide-react';
+import { Search, MessageSquare, ArrowBigUp, ArrowBigDown, Share2, MoreHorizontal, Bot, Globe, Check, ArrowRight } from 'lucide-react';
 import AnimatedCounter from './AnimatedCounter';
 
 const StatItem = ({ value, label }: { value: string, label: string }) => (
@@ -113,6 +113,31 @@ export default function RedditOpportunity() {
                 />
             </Card>
 
+        </div>
+
+        {/* CTA Section */}
+        <div className="mt-20 flex flex-col items-center">
+            <a 
+                href="/login?next=/#pricing" 
+                className="bg-[#FF5700] hover:bg-[#ff4500] text-white text-lg md:text-xl font-bold py-4 px-10 rounded-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2 shadow-[0_4px_14px_0_rgba(255,87,0,0.39)] hover:shadow-[0_6px_20px_rgba(255,87,0,0.23)] border-t border-white/20"
+            >
+                Get Customers From Reddit <ArrowRight size={20} strokeWidth={3} />
+            </a>
+            
+            <div className="mt-6 flex flex-row justify-center items-center gap-6 md:gap-12 text-gray-500 text-[10px] md:text-xs font-bold uppercase tracking-[0.15em]">
+                <div className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-full border border-gray-600 flex items-center justify-center">
+                        <Check size={10} className="text-gray-400" strokeWidth={3} />
+                    </div>
+                    <span>No card required</span>
+                </div>
+                <div className="flex items-center gap-3">
+                     <div className="w-5 h-5 rounded-full border border-gray-600 flex items-center justify-center">
+                        <Check size={10} className="text-gray-400" strokeWidth={3} />
+                    </div>
+                    <span>3-day free trial</span>
+                </div>
+            </div>
         </div>
 
       </div>
