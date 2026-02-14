@@ -124,7 +124,7 @@ export default async function AdminDashboard() {
                                 title="New Users" 
                                 data={signupsTrend} 
                                 total={totalSignupsPeriod} 
-                                color="#3b82f6" // Blue
+                                color="#000000" // Black
                             />
                         </section>
 

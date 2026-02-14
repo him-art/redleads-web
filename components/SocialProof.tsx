@@ -2,61 +2,78 @@
 
 import { Star } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 const testimonials = [
   {
     name: "Vivek ps",
     handle: "@vivekps143",
+    image: "/vivek.png",
     content: "Smart approach to Reddit lead gen! Finding relevant conversations where people are actively looking for solutions is way more effective than cold outreach. ",
     highlights: ["Smart approach to Reddit lead gen!", "way more effective than cold outreach"],
   },
   {
     name: "Umair Shaikh",
     handle: "@1Umairshaikh",
+    image: "/umair.png",
     content: "I like this, this will make life easier for sure",
     highlights: ["make life easier for sure"],
   },
   {
     name: "Konny",
     handle: "@konnydev",
+    image: "/konny.png",
     content: "Thats useful I guess👀",
     highlights: ["useful I guess"],
   },
   {
     name: "Martin B",
     handle: "@MartinB293887",
+    image: "/martin.png",
     content: "Seems very helpful",
     highlights: ["very helpful"],
   },
   {
     name: "sachanh.farcaster.eth",
     handle: "@DefiHimanshu",
+    image: "/sachanh.png",
     content: "Wow this is nice, love to explore.",
     highlights: ["this is nice", "love to explore"],
   },
   {
     name: "Henry Labs",
     handle: "@Henrylabss",
+    image: "/henry.png",
     content: "This is a good tool reddit monitoring for leads",
     highlights: ["good tool", "monitoring for leads"],
   },
   {
     name: "Pranav Alone",
     handle: "@MaDAxe__",
+    image: "/pranav.png",
     content: "This is great man! Just signed up on the site and search the url of my app and i got tons of reddit posts related to it which would have taken me hours to search manually.",
     highlights: ["Just signed up", "tons of reddit posts", "taken me hours to search manually"],
   },
   {
     name: "Marc Hanson",
     handle: "@bubbling_sort",
+    image: "/marc.png",
     content: "Interesting. Bookmarking this to check out. Connected!",
     highlights: ["Bookmarking this", "Connected!"],
   },
   {
     name: "Bishopi.io",
     handle: "@Bishopi_io",
+    image: "/bishopi.png",
     content: "That looks super useful",
     highlights: ["super useful"],
+  },
+  {
+    name: "Manish | Building PinTheFrame",
+    handle: "@manish_saraan",
+    image: "/manish.png",
+    content: "Great product for getting users from Reddit Reddit is a channel that people are still sleeping on",
+    highlights: ["Great product", "users from Reddit", "still sleeping on"],
   },
 ];
 
@@ -107,9 +124,20 @@ const TestimonialCard = ({ testimonial, index }: { testimonial: typeof testimoni
 
         {/* Author */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-orange-100 border border-orange-200 flex items-center justify-center font-bold text-orange-600 text-sm uppercase shrink-0">
-            {testimonial.name.charAt(0)}
-          </div>
+          {testimonial.image ? (
+            <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0 border border-orange-100 shadow-sm">
+              <Image 
+                src={testimonial.image} 
+                alt={testimonial.name} 
+                fill 
+                className="object-cover"
+              />
+            </div>
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-orange-100 border border-orange-200 flex items-center justify-center font-bold text-orange-600 text-sm uppercase shrink-0">
+              {testimonial.name.charAt(0)}
+            </div>
+          )}
           <div className="flex flex-col">
             <span className="font-bold text-gray-900 text-[14px] leading-tight">{testimonial.name}</span>
             <span className="text-gray-400 text-[12px] font-medium">{testimonial.handle}</span>

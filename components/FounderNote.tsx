@@ -94,6 +94,14 @@ const testimonials: Testimonial[] = [
     content: "I am telling you it's a game changer 🔥",
     highlights: ["game changer"],
   },
+  {
+    name: "Manish | Building PinTheFrame",
+    handle: "@manish_saraan",
+    image: "/manish.png",
+    url: "https://x.com/manish_saraan",
+    content: "Great product for getting users from Reddit Reddit is a channel that people are still sleeping on",
+    highlights: ["Great product", "users from Reddit", "still sleeping on"],
+  },
 ];
 
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
@@ -128,7 +136,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
       href={testimonial.url} 
       target="_blank" 
       rel="noopener noreferrer" 
-      className="break-inside-avoid mb-6 block group"
+      className="break-inside-avoid block group"
     >
       <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col relative transition-all duration-300 group-hover:shadow-md group-hover:border-gray-200 group-hover:-translate-y-1">
         {/* X Icon */}
@@ -176,7 +184,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
 export default function FounderNote() {
   return (
     <section className="py-24 bg-[#1a1a1a] overflow-hidden border-t border-white/5">
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-6">
         {/* Split Founder Note Layout */}
         <div className="max-w-4xl mx-auto mb-24">
           <motion.div 
@@ -249,23 +257,23 @@ export default function FounderNote() {
             <p className="text-gray-500 text-sm md:text-base font-medium opacity-60">Reactions from the early RedLeads community</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
             {/* Column 1 */}
-            <div className="flex flex-col gap-6">
-              {[testimonials[6]!, testimonials[9]!, testimonials[2]!, testimonials[3]!].map((testimonial, idx) => (
+            <div className="flex flex-col gap-4">
+              {[testimonials[6]!, testimonials[10]!, testimonials[2]!, testimonials[3]!].map((testimonial, idx) => (
                 <TestimonialCard key={`col1-${idx}`} testimonial={testimonial} />
               ))}
             </div>
             
             {/* Column 2 */}
-            <div className="flex flex-col gap-6">
-              {[testimonials[4]!, testimonials[1]!, testimonials[0]!].map((testimonial, idx) => (
+            <div className="flex flex-col gap-4">
+              {[testimonials[4]!, testimonials[9]!, testimonials[1]!, testimonials[0]!].map((testimonial, idx) => (
                 <TestimonialCard key={`col2-${idx}`} testimonial={testimonial} />
               ))}
             </div>
 
             {/* Column 3 */}
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
               {[testimonials[7]!, testimonials[8]!, testimonials[5]!].map((testimonial, idx) => (
                 <TestimonialCard key={`col3-${idx}`} testimonial={testimonial} />
               ))}

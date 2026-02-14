@@ -68,14 +68,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
       </div>
 
       <div className="relative z-10 container mx-auto px-4 pt-32 pb-0 md:pt-40 md:pb-0 flex flex-col items-center text-center">
-        {/* Trust Badge */}
-        <Link 
-          href="/protocol" 
-          className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full mb-8 hover:bg-white/10 transition-colors group"
-        >
-          <ShieldCheck size={14} className="text-orange-500" />
-          <span className="text-slate-400 text-[10px] font-black uppercase tracking-widest group-hover:text-white transition-colors">Verified Reddit Success Protocol</span>
-        </Link>
+      
 
         {/* Main Headline - Serif & Minimal */}
         <h1 
@@ -182,6 +175,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                         <span className="text-xl md:text-2xl font-bold text-black tracking-tight">RedLeads.app</span>
                     </div>
                     <button 
+                        suppressHydrationWarning
                         className="bg-[#ff5700] text-white text-[10px] md:text-xs font-black uppercase tracking-widest px-6 md:px-8 py-3 md:py-4 rounded-xl shadow-lg shadow-orange-500/20"
                     >
                         Scan

@@ -157,9 +157,9 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
                             <div className="absolute inset-0 bg-orange-500/5 blur-xl rounded-full" />
                         </div>
                         <div className="space-y-1">
-                            <h4 className="text-gray-500 font-black text-xs tracking-[0.2em] uppercase">Stream Standby</h4>
+                            <h4 className="text-gray-500 font-black text-xs tracking-[0.2em] uppercase">monitoring communities</h4>
                             <p className="text-[9px] text-gray-600 max-w-[240px] mx-auto leading-relaxed uppercase font-black tracking-widest">
-                                System monitoring communities
+                                Live leads will be displayed here
                             </p>
                         </div>
                     </div>

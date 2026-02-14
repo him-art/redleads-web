@@ -79,7 +79,7 @@ export async function POST(req: Request) {
 
             if (!(isPaid || isInTrial)) {
                 return NextResponse.json({ 
-                    error: 'Your trial has ended. Please upgrade to a paid plan to continue finding leads.', 
+                    error: 'Your trial has ended. Please upgrade to a paid plan to continue automated.', 
                     code: 'PAYWALL_REQUIRED' 
                 }, { status: 403 });
             }

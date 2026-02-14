@@ -22,9 +22,11 @@ interface LeadSearchProps {
     initialUrl?: string;
     onShowModal?: () => void;
     onResultsFound?: (count: number) => void;
+    initialLeads?: RedditLead[];
+    autoScan?: boolean;
 }
 
-export default function LeadSearch({ user, isDashboardView = false, initialUrl = '', onShowModal, onResultsFound }: LeadSearchProps) {
+export default function LeadSearch({ user, isDashboardView = false, initialUrl = '', initialLeads = [], autoScan = false, onShowModal, onResultsFound }: LeadSearchProps) {
     const [url, setUrl] = useState(initialUrl);
     const [isScanning, setIsScanning] = useState(false);
     const [scanStep, setScanStep] = useState(0);
@@ -47,16 +49,21 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
         fetchProfile();
     }, [user?.id]);
 
-    // Auto-scan if initialUrl is provided
+    // Auto-load initial leads or auto-scan
     useEffect(() => {
-        if (initialUrl) {
+        if (initialLeads && initialLeads.length > 0 && results.length === 0) {
+            setResults(initialLeads);
+            if (initialLeads.length > 0) {
+                setOpenGroups({ 'High': true, 'Medium': true });
+            }
+            onResultsFound?.(initialLeads.length);
+            hasAutoScanned.current = true; // Prevent duplicate scan
+        } else if (autoScan && initialUrl && !isScanning && results.length === 0 && !hasAutoScanned.current) {
             setUrl(initialUrl);
-        }
-        if (initialUrl && !isScanning && results.length === 0 && !hasAutoScanned.current) {
             hasAutoScanned.current = true;
             handleScan(null as any);
             
-            // Consume the URL parameter so it doesn't re-trigger on refresh
+            // Consume the URL parameter
             try {
                 const params = new URLSearchParams(searchParams.toString());
                 params.delete('search');
@@ -65,8 +72,10 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
             } catch (e) {
                 console.warn('Router replace failed:', e);
             }
+        } else if (initialUrl) {
+            setUrl(initialUrl);
         }
-    }, [initialUrl]);
+    }, [initialUrl, initialLeads, autoScan]);
 
     const scanSteps = [
         "Analyzing target product model...",
@@ -96,43 +105,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
         setScanStep(0);
         setResults([]);
 
-        // 1. Check Cache (Safe check for SSR/Mobile)
-        if (typeof window === 'undefined') return;
-        const CACHE_KEY = `rl_cache_${normalizedUrl}`;
-        const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
-        const cached = window.localStorage.getItem(CACHE_KEY);
-        
-        if (cached) {
-            try {
-                const parsed = JSON.parse(cached);
-                if (parsed && typeof parsed === 'object' && parsed.timestamp && parsed.data) {
-                    const { timestamp, data } = parsed;
-                    if (Date.now() - timestamp < CACHE_TTL) {
-                        console.log(`[Cache] Using cached results for ${normalizedUrl}`);
-                        
-                        setScanStep(0);
-                        setTimeout(() => setScanStep(2), 400);
-                        setTimeout(() => setScanStep(4), 800);
-                        
-                        setTimeout(() => {
-                            setResults(data.leads || []);
-                            setTeaserInfo(data.isTeaser ? { isTeaser: true, totalFound: data.totalFound } : null);
-                            onResultsFound?.(data.leads?.length || 0);
-                            if (data.leads?.length > 0) {
-                                setOpenGroups({ 'High': true, 'Medium': true });
-                            }
-                            setIsScanning(false);
-                        }, 1200);
-                        return;
-                    }
-                } else {
-                    window.localStorage.removeItem(CACHE_KEY);
-                }
-            } catch (e) {
-                console.warn('[Cache] Corruption detected, clearing...');
-                try { window.localStorage.removeItem(CACHE_KEY); } catch(err) {}
-            }
-        }
+
 
         const scannerPromise = fetch('/api/scanner', {
             method: 'POST',
@@ -168,16 +141,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                     setOpenGroups({ 'High': true, 'Medium': true, 'Low': true });
                 }
 
-                // Store in Cache
-                if (typeof window !== 'undefined') {
-                    localStorage.setItem(CACHE_KEY, JSON.stringify({
-                        timestamp: Date.now(),
-                        data: {
-                            ...data,
-                            leads: enrichedLeads
-                        }
-                    }));
-                }
+
             }
         } catch (error: any) {
             console.error(error);

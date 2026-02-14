@@ -13,7 +13,8 @@ import PaywallModal from '@/components/PaywallModal';
 import OnboardingWizard from './OnboardingWizard';
 import RoadmapTab from './RoadmapTab'; // [NEW]
 import { DashboardDataProvider } from '@/app/dashboard/DashboardDataContext';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import DashboardErrorBoundary from '@/components/dashboard/DashboardErrorBoundary';
 
 interface DashboardClientProps {
     profile: any;
@@ -24,7 +25,10 @@ interface DashboardClientProps {
 
 export default function DashboardClient({ profile, reports, user, initialSearch = '' }: DashboardClientProps) {
     const router = useRouter();
-    const [activeTab, setActiveTab] = useState<'reports' | 'live' | 'settings' | 'billing' | 'roadmap'>(initialSearch ? 'live' : 'live'); 
+    const searchParams = useSearchParams();
+    const effectiveSearch = searchParams.get('search') || initialSearch;
+
+    const [activeTab, setActiveTab] = useState<'reports' | 'live' | 'settings' | 'billing' | 'roadmap'>(effectiveSearch ? 'live' : 'live'); 
     // Note: It's currently hardcoded to 'live', keeping as is for now but fixed the syntax.
     
     // Check onboarding status
@@ -107,8 +111,8 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                     keywordLimit={isScout && !isPro ? 5 : 15}
                     onComplete={(data, onboardingUrl) => {
                         setShowOnboarding(false);
-                        const searchParam = onboardingUrl ? `?search=${encodeURIComponent(onboardingUrl)}` : '';
-                        router.push(`/dashboard${searchParam}`);
+                        // Redirect with search param to trigger initial scan
+                        router.push(`/dashboard?search=${encodeURIComponent(onboardingUrl || '')}`);
                         router.refresh();
                     }} 
                 />
@@ -154,7 +158,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                 >
                     {/* Brand Header */}
                     <div className="flex flex-col mb-12">
-                        <span className="text-[10px] font-black text-gray-700 uppercase tracking-[0.3em] mb-8 px-2">Workspace</span>
+                        <span className="text-[10px] font-black text-gray-700 uppercase tracking-[0.3em] mb-8 px-2">Dashboard</span>
                         <div className="flex items-center gap-3 px-2">
                             <div className="w-10 h-10 flex items-center justify-center relative">
                                 <Image
@@ -241,6 +245,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                 <div className="max-w-6xl mx-auto space-y-10 mt-16 lg:mt-0">
                                     
                                     {/* Dynamic Tab Content - Hidden but mounted for caching */}
+                                    <DashboardErrorBoundary>
                                     <AnimatePresence mode="wait">
                                         {activeTab === 'live' && (
                                             <motion.div
@@ -250,7 +255,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                                 exit={{ opacity: 0, y: -10 }}
                                                 transition={{ duration: 0.2 }}
                                             >
-                                                <LiveDiscoveryTab user={user} profile={profile} isPro={isPro} isScout={isScout} isAdmin={isAdmin} initialSearch={initialSearch} onNavigate={(tab) => setActiveTab(tab as any)} />
+                                                <LiveDiscoveryTab user={user} profile={profile} isPro={isPro} isScout={isScout} isAdmin={isAdmin} initialSearch={effectiveSearch} onNavigate={(tab) => setActiveTab(tab as any)} />
                                             </motion.div>
                                         )}
 
@@ -302,6 +307,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                             </motion.div>
                                         )}
                                     </AnimatePresence>
+                                    </DashboardErrorBoundary>
                                 </div>
                             </div>
                         </div>

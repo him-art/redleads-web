@@ -5,6 +5,7 @@ import LiveFeed from './LiveFeed';
 import LeadSearch from '@/components/LeadSearch';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import { useDashboardData } from '@/app/dashboard/DashboardDataContext';
 
 export default function LiveDiscoveryTab({ 
     user, 
@@ -30,6 +31,8 @@ export default function LiveDiscoveryTab({
     const router = useRouter();
     const [hasResults, setHasResults] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
+    
+
  
     useEffect(() => {
         setIsMounted(true);
@@ -95,80 +98,80 @@ export default function LiveDiscoveryTab({
 
     return (
         <section className="space-y-6 max-w-7xl mx-auto">
-            {/* 1. Status Cards Grid (Skeleton Style) */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {/* 1. Status Cards Grid (Slimmer Version) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                 {/* Card 1: Plan Status */}
-                <div className="relative overflow-hidden rounded-3xl bg-[#0F0F0F] border border-white/5 p-5 sm:p-6 flex flex-col justify-between h-32 md:h-40 group hover:border-white/10 transition-colors">
-                    <div className="flex justify-between items-start">
-                        <div className="p-2 bg-orange-500/10 rounded-xl text-orange-500">
-                             {isActuallySubscribed ? <ShieldCheck size={20} /> : <Clock size={20} />}
+                <div className="relative overflow-hidden rounded-2xl bg-[#0F0F0F] border border-white/5 p-4 sm:p-5 group hover:border-white/10 transition-colors">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="p-1.5 bg-orange-500/10 rounded-lg text-orange-500">
+                             {isActuallySubscribed ? <ShieldCheck size={16} /> : <Clock size={16} />}
                         </div>
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Plan Status</span>
+                        <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500">Plan Status</span>
                     </div>
                     <div>
-                        <h3 className="text-2xl font-bold text-white mb-1">
-                            {isAdmin ? 'Admin' : isPro ? 'Growth Plan' : isScout ? 'Starter Plan' : 'Free Trial'}
+                        <h3 className="text-xl font-bold text-white mb-0.5 tracking-tight">
+                            {isAdmin ? 'Admin' : isPro ? 'Growth' : isScout ? 'Starter' : 'Free Trial'}
                         </h3>
-                        <p className="text-xs text-gray-500 font-medium">
+                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest opacity-60">
                             {isInTrial 
-                                ? `${daysRemaining} Days Remaining` 
+                                ? `${daysRemaining} Days Left` 
                                 : isActuallySubscribed 
-                                    ? 'Active Subscription' 
+                                    ? 'Active' 
                                     : 'Trial Expired'}
                         </p>
                     </div>
                 </div>
 
                 {/* Card 2: Usage Stats */}
-                <div className="relative overflow-hidden rounded-3xl bg-[#0F0F0F] border border-white/5 p-5 sm:p-6 flex flex-col justify-between h-32 md:h-40 group hover:border-white/10 transition-colors">
-                     <div className="flex justify-between items-start">
-                        <div className="p-2 bg-blue-500/10 rounded-xl text-blue-500">
-                             <Activity size={20} />
+                <div className="relative overflow-hidden rounded-2xl bg-[#0F0F0F] border border-white/5 p-4 sm:p-5 group hover:border-white/10 transition-colors">
+                     <div className="flex items-center justify-between mb-4">
+                        <div className="p-1.5 bg-blue-500/10 rounded-lg text-blue-500">
+                             <Activity size={16} />
                         </div>
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Usage</span>
+                        <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500">Usage</span>
                     </div>
                     <div>
-                        <h3 className="text-2xl font-bold text-white mb-1">
+                        <h3 className="text-xl font-bold text-white mb-0.5 tracking-tight">
                             {isMounted ? `${currentUsage}/${searchLimit}` : '...'}
                         </h3>
-                        <p className="text-xs text-gray-500 font-medium">
-                            Daily Scans Used
+                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest opacity-60">
+                            Scans Today
                         </p>
                     </div>
-                    {/* Progress Bar background */}
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/5">
+                    {/* Thinner Progress Bar background */}
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/5">
                         <div 
-                            className="h-full bg-blue-500" 
+                            className="h-full bg-blue-500/50" 
                             style={{ width: `${Math.min(100, (currentUsage / searchLimit) * 100)}%` }} 
                         />
                     </div>
                 </div>
 
                 {/* Card 3: Keywords / Setup */}
-                <div className="relative overflow-hidden rounded-3xl bg-[#0F0F0F] border border-white/5 p-5 sm:p-6 flex flex-col justify-between h-32 md:h-40 group hover:border-white/10 transition-colors cursor-pointer" onClick={() => onNavigate('settings')}>
-                     <div className="flex justify-between items-start">
-                        <div className="p-2 bg-purple-500/10 rounded-xl text-purple-500">
-                             <Compass size={20} />
+                <div className="relative overflow-hidden rounded-2xl bg-[#0F0F0F] border border-white/5 p-4 sm:p-5 group hover:border-white/10 transition-colors cursor-pointer" onClick={() => onNavigate('settings')}>
+                     <div className="flex items-center justify-between mb-4">
+                        <div className="p-1.5 bg-purple-500/10 rounded-lg text-purple-500">
+                             <Compass size={16} />
                         </div>
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Tracking</span>
+                        <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500">Tracking</span>
                     </div>
                     <div>
-                        <h3 className="text-2xl font-bold text-white mb-1">
+                        <h3 className="text-xl font-bold text-white mb-0.5 tracking-tight">
                             {profile?.keywords?.length || 0}
                         </h3>
                         <div className="flex items-center gap-2">
-                            <p className="text-xs text-gray-500 font-medium">Active Keywords</p>
+                            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest opacity-60">Active Keywords</p>
                             {!isSetupComplete && (
-                                <span className="flex h-2 w-2 relative">
+                                <span className="flex h-1.5 w-1.5 relative">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+                                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-orange-500"></span>
                                 </span>
                             )}
                         </div>
                     </div>
                     {/* Hover Hint */}
-                     <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <ArrowRight size={16} className="text-gray-500" />
+                     <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <ArrowRight size={14} className="text-gray-500" />
                     </div>
                 </div>
             </div>
@@ -189,6 +192,7 @@ export default function LiveDiscoveryTab({
                             user={user} 
                             isDashboardView={true} 
                             initialUrl={initialSearch || profile?.website_url || ''} 
+                            autoScan={false}
                             onResultsFound={(count) => setHasResults(count > 0)}
                         />
                     </div>
@@ -206,7 +210,7 @@ export default function LiveDiscoveryTab({
                                 <div className="absolute inset-0 bg-orange-500/20 blur-md animate-pulse rounded-full" />
                             </div>
                             <div className="space-y-0.5">
-                                <h2 className="text-[10px] font-black tracking-[0.2em] text-gray-500 uppercase">Neural Stream</h2>
+                                <h2 className="text-[10px] font-black tracking-[0.2em] text-gray-500 uppercase">automated</h2>
                                 <p className="text-sm font-bold text-white tracking-tight">Live Intelligence</p>
                             </div>
                         </div>

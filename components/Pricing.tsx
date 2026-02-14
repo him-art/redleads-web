@@ -61,7 +61,7 @@ const Pricing = () => {
             name: 'Growth',
             price: 29,
             originalPrice: 39,
-            description: 'For growing startups with multiple products to monitor',
+            description: 'For growing startups to get maximum benefits',
             highlight: true,
             badge: 'BEST VALUE',
             features: {
@@ -128,7 +128,7 @@ const Pricing = () => {
                                     <span className="text-6xl font-black text-white tracking-tighter">${plan.price}</span>
                                     <span className="text-sm font-bold text-gray-600 uppercase tracking-widest ml-1">/mo</span>
                                 </div>
-                                <p className="text-xs font-bold text-gray-500 leading-relaxed max-w-[240px] uppercase tracking-wider">{plan.description}. API-safe discovery engine.</p>
+                                <p className="text-xs font-bold text-gray-500 leading-relaxed max-w-[240px] uppercase tracking-wider">{plan.description}. Start finding users.</p>
                             </div>
 
                             <div className="space-y-10 flex-grow mb-14">

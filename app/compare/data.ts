@@ -179,7 +179,7 @@ export const comparisons: ComparisonData[] = [
     competitor: 'BillyBuzz',
     competitorDescription: 'An AI-powered social listening tool for brand mentions.',
     title: 'RedLeads vs BillyBuzz: Which is Better for Reddit Marketing? (2026)',
-    description: 'Compare RedLeads and BillyBuzz for Reddit marketing. See features, pricing, and which tool is best for finding leads.',
+    description: 'Compare RedLeads and BillyBuzz for Reddit marketing. See features, pricing, and which tool is best for automated.',
     keywords: ['BillyBuzz alternative', 'RedLeads vs BillyBuzz', 'Reddit marketing'],
     features: [
       { name: 'AI-Powered Analysis', redleads: true, competitor: true },

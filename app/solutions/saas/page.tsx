@@ -33,7 +33,7 @@ export default function SaaSPage() {
               href="/login"
               className="px-10 py-5 bg-orange-500 text-white font-black uppercase tracking-widest rounded-full hover:scale-105 transition-transform w-full sm:w-auto"
             >
-              Start Finding Leads
+              Start automated
             </Link>
             <Link 
               href="/protocol"

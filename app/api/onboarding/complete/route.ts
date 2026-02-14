@@ -40,43 +40,6 @@ export async function POST(req: Request) {
             throw new Error('Failed to save profile');
         }
 
-        // 2. Trigger Initial Scan with a strict 15s timeout
-        console.log('[Onboarding] Triggering initial scan for:', url);
-        
-        try {
-            // We use a timeout to ensure the user isn't stuck if external APIs are slow
-            const scanPromise = performScan(url, {
-                keywords,
-                description,
-                tavilyApiKey: process.env.TAVILY_API_KEY
-            });
-
-            const timeoutPromise = new Promise<null>((_, reject) => 
-                setTimeout(() => reject(new Error('Scan timeout')), 15000)
-            );
-
-            const scanResult = await Promise.race([scanPromise, timeoutPromise]) as any;
-
-            // Persist Leads if scan finished in time
-            if (scanResult && scanResult.leads && scanResult.leads.length > 0) {
-                 const leadsToSave = scanResult.leads.map((lead: any) => ({
-                    user_id: user.id,
-                    title: lead.title,
-                    subreddit: lead.subreddit,
-                    url: lead.url,
-                    status: 'new',
-                    match_score: lead.match_category === 'High' ? 0.95 : lead.match_category === 'Medium' ? 0.75 : 0.45,
-                    match_category: lead.match_category || 'Medium',
-                    is_saved: false
-                }));
-
-                await supabase.from('monitored_leads').insert(leadsToSave);
-            }
-        } catch (scanError) {
-            console.error('[Onboarding Scan Error/Timeout]', scanError);
-            // We don't fail the whole onboarding if only the scan fails
-        }
-
         return NextResponse.json({ success: true });
 
     } catch (error: any) {

@@ -63,87 +63,111 @@ export function DashboardDataProvider({ children, userId }: { children: React.Re
     const [analyses, setAnalyses] = useState<LeadAnalysis[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     
-    // Use useMemo to ensure the supabase client is stable across renders
+    // Use useRef for tracking fetch times to avoid re-triggering memoized fetchers
+    const lastLeadsFetch = React.useRef<number>(0);
+    
     const supabase = React.useMemo(() => createClient(), []);
 
-    const fetchLeads = useCallback(async () => {
+    const fetchLeads = useCallback(async (force = false) => {
         if (!userId) return;
-        const { data, error } = await supabase
-            .from('monitored_leads')
-            .select('*')
-            .eq('user_id', userId)
-            .order('created_at', { ascending: false })
-            .limit(1000);
         
-        if (!error && data) setLeads(data);
-    }, [userId]);
+        const now = Date.now();
+        // 1-Minute Cache Check using ref to avoid dependency loop
+        if (!force && lastLeadsFetch.current > 0 && now - lastLeadsFetch.current < 60000) {
+            return;
+        }
+
+        try {
+            const { data, error } = await supabase
+                .from('monitored_leads')
+                .select('*')
+                .eq('user_id', userId)
+                .order('created_at', { ascending: false })
+                .limit(1000);
+            
+            if (!error && data) {
+                setLeads(data);
+                lastLeadsFetch.current = now;
+            }
+        } catch (err) {
+            console.error('Error fetching leads:', err);
+        }
+    }, [userId, supabase]);
 
     const updateLead = useCallback(async (id: string, updates: any) => {
-        // Optimistic update
         setLeads(prev => prev.map(l => l.id === id ? { ...l, ...updates } : l));
         const { error } = await supabase.from('monitored_leads').update(updates).eq('id', id);
         if (error) {
-            // Revert on error
-            fetchLeads();
+            fetchLeads(true); // Sync back on error
             throw error;
         }
     }, [supabase, fetchLeads]);
 
     const deleteLead = useCallback(async (id: string) => {
-        // Optimistic update
         setLeads(prev => prev.filter(l => l.id !== id));
         const { error } = await supabase.from('monitored_leads').delete().eq('id', id);
         if (error) {
-            fetchLeads();
+            fetchLeads(true);
             throw error;
         }
     }, [supabase, fetchLeads]);
 
     const fetchRoadmap = useCallback(async () => {
         if (!userId) return;
-        const [nodesRes, progressRes] = await Promise.all([
-            supabase.from('roadmap_nodes').select('*').order('order_index'),
-            supabase.from('user_roadmap_progress').select('*').eq('user_id', userId)
-        ]);
+        try {
+            const [nodesRes, progressRes] = await Promise.all([
+                supabase.from('roadmap_nodes').select('*').order('order_index'),
+                supabase.from('user_roadmap_progress').select('*').eq('user_id', userId)
+            ]);
 
-        if (nodesRes.data) setRoadmapNodes(nodesRes.data);
-        if (progressRes.data) setRoadmapProgress(progressRes.data);
-    }, [userId]);
+            if (nodesRes.data) setRoadmapNodes(nodesRes.data);
+            if (progressRes.data) setRoadmapProgress(progressRes.data);
+        } catch (err) {
+            console.error('Error fetching roadmap:', err);
+        }
+    }, [userId, supabase]);
 
     const fetchAnalyses = useCallback(async () => {
         if (!userId) return;
-        const { data } = await supabase
-            .from('lead_analyses')
-            .select('*')
-            .eq('user_id', userId)
-            .order('created_at', { ascending: false })
-            .limit(5);
-        if (data) setAnalyses(data);
-    }, [userId]);
+        try {
+            const { data } = await supabase
+                .from('lead_analyses')
+                .select('*')
+                .eq('user_id', userId)
+                .order('created_at', { ascending: false })
+                .limit(5);
+            if (data) setAnalyses(data);
+        } catch (err) {
+            console.error('Error fetching analyses:', err);
+        }
+    }, [userId, supabase]);
 
     useEffect(() => {
+        let isMounted = true;
+        
         async function init() {
             if (!userId) return;
             setIsLoading(true);
             await Promise.all([fetchLeads(), fetchRoadmap(), fetchAnalyses()]);
-            setIsLoading(false);
+            if (isMounted) setIsLoading(false);
         }
+        
         init();
 
-        // Realtime subscription for leads
         const channel = supabase
-            .channel('dashboard-updates')
+            .channel(`dashboard-updates-${userId}`)
             .on(
                 'postgres_changes',
                 { event: '*', schema: 'public', table: 'monitored_leads', filter: `user_id=eq.${userId}` },
-                () => { fetchLeads(); }
+                () => { fetchLeads(true); }
             )
             .subscribe();
 
         return () => {
+            isMounted = false;
             supabase.removeChannel(channel);
         };
-    }, [userId, fetchLeads, fetchRoadmap, fetchAnalyses]);
+    }, [userId, fetchLeads, fetchRoadmap, fetchAnalyses, supabase]);
 
     const value = React.useMemo(() => ({
           leads,
