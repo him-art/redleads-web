@@ -84,7 +84,7 @@ export async function POST(req: Request) {
                     // Determine keyword limit based on plan
                     let keywordLimit = 5;
                     if (planType === 'growth') keywordLimit = 15;
-                    if (planType === 'lifetime') keywordLimit = 50;
+                    if (planType === 'lifetime') keywordLimit = 15;
                     
                     await supabase
                         .from('profiles')

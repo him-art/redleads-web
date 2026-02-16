@@ -218,7 +218,7 @@ const Pricing = () => {
                     ))}
 
                     {/* Lifetime Plan (Obsidian Style) */}
-                    <div className="relative rounded-[2.5rem] bg-gradient-to-b from-white/[0.05] to-transparent border border-white/10 p-8 lg:p-12 flex flex-col group mt-4">
+                    <div className="relative h-full p-8 md:p-12 bg-gradient-to-br from-[#1a1a1a] to-black border-2 border-red-500/50 rounded-[2.5rem] group flex flex-col">
                         {/* Sold Out Overlay */}
                         {slots && slots.sold >= slots.total && (
                             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center rounded-[2.5rem]">
@@ -228,17 +228,17 @@ const Pricing = () => {
                                 </div>
                             </div>
                         )}
-
-                        <div className="absolute -top-4 right-10 bg-white text-black px-6 py-2.5 rounded-2xl flex items-center gap-3 z-20 shadow-2xl border-none">
+                        
+                        <div className="absolute -top-4 right-10 bg-yellow-500 text-black px-6 py-2.5 rounded-2xl flex items-center gap-3 z-20 shadow-2xl border-none">
                             <span className="text-xs font-black uppercase tracking-[0.3em] flex items-center gap-3">
-                                <Crown size={14} className="text-black/80" />
-                                LIMITED SEATS
+                                <Crown size={14} className="text-black" />
+                                ONLY 10 SEATS LEFT
                             </span>
                         </div>
 
                         <div className="mb-10 relative">
                             <h3 className="text-2xl font-black mb-6 text-white flex items-center gap-2">
-                                Lifetime <Sparkles size={18} className="text-orange-500 animate-pulse" />
+                                Lifetime Plan
                             </h3>
                             <div className="flex items-baseline gap-2 mb-4">
                                 <span className="text-6xl font-black text-white tracking-tighter">$199</span>
@@ -247,16 +247,6 @@ const Pricing = () => {
                             <p className="text-xs font-bold text-gray-500 leading-relaxed max-w-[240px] uppercase tracking-wider">Full lifetime access and all future features included.</p>
                         </div>
 
-                        {/* Urgency Slots Ticker */}
-                        <div className="mb-8 p-4 bg-orange-500/5 rounded-2xl border border-orange-500/10 inline-flex items-center justify-center gap-4">
-                            <div className="relative flex h-3 w-3">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
-                            </div>
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-500">
-                                {slots ? `${slots.total - slots.sold}/${slots.total}` : 'Checking'} SEATS REMAINING
-                            </span>
-                        </div>
 
                         <div className="flex-grow mb-14">
                             {/* Everything in Growth callout */}
@@ -273,10 +263,10 @@ const Pricing = () => {
                             </div>
                             <ul className="space-y-5">
                                 {[
-                                    { name: '10 power scans per day', icon: <Globe size={14} /> },
-                                    { name: '50 tracked keywords', icon: <Search size={14} /> },
-                                    { name: 'Unlimited AI replies', icon: <Bot size={14} /> },
-                                    { name: 'All future features included', icon: <Crown size={14} /> }
+                                    { name: 'All future features included', icon: <Crown size={14} /> },
+                                    { name: '24/7 personal support', icon: <Bot size={14} /> },
+                                    { name: 'Life time access', icon: <Crown size={14} /> }
+                                    
                                 ].map((item) => (
                                     <li key={item.name} className="flex items-center gap-4">
                                         <div className="p-1.5 rounded-lg text-white bg-white/5 border border-white/10">

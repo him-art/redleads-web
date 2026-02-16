@@ -64,7 +64,7 @@ export async function POST(req: Request) {
             'free': 5,
             'starter': 100,
             'growth': 500,
-            'lifetime': 9999
+            'lifetime': 500
         };
 
         const currentTierKey = tier || 'free';

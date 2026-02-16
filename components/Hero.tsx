@@ -75,9 +75,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
           className="max-w-[100vw] xl:max-w-none mx-auto text-[1.75rem] sm:text-[2.75rem] md:text-[5rem] lg:text-[7rem] font-medium text-[#f5f5f5] mb-8 leading-[1.05] px-4 font-serif"
         >
           {/* Forced three lines for branding presence */}
-          <span className="block text-[#ff914d] text-lg md:text-0.1xl font-black uppercase tracking-[0.4em] mb-4 font-sans">
-            RedLeads
-          </span>
+        
           <span className="flex flex-wrap items-center font-medium justify-center gap-x-3 sm:gap-x-6 sm:whitespace-nowrap">
             <span>Find your</span>
             <span className="text-[#ff6900] font-bold font-medium">first 100 users</span>
@@ -149,6 +147,9 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
              </div>
              <div className="flex items-center gap-2 text-xs text-slate-400 uppercase tracking-wider font-medium">
                 <CheckCircle2 className="w-3 h-3" /> 3-Day Free Trial
+             </div>
+             <div className="flex items-center gap-2 text-xs text-slate-400 uppercase tracking-wider font-medium">
+                <CheckCircle2 className="w-3 h-3" /> For SaaS Founders
              </div>
           </div>
         </motion.div>

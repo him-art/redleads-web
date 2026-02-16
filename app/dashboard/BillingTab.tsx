@@ -1,6 +1,6 @@
 'use client';
 
-import { CheckCircle2, Zap, Loader2, ShieldCheck, Globe, Search, Bot, Compass } from 'lucide-react';
+import { CheckCircle2, Zap, Loader2, ShieldCheck, Globe, Search, Bot, Compass, Crown, Sparkles, ArrowRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: any; isGrowth: boolean; isAdmin: boolean }) {
@@ -12,10 +12,11 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
     const [isLoading, setIsLoading] = useState<string | null>(null);
     const [isManaging, setIsManaging] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
-    
-    useEffect(() => { setIsMounted(true); }, []);
+    useEffect(() => { 
+        setIsMounted(true); 
+    }, []);
 
-    const handleUpgrade = async (plan: 'starter' | 'growth') => {
+    const handleUpgrade = async (plan: 'starter' | 'growth' | 'lifetime') => {
         setIsLoading(plan);
         try {
             const res = await fetch('/api/payments/create-checkout', {
@@ -189,6 +190,7 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
                 <p className="text-gray-500 font-bold uppercase tracking-[0.2em] text-[10px]">Manage your subscriptions and upgrades</p>
             </div>
 
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Current Status Card */}
                 <div className="lg:col-span-3 bg-gradient-to-br from-[#141414] to-[#0a0a0a] border border-white/10 rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden">
@@ -207,9 +209,9 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {[
-                            { label: 'Keywords', value: isLifetime ? '50 Keywords' : isGrowth ? '15 Keywords' : isStarter ? '5 Keywords' : 'Free Trial', icon: <Search size={16} /> },
-                            { label: 'Power Scans', value: isLifetime ? '10/Day' : isGrowth ? '5/Day' : isStarter ? '2/Day' : 'Free Trial', icon: <Compass size={16} /> },
-                            { label: 'AI Outreach', value: isLifetime ? 'Unlimited Drafts' : isGrowth ? '500 Drafts / Month' : isStarter ? '100 Drafts / Month' : '5 Lifetime', icon: <Bot size={16} /> },
+                            { label: 'Keywords', value: isLifetime ? '15 Keywords' : isGrowth ? '15 Keywords' : isStarter ? '5 Keywords' : 'Free Trial', icon: <Search size={16} /> },
+                            { label: 'Power Scans', value: isLifetime ? '5/Day' : isGrowth ? '5/Day' : isStarter ? '2/Day' : 'Free Trial', icon: <Compass size={16} /> },
+                            { label: 'AI Outreach', value: isLifetime ? '500 Drafts / Month' : isGrowth ? '500 Drafts / Month' : isStarter ? '100 Drafts / Month' : '5 Lifetime', icon: <Bot size={16} /> },
                             { label: 'Support', value: isLifetime ? 'Priority Founder' : 'Standard Support', icon: <CheckCircle2 size={16} /> }
                         ].map((stat) => (
                             <div key={stat.label} className="p-4 rounded-2xl bg-white/5 border border-white/5">
@@ -222,7 +224,7 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
                         ))}
                     </div>
 
-                    {isSubscribed && !isAdmin && (
+                    {isSubscribed && !isAdmin && !isLifetime && (
                         <div className="mt-12 pt-8 border-t border-white/5 flex flex-wrap gap-4">
                             <button onClick={handleManageSubscription} disabled={isManaging} className="px-8 py-4 bg-white/5 text-white font-black rounded-xl hover:bg-white/10 transition-all text-[10px] uppercase tracking-widest border border-white/5">
                                 {isManaging ? <Loader2 size={14} className="animate-spin" /> : 'Portal Access'}
@@ -261,6 +263,74 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
                     </>
                 )}
             </div>
+
+            {/* Lifetime Upgrade Invitation for existing users or trial users */}
+            {!isLifetime && (
+                <div className="mt-12 relative rounded-[2.5rem] bg-gradient-to-br from-white/[0.05] to-[#141414] border-2 border-red-500/50 p-8 md:p-12 overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <Crown size={180} className="text-white -rotate-12 translate-x-20 -translate-y-20" />
+                    </div>
+                    
+                    <div className="relative z-10 flex flex-col md:flex-row items-center gap-12">
+                        <div className="flex-grow">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 mb-6">
+                                <Crown size={12} className="fill-yellow-500" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Limited Founding Member Offer</span>
+                            </div>
+                            
+                            <h3 className="text-3xl sm:text-4xl font-black text-white mb-4 tracking-tight flex items-center gap-3">
+                                Lock in Growth Forever. <Sparkles size={24} className="text-orange-500 animate-pulse" />
+                            </h3>
+                            
+                            <p className="text-gray-400 font-medium max-w-xl mb-8 leading-relaxed">
+                                Stop the monthly "SaaS Tax." Pay once and get every lead, every power scan, and every future AI update—without ever seeing another invoice.
+                            </p>
+
+                            <div className="flex flex-wrap gap-8 mb-8">
+                                {[
+                                    { label: 'One-Time', value: '$199', icon: <Zap size={14} /> },
+                                    { label: 'Value', value: '$348/Year', icon: <CheckCircle2 size={14} /> }
+                                ].map((pill) => (
+                                    <div key={pill.label} className="flex flex-col">
+                                        <div className="flex items-center gap-2 text-gray-500 mb-1">
+                                            {pill.icon}
+                                            <span className="text-[10px] font-black uppercase tracking-widest">{pill.label}</span>
+                                        </div>
+                                        <p className="text-lg font-black text-white">{pill.value}</p>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <button
+                                onClick={() => handleUpgrade('lifetime')}
+                                disabled={!!isLoading}
+                                className="inline-flex items-center justify-center gap-3 px-10 py-5 bg-white text-black font-black rounded-2xl hover:bg-orange-500 hover:text-white transition-all text-xs uppercase tracking-[0.2em] active:scale-95 disabled:opacity-50"
+                            >
+                                {isLoading === 'lifetime' ? <Loader2 size={16} className="animate-spin" /> : <>Claim My Lifetime Seat <ArrowRight size={16} /></>}
+                            </button>
+                        </div>
+
+                        <div className="w-full md:w-72 flex-shrink-0">
+                            <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-4">
+                                <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest text-center mb-2">Growth Features +</p>
+                                {[
+                                    '15 Tracked Keywords',
+                                    '5 Power Scans / Day',
+                                    '500 AI Drafts / Month',
+                                    'Priority Beta Access'
+                                ].map((feat) => (
+                                    <div key={feat} className="flex items-center gap-3">
+                                        <div className="p-1 rounded-md bg-orange-500/10 text-orange-500">
+                                            <CheckCircle2 size={12} />
+                                        </div>
+                                        <span className="text-[10px] font-bold text-gray-300 uppercase tracking-wider">{feat}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
