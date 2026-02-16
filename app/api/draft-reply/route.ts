@@ -25,12 +25,12 @@ export async function POST(req: Request) {
             .eq('id', user.id)
             .single();
 
-        const tier = profile?.subscription_tier; // 'pro' (Growth), 'scout' (Starter), or null/free
+        const tier = profile?.subscription_tier; // 'growth', 'starter', 'lifetime', or null/free
         let genCount = profile?.reply_generation_count || 0;
         const lastReplyAt = profile?.last_reply_at;
 
         // --- Trial Expiration Check (Free Only) ---
-        const isPaid = tier === 'scout' || tier === 'pro';
+        const isPaid = tier === 'starter' || tier === 'growth' || tier === 'lifetime';
         if (!isPaid) {
             const trialEndsAt = profile?.trial_ends_at 
                 ? new Date(profile.trial_ends_at) 
@@ -56,13 +56,15 @@ export async function POST(req: Request) {
         }
 
         // 3. Define Limits (Generations: 1 post = 1 generation = 3 variants)
-        // Trial: 5 generations (Lifetime)
-        // Scout (Starter): 100 generations (Monthly)
-        // Growth (pro): 500 generations (Monthly)
+        // Trial: 5 generations (Lifetime of trial)
+        // Starter: 100 generations (Monthly)
+        // Growth: 500 generations (Monthly)
+        // Lifetime: Unlimited (effectively 9999)
         const limits: Record<string, number> = {
             'free': 5,
-            'scout': 100,
-            'pro': 500
+            'starter': 100,
+            'growth': 500,
+            'lifetime': 9999
         };
 
         const currentTierKey = tier || 'free';

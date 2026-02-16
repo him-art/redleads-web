@@ -39,8 +39,8 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
     useEffect(() => { setIsMounted(true); }, []);
 
     // Trial expiration check - Moved up to use for initialization
-    const isPro = profile?.subscription_tier === 'pro' || profile?.effective_tier === 'pro';
-    const isScout = profile?.subscription_tier === 'scout' || profile?.effective_tier === 'scout' || isPro;
+    const isGrowth = profile?.subscription_tier === 'growth' || profile?.effective_tier === 'growth';
+    const isStarter = profile?.subscription_tier === 'starter' || profile?.effective_tier === 'starter' || isGrowth;
     const isAdmin = profile?.is_admin === true || user?.email === 'hjayaswar@gmail.com';
     
     const trialEndsAtString = profile?.trial_ends_at || (profile?.created_at ? (() => {
@@ -61,7 +61,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
             return 0;
         }
     })();
-    const isActuallyExpired = !isScout && !isAdmin && (trialExpired || (trialEndsAt && daysRemaining <= 0));
+    const isActuallyExpired = !isStarter && !isAdmin && (trialExpired || (trialEndsAt && daysRemaining <= 0));
 
     // Force Billing tab if expired on mount
     useEffect(() => {
@@ -70,9 +70,9 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
         }
     }, [isActuallyExpired]);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const showPaywall = isActuallyExpired && !isScout && !isAdmin;
+    const showPaywall = isActuallyExpired && !isStarter && !isAdmin;
 
-    const handleCheckout = async (plan: 'scout' | 'pro' | 'professional' = 'pro') => {
+    const handleCheckout = async (plan: 'starter' | 'growth' | 'lifetime' = 'growth') => {
         const res = await fetch('/api/payments/create-checkout', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -108,7 +108,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
             {showOnboarding && (
                 <OnboardingWizard 
                     userEmail={user.email} 
-                    keywordLimit={isScout && !isPro ? 5 : 15}
+                    keywordLimit={isStarter && !isGrowth ? 5 : 15}
                     onComplete={(data, onboardingUrl) => {
                         setShowOnboarding(false);
                         // Redirect with search param to trigger initial scan
@@ -227,7 +227,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                             <div className="overflow-hidden">
                                 <p className="text-xs font-bold text-white truncate">{user.email}</p>
                                 <p className="text-[10px] text-gray-500 truncate">
-                                    {isAdmin ? 'Administrator' : isPro ? 'Growth Member' : isScout ? 'Starter Member' : 'Free Trial'}
+                                    {isAdmin ? 'Administrator' : profile?.subscription_tier === 'lifetime' ? 'Lifetime Founder' : isGrowth ? 'Growth Member' : isStarter ? 'Starter Member' : 'Free Trial'}
                                 </p>
                             </div>
                         </div>
@@ -255,7 +255,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                                 exit={{ opacity: 0, y: -10 }}
                                                 transition={{ duration: 0.2 }}
                                             >
-                                                <LiveDiscoveryTab user={user} profile={profile} isPro={isPro} isScout={isScout} isAdmin={isAdmin} initialSearch={effectiveSearch} onNavigate={(tab) => setActiveTab(tab as any)} />
+                                                <LiveDiscoveryTab user={user} profile={profile} isGrowth={isGrowth} isStarter={isStarter} isAdmin={isAdmin} initialSearch={effectiveSearch} onNavigate={(tab) => setActiveTab(tab as any)} />
                                             </motion.div>
                                         )}
 
@@ -267,7 +267,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                                 exit={{ opacity: 0, y: -10 }}
                                                 transition={{ duration: 0.2 }}
                                             >
-                                                <ReportsTab reports={reports} profile={profile} user={user} isPro={isPro} isAdmin={isAdmin} />
+                                                <ReportsTab reports={reports} profile={profile} user={user} isGrowth={isGrowth} isAdmin={isAdmin} />
                                             </motion.div>
                                         )}
 
@@ -303,7 +303,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                                 exit={{ opacity: 0, y: -10 }}
                                                 transition={{ duration: 0.2 }}
                                             >
-                                                <BillingTab profile={profile} isPro={isPro} isAdmin={isAdmin} />
+                                                <BillingTab profile={profile} isGrowth={isGrowth} isAdmin={isAdmin} />
                                             </motion.div>
                                         )}
                                     </AnimatePresence>

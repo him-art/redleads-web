@@ -4,7 +4,7 @@
 @theme {
   --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-garamond), serif;
-  --color-primary: #f25e36; /* brand-orange */
+  --color-primary: #ff914d; /* brand-orange */
   --color-primary-foreground: #ffffff;
   --color-accent: #f59e0b; /* amber-500 */
   --color-accent-foreground: #ffffff;

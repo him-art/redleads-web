@@ -10,14 +10,14 @@ const Footer = () => {
           
           {/* Brand Mission */}
           <div className="flex flex-col gap-6">
-            <div className="w-12 h-12 relative">
+            <Link href="/" className="w-12 h-12 relative group/logo">
                <Image 
                  src="/footer-logo.png" 
                  alt="RedLeads Logo" 
                  fill 
-                 className="object-contain"
+                 className="object-contain transition-transform group-hover/logo:scale-110"
                />
-            </div>
+            </Link>
             <p className="text-gray-500 text-[13px] font-medium leading-relaxed tracking-wide uppercase max-w-[200px]">
               PRECISION AUTOMATION FOR SCALEABLE REDDIT GROWTH.
             </p>

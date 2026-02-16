@@ -111,11 +111,11 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
                                             {/* ACTION: DRAFT REPLY */}
                                             <button
                                                 onClick={() => setDraftingLead(lead)}
-                                                className="px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/10 text-slate-400 text-[10px] font-black uppercase tracking-wider hover:bg-orange-500 hover:text-black hover:border-orange-500 transition-all flex items-center gap-1.5 group/btn"
+                                                className="px-3 py-1.5 rounded-lg bg-[#ff914d] text-black border border-[#ff914d] text-[10px] font-black uppercase tracking-wider hover:bg-[#ff914d]/90 transition-all flex items-center gap-1.5 group/btn"
                                                 title="Open Reply Generator"
                                             >
-                                                <MessageSquarePlus size={12} className="text-orange-500 group-hover:text-black" />
-                                                Draft
+                                                <MessageSquarePlus size={12} className="text-black" />
+                                                Draft Reply
                                             </button>
 
                                             <button 

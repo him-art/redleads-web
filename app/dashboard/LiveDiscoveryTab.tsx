@@ -10,22 +10,22 @@ import { useDashboardData } from '@/app/dashboard/DashboardDataContext';
 export default function LiveDiscoveryTab({ 
     user, 
     profile, 
-    isPro,
-    isScout,
+    isGrowth,
+    isStarter,
     isAdmin,
     initialSearch = '', 
     onNavigate 
 }: { 
     user: any, 
     profile: any, 
-    isPro: boolean,
-    isScout?: boolean,
+    isGrowth: boolean,
+    isStarter?: boolean,
     isAdmin: boolean,
     initialSearch?: string, 
     onNavigate: (tab: string) => void 
 }) {
-    const isEffectivePro = isPro || isAdmin;
-    const isActuallySubscribed = isEffectivePro || isScout;
+    const isEffectiveGrowth = isGrowth || isAdmin;
+    const isActuallySubscribed = isEffectiveGrowth || isStarter;
     const [isUpgrading, setIsUpgrading] = useState(false);
 
     const router = useRouter();
@@ -53,7 +53,7 @@ export default function LiveDiscoveryTab({
     const isInTrial = !isActuallySubscribed && !isActuallyExpired && daysRemaining > 0;
     const canSeeLiveFeed = isActuallySubscribed || isInTrial;
 
-    const searchLimit = isEffectivePro ? 5 : isScout ? 2 : 5;
+    const searchLimit = isEffectiveGrowth ? 5 : isStarter ? 2 : 5;
     const currentUsage = (() => {
         try {
             if (!isActuallySubscribed || !profile?.last_scan_at) return profile?.scan_count || 0;
@@ -71,7 +71,7 @@ export default function LiveDiscoveryTab({
         profile?.keywords?.length > 0
     );
 
-    const handleUpgrade = async (plan: 'scout' | 'pro' = 'pro') => {
+    const handleUpgrade = async (plan: 'starter' | 'growth' = 'growth') => {
         try {
             setIsUpgrading(true);
             const res = await fetch('/api/payments/create-checkout', {
@@ -103,14 +103,14 @@ export default function LiveDiscoveryTab({
                 {/* Card 1: Plan Status */}
                 <div className="relative overflow-hidden rounded-2xl bg-[#0F0F0F] border border-white/5 p-4 sm:p-5 group hover:border-white/10 transition-colors">
                     <div className="flex items-center justify-between mb-4">
-                        <div className="p-1.5 bg-orange-500/10 rounded-lg text-orange-500">
+                        <div className="p-1.5 bg-[#ff914d]/10 rounded-lg text-[#ff914d]">
                              {isActuallySubscribed ? <ShieldCheck size={16} /> : <Clock size={16} />}
                         </div>
                         <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500">Plan Status</span>
                     </div>
                     <div>
                         <h3 className="text-xl font-bold text-white mb-0.5 tracking-tight">
-                            {isAdmin ? 'Admin' : isPro ? 'Growth' : isScout ? 'Starter' : 'Free Trial'}
+                            {isAdmin ? 'Admin' : isGrowth ? 'Growth' : isStarter ? 'Starter' : 'Free Trial'}
                         </h3>
                         <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest opacity-60">
                             {isInTrial 
@@ -164,7 +164,7 @@ export default function LiveDiscoveryTab({
                             {!isSetupComplete && (
                                 <span className="flex h-1.5 w-1.5 relative">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-orange-500"></span>
+                                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#ff914d]"></span>
                                 </span>
                             )}
                         </div>
@@ -179,11 +179,11 @@ export default function LiveDiscoveryTab({
             {/* 2. Main Search Area */}
             <div className="relative group mb-8">
                 <div className={`relative bg-[#0F0F0F] border rounded-3xl p-1 transition-all ${
-                    hasResults ? 'border-orange-500/50 shadow-[0_0_30px_rgba(249,115,22,0.1)]' : 'border-white/5'
+                    hasResults ? 'border-[#ff914d]/50 shadow-[0_0_30px_rgba(255,145,77,0.1)]' : 'border-white/5'
                 }`}>
                     <div className="px-4 sm:px-6 py-4 border-b border-white/5 flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+                            <div className="w-2 h-2 rounded-full bg-[#ff914d] animate-pulse" />
                             <span className="text-xs font-bold uppercase tracking-widest text-gray-400">Power Scan</span>
                         </div>
                     </div>
@@ -206,8 +206,8 @@ export default function LiveDiscoveryTab({
                     <div className="flex items-center justify-between px-2">
                         <div className="flex items-center gap-3">
                             <div className="relative">
-                                <Activity className="text-orange-500" size={18} />
-                                <div className="absolute inset-0 bg-orange-500/20 blur-md animate-pulse rounded-full" />
+                                <Activity className="text-[#ff914d]" size={18} />
+                                <div className="absolute inset-0 bg-[#ff914d]/20 blur-md animate-pulse rounded-full" />
                             </div>
                             <div className="space-y-0.5">
                                 <h2 className="text-[10px] font-black tracking-[0.2em] text-gray-500 uppercase">automated</h2>
@@ -255,14 +255,14 @@ export default function LiveDiscoveryTab({
                                     </div>
                                     <div className="space-y-3">
                                         <button 
-                                            onClick={() => handleUpgrade('pro')}
+                                            onClick={() => handleUpgrade('growth')}
                                             disabled={isUpgrading}
-                                            className="w-full py-5 bg-orange-500 hover:bg-orange-400 text-black font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
+                                            className="w-full py-5 bg-[#ff914d] hover:bg-[#ff914d]/90 text-black font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
                                             {isUpgrading ? 'Loading...' : <>Get Growth Access   $29/mo <span className="line-through opacity-50 ml-1 text-[10px]">$39</span></>}
                                         </button>
                                         <button 
-                                            onClick={() => handleUpgrade('scout')}
+                                            onClick={() => handleUpgrade('starter')}
                                             disabled={isUpgrading}
                                             className="w-full py-5 bg-white/10 hover:bg-white/20 text-white font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
@@ -289,16 +289,16 @@ export default function LiveDiscoveryTab({
                                 </p>
                                 <div className="space-y-2">
                                     <button 
-                                        onClick={() => handleUpgrade('scout')}
+                                        onClick={() => handleUpgrade('starter')}
                                         disabled={isUpgrading}
                                         className="w-full py-3 bg-white/10 text-white border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-white/20 transition-all flex items-center justify-center gap-2"
                                     >
                                         Starter ($15) <span className="line-through text-gray-500">$19</span>
                                     </button>
                                     <button 
-                                        onClick={() => handleUpgrade('pro')}
+                                        onClick={() => handleUpgrade('growth')}
                                         disabled={isUpgrading}
-                                        className="w-full py-3 bg-orange-500 text-black rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-orange-400 transition-all flex items-center justify-center gap-2"
+                                        className="w-full py-3 bg-[#ff914d] text-black rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-[#ff914d]/90 transition-all flex items-center justify-center gap-2"
                                     >
                                         Growth ($29) <span className="line-through text-black/40">$39</span>
                                     </button>

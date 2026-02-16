@@ -1,16 +1,30 @@
 'use client';
 
-import { useState } from 'react';
-import { Loader2, Zap, Lock, ArrowRight, Search, Globe, Bot, Mail } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Loader2, Zap, Lock, ArrowRight, Search, Globe, Bot, Mail, Crown, Sparkles } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
 
 interface PaywallModalProps {
-    onCheckout: (plan: 'scout' | 'pro') => Promise<void>;
+    onCheckout: (plan: 'starter' | 'growth' | 'lifetime') => Promise<void>;
 }
 
 export default function PaywallModal({ onCheckout }: PaywallModalProps) {
     const [isLoading, setIsLoading] = useState<string | null>(null);
+    const [slots, setSlots] = useState<{ sold: number; total: number } | null>(null);
 
-    const handleClick = async (plan: 'scout' | 'pro') => {
+    useEffect(() => {
+        const fetchSlots = async () => {
+            const supabase = createClient();
+            const { data } = await supabase
+                .from('lifetime_slots')
+                .select('sold_slots, total_slots')
+                .single();
+            if (data) setSlots({ sold: data.sold_slots, total: data.total_slots });
+        };
+        fetchSlots();
+    }, []);
+
+    const handleClick = async (plan: 'starter' | 'growth' | 'lifetime') => {
         setIsLoading(plan);
         try {
             await onCheckout(plan);
@@ -23,8 +37,8 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
     };
 
     return (
-        <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-3xl flex items-center justify-center p-4">
-            <div className="max-w-2xl w-full bg-[#141414] border border-white/5 rounded-[3rem] p-8 md:p-12 text-center relative overflow-hidden ring-1 ring-white/10 shadow-2xl">
+        <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-3xl flex items-center justify-center p-4 overflow-y-auto pt-20 pb-20">
+            <div className="max-w-4xl w-full bg-[#141414] border border-white/5 rounded-[3rem] p-8 md:p-12 text-center relative overflow-hidden ring-1 ring-white/10 shadow-2xl">
                 <div className="relative z-10">
                     <div className="mx-auto w-16 h-16 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mb-6">
                         <Lock className="w-8 h-8 text-orange-500" />
@@ -38,73 +52,85 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                         Upgrade to keep finding high-intent leads 24/7.
                     </p>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
                         {/* Starter Option */}
-                        <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5 flex flex-col">
+                        <div className="p-6 rounded-[2rem] bg-white/5 border border-white/5 flex flex-col">
                             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 mb-2">Starter</h3>
-                            <div className="flex items-baseline gap-2 mb-8">
-                                <span className="text-3xl font-black text-white">$15</span>
-                                <span className="text-sm font-bold text-gray-700 line-through decoration-orange-500/50 decoration-1 tracking-tight">$19</span>
+                            <div className="flex items-baseline gap-2 mb-6">
+                                <span className="text-2xl font-black text-white">$15</span>
                                 <span className="text-xs text-gray-600 font-bold uppercase ml-1">/mo</span>
                             </div>
-                            <ul className="space-y-4 mb-10 flex-grow">
-                                <li className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-3">
-                                    <Globe size={12} className="text-orange-500/50" /> 2 website power scan per day
+                            <ul className="space-y-3 mb-8 flex-grow">
+                                <li className="text-[9px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                                    <Search size={10} className="text-orange-500/50" /> 5 Key-words
                                 </li>
-                                <li className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-3">
-                                    <Search size={12} className="text-orange-500/50" /> 5 Tracked Keywords
-                                </li>
-                                <li className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-3">
-                                    <Bot size={12} className="text-orange-500/50" /> 100 AI Replies /mo
-                                </li>
-                                <li className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-3">
-                                    <Mail size={12} className="text-gray-700" /> 30 daily auto DMs <span className="text-[7px] bg-[#1a1a1a] px-1 rounded border border-white/5">Soon</span>
+                                <li className="text-[9px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                                    <Bot size={10} className="text-orange-500/50" /> 100 Replies
                                 </li>
                             </ul>
                             <button
-                                onClick={() => handleClick('scout')}
+                                onClick={() => handleClick('starter')}
                                 disabled={!!isLoading}
-                                className="w-full py-5 rounded-2xl bg-white/5 border border-white/5 text-white font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all disabled:opacity-50"
+                                className="w-full py-4 rounded-xl bg-white/5 border border-white/10 text-white font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all disabled:opacity-50"
                             >
-                                {isLoading === 'scout' ? <Loader2 size={14} className="animate-spin mx-auto" /> : 'Unlock Starter'}
+                                {isLoading === 'starter' ? <Loader2 size={12} className="animate-spin mx-auto" /> : 'Select'}
                             </button>
                         </div>
 
                         {/* Growth Option */}
-                        <div className="p-8 rounded-[2rem] bg-orange-500/[0.03] border border-orange-500/20 flex flex-col ring-1 ring-orange-500/10 relative overflow-hidden">
-                            <div className="absolute top-4 right-6 text-[8px] font-black uppercase text-orange-500 tracking-[0.3em]">Popular</div>
+                        <div className="p-6 rounded-[2rem] bg-orange-500/[0.03] border border-orange-500/20 flex flex-col ring-1 ring-orange-500/10 relative overflow-hidden">
                             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 mb-2">Growth</h3>
-                            <div className="flex items-baseline gap-2 mb-8">
-                                <span className="text-3xl font-black text-white">$29</span>
-                                <span className="text-sm font-bold text-orange-500/30 line-through decoration-orange-500 decoration-1 tracking-tight">$39</span>
+                            <div className="flex items-baseline gap-2 mb-6">
+                                <span className="text-2xl font-black text-white">$29</span>
                                 <span className="text-xs text-gray-600 font-bold uppercase ml-1">/mo</span>
                             </div>
-                            <ul className="space-y-4 mb-10 flex-grow">
-                                <li className="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-3">
-                                    <Globe size={12} className="text-orange-500" /> 5 website power scan per day
+                            <ul className="space-y-3 mb-8 flex-grow">
+                                <li className="text-[9px] font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                                    <Search size={10} className="text-orange-500" /> 15 Key-words
                                 </li>
-                                <li className="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-3">
-                                    <Search size={12} className="text-orange-500" /> 15 Tracked Keywords
-                                </li>
-                                <li className="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-3">
-                                    <Bot size={12} className="text-orange-500" /> 500 AI Replies /mo
-                                </li>
-                                <li className="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-3">
-                                    <Mail size={12} className="text-orange-500/50" /> 100 daily auto DMs <span className="text-[7px] bg-[#1a1a1a] px-1 rounded border border-orange-500/20">Soon</span>
+                                <li className="text-[9px] font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                                    <Bot size={10} className="text-orange-500" /> 500 Replies
                                 </li>
                             </ul>
                             <button
-                                onClick={() => handleClick('pro')}
+                                onClick={() => handleClick('growth')}
                                 disabled={!!isLoading}
-                                className="w-full py-5 rounded-2xl bg-orange-500 text-white font-black text-[10px] uppercase tracking-widest hover:bg-[#ff4d29] transition-all disabled:opacity-50 shadow-2xl shadow-orange-950/20"
+                                className="w-full py-4 rounded-xl bg-[#ff914d] text-black font-black text-[10px] uppercase tracking-widest hover:bg-[#ff914d]/90 transition-all disabled:opacity-50 shadow-lg"
                             >
-                                {isLoading === 'pro' ? <Loader2 size={14} className="animate-spin mx-auto" /> : 'Unlock Growth'}
+                                {isLoading === 'growth' ? <Loader2 size={12} className="animate-spin mx-auto" /> : 'Go Pro'}
+                            </button>
+                        </div>
+
+                        {/* Lifetime Option */}
+                        <div className="p-6 rounded-[2rem] bg-white text-black flex flex-col relative overflow-hidden border border-white shadow-2xl">
+                            <div className="absolute top-3 right-4 text-[7px] font-black uppercase text-orange-600 tracking-[0.2em] flex items-center gap-1 animate-pulse">
+                                <Crown size={8} /> {slots ? `${slots.total - slots.sold}/${slots.total}` : '...'} Seats Left
+                            </div>
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-black mb-2">Life Time</h3>
+                            <div className="flex items-baseline gap-2 mb-6">
+                                <span className="text-2xl font-black text-black">$199</span>
+                                <span className="text-[8px] text-gray-600 font-black uppercase ml-1 tracking-tighter">Founding</span>
+                            </div>
+                            <ul className="space-y-3 mb-8 flex-grow">
+                                <li className="text-[9px] font-black text-black uppercase tracking-widest flex items-center gap-2">
+                                    <Zap size={10} className="text-orange-600" /> Unlimited Discovery
+                                </li>
+                                <li className="text-[9px] font-black text-black uppercase tracking-widest flex items-center gap-2">
+                                    <Sparkles size={10} className="text-orange-600" /> Future Pro updates
+                                </li>
+                            </ul>
+                            <button
+                                onClick={() => handleClick('lifetime')}
+                                disabled={!!isLoading || (slots ? slots.sold >= slots.total : false)}
+                                className="w-full py-4 rounded-xl bg-black text-white font-black text-[9px] uppercase tracking-widest hover:bg-orange-600 transition-all disabled:opacity-50"
+                            >
+                                {isLoading === 'lifetime' ? <Loader2 size={12} className="animate-spin mx-auto" /> : 'Claim Seat'}
                             </button>
                         </div>
                     </div>
 
                     <p className="mt-8 text-[9px] font-bold text-gray-700 uppercase tracking-[0.2em]">
-                        7-Day Guarantee • Cancel Anytime • Secure Dodo Checkout
+                        7-Day Guarantee • 7 DAY MONEY BACK GUARANTEE • Secure Dodo Checkout
                     </p>
                 </div>
             </div>

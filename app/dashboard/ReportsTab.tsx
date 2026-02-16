@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/client';
 import ReplyModal from '@/components/dashboard/ReplyModal';
 import { useDashboardData, MonitoredLead, LeadAnalysis } from '@/app/dashboard/DashboardDataContext';
 
-export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: { reports: any[], profile: any, user: any, isPro: boolean, isAdmin: boolean }) {
+export default function ReportsTab({ reports, profile, user, isGrowth, isAdmin }: { reports: any[], profile: any, user: any, isGrowth: boolean, isAdmin: boolean }) {
     const { leads: historyLeads, analyses: leadAnalyses, isLoading: isDataLoading, updateLead, deleteLead } = useDashboardData();
     const [filter, setFilter] = useState<'all' | 'saved'>('all');
     const [expandedDay, setExpandedDay] = useState<string | null>(null);
@@ -223,10 +223,11 @@ export default function ReportsTab({ reports, profile, user, isPro, isAdmin }: {
                                                  <div className="flex items-center gap-1.5 sm:gap-2">
                                                     <button 
                                                         onClick={() => setDraftingLead(lead)}
-                                                        className="p-2 rounded-lg bg-white/[0.03] border border-white/10 text-slate-400 hover:bg-orange-500 hover:text-black hover:border-orange-500 transition-all group/btn"
+                                                        className="px-3 py-1.5 rounded-lg bg-[#ff914d] text-black border border-[#ff914d] text-[10px] font-black uppercase tracking-wider hover:bg-[#ff914d]/90 transition-all flex items-center gap-1.5 group/btn whitespace-nowrap"
                                                         title="Open Reply Generator"
                                                     >
-                                                        <MessageSquarePlus size={14} className="text-orange-500 group-hover/btn:text-black" />
+                                                        <MessageSquarePlus size={14} className="text-black" />
+                                                        Draft Reply
                                                     </button>
                                                     <button 
                                                         onClick={async () => {

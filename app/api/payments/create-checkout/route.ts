@@ -4,7 +4,7 @@ import { dodo } from '@/lib/dodo';
 import { z } from 'zod';
 
 const checkoutSchema = z.object({
-    plan: z.enum(['scout', 'pro']).optional(),
+    plan: z.enum(['starter', 'growth', 'lifetime']).optional(),
 });
 
 /**
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Invalid request data' }, { status: 400 });
         }
         
-        const { plan = 'pro' } = result.data;
+        const { plan = 'growth' } = result.data;
 
         // 3. Get user profile
         const { data: profile } = await supabase
@@ -42,10 +42,34 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Already on this plan' }, { status: 400 });
         }
 
+        // 3.5 Check Lifetime Slots if applicable
+        if (plan === 'lifetime') {
+            const { data: slots } = await supabase
+                .from('lifetime_slots')
+                .select('sold_slots, total_slots')
+                .single();
+            
+            if (slots && slots.sold_slots >= slots.total_slots) {
+                return NextResponse.json({ 
+                    error: 'Lifetime slots are sold out! Please select a monthly plan.',
+                }, { status: 410 });
+            }
+        }
+
         // 4. Select Product ID
-        const productId = plan === 'scout' 
-            ? process.env.DODO_PRODUCT_ID_SCOUT 
-            : process.env.DODO_PRODUCT_ID_PRO || process.env.DODO_PRODUCT_ID;
+        let productId: string | undefined;
+        
+        switch (plan) {
+            case 'starter': 
+                productId = process.env.DODO_PRODUCT_ID_STARTER;
+                break;
+            case 'growth':
+                productId = process.env.DODO_PRODUCT_ID_GROWTH;
+                break;
+            case 'lifetime':
+                productId = process.env.DODO_PRODUCT_ID_LTD;
+                break;
+        }
         
         if (!productId) {
             console.error(`[Checkout] Product ID for ${plan} is not set`);

@@ -119,7 +119,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
     // ──────────────────────────────
     // Step 6: Handle plan selection (checkout)
     // ──────────────────────────────
-    const handleSelectPlan = async (plan: 'scout' | 'pro') => {
+    const handleSelectPlan = async (plan: 'starter' | 'growth') => {
         setCheckoutLoading(plan);
         try {
             const res = await fetch('/api/payments/create-checkout', {
@@ -441,11 +441,11 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                         ))}
                                     </ul>
                                     <button
-                                        onClick={() => handleSelectPlan('scout')}
+                                        onClick={() => handleSelectPlan('starter')}
                                         disabled={!!checkoutLoading}
                                         className="w-full py-4 rounded-xl bg-white/5 border border-white/10 text-white font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all disabled:opacity-50"
                                     >
-                                        {checkoutLoading === 'scout' ? <Loader2 size={14} className="animate-spin mx-auto" /> : 'Select Starter'}
+                                        {checkoutLoading === 'starter' ? <Loader2 size={14} className="animate-spin mx-auto" /> : 'Select Starter'}
                                     </button>
                                 </div>
 
@@ -468,11 +468,11 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                         ))}
                                     </ul>
                                     <button
-                                        onClick={() => handleSelectPlan('pro')}
+                                        onClick={() => handleSelectPlan('growth')}
                                         disabled={!!checkoutLoading}
                                         className="w-full py-4 rounded-xl bg-orange-500 text-black font-black text-[10px] uppercase tracking-widest hover:bg-orange-400 transition-all disabled:opacity-50 shadow-[0_0_20px_rgba(249,115,22,0.2)]"
                                     >
-                                        {checkoutLoading === 'pro' ? <Loader2 size={14} className="animate-spin mx-auto" /> : 'Select Growth'}
+                                        {checkoutLoading === 'growth' ? <Loader2 size={14} className="animate-spin mx-auto" /> : 'Select Growth'}
                                     </button>
                                 </div>
                             </div>
@@ -486,7 +486,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                 </button>
                                 <p className="text-[9px] font-bold text-gray-700 uppercase tracking-[0.2em]">
                                     <Shield size={10} className="inline mr-1" />
-                                    7-Day Money-Back Guarantee • Cancel Anytime • Secure Checkout
+                                    7-Day Money-Back Guarantee • 7 DAY MONEY BACK GUARANTEE • Secure Checkout
                                 </p>
                             </div>
                         </motion.div>

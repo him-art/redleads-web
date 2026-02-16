@@ -79,8 +79,12 @@ export async function POST(req: Request) {
                 case 'subscription.created':
                 case 'payment.succeeded':
                 case 'payment.captured':
-                    const planType = data?.metadata?.plan || 'pro';
-                    const keywordLimit = planType === 'pro' ? 15 : 5;
+                    const planType = data?.metadata?.plan || 'growth';
+                    
+                    // Determine keyword limit based on plan
+                    let keywordLimit = 5;
+                    if (planType === 'growth') keywordLimit = 15;
+                    if (planType === 'lifetime') keywordLimit = 50;
                     
                     await supabase
                         .from('profiles')
@@ -91,6 +95,26 @@ export async function POST(req: Request) {
                             dodo_customer_id: data.customer?.customer_id || data.customer_id || null,
                         })
                         .eq('id', userId);
+
+                    // Increment lifetime slots if this was a lifetime purchase
+                    if (planType === 'lifetime') {
+                        const { data: slots } = await supabase
+                            .from('lifetime_slots')
+                            .select('*')
+                            .order('created_at', { ascending: false })
+                            .limit(1)
+                            .single();
+
+                        if (slots) {
+                            await supabase
+                                .from('lifetime_slots')
+                                .update({ 
+                                    sold_slots: slots.sold_slots + 1,
+                                    updated_at: new Date().toISOString()
+                                })
+                                .eq('id', slots.id);
+                        }
+                    }
                     
                     await supabase.from('webhook_logs').update({ status: 'success', status_detail: `Updated to ${planType}` }).eq('event_type', eventType).order('created_at', { ascending: false }).limit(1);
                     break;

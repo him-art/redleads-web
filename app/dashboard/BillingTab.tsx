@@ -1,12 +1,13 @@
 'use client';
 
-import { CheckCircle2, Zap, Loader2, ShieldCheck, Globe, Search, Bot } from 'lucide-react';
+import { CheckCircle2, Zap, Loader2, ShieldCheck, Globe, Search, Bot, Compass } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
-export default function BillingTab({ profile, isPro, isAdmin }: { profile: any; isPro: boolean; isAdmin: boolean }) {
-    const isScout = profile?.subscription_tier === 'scout';
-    const isEffectivePro = isPro || isAdmin;
-    const isSubscribed = isEffectivePro || isScout;
+export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: any; isGrowth: boolean; isAdmin: boolean }) {
+    const isStarter = profile?.subscription_tier === 'starter';
+    const isLifetime = profile?.subscription_tier === 'lifetime';
+    const isEffectiveGrowth = isGrowth || isAdmin || isLifetime;
+    const isSubscribed = isEffectiveGrowth || isStarter;
 
     const [isLoading, setIsLoading] = useState<string | null>(null);
     const [isManaging, setIsManaging] = useState(false);
@@ -14,7 +15,7 @@ export default function BillingTab({ profile, isPro, isAdmin }: { profile: any; 
     
     useEffect(() => { setIsMounted(true); }, []);
 
-    const handleUpgrade = async (plan: 'scout' | 'pro') => {
+    const handleUpgrade = async (plan: 'starter' | 'growth') => {
         setIsLoading(plan);
         try {
             const res = await fetch('/api/payments/create-checkout', {
@@ -86,15 +87,19 @@ export default function BillingTab({ profile, isPro, isAdmin }: { profile: any; 
                 user_id: profile?.id,
                 email: profile?.email,
                 reason: feedbackReason,
-                plan_at_cancellation: isPro ? 'pro' : 'scout'
+                plan_at_cancellation: isGrowth ? 'growth' : 'starter'
             });
 
-            if (isWithinGuarantee) {
-                await fetch('/api/payments/refund-subscription', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ reason: `7-day guarantee: ${feedbackReason}` })
-                });
+            // Call the new cancellation API which handles Dodo cancellation AND refunds
+            const res = await fetch('/api/payments/cancel-subscription', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ reason: feedbackReason })
+            });
+
+            if (!res.ok) {
+                const data = await res.json();
+                throw new Error(data.error || 'Cancellation failed');
             }
             
             setGuardStep(3);
@@ -140,7 +145,7 @@ export default function BillingTab({ profile, isPro, isAdmin }: { profile: any; 
                         onClick={() => setGuardStep(0)}
                         className="w-full py-4 bg-orange-500 text-black font-black rounded-xl mb-4 hover:bg-orange-400 transition-all text-xs uppercase tracking-widest"
                     >
-                        Keep {isPro ? 'Growth' : 'Starter'} Access
+                        Keep {isGrowth ? 'Growth' : 'Starter'} Access
                     </button>
                     <button onClick={() => setGuardStep(2)} className="text-xs text-gray-500 hover:text-white underline">Still want to cancel?</button>
                 </div>
@@ -188,24 +193,24 @@ export default function BillingTab({ profile, isPro, isAdmin }: { profile: any; 
                 {/* Current Status Card */}
                 <div className="lg:col-span-3 bg-gradient-to-br from-[#141414] to-[#0a0a0a] border border-white/10 rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-8">
-                        <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${isSubscribed || isAdmin ? 'bg-orange-500/10 text-orange-500 border-orange-500/20 shadow-[0_0_20px_rgba(249,115,22,0.1)]' : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
-                            {isMounted ? (isSubscribed || isAdmin ? 'Active' : (isInTrial ? `${daysRemaining} Days Left` : 'Expired')) : '...'}
+                        <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${isSubscribed || isAdmin ? (isLifetime ? 'bg-white text-black border-white' : 'bg-orange-500/10 text-orange-500 border-orange-500/20 shadow-[0_0_20px_rgba(249,115,22,0.1)]') : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
+                            {isMounted ? (isSubscribed || isAdmin ? (isLifetime ? 'Founding Member' : 'Active') : (isInTrial ? `${daysRemaining} Days Left` : 'Expired')) : '...'}
                         </div>
                     </div>
 
                     <div className="mb-12">
                         <p className="text-[10px] font-black text-gray-600 uppercase tracking-[0.4em] mb-4">Membership Status</p>
                         <h3 className="text-4xl sm:text-5xl font-black text-white tracking-tight">
-                            {isAdmin ? 'Administrator' : isPro ? 'Growth Member' : isScout ? 'Starter Member' : (isActuallyExpired ? 'Free Tier' : '3-Day Trial')}
+                            {isAdmin ? 'Administrator' : isLifetime ? 'Lifetime Founder' : isGrowth ? 'Growth Member' : isStarter ? 'Starter Member' : (isActuallyExpired ? 'Free Tier' : '3-Day Trial')}
                         </h3>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {[
-                            { label: 'Keywords', value: isPro ? '15 Keywords' : isScout ? '5 Keywords' : 'Free Trial', icon: <Search size={16} /> },
-                            { label: 'Intelligence', value: '24/7 Monitoring', icon: <Zap size={16} /> },
-                            { label: 'AI Outreach', value: isPro ? '500 Drafts / Month' : isScout ? '100 Drafts / Month' : '5 Lifetime', icon: <Bot size={16} /> },
-                            { label: 'Support', value: 'Standard Support', icon: <CheckCircle2 size={16} /> }
+                            { label: 'Keywords', value: isLifetime ? '50 Keywords' : isGrowth ? '15 Keywords' : isStarter ? '5 Keywords' : 'Free Trial', icon: <Search size={16} /> },
+                            { label: 'Power Scans', value: isLifetime ? '10/Day' : isGrowth ? '5/Day' : isStarter ? '2/Day' : 'Free Trial', icon: <Compass size={16} /> },
+                            { label: 'AI Outreach', value: isLifetime ? 'Unlimited Drafts' : isGrowth ? '500 Drafts / Month' : isStarter ? '100 Drafts / Month' : '5 Lifetime', icon: <Bot size={16} /> },
+                            { label: 'Support', value: isLifetime ? 'Priority Founder' : 'Standard Support', icon: <CheckCircle2 size={16} /> }
                         ].map((stat) => (
                             <div key={stat.label} className="p-4 rounded-2xl bg-white/5 border border-white/5">
                                 <div className="flex items-center gap-3 mb-2 text-gray-500">
@@ -233,8 +238,8 @@ export default function BillingTab({ profile, isPro, isAdmin }: { profile: any; 
                 {!isSubscribed && !isAdmin && (
                     <>
                         {[
-                            { id: 'scout', name: 'Starter', price: '$15', oldPrice: '$19', desc: '5 keywords, 2 site scans & 100 AI reply drafts per month', primary: false },
-                            { id: 'pro', name: 'Growth', price: '$29', oldPrice: '$39', desc: '15 keywords, 5 site scans & 500 AI reply drafts per month', primary: true }
+                            { id: 'starter', name: 'Starter', price: '$15', oldPrice: '$19', desc: '5 keywords, 2 site scans & 100 AI reply drafts per month', primary: false },
+                            { id: 'growth', name: 'Growth', price: '$29', oldPrice: '$39', desc: '15 keywords, 5 site scans & 500 AI reply drafts per month', primary: true }
                         ].map((plan) => (
                             <div key={plan.id} className={`p-8 rounded-[2rem] border flex flex-col ${plan.primary ? 'bg-orange-500/5 border-orange-500/20' : 'bg-white/5 border-white/5'}`}>
                                 <h4 className={`text-sm font-black uppercase tracking-[0.2em] mb-4 ${plan.primary ? 'text-orange-500' : 'text-gray-500'}`}>{plan.name}</h4>

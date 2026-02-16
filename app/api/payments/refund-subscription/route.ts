@@ -27,8 +27,8 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
         }
 
-        if (profile.subscription_tier !== 'pro') {
-            return NextResponse.json({ error: 'No active Pro subscription' }, { status: 400 });
+        if (!['growth', 'starter', 'lifetime'].includes(profile.subscription_tier)) {
+            return NextResponse.json({ error: 'No active paid subscription' }, { status: 400 });
         }
 
         // 2. Check 7-day window

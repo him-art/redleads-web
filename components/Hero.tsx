@@ -74,10 +74,13 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
         <h1 
           className="max-w-[100vw] xl:max-w-none mx-auto text-[1.75rem] sm:text-[2.75rem] md:text-[5rem] lg:text-[7rem] font-medium text-[#f5f5f5] mb-8 leading-[1.05] px-4 font-serif"
         >
-          {/* Forced two lines on all screens - Full Serif Style */}
+          {/* Forced three lines for branding presence */}
+          <span className="block text-[#ff914d] text-lg md:text-0.1xl font-black uppercase tracking-[0.4em] mb-4 font-sans">
+            RedLeads
+          </span>
           <span className="flex flex-wrap items-center font-medium justify-center gap-x-3 sm:gap-x-6 sm:whitespace-nowrap">
             <span>Find your</span>
-            <span className="text-orange-500 font-bold font-serif-italic">first 100 users</span>
+            <span className="text-[#ff6900] font-bold font-medium">first 100 users</span>
           </span>
           <span className="block font-medium sm:whitespace-nowrap">
             <span>on Reddit</span>
@@ -98,10 +101,10 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
           transition={{ duration: 0.8, delay: 0.3, ease: [0.2, 0.65, 0.3, 0.9] }}
           className="w-full max-w-xl mx-auto mb-12"
         >
-          <div className="p-2 bg-white/5 border border-orange-500/10 rounded-2xl">
+          <div className="p-2 bg-white/5 border border-[#ff914d]/10 rounded-2xl">
             <form 
               onSubmit={handleSearch}
-              className="relative flex items-center bg-[#1a1a1a] rounded-xl overflow-hidden border-2 border-orange-500/30"
+              className="relative flex items-center bg-[#1a1a1a] rounded-xl overflow-hidden border-2 border-[#ff914d]/30"
             >
               <div className="pl-4 pr-3 text-slate-500">
                 <Globe size={20} />
@@ -123,7 +126,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                 disabled={isScanning}
                 className={`m-1 px-6 py-2.5 rounded-lg font-black text-[10px] uppercase tracking-[0.2em] transition-all flex items-center gap-2 active:scale-95 disabled:opacity-80 ${
                   isScanning 
-                    ? 'bg-orange-500 text-white' 
+                    ? 'bg-[#ff914d] text-white' 
                     : 'bg-white text-black hover:bg-slate-200'
                 }`}
               >
@@ -154,16 +157,16 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
         <div
            className="relative w-full max-w-5xl mx-auto mt-0 md:mt-0 pointer-events-none select-none"
         >
-            <div className="relative rounded-t-[2rem] border-x-2 border-t-2 border-b-0 border-orange-500/20 bg-[#050505] overflow-hidden shadow-2xl p-6 md:p-10 text-left">
+            <div className="relative rounded-t-[2rem] border-x-2 border-t-2 border-b-0 border-[#ff914d]/20 bg-[#050505] overflow-hidden shadow-2xl p-6 md:p-10 text-left">
                 {/* Background Glow */}
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-orange-500/5 rounded-full blur-[100px] pointer-events-none" />
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#ff914d]/5 rounded-full blur-[100px] pointer-events-none" />
 
 
 
                 {/* Header: Power Scan */}
                 <div className="relative flex items-center gap-3 mb-8 md:mb-12">
                     <div className="relative flex h-2.5 w-2.5">
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-500 shadow-[0_0_10px_rgba(255,87,0,0.5)]"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#ff914d] shadow-[0_0_10px_rgba(255,145,77,0.5)]"></span>
                     </div>
                     <span className="text-[11px] font-black tracking-[0.2em] text-gray-400 uppercase">Power Scan</span>
                 </div>
@@ -171,12 +174,12 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                 {/* Search Bar */}
                 <div className="relative w-full bg-[#F0F4FF] rounded-2xl h-16 md:h-20 flex items-center justify-between pl-6 pr-2 mb-12 md:mb-16 shadow-[0_0_60px_-15px_rgba(255,255,255,0.1)]">
                     <div className="flex items-center gap-4">
-                        <Globe className="text-orange-500" size={24} strokeWidth={2} />
+                        <Globe className="text-[#ff914d]" size={24} strokeWidth={2} />
                         <span className="text-xl md:text-2xl font-bold text-black tracking-tight">RedLeads.app</span>
                     </div>
                     <button 
                         suppressHydrationWarning
-                        className="bg-[#ff5700] text-white text-[10px] md:text-xs font-black uppercase tracking-widest px-6 md:px-8 py-3 md:py-4 rounded-xl shadow-lg shadow-orange-500/20"
+                        className="bg-[#ff914d] text-white text-[10px] md:text-xs font-black uppercase tracking-widest px-6 md:px-8 py-3 md:py-4 rounded-xl"
                     >
                         Scan
                     </button>
@@ -185,7 +188,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                 {/* Results Header */}
                 <div className="relative mb-8">
                    <div className="flex items-center gap-3 mb-2">
-                       <Search className="text-orange-500" size={22} strokeWidth={3} />
+                       <Search className="text-[#ff914d]" size={22} strokeWidth={3} />
                        <h3 className="text-2xl md:text-3xl font-black text-white tracking-tight">
                            Intel Report: <span className="text-white">18 Matches</span>
                        </h3>
@@ -277,6 +280,7 @@ function FloatingBubble({ className, delay = 0, scale = 1, duration = 3, floatDe
              alt="Reddit" 
              width={32} 
              height={32} 
+             priority
              className="w-full h-full object-contain"
            />
       </div>

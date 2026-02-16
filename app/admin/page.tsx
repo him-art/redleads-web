@@ -48,8 +48,8 @@ export default async function AdminDashboard() {
 
     const stats = {
         free: allProfiles?.filter(u => u.subscription_tier === 'free').length || 0,
-        trial: allProfiles?.filter(u => !['pro', 'scout', 'professional'].includes(u.subscription_tier || '')).length || 0,
-        pro: allProfiles?.filter(u => ['pro', 'scout', 'professional'].includes(u.subscription_tier || '')).length || 0,
+        trial: allProfiles?.filter(u => !['growth', 'starter', 'professional', 'lifetime'].includes(u.subscription_tier || '')).length || 0,
+        pro: allProfiles?.filter(u => ['growth', 'starter', 'professional', 'lifetime'].includes(u.subscription_tier || '')).length || 0,
         total: allProfiles?.length || 0
     };
 
@@ -155,11 +155,11 @@ export default async function AdminDashboard() {
                                                     </td>
                                                     <td className="px-6 py-4">
                                                         <span className={`px-2.5 py-1 rounded-md text-[9px] font-black uppercase tracking-widest ${
-                                                            p.subscription_tier === 'pro' ? 'bg-orange-500/10 text-orange-500 border border-orange-500/20' :
-                                                            p.subscription_tier === 'scout' ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' :
-                                                            'bg-white/5 text-gray-500 border border-white/5'
-                                                        }`}>
-                                                            {p.subscription_tier || 'Trial'}
+                                                            p.subscription_tier === 'lifetime' ? 'bg-white/10 text-white border border-white/20' :
+                                                            p.subscription_tier === 'growth' ? 'bg-orange-500/10 text-orange-500 border border-orange-500/20' :
+                                                            p.subscription_tier === 'starter' ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' :
+                                                            'bg-gray-500/10 text-gray-500 border border-gray-500/20'}`}>
+                                                            {p.subscription_tier === 'lifetime' ? 'Founder' : p.subscription_tier === 'growth' ? 'Growth' : p.subscription_tier === 'starter' ? 'Starter' : p.subscription_tier || 'Trial'}
                                                         </span>
                                                     </td>
                                                     <td className="px-6 py-4">

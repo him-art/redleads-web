@@ -53,7 +53,6 @@ export async function POST(req: Request) {
             const remoteIP = req.headers.get('x-forwarded-for')?.split(',')[0] || 'localhost';
             const hashIP = crypto.createHash('sha256').update(remoteIP).digest('hex');
             
-            let isPro = false;
             let isInTrial = false;
 
             if (!user) {
@@ -69,7 +68,7 @@ export async function POST(req: Request) {
                 .eq('id', user.id)
                 .single();
             
-            const isPaid = profile?.subscription_tier === 'pro' || profile?.subscription_tier === 'scout';
+            const isPaid = profile?.subscription_tier === 'growth' || profile?.subscription_tier === 'starter' || profile?.subscription_tier === 'lifetime';
             
             // Get trial status - auto-calculate if trial_ends_at is not set
             const trialEndsAt = profile?.trial_ends_at 
@@ -89,7 +88,7 @@ export async function POST(req: Request) {
             
             // Usage Guardrails (SaaS 2.0)
             let currentCount = profile?.scan_count || 0;
-            const dailyLimit = profile?.scan_allowance || (profile?.subscription_tier === 'pro' ? 5 : profile?.subscription_tier === 'scout' ? 2 : 5);
+            const dailyLimit = profile?.scan_allowance || (profile?.subscription_tier === 'lifetime' ? 10 : profile?.subscription_tier === 'growth' ? 5 : profile?.subscription_tier === 'starter' ? 2 : 5);
 
             if (isPaid) {
                 // If Paid, reset if it's a new day

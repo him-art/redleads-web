@@ -111,7 +111,8 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
 
     // Determine keyword limit
     const getKeywordLimit = () => {
-        if (profile?.subscription_tier === 'scout') return 5;
+        if (profile?.subscription_tier === 'lifetime') return 50;
+        if (profile?.subscription_tier === 'starter') return 5;
         return 15; // Pro & Trial limit
     };
     const keywordLimit = getKeywordLimit();

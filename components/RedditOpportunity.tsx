@@ -41,7 +41,7 @@ export default function RedditOpportunity() {
         {/* Section Heading */}
         <div className="text-center max-w-[90vw] mx-auto mb-16 px-4">
             <h2 className="text-4xl md:text-[5rem] font-black text-white leading-[1.05] tracking-tighter mb-4">
-                <span className="block whitespace-nowrap">How <span className="text-orange-500 font-serif-italic">Reddit Marketing</span></span>
+                <span className="block whitespace-nowrap">How <span className="text-[#ff914d] font-serif-italic">Reddit Marketing</span></span>
                 <span className="block whitespace-nowrap">Helps You Get Customers</span>
             </h2>
         </div>
@@ -55,6 +55,7 @@ export default function RedditOpportunity() {
                             src="/reddit-logo.png" 
                             alt="Reddit Logo" 
                             fill
+                            priority
                             className="object-contain" 
                          />
                     </div>
@@ -119,7 +120,7 @@ export default function RedditOpportunity() {
         <div className="mt-20 flex flex-col items-center">
             <a 
                 href="/login?next=/#pricing" 
-                className="bg-[#FF5700] hover:bg-[#ff4500] text-white text-lg md:text-xl font-bold py-4 px-10 rounded-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2 shadow-[0_4px_14px_0_rgba(255,87,0,0.39)] hover:shadow-[0_6px_20px_rgba(255,87,0,0.23)] border-t border-white/20"
+                className="bg-[#ff6900] hover:bg-[#ff814d] text-white text-lg md:text-xl font-bold py-4 px-10 rounded-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2 border-t border-white/20"
             >
                 Get Customers From Reddit <ArrowRight size={20} strokeWidth={3} />
             </a>
