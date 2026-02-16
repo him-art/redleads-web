@@ -55,11 +55,10 @@ export async function POST(req: Request) {
         // 3. Cancel Subscription in Dodo
         if (subscriptionId) {
             try {
-                await dodo.subscriptions.cancel({
-                    subscription_id: subscriptionId,
-                    reason: reason || 'User requested cancellation'
+                await dodo.subscriptions.update(subscriptionId, {
+                    status: 'cancelled'
                 });
-                console.log(`[Cancel] Successfully cancelled subscription ${subscriptionId}`);
+                console.log(`[Cancel] Successfully updated subscription ${subscriptionId} to cancelled status`);
             } catch (err: any) {
                 console.error('[Cancel] Dodo cancellation failed:', err);
                 // If cancellation fails, we MUST throw to let the frontend redirect to portal.

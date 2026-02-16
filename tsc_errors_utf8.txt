@@ -1,0 +1,1 @@
+﻿app/api/payments/cancel-subscription/route.ts(58,42): error TS2339: Property 'cancel' does not exist on type 'Subscriptions'.
