@@ -1,6 +1,6 @@
 'use client';
 
-import { CheckCircle2, Zap, Loader2, ShieldCheck, Globe, Search, Bot, Compass, Crown, Sparkles, ArrowRight } from 'lucide-react';
+import { CheckCircle2, Zap, Loader2, ShieldCheck, Search, Bot, Compass, Crown, Sparkles, ArrowRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: any; isGrowth: boolean; isAdmin: boolean }) {
@@ -115,20 +115,20 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
     if (guardStep === 3) {
         return (
             <div className="max-w-2xl space-y-8">
-                <div className="bg-[#141414] border border-white/5 rounded-3xl p-12 text-center">
+                <div className="glass-panel rounded-3xl p-12 text-center">
                     <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-8">
                         <CheckCircle2 size={40} className="text-green-500" />
                     </div>
-                    <h3 className="text-3xl font-black mb-4">Subscription Cancelled</h3>
+                    <h3 className="text-3xl font-black mb-4 text-text-primary">Subscription Cancelled</h3>
                     {isWithinGuarantee ? (
                         <div className="bg-white/5 rounded-2xl p-6 mb-8 text-left">
-                            <p className="text-gray-300 font-bold mb-2">💰 Refund Initiated</p>
-                            <p className="text-gray-400 text-sm leading-relaxed">
+                            <p className="text-text-primary font-bold mb-2">💰 Refund Initiated</p>
+                            <p className="text-text-secondary text-sm leading-relaxed">
                                 Your full refund has been successfully initiated. You should see the amount reflected in your account within 2–4 product days.
                             </p>
                         </div>
                     ) : (
-                        <p className="text-gray-400 mb-8">Your subscription has been stopped. You will not be charged again.</p>
+                        <p className="text-text-secondary mb-8">Your subscription has been stopped. You will not be charged again.</p>
                     )}
                     <button onClick={handleManageSubscription} className="w-full py-4 bg-white text-black font-black rounded-xl hover:bg-gray-200 transition-all text-xs uppercase tracking-widest">Finalize in Portal</button>
                 </div>
@@ -139,16 +139,16 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
     if (guardStep === 1) {
         return (
             <div className="max-w-2xl space-y-8">
-                <div className="bg-[#141414] border border-white/5 rounded-[2.5rem] p-12 text-center">
-                    <h3 className="text-2xl font-black mb-2">Wait! Don't lose your edge.</h3>
-                    <p className="text-gray-400 mb-8">If you cancel now, you'll lose access to your real-time leads radar.</p>
+                <div className="glass-panel rounded-[2.5rem] p-12 text-center">
+                    <h3 className="text-2xl font-black mb-2 text-text-primary">Wait! Don't lose your edge.</h3>
+                    <p className="text-text-secondary mb-8">If you cancel now, you'll lose access to your real-time leads radar.</p>
                     <button 
                         onClick={() => setGuardStep(0)}
-                        className="w-full py-4 bg-orange-500 text-black font-black rounded-xl mb-4 hover:bg-orange-400 transition-all text-xs uppercase tracking-widest"
+                        className="w-full py-4 bg-primary text-primary-foreground font-black rounded-xl mb-4 hover:bg-primary/90 transition-all text-xs uppercase tracking-widest"
                     >
                         Keep {isGrowth ? 'Growth' : 'Starter'} Access
                     </button>
-                    <button onClick={() => setGuardStep(2)} className="text-xs text-gray-500 hover:text-white underline">Still want to cancel?</button>
+                    <button onClick={() => setGuardStep(2)} className="text-xs text-text-secondary hover:text-text-primary underline">Still want to cancel?</button>
                 </div>
             </div>
         );
@@ -157,17 +157,17 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
     if (guardStep === 2) {
         return (
             <div className="max-w-2xl space-y-8">
-                <div className="bg-[#141414] border border-white/5 rounded-[2.5rem] p-12">
-                    <h3 className="text-2xl font-black mb-8 text-center text-white">Help us improve.</h3>
+                <div className="glass-panel rounded-[2.5rem] p-12">
+                    <h3 className="text-2xl font-black mb-8 text-center text-text-primary">Help us improve.</h3>
                     <div className="space-y-3 mb-8">
                         {['Too expensive', 'Not finding relevant leads', 'Too many notifications', 'No longer needed'].map((reason) => (
                             <button 
                                 key={reason}
                                 onClick={() => setFeedbackReason(reason)}
-                                className={`w-full p-4 rounded-xl border text-left flex justify-between items-center transition-all ${feedbackReason === reason ? 'border-orange-500 bg-orange-500/5 text-white' : 'border-white/5 bg-white/[0.02] text-gray-400 hover:border-white/10'}`}
+                                className={`w-full p-4 rounded-xl border text-left flex justify-between items-center transition-all ${feedbackReason === reason ? 'border-primary bg-primary/10 text-text-primary' : 'border-border-subtle bg-white/[0.02] text-text-secondary hover:border-white/10'}`}
                             >
                                 <span className="text-sm font-bold uppercase tracking-widest">{reason}</span>
-                                {feedbackReason === reason && <CheckCircle2 size={16} className="text-orange-500" />}
+                                {feedbackReason === reason && <CheckCircle2 size={16} className="text-primary" />}
                             </button>
                         ))}
                     </div>
@@ -186,23 +186,23 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
     return (
         <div className="max-w-4xl space-y-8">
             <div>
-                <h2 className="text-3xl font-black mb-2 text-white">Billing & Plan</h2>
-                <p className="text-gray-500 font-bold uppercase tracking-[0.2em] text-[10px]">Manage your subscriptions and upgrades</p>
+                <h2 className="text-3xl font-black mb-2 text-text-primary">Billing & Plan</h2>
+                <p className="text-text-secondary font-bold uppercase tracking-[0.2em] text-[10px]">Manage your subscriptions and upgrades</p>
             </div>
 
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Current Status Card */}
-                <div className="lg:col-span-3 bg-gradient-to-br from-[#141414] to-[#0a0a0a] border border-white/10 rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden">
+                <div className="lg:col-span-3 glass-panel rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-8">
-                        <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${isSubscribed || isAdmin ? (isLifetime ? 'bg-white text-black border-white' : 'bg-orange-500/10 text-orange-500 border-orange-500/20 shadow-[0_0_20px_rgba(249,115,22,0.1)]') : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
+                        <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${isSubscribed || isAdmin ? (isLifetime ? 'bg-white text-black border-white' : 'bg-primary/10 text-primary border-primary/20 shadow-[0_0_20px_rgba(255,88,54,0.1)]') : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
                             {isMounted ? (isSubscribed || isAdmin ? (isLifetime ? 'Founding Member' : 'Active') : (isInTrial ? `${daysRemaining} Days Left` : 'Expired')) : '...'}
                         </div>
                     </div>
 
                     <div className="mb-12">
-                        <p className="text-[10px] font-black text-gray-600 uppercase tracking-[0.4em] mb-4">Membership Status</p>
-                        <h3 className="text-4xl sm:text-5xl font-black text-white tracking-tight">
+                        <p className="text-[10px] font-black text-text-secondary uppercase tracking-[0.4em] mb-4">Membership Status</p>
+                        <h3 className="text-4xl sm:text-5xl font-black text-text-primary tracking-tight">
                             {isAdmin ? 'Administrator' : isLifetime ? 'Lifetime Founder' : isGrowth ? 'Growth Member' : isStarter ? 'Starter Member' : (isActuallyExpired ? 'Free Tier' : '3-Day Trial')}
                         </h3>
                     </div>
@@ -215,21 +215,21 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
                             { label: 'Support', value: isLifetime ? 'Priority Founder' : 'Standard Support', icon: <CheckCircle2 size={16} /> }
                         ].map((stat) => (
                             <div key={stat.label} className="p-4 rounded-2xl bg-white/5 border border-white/5">
-                                <div className="flex items-center gap-3 mb-2 text-gray-500">
+                                <div className="flex items-center gap-3 mb-2 text-text-secondary">
                                     {stat.icon}
                                     <span className="text-[10px] font-black uppercase tracking-widest">{stat.label}</span>
                                 </div>
-                                <p className="text-xs font-black text-white uppercase tracking-wider">{stat.value}</p>
+                                <p className="text-xs font-black text-text-primary uppercase tracking-wider">{stat.value}</p>
                             </div>
                         ))}
                     </div>
 
                     {isSubscribed && !isAdmin && !isLifetime && (
                         <div className="mt-12 pt-8 border-t border-white/5 flex flex-wrap gap-4">
-                            <button onClick={handleManageSubscription} disabled={isManaging} className="px-8 py-4 bg-white/5 text-white font-black rounded-xl hover:bg-white/10 transition-all text-[10px] uppercase tracking-widest border border-white/5">
+                            <button onClick={handleManageSubscription} disabled={isManaging} className="px-8 py-4 bg-white/5 text-text-primary font-black rounded-xl hover:bg-white/10 transition-all text-[10px] uppercase tracking-widest border border-white/5">
                                 {isManaging ? <Loader2 size={14} className="animate-spin" /> : 'Portal Access'}
                             </button>
-                            <button onClick={() => setGuardStep(1)} className="px-8 py-4 bg-transparent text-gray-600 font-black rounded-xl hover:text-red-500 transition-all text-[10px] uppercase tracking-widest">
+                            <button onClick={() => setGuardStep(1)} className="px-8 py-4 bg-transparent text-text-secondary font-black rounded-xl hover:text-red-500 transition-all text-[10px] uppercase tracking-widest">
                                 Cancel Subscription
                             </button>
                         </div>
@@ -243,18 +243,18 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
                             { id: 'starter', name: 'Starter', price: '$15', oldPrice: '$19', desc: '5 keywords, 2 site scans & 100 AI reply drafts per month', primary: false },
                             { id: 'growth', name: 'Growth', price: '$29', oldPrice: '$39', desc: '15 keywords, 5 site scans & 500 AI reply drafts per month', primary: true }
                         ].map((plan) => (
-                            <div key={plan.id} className={`p-8 rounded-[2rem] border flex flex-col ${plan.primary ? 'bg-orange-500/5 border-orange-500/20' : 'bg-white/5 border-white/5'}`}>
-                                <h4 className={`text-sm font-black uppercase tracking-[0.2em] mb-4 ${plan.primary ? 'text-orange-500' : 'text-gray-500'}`}>{plan.name}</h4>
+                            <div key={plan.id} className={`p-8 rounded-[2rem] border flex flex-col ${plan.primary ? 'glass-panel border-primary/20' : 'bg-white/[0.02] border-border-subtle'}`}>
+                                <h4 className={`text-sm font-black uppercase tracking-[0.2em] mb-4 ${plan.primary ? 'text-primary' : 'text-text-secondary'}`}>{plan.name}</h4>
                                 <div className="flex items-baseline gap-2 mb-2">
-                                    {plan.oldPrice && <span className="text-sm font-bold text-gray-700 line-through tracking-tight">{plan.oldPrice}</span>}
-                                    <span className="text-3xl font-black text-white">{plan.price}</span>
-                                    <span className="text-[10px] font-bold text-gray-600 uppercase">/mo</span>
+                                    {plan.oldPrice && <span className="text-sm font-bold text-text-secondary line-through tracking-tight">{plan.oldPrice}</span>}
+                                    <span className="text-3xl font-black text-text-primary">{plan.price}</span>
+                                    <span className="text-[10px] font-bold text-text-secondary uppercase">/mo</span>
                                 </div>
-                                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-8">{plan.desc}</p>
+                                <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-8">{plan.desc}</p>
                                 <button 
                                     onClick={() => handleUpgrade(plan.id as any)} 
                                     disabled={!!isLoading}
-                                    className={`mt-auto w-full py-4 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${plan.primary ? 'bg-orange-500 text-black hover:bg-orange-400' : 'bg-white/5 text-white hover:bg-white hover:text-black border border-white/5'}`}
+                                    className={`mt-auto w-full py-4 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${plan.primary ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'bg-white/5 text-text-primary hover:bg-white hover:text-black border border-white/5'}`}
                                 >
                                     {isLoading === plan.id ? <Loader2 size={14} className="animate-spin mx-auto" /> : `UPGRADE TO ${plan.name}`}
                                 </button>
@@ -275,15 +275,15 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
                         <div className="flex-grow">
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 mb-6">
                                 <Crown size={12} className="fill-yellow-500" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Limited Founding Member Offer</span>
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em]">For Limited Members</span>
                             </div>
                             
-                            <h3 className="text-3xl sm:text-4xl font-black text-white mb-4 tracking-tight flex items-center gap-3">
+                            <h3 className="text-3xl sm:text-4xl font-black text-text-primary mb-4 tracking-tight flex items-center gap-3">
                                 Lock in Growth Forever. <Sparkles size={24} className="text-orange-500 animate-pulse" />
                             </h3>
                             
-                            <p className="text-gray-400 font-medium max-w-xl mb-8 leading-relaxed">
-                                Stop the monthly "SaaS Tax." Pay once and get every lead, every power scan, and every future AI update—without ever seeing another invoice.
+                            <p className="text-text-secondary font-medium max-w-xl mb-8 leading-relaxed">
+                                Stop the monthly "SaaS Tax." Pay once and get every lead, every power scan, and every future AI update without ever seeing another invoice.
                             </p>
 
                             <div className="flex flex-wrap gap-8 mb-8">
@@ -292,11 +292,11 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
                                     { label: 'Value', value: '$348/Year', icon: <CheckCircle2 size={14} /> }
                                 ].map((pill) => (
                                     <div key={pill.label} className="flex flex-col">
-                                        <div className="flex items-center gap-2 text-gray-500 mb-1">
+                                        <div className="flex items-center gap-2 text-text-secondary mb-1">
                                             {pill.icon}
                                             <span className="text-[10px] font-black uppercase tracking-widest">{pill.label}</span>
                                         </div>
-                                        <p className="text-lg font-black text-white">{pill.value}</p>
+                                        <p className="text-lg font-black text-text-primary">{pill.value}</p>
                                     </div>
                                 ))}
                             </div>
@@ -312,7 +312,7 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
 
                         <div className="w-full md:w-72 flex-shrink-0">
                             <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-4">
-                                <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest text-center mb-2">Growth Features +</p>
+                                <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest text-center mb-2">Growth Features +</p>
                                 {[
                                     '15 Tracked Keywords',
                                     '5 Power Scans / Day',
@@ -323,7 +323,7 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
                                         <div className="p-1 rounded-md bg-orange-500/10 text-orange-500">
                                             <CheckCircle2 size={12} />
                                         </div>
-                                        <span className="text-[10px] font-bold text-gray-300 uppercase tracking-wider">{feat}</span>
+                                        <span className="text-[10px] font-bold text-text-primary uppercase tracking-wider">{feat}</span>
                                     </div>
                                 ))}
                             </div>

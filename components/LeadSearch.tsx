@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { type User as SupabaseUser } from '@supabase/supabase-js';
-import ReplyModal from './dashboard/ReplyModal';
+import { useDashboardData } from '@/app/dashboard/DashboardDataContext';
 
 interface RedditLead {
     subreddit: string;
@@ -33,7 +33,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
     const [results, setResults] = useState<RedditLead[]>([]);
     const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
     const [teaserInfo, setTeaserInfo] = useState<{ isTeaser: boolean, totalFound: number } | null>(null);
-    const [draftingLead, setDraftingLead] = useState<any | null>(null);
+    const { draftingLead, setDraftingLead } = useDashboardData();
     const [productContext, setProductContext] = useState('');
     const supabase = useMemo(() => createClient(), []);
     const router = useRouter();
@@ -163,13 +163,13 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                 initial={{ width: 0 }}
                                 animate={{ width: "100%" }}
                                 transition={{ duration: 6, ease: "linear" }}
-                                className="h-full bg-orange-500"
+                                className="h-full bg-primary"
                             />
                         </div>
                     )}
 
                     <div className="relative flex items-center">
-                        <div className="absolute left-4 sm:left-6 text-gray-500 group-focus-within:text-orange-500 transition-colors">
+                        <div className="absolute left-4 sm:left-6 text-text-secondary group-focus-within:text-primary transition-colors">
                             {isScanning ? <Loader2 size={18} className="animate-spin" /> : <Globe size={18} />}
                         </div>
                         <input 
@@ -181,15 +181,15 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                             onChange={(e) => setUrl(e.target.value)}
                             disabled={isScanning}
                             suppressHydrationWarning
-                            className="w-full bg-white/[0.03] border border-white/5 rounded-2xl py-4 sm:py-6 pl-12 sm:pl-16 pr-24 sm:pr-32 text-base sm:text-lg focus:outline-none focus:bg-white/[0.05] focus:border-white/10 transition-all placeholder:text-gray-600 font-medium tracking-tight"
+                            className="w-full bg-black/20 border border-border-subtle rounded-2xl py-4 sm:py-6 pl-12 sm:pl-16 pr-24 sm:pr-32 text-base sm:text-lg focus:outline-none focus:bg-black/30 focus:border-primary/20 transition-all placeholder:text-text-secondary font-medium tracking-tight text-text-primary shadow-inner"
                         />
                         <button 
                             type="submit"
                             disabled={isScanning || url.trim().length < 3}
                             className={`absolute right-2 sm:right-3 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-black uppercase text-[9px] sm:text-[10px] tracking-widest transition-all ${
                                 !isScanning && url.trim().length >= 3 
-                                    ? 'bg-orange-500 text-black shadow-[0_0_20px_rgba(249,115,22,0.3)] animate-[pulse_3s_infinite]' 
-                                    : 'bg-white/5 text-gray-600 cursor-not-allowed opacity-50'
+                                    ? 'bg-primary text-white shadow-[0_0_20px_rgba(255,88,54,0.3)]' 
+                                    : 'bg-white/5 text-text-secondary cursor-not-allowed opacity-50'
                             }`}
                         >
                             {isScanning ? 'Analyzing' : 'Power Scan'}
@@ -204,8 +204,8 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                 exit={{ opacity: 0 }}
                                 className="mt-4 flex items-center justify-center gap-2"
                             >
-                                <Activity size={12} className="text-orange-500/50" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.15em] text-gray-600 animate-pulse">
+                                <Activity size={12} className="text-primary/50" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.15em] text-text-secondary animate-pulse">
                                     {scanSteps[scanStep]}
                                 </span>
                             </motion.div>
@@ -222,15 +222,11 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                     animate={{ opacity: 1, y: 0 }} 
                     className="mt-8 sm:mt-16 space-y-8 sm:space-y-12"
                 >
-                    <ReplyModal 
-                        lead={draftingLead} 
-                        productContext={productContext} 
-                        onClose={() => setDraftingLead(null)} 
-                    />
+
                     <div className="flex items-center justify-between px-2">
                         <div className="space-y-1">
                             <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                                <Search size={18} className="text-orange-500" />
+                                <Search size={18} className="text-primary" />
                                 {teaserInfo?.isTeaser ? `Top 3 Sample Leads` : `Intel Report: ${results.length} Matches`}
                             </h2>
                             <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">
@@ -239,75 +235,78 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                         </div>
                     </div>
 
-                    <div className="space-y-4">
-                        {Object.entries(
-                            results.reduce((acc, lead) => {
-                                const groupKey = lead.relevance;
-                                if (!acc[groupKey]) acc[groupKey] = [];
-                                acc[groupKey].push(lead);
-                                return acc;
-                            }, {} as Record<string, RedditLead[]>)
-                        )
-                        .sort(([keyA], [keyB]) => {
-                            const order: Record<string, number> = { 'High': 0, 'Medium': 1, 'Low': 2 };
-                            return (order[keyA] ?? 9) - (order[keyB] ?? 9);
-                        })
-                        .map(([groupKey, leads]) => {
-                            const isOpen = openGroups[groupKey];
-                            return (
-                                <div key={groupKey} className="space-y-3">
-                                    <button
-                                        onClick={() => setOpenGroups(prev => ({ ...prev, [groupKey]: !prev[groupKey] }))}
-                                        className="flex items-center gap-2 px-2 text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-gray-300 transition-colors"
-                                    >
-                                        <ChevronDown size={14} className={`transition-transform ${isOpen ? '' : '-rotate-90'}`} />
-                                        {groupKey} RELEVANCY • {leads.length}
-                                    </button>
+                        <motion.div 
+                            layout
+                            className="space-y-4"
+                        >
+                            {Object.entries(
+                                results.reduce((acc, lead) => {
+                                    const groupKey = lead.relevance;
+                                    if (!acc[groupKey]) acc[groupKey] = [];
+                                    acc[groupKey].push(lead);
+                                    return acc;
+                                }, {} as Record<string, RedditLead[]>)
+                            )
+                            .sort(([keyA], [keyB]) => {
+                                const order: Record<string, number> = { 'High': 0, 'Medium': 1, 'Low': 2 };
+                                return (order[keyA] ?? 9) - (order[keyB] ?? 9);
+                            })
+                            .map(([groupKey, leads]) => {
+                                const isOpen = openGroups[groupKey];
+                                return (
+                                    <div key={groupKey} className="space-y-3">
+                                        <button
+                                            onClick={() => setOpenGroups(prev => ({ ...prev, [groupKey]: !prev[groupKey] }))}
+                                            className="flex items-center gap-2 px-2 text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-gray-300 transition-colors"
+                                        >
+                                            <ChevronDown size={14} className={`transition-transform ${isOpen ? '' : '-rotate-90'}`} />
+                                            {groupKey} RELEVANCY • {leads.length}
+                                        </button>
 
-                                    <AnimatePresence>
-                                        {isOpen && (
-                                            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                {leads.map((lead, i) => (
-                                                    <Link key={i} href={lead.url} target="_blank" className="group p-5 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.04] transition-all relative overflow-hidden">
-                                                        <div className="flex flex-col h-full justify-between gap-4">
-                                                            <div className="space-y-3">
-                                                                <div className="flex items-center justify-between">
-                                                                    <div className="flex items-center gap-2">
-                                                                        <span className="text-[10px] font-black text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded-md">r/{lead.subreddit}</span>
-                                                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider ${
-                                                                            lead.relevance === 'High' ? 'bg-green-500/10 text-green-500 border border-green-500/20' :
-                                                                            lead.relevance === 'Medium' ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' :
-                                                                            'bg-gray-500/10 text-gray-500 border border-gray-500/20'
-                                                                        }`}>
-                                                                            {lead.relevance} Match
-                                                                        </span>
-                                                                        <button 
-                                                                            onClick={(e) => {
-                                                                                e.preventDefault();
-                                                                                e.stopPropagation();
-                                                                                setDraftingLead(lead);
-                                                                            }}
-                                                                            className="ml-2 px-3 py-1.5 rounded-lg bg-[#ff914d] text-black border border-[#ff914d] text-[10px] font-black uppercase tracking-wider hover:bg-[#ff914d]/90 transition-all flex items-center gap-1.5 group/btn whitespace-nowrap"
-                                                                            title="Open Reply Generator"
-                                                                        >
-                                                                            <MessageSquarePlus size={12} className="text-black" />
-                                                                            Draft Reply
-                                                                        </button>
+                                        <AnimatePresence>
+                                            {isOpen && (
+                                                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    {leads.map((lead, i) => (
+                                                        <Link key={i} href={lead.url} target="_blank" className="group p-5 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.04] transition-all relative overflow-hidden">
+                                                            <div className="flex flex-col h-full justify-between gap-4">
+                                                                <div className="space-y-3">
+                                                                    <div className="flex items-center justify-between">
+                                                                        <div className="flex items-center gap-2">
+                                                                            <span className="text-[10px] font-black text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded-md">r/{lead.subreddit}</span>
+                                                                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider ${
+                                                                                lead.relevance === 'High' ? 'bg-green-500/10 text-green-500 border border-green-500/20' :
+                                                                                lead.relevance === 'Medium' ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' :
+                                                                                'bg-gray-500/10 text-gray-500 border border-gray-500/20'
+                                                                            }`}>
+                                                                                {lead.relevance} Match
+                                                                            </span>
+                                                                            <button 
+                                                                                onClick={(e) => {
+                                                                                    e.preventDefault();
+                                                                                    e.stopPropagation();
+                                                                                    setDraftingLead(lead as any);
+                                                                                }}
+                                                                                className="ml-2 px-3 py-1.5 rounded-lg bg-primary text-white border border-primary text-[10px] font-black uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center gap-1.5 group/btn whitespace-nowrap"
+                                                                                title="Open Reply Generator"
+                                                                            >
+                                                                                <MessageSquarePlus size={12} className="text-white" />
+                                                                                Draft Reply
+                                                                            </button>
+                                                                        </div>
+                                                                        <ExternalLink size={12} className="text-gray-600 group-hover:text-white transition-colors" />
                                                                     </div>
-                                                                    <ExternalLink size={12} className="text-gray-600 group-hover:text-white transition-colors" />
+                                                                    <h4 className="text-sm font-semibold text-gray-200 group-hover:text-white leading-relaxed line-clamp-3 transition-colors">{lead.title}</h4>
                                                                 </div>
-                                                                <h4 className="text-sm font-semibold text-gray-200 group-hover:text-white leading-relaxed line-clamp-3 transition-colors">{lead.title}</h4>
                                                             </div>
-                                                        </div>
-                                                    </Link>
-                                                ))}
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
-                                </div>
-                            );
-                        })}
-                    </div>
+                                                        </Link>
+                                                    ))}
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
+                                );
+                            })}
+                        </motion.div>
 
                     {teaserInfo?.isTeaser && (
                         <div className="pt-8 flex flex-col items-center text-center space-y-6">

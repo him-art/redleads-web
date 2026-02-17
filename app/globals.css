@@ -4,9 +4,20 @@
 @theme {
   --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-garamond), serif;
-  --color-primary: #ff914d; /* brand-orange */
+  
+  /* Soft Antigravity Palette */
+  --color-void: #0A0A0A; /* Softened deep black */
+  --color-card: rgba(255, 255, 255, 0.03); /* Subtle, smoky glass */
+  --color-border-subtle: rgba(255, 255, 255, 0.05);
+  
+  /* Text Colors */
+  --color-text-primary: #EDEDED;
+  --color-text-secondary: #A1A1AA;
+  
+  /* Brand Accents */
+  --color-primary: #ff5836; /* Signature Orange */
   --color-primary-foreground: #ffffff;
-  --color-accent: #f59e0b; /* amber-500 */
+  --color-accent: #27272a; /* Zinc 800 - for secondary elements */
   --color-accent-foreground: #ffffff;
 }
 
@@ -75,4 +86,16 @@ h1, h2, h3, h4, h5, h6 {
 .custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-card backdrop-blur-md border border-border-subtle;
+  }
+  
+  .shadow-void {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), 
+                0 4px 6px -1px rgba(0, 0, 0, 0.5), 
+                0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  }
 }

@@ -135,7 +135,7 @@ export type Database = {
         }
         Relationships: []
       }
-      roadmap_nodes: {
+      Guide_nodes: {
         Row: {
           action_label: string | null
           action_link: string | null
@@ -171,7 +171,7 @@ export type Database = {
         }
         Relationships: []
       }
-      user_roadmap_progress: {
+      user_Guide_progress: {
         Row: {
           completed_at: string
           node_id: string
@@ -192,10 +192,10 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "user_roadmap_progress_node_id_fkey"
+            foreignKeyName: "user_Guide_progress_node_id_fkey"
             columns: ["node_id"]
             isOneToOne: false
-            referencedRelation: "roadmap_nodes"
+            referencedRelation: "Guide_nodes"
             referencedColumns: ["id"]
           },
         ]

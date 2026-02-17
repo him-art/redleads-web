@@ -224,7 +224,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
 
                 {/* Step Indicator */}
                 <div className="absolute top-8 right-8 flex items-center gap-2 z-50">
-                    <span className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mr-2">
+                    <span className="text-[10px] font-bold text-text-secondary/50 uppercase tracking-widest mr-2">
                         Step {step + 1} of {TOTAL_STEPS}
                     </span>
                     {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
@@ -261,10 +261,10 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                             />
                                         </div>
                                     </motion.div>
-                                    <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white leading-tight">
+                                    <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-text-primary leading-tight">
                                         Let&apos;s find your <span className="text-orange-500">first leads</span>
                                     </h1>
-                                    <p className="text-gray-400 text-base max-w-lg mx-auto leading-relaxed">
+                                    <p className="text-text-secondary text-base max-w-lg mx-auto leading-relaxed">
                                         We&apos;ll analyze your product, discover relevant Reddit conversations which are also ranking on google and show you real leads in under 60 seconds.
                                     </p>
                                 </div>
@@ -273,7 +273,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                 <div className="pt-2">
                                     <button
                                         onClick={() => setStep(1)}
-                                        className="group px-10 py-4 bg-[#f25e36] text-white font-black uppercase text-xs tracking-widest rounded-xl hover:bg-[#d94a24] transition-all shadow-lg active:scale-[0.98] w-full sm:w-auto"
+                                        className="group px-10 py-4 bg-primary text-primary-foreground font-black uppercase text-xs tracking-widest rounded-xl hover:bg-primary/90 transition-all shadow-lg active:scale-[0.98] w-full sm:w-auto"
                                     >
                                         Start automated <ArrowRight size={14} className="inline ml-2 group-hover:translate-x-1 transition-transform" />
                                     </button>
@@ -287,17 +287,17 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                     {step === 1 && (
                         <motion.div key="step1" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.4 }} className="w-full space-y-8">
                             <div className="text-center space-y-2">
-                                <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+                                <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-text-primary">
                                     What&apos;s your product?
                                 </h2>
-                                <p className="text-gray-500 text-sm">
+                                <p className="text-text-secondary text-sm">
                                     Enter your website URL and our AI will analyze it instantly.
                                 </p>
                             </div>
 
                             <div className="space-y-4">
                                 <div className="relative group">
-                                    <div className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-orange-500 transition-colors">
+                                    <div className="absolute left-5 top-1/2 -translate-y-1/2 text-text-secondary/50 group-focus-within:text-primary transition-colors">
                                         <Globe size={18} />
                                     </div>
                                     <input
@@ -308,7 +308,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                         onChange={(e) => { setUrl(e.target.value); setError(''); }}
                                         onKeyDown={(e) => e.key === 'Enter' && canProceed() && goNext()}
                                         autoFocus
-                                        className="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-5 pl-14 pr-6 text-lg focus:outline-none focus:border-orange-500/30 focus:bg-white/[0.05] transition-all placeholder:text-gray-700 font-medium tracking-tight"
+                                        className="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-5 pl-14 pr-6 text-lg focus:outline-none focus:border-primary/30 focus:bg-white/[0.05] transition-all placeholder:text-text-secondary/40 font-medium tracking-tight"
                                     />
                                 </div>
                                 {error && (
@@ -316,7 +316,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                         {error}
                                     </motion.p>
                                 )}
-                                <p className="text-center text-[10px] text-gray-700 font-bold uppercase tracking-widest">
+                                <p className="text-center text-[10px] text-text-secondary/40 font-bold uppercase tracking-widest">
                                     We&apos;ll scan your landing page to understand your product
                                 </p>
                             </div>
@@ -332,10 +332,10 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full text-[10px] font-black text-green-500 uppercase tracking-widest mb-2">
                                     <Check size={10} /> AI Analysis Complete
                                 </div>
-                                <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+                                <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-text-primary">
                                     Your product pitch
                                 </h2>
-                                <p className="text-gray-500 text-sm">
+                                <p className="text-text-secondary text-sm">
                                     Review and refine how we describe your product. This helps us find the most relevant leads.
                                 </p>
                             </div>
@@ -345,9 +345,9 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     rows={5}
-                                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl p-5 text-sm leading-relaxed focus:outline-none focus:border-orange-500/30 focus:bg-white/[0.05] transition-all resize-none text-gray-300"
+                                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl p-5 text-sm leading-relaxed focus:outline-none focus:border-primary/30 focus:bg-white/[0.05] transition-all resize-none text-text-secondary"
                                 />
-                                <div className="absolute bottom-3 right-4 text-[9px] font-bold text-gray-700 uppercase tracking-widest">
+                                <div className="absolute bottom-3 right-4 text-[9px] font-bold text-text-secondary/40 uppercase tracking-widest">
                                     {description.length} chars
                                 </div>
                             </div>
@@ -360,10 +360,10 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                     {step === 3 && (
                         <motion.div key="step3" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.4 }} className="w-full space-y-6">
                             <div className="text-center space-y-2">
-                                <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+                                <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-text-primary">
                                     Target keywords
                                 </h2>
-                                <p className="text-gray-500 text-sm">
+                                <p className="text-text-secondary text-sm">
                                     These keywords help us find Reddit conversations about your product. Add or remove as needed.
                                 </p>
                             </div>
@@ -383,7 +383,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                     </motion.span>
                                 ))}
                                 {keywords.length === 0 && (
-                                    <p className="text-gray-700 text-xs font-bold uppercase tracking-widest">
+                                    <p className="text-text-secondary/40 text-xs font-bold uppercase tracking-widest">
                                         No keywords yet — add some below
                                     </p>
                                 )}
@@ -397,15 +397,15 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                         value={newKeyword}
                                         onChange={(e) => setNewKeyword(e.target.value)}
                                         onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addKeyword())}
-                                        className="flex-1 bg-white/[0.03] border border-white/10 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-orange-500/30 transition-all placeholder:text-gray-700"
+                                        className="flex-1 bg-white/[0.03] border border-white/10 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-primary/30 transition-all placeholder:text-text-secondary/40"
                                     />
-                                    <button onClick={addKeyword} className="px-5 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-black uppercase tracking-widest text-gray-400 hover:text-white hover:bg-white/10 transition-all">
+                                    <button onClick={addKeyword} className="px-5 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-black uppercase tracking-widest text-text-secondary hover:text-text-primary hover:bg-white/10 transition-all">
                                         Add
                                     </button>
                                 </div>
                             )}
 
-                            <p className="text-center text-[10px] text-gray-700 font-bold uppercase tracking-widest">
+                            <p className="text-center text-[10px] text-text-secondary/40 font-bold uppercase tracking-widest">
                                 {keywords.length} / {keywordLimit} keywords
                             </p>
                         </motion.div>
@@ -418,7 +418,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                         <motion.div key="step4" variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.4 }} className="w-full space-y-6">
                             <div className="text-center space-y-2">
 
-                                <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+                                <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-text-primary">
                                     Your 3-day free trial is active
                                 </h2>
 
@@ -427,23 +427,23 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {/* Starter Plan */}
                                 <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/5 flex flex-col">
-                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 mb-3">Starter</h3>
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary mb-3">Starter</h3>
                                     <div className="flex items-baseline gap-2 mb-1">
-                                        <span className="text-sm font-bold text-gray-700 line-through">$19</span>
-                                        <span className="text-3xl font-black text-white">$15</span>
-                                        <span className="text-xs text-gray-600 font-bold uppercase">/mo</span>
+                                        <span className="text-sm font-bold text-text-secondary/40 line-through">$19</span>
+                                        <span className="text-3xl font-black text-text-primary">$15</span>
+                                        <span className="text-xs text-text-secondary/50 font-bold uppercase">/mo</span>
                                     </div>
                                     <ul className="space-y-2.5 my-5 flex-grow">
                                         {['5 tracked keywords', '2 daily power scans', '100 AI reply drafts /mo', 'Daily email alerts'].map(f => (
-                                            <li key={f} className="text-[10px] font-bold text-gray-500 uppercase tracking-widest flex items-center gap-2">
-                                                <Check size={10} className="text-gray-600" /> {f}
+                                            <li key={f} className="text-[10px] font-bold text-text-secondary uppercase tracking-widest flex items-center gap-2">
+                                                <Check size={10} className="text-text-secondary/50" /> {f}
                                             </li>
                                         ))}
                                     </ul>
                                     <button
                                         onClick={() => handleSelectPlan('starter')}
                                         disabled={!!checkoutLoading}
-                                        className="w-full py-4 rounded-xl bg-white/5 border border-white/10 text-white font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all disabled:opacity-50"
+                                        className="w-full py-4 rounded-xl bg-white/5 border border-white/10 text-text-primary font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all disabled:opacity-50"
                                     >
                                         {checkoutLoading === 'starter' ? <Loader2 size={14} className="animate-spin mx-auto" /> : 'Select Starter'}
                                     </button>
@@ -457,12 +457,12 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 mb-3">Growth</h3>
                                     <div className="flex items-baseline gap-2 mb-1">
                                         <span className="text-sm font-bold text-orange-500/30 line-through">$39</span>
-                                        <span className="text-3xl font-black text-white">$29</span>
-                                        <span className="text-xs text-gray-600 font-bold uppercase">/mo</span>
+                                        <span className="text-3xl font-black text-text-primary">$29</span>
+                                        <span className="text-xs text-text-secondary/50 font-bold uppercase">/mo</span>
                                     </div>
                                     <ul className="space-y-2.5 my-5 flex-grow">
                                         {['15 tracked keywords', '5 daily power scans', '500 AI reply drafts /mo', 'Priority email alerts'].map(f => (
-                                            <li key={f} className="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                                            <li key={f} className="text-[10px] font-bold text-text-primary uppercase tracking-widest flex items-center gap-2">
                                                 <Check size={10} className="text-orange-500" /> {f}
                                             </li>
                                         ))}
@@ -480,11 +480,11 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                             <div className="text-center space-y-4">
                                 <button
                                     onClick={handleSkipToTrial}
-                                    className="group px-10 py-4 bg-[#f25e36] hover:bg-[#d94a24] text-white font-black uppercase text-xs tracking-[0.2em] rounded-2xl shadow-[0_0_20px_rgba(242,94,54,0.3)] transition-all active:scale-[0.98] w-full sm:w-auto"
+                                    className="group px-10 py-4 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-xs tracking-[0.2em] rounded-2xl shadow-[0_0_20px_rgba(242,94,54,0.3)] transition-all active:scale-[0.98] w-full sm:w-auto"
                                 >
                                     Start free 3 day trial <ArrowRight size={14} className="inline ml-2 group-hover:translate-x-1 transition-transform" />
                                 </button>
-                                <p className="text-[9px] font-bold text-gray-700 uppercase tracking-[0.2em]">
+                                <p className="text-[9px] font-bold text-text-secondary/40 uppercase tracking-[0.2em]">
                                     <Shield size={10} className="inline mr-1" />
                                     7-Day Money-Back Guarantee • 7 DAY MONEY BACK GUARANTEE • Secure Checkout
                                 </p>
@@ -503,7 +503,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                         <>
                             <button 
                                 onClick={goBack}
-                                className="flex items-center gap-2 text-xs font-bold text-gray-500 hover:text-white transition-colors uppercase tracking-widest"
+                                className="flex items-center gap-2 text-xs font-bold text-text-secondary hover:text-text-primary transition-colors uppercase tracking-widest"
                             >
                                 <ArrowLeft size={14} /> Back
                             </button>
@@ -513,8 +513,8 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                 disabled={!canProceed() || isGenerating}
                                 className={`flex items-center gap-2 px-8 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${
                                     canProceed() && !isGenerating
-                                        ? 'bg-[#f25e36] text-white hover:bg-[#d94a24] shadow-lg'
-                                        : 'bg-white/5 text-gray-600 cursor-not-allowed'
+                                        ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg'
+                                        : 'bg-white/5 text-text-secondary/50 cursor-not-allowed'
                                 }`}
                             >
                                 {isGenerating ? (
@@ -535,7 +535,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                     ) : (
                          /* Static footer text for Step 0, 5, 6 */
                          <div className="w-full text-center">
-                            <div className="flex items-center justify-center gap-2 text-[10px] font-bold text-gray-600 uppercase tracking-widest">
+                            <div className="flex items-center justify-center gap-2 text-[10px] font-bold text-text-secondary/50 uppercase tracking-widest">
                                 <Users size={12} />
                                 50+ founders using RedLeads
                             </div>

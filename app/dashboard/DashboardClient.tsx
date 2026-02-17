@@ -11,10 +11,11 @@ import BillingTab from './BillingTab';
 import LiveDiscoveryTab from './LiveDiscoveryTab';
 import PaywallModal from '@/components/PaywallModal';
 import OnboardingWizard from './OnboardingWizard';
-import RoadmapTab from './RoadmapTab'; // [NEW]
+import GuideTab from './GuideTab'; // [NEW]
 import { DashboardDataProvider } from '@/app/dashboard/DashboardDataContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import DashboardErrorBoundary from '@/components/dashboard/DashboardErrorBoundary';
+import ReplyPanel from '@/components/dashboard/ReplyPanel';
 
 interface DashboardClientProps {
     profile: any;
@@ -28,7 +29,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
     const searchParams = useSearchParams();
     const effectiveSearch = searchParams.get('search') || initialSearch;
 
-    const [activeTab, setActiveTab] = useState<'reports' | 'live' | 'settings' | 'billing' | 'roadmap'>(effectiveSearch ? 'live' : 'live'); 
+    const [activeTab, setActiveTab] = useState<'reports' | 'live' | 'settings' | 'billing' | 'Guide'>(effectiveSearch ? 'live' : 'live'); 
     // Note: It's currently hardcoded to 'live', keeping as is for now but fixed the syntax.
     
     // Check onboarding status
@@ -70,6 +71,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
         }
     }, [isActuallyExpired]);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [draftingLead, setDraftingLead] = useState<any>(null);
     const showPaywall = isActuallyExpired && !isStarter && !isAdmin;
 
     const handleCheckout = async (plan: 'starter' | 'growth' | 'lifetime' = 'growth') => {
@@ -88,7 +90,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
 
     const tabs = [
         { id: 'live', label: 'Command Center', icon: Navigation, protected: true },
-        { id: 'roadmap', label: 'Roadmap (Beta)', icon: GraduationCap, protected: true },
+        { id: 'Guide', label: 'Guide', icon: GraduationCap, protected: true },
         { id: 'reports', label: 'Leads Archive', icon: Archive, protected: true },
         { id: 'settings', label: 'Tracking Setup', icon: Sliders, protected: true },
         { id: 'billing', label: 'Billing & Plan', icon: ShieldCheck, protected: false },
@@ -120,12 +122,12 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
             {/* PaywallModal only shows if trial is expired and they aren't on billing yet */}
             {showPaywall && !showOnboarding && activeTab !== 'billing' && <PaywallModal onCheckout={handleCheckout} />}
             
-            <DashboardDataProvider userId={user.id}>
-                {/* Main Layout Container - Full Dark Theme */}
-            <div className="flex h-screen bg-[#050505] text-white overflow-hidden font-sans selection:bg-orange-500/30">
+            <DashboardDataProvider userId={user.id} draftingState={{ draftingLead, setDraftingLead }}>
+                {/* Main Layout Container - Soft Antigravity Theme */}
+                <div className="flex h-screen bg-void text-text-primary overflow-hidden font-sans selection:bg-primary/30 relative">
                 
                 {/* Mobile Header Toggle */}
-                <div className="lg:hidden absolute top-0 left-0 right-0 z-50 p-4 bg-[#050505]/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between">
+                <div className="lg:hidden absolute top-0 left-0 right-0 z-50 p-4 bg-void/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                          <div className="w-8 h-8 relative">
                             <Image 
@@ -135,30 +137,32 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                 className="object-contain" 
                             />
                         </div>
-                        <span className="font-bold text-lg tracking-tight">RedLeads</span>
+                        <span className="font-bold text-lg tracking-tight text-text-primary">RedLeads</span>
                     </div>
                     <button 
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className="p-2 text-gray-400 hover:text-white transition-colors"
+                        className="p-2 text-text-secondary hover:text-text-primary transition-colors"
                     >
                         {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                     </button>
                 </div>
 
-                {/* Sidebar Navigation - Fixed Left */}
+                {/* Sidebar Navigation - Floating Glass Panel */}
                 <motion.aside 
                     initial={false}
                     animate={isMobileMenuOpen ? { x: 0 } : { x: 0 }}
                     className={`
-                        fixed inset-y-0 left-0 z-40 w-72 bg-[#050505]
+                        fixed inset-y-0 left-0 z-40 w-72 
+                        lg:glass-panel lg:bg-card/50
+                        bg-void
                         transform lg:transform-none transition-transform duration-300 ease-in-out
                         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-                        flex flex-col p-8
+                        flex flex-col p-6
                     `}
                 >
                     {/* Brand Header */}
-                    <div className="flex flex-col mb-12">
-                        <span className="text-[10px] font-black text-gray-700 uppercase tracking-[0.3em] mb-8 px-2">Dashboard</span>
+                    <div className="flex flex-col mb-10">
+                        <span className="text-[10px] font-black text-text-secondary uppercase tracking-[0.3em] mb-6 px-2 opacity-50">Command Center</span>
                         <div className="flex items-center gap-3 px-2">
                             <div className="w-10 h-10 flex items-center justify-center relative">
                                 <Image
@@ -169,8 +173,8 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                 />
                             </div>
                             <div>
-                                <h1 className="font-bold text-xl tracking-tight leading-none text-white">RedLeads</h1>
-                                <span className="text-[10px] font-medium text-gray-500 uppercase tracking-widest">Intelligence</span>
+                                <h1 className="font-bold text-xl tracking-tight leading-none text-text-primary">RedLeads</h1>
+                                <span className="text-[10px] font-medium text-primary uppercase tracking-widest">Intelligence</span>
                             </div>
                         </div>
                     </div>
@@ -178,7 +182,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                     {/* Navigation Items */}
                     <div className="space-y-1 flex-1">
                         <div className="px-3 mb-2">
-                             <span className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">Menu</span>
+                             <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest opacity-60">Menu</span>
                         </div>
                         {tabs.map((tab) => {
                             const Icon = tab.icon;
@@ -193,23 +197,23 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                         setActiveTab(tab.id as any);
                                         setIsMobileMenuOpen(false);
                                     }}
-                                    className={`relative w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 group overflow-hidden ${
+                                    className={`relative w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 group overflow-hidden ${
                                         isLocked
                                             ? 'opacity-40 cursor-not-allowed grayscale'
                                             : isActive 
-                                                ? 'bg-white/[0.05] text-white shadow-inner' 
-                                                : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]'
+                                                ? 'bg-white/[0.08] text-text-primary shadow-void border border-white/5' 
+                                                : 'text-text-secondary hover:text-text-primary hover:bg-white/[0.04]'
                                     }`}
                                 >
                                     {isActive && !isLocked && (
-                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-orange-500 rounded-r-full" />
+                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-primary rounded-r-full shadow-[0_0_10px_rgba(255,88,54,0.5)]" />
                                     )}
-                                    <Icon size={18} className={`relative z-10 transition-colors ${isLocked ? 'text-gray-600' : isActive ? 'text-orange-500' : 'group-hover:text-gray-300'}`} />
-                                    <span className={`relative z-10 text-sm font-medium tracking-wide ${isActive && !isLocked ? 'text-white' : ''}`}>
+                                    <Icon size={18} className={`relative z-10 transition-colors ${isLocked ? 'text-text-secondary' : isActive ? 'text-primary' : 'group-hover:text-text-primary'}`} />
+                                    <span className={`relative z-10 text-sm font-medium tracking-wide ${isActive && !isLocked ? 'text-text-primary' : ''}`}>
                                         {tab.label}
                                     </span>
                                     {isLocked && (
-                                        <Lock size={12} className="ml-auto text-gray-700" />
+                                        <Lock size={12} className="ml-auto text-text-secondary" />
                                     )}
                                 </button>
                             );
@@ -217,16 +221,16 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                     </div>
 
                     {/* User Profile / Footer */}
-                    <div className="mt-auto pt-6 border-t border-white/5">
-                        <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center border border-white/10">
-                                <span className="text-xs font-bold text-gray-300">
+                    <div className="mt-auto pt-6 border-t border-border-subtle">
+                        <div className="p-3 rounded-xl bg-white/[0.03] border border-border-subtle flex items-center gap-3 backdrop-blur-sm">
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-zinc-800 to-black flex items-center justify-center border border-white/10 text-text-primary">
+                                <span className="text-xs font-bold">
                                     {user.email?.[0].toUpperCase()}
                                 </span>
                             </div>
                             <div className="overflow-hidden">
-                                <p className="text-xs font-bold text-white truncate">{user.email}</p>
-                                <p className="text-[10px] text-gray-500 truncate">
+                                <p className="text-xs font-bold text-text-primary truncate">{user.email}</p>
+                                <p className="text-[10px] text-text-secondary truncate">
                                     {isAdmin ? 'Administrator' : profile?.subscription_tier === 'lifetime' ? 'Lifetime Founder' : isGrowth ? 'Growth Member' : isStarter ? 'Starter Member' : 'Free Trial'}
                                 </p>
                             </div>
@@ -235,14 +239,14 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                 </motion.aside>
 
                 {/* Main Content Area */}
-                <main className="flex-1 lg:pl-72 relative flex flex-col min-w-0 bg-[#050505]">
-                    {/* Frame Container - Flush on mobile, Framed on desktop */}
-                    <div className="flex-1 p-0 lg:pt-6 lg:px-6 lg:pb-0 overflow-hidden">
-                        <div className="w-full h-full bg-[#0F0F0F] rounded-none lg:rounded-t-[2.5rem] border-0 lg:border-x lg:border-t border-white/5 overflow-hidden relative flex flex-col shadow-none lg:shadow-[0_-20px_50px_rgba(0,0,0,0.5)]">
+                <main className="flex-1 lg:pl-[20rem] relative flex flex-col min-w-0 bg-void">
+                    {/* Content Container */}
+                    <div className="flex-1 p-0 overflow-hidden">
+                        <div className="w-full h-full relative flex flex-col">
                             {/* Scrollable Content Container - Custom Scrollbar */}
-                            <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 lg:p-12 custom-scrollbar scrollbar-hide lg:scrollbar-default">
+                            <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 lg:p-4 custom-scrollbar scrollbar-hide lg:scrollbar-default">
                                 {/* Content Wrapper limit width */}
-                                <div className="max-w-6xl mx-auto space-y-10 mt-16 lg:mt-0">
+                                <div className="max-w-7xl mx-auto space-y-10 mt-16 lg:mt-0">
                                     
                                     {/* Dynamic Tab Content - Hidden but mounted for caching */}
                                     <DashboardErrorBoundary>
@@ -271,15 +275,15 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                             </motion.div>
                                         )}
 
-                                        {activeTab === 'roadmap' && (
+                                        {activeTab === 'Guide' && (
                                             <motion.div
-                                                key="roadmap"
+                                                key="Guide"
                                                 initial={{ opacity: 0, y: 10 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 exit={{ opacity: 0, y: -10 }}
                                                 transition={{ duration: 0.2 }}
                                             >
-                                                <RoadmapTab user={user} onNavigate={(tab) => setActiveTab(tab as any)} />
+                                                <GuideTab user={user} onNavigate={(tab) => setActiveTab(tab as any)} />
                                             </motion.div>
                                         )}
 
@@ -313,6 +317,48 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                         </div>
                     </div>
                 </main>
+                
+                {/* AI Intelligence Sidebar (Cursor-Style) */}
+                <AnimatePresence>
+                    {draftingLead && (
+                        <motion.aside
+                            initial={{ x: '100%', opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            exit={{ x: '100%', opacity: 0 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                            className="fixed top-0 right-0 z-[60] w-full sm:w-[500px] h-screen bg-[#0A0A0A] border-l border-white/5 shadow-2xl flex flex-col pt-20 lg:pt-0"
+                        >
+                            {/* Sidebar Header */}
+                            <div className="flex items-center justify-between p-6 border-b border-white/5 bg-void/50 backdrop-blur-md">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+                                        <Sparkles size={18} className="text-primary" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-sm font-black uppercase tracking-widest text-text-primary">AI Intelligence</h3>
+                                        <p className="text-[10px] text-text-secondary font-medium uppercase tracking-wider opacity-60">Drafting Response</p>
+                                    </div>
+                                </div>
+                                <button 
+                                    onClick={() => setDraftingLead(null)}
+                                    className="p-2 rounded-xl hover:bg-white/5 text-text-secondary hover:text-text-primary transition-all"
+                                >
+                                    <X size={20} />
+                                </button>
+                            </div>
+
+                            {/* Sidebar Content */}
+                            <div className="flex-1 overflow-hidden">
+                                <ReplyPanel 
+                                    lead={draftingLead}
+                                    productContext={profile?.description || ''}
+                                    onClose={() => setDraftingLead(null)}
+                                    isSidebar={true}
+                                />
+                            </div>
+                        </motion.aside>
+                    )}
+                </AnimatePresence>
 
             </div>
             </DashboardDataProvider>

@@ -173,7 +173,7 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
         <div className="space-y-8 max-w-2xl">
             <div>
                 <h2 className="text-xl sm:text-2xl font-bold mb-2">Tracking Configuration</h2>
-                <p className="text-xs sm:text-sm text-gray-400">Tell us what to scan for. We use this to fine-tune your daily reports.</p>
+                <p className="text-xs sm:text-sm text-text-secondary">Tell us what to scan for. We use this to fine-tune your daily reports.</p>
             </div>
 
             <div className="space-y-6">
@@ -181,8 +181,8 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                 <div className="space-y-4">
                     <div>
                         <div className="flex items-center justify-between mb-2">
-                            <label htmlFor="product-description" className="block text-sm font-bold text-gray-300">product Description</label>
-                            <span className={`text-[10px] font-bold ${description.split(/\s+/).filter(Boolean).length > 150 ? 'text-red-500' : 'text-gray-500'}`}>
+                            <label htmlFor="product-description" className="block text-sm font-bold text-text-primary">Product Description</label>
+                            <span className={`text-[10px] font-bold ${description.split(/\s+/).filter(Boolean).length > 150 ? 'text-red-500' : 'text-text-secondary'}`}>
                                 {description.split(/\s+/).filter(Boolean).length}/150 words
                             </span>
                         </div>
@@ -198,9 +198,9 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                             }}
                             placeholder="[Brand Name] is a [Product Type] that helps [Target Audience] solve [Problem] by [Value Proposition]."
                             rows={5}
-                            className="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-white focus:border-orange-500 outline-none transition-colors resize-none placeholder:text-gray-700"
+                            className="w-full bg-black/20 border border-border-subtle rounded-xl p-4 text-text-primary focus:border-primary/50 outline-none transition-colors resize-none placeholder:text-text-secondary shadow-inner"
                         />
-                        <p className="text-xs text-gray-500 mt-2">
+                        <p className="text-xs text-text-secondary/70 mt-2">
                             <span className="text-orange-500/80 font-bold">Pro Tip:</span> Being highly specific (mentioning exact target customers and their specific pain points) helps the AI find much higher quality leads.
                         </p>
                     </div>
@@ -208,7 +208,7 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                     <button
                         onClick={handleAutofill}
                         disabled={autofilling || !description || description.length < 10}
-                        className="w-full py-4 bg-orange-500 text-black rounded-xl text-[10px] sm:text-sm font-black uppercase tracking-widest hover:bg-orange-600 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        className="w-full py-4 bg-primary text-primary-foreground rounded-xl text-[10px] sm:text-sm font-black uppercase tracking-widest hover:bg-primary/90 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                         {autofilling ? (
                             <>
@@ -228,19 +228,19 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                 <div className="rounded-2xl -m-4 p-4 transition-colors duration-500">
                     <div className="flex items-center justify-between mb-1.5">
                         <div className="flex items-center gap-2">
-                            <label className="block text-sm font-bold text-gray-300">Priority Keywords</label>
+                            <label className="block text-sm font-bold text-text-primary">Priority Keywords</label>
                             {isMounted && wasAiGenerated && (
-                                <span className="text-[11px] font-medium text-gray-500 flex items-center gap-1 animate-in fade-in zoom-in duration-500">
+                                <span className="text-[11px] font-medium text-text-secondary flex items-center gap-1 animate-in fade-in zoom-in duration-500">
                                     <Sparkles size={10} className="text-orange-500/50" />
                                     AI selected
                                 </span>
                             )}
                         </div>
-                        <span className={`text-[10px] font-bold ${keywords.length >= keywordLimit ? 'text-orange-500' : 'text-gray-600'}`}>
+                        <span className={`text-[10px] font-bold ${keywords.length >= keywordLimit ? 'text-primary' : 'text-text-secondary'}`}>
                             {keywords.length}/{keywordLimit}
                         </span>
                     </div>
-                    <p className="text-xs text-gray-500/80 mb-3 leading-relaxed">
+                    <p className="text-xs text-text-secondary/70 mb-3 leading-relaxed">
                         We scan 100+ active SaaS & Tech subreddits for these keywords.
                     </p>
                     <div className="flex gap-2 mb-3">
@@ -252,20 +252,20 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                             onChange={(e) => setNewKeyword(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && addKeyword()}
                             placeholder="Best results with 2-word phrases: 'lead generation', 'sales automation', 'cold outreach'"
-                            className="flex-grow bg-black/50 border border-white/10 rounded-xl p-3 text-sm sm:text-base text-white focus:border-orange-500 outline-none placeholder:text-gray-700"
+                            className="flex-grow bg-black/20 border border-border-subtle rounded-xl p-3 text-sm sm:text-base text-text-primary focus:border-primary/50 outline-none placeholder:text-text-secondary shadow-inner"
                         />
                         <button 
                             onClick={addKeyword}
-                            className="bg-white/10 hover:bg-white/20 text-white p-3 rounded-xl transition-colors"
+                            className="bg-white/10 hover:bg-white/20 text-text-primary p-3 rounded-xl transition-colors"
                         >
                             <Plus size={20} />
                         </button>
                     </div>
                     <div className="flex flex-wrap gap-2">
                         {keywords.map((kw, i) => (
-                            <div key={i} className="flex items-center gap-2 bg-orange-500/10 border border-orange-500/20 text-orange-500 px-3 py-1.5 rounded-full text-sm font-medium">
+                            <div key={i} className="flex items-center gap-2 bg-primary/10 border border-primary/20 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
                                 <span>{kw}</span>
-                                <button onClick={() => removeKeyword(i)} className="text-orange-500/50 hover:text-orange-500">
+                                <button onClick={() => removeKeyword(i)} className="text-primary/50 hover:text-primary">
                                     <X size={14} />
                                 </button>
                             </div>
@@ -276,10 +276,10 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                 {/* Subreddits Section Removed - Global Monitoring Active */}
                 <div className="rounded-2xl -m-4 p-4 mt-2 opacity-50 pointer-events-none grayscale">
                     <div className="flex items-center gap-2 mb-1.5">
-                        <label className="block text-sm font-bold text-gray-500">Global Monitoring Active</label>
+                        <label className="block text-sm font-bold text-text-secondary">Global Monitoring Active</label>
                         <span className="text-[10px] bg-green-500/10 text-green-500 px-2 py-0.5 rounded-full border border-green-500/20">100+ Communities</span>
                     </div>
-                     <p className="text-xs text-gray-600/80 leading-relaxed">
+                     <p className="text-xs text-text-secondary/60 leading-relaxed">
                         We now automatically scan the top 100 communities for founders and SaaS. No manual selection needed.
                     </p>
                 </div>

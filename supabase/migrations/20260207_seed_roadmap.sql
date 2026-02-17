@@ -1,10 +1,10 @@
--- Seed Roadmap Content (Refined with Expert Limits)
+-- Seed Guide Content (Refined with Expert Limits)
 
 -- Clear existing nodes to avoid duplicates during dev
-delete from public.roadmap_nodes;
+delete from public.Guide_nodes;
 
 -- Phase 1: The Trojan Horse (Days 1-7)
-insert into public.roadmap_nodes (phase, order_index, title, description, content, action_link, action_label) values
+insert into public.Guide_nodes (phase, order_index, title, description, content, action_link, action_label) values
 (1, 10, 'The Setup', 'Build a profile that looks like a veteran, not a spammer.', 
 '# The 5-Year Veteran Disguise
 

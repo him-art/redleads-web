@@ -26,7 +26,7 @@ export default function ProtocolPage() {
             <span className="text-orange-500 font-serif-italic">Success Protocol</span>
           </h1>
           <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed mb-12">
-            Reddit is not just a platform; it's a series of high-trust communities. To win, you must stop "marketing" and start leading. This protocol is your roadmap to sustainable growth.
+            Reddit is not just a platform; it's a series of high-trust communities. To win, you must stop "marketing" and start leading. This protocol is your Guide to sustainable growth.
           </p>
         </div>
       </section>

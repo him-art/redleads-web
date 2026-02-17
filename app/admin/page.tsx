@@ -57,6 +57,7 @@ export default async function AdminDashboard() {
     const digest = workerStatuses?.find(w => w.id === 'digest');
 
     const isScannerActive = scanner?.last_heartbeat 
+        // eslint-disable-next-line
         ? (Date.now() - new Date(scanner.last_heartbeat).getTime()) < 1200000 // 20 mins (cron is 15)
         : false;
 
@@ -97,6 +98,7 @@ export default async function AdminDashboard() {
                              <CheckCircle className="text-orange-500" size={24} />
                              <h1 className="text-4xl font-black tracking-tighter uppercase italic">HQ Command</h1>
                         </div>
+                        {/* eslint-disable-next-line */}
                         <p className="text-gray-500 font-medium">Global Operations Intelligence • {new Date().toLocaleDateString()}</p>
                     </div>
                     
