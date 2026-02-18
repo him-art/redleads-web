@@ -24,9 +24,10 @@ interface LeadSearchProps {
     onResultsFound?: (count: number) => void;
     initialLeads?: RedditLead[];
     autoScan?: boolean;
+    isLocked?: boolean;
 }
 
-export default function LeadSearch({ user, isDashboardView = false, initialUrl = '', initialLeads = [], autoScan = false, onShowModal, onResultsFound }: LeadSearchProps) {
+export default function LeadSearch({ user, isDashboardView = false, initialUrl = '', initialLeads = [], autoScan = false, isLocked = false, onShowModal, onResultsFound }: LeadSearchProps) {
     const [url, setUrl] = useState(initialUrl);
     const [isScanning, setIsScanning] = useState(false);
     const [scanStep, setScanStep] = useState(0);
@@ -170,18 +171,19 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
 
                     <div className="relative flex items-center">
                         <div className="absolute left-4 sm:left-6 text-text-secondary group-focus-within:text-primary transition-colors">
-                            {isScanning ? <Loader2 size={18} className="animate-spin" /> : <Globe size={18} />}
+                            {isScanning ? <Loader2 size={18} className="animate-spin" /> : isLocked ? <Lock size={18} className="text-primary/50" /> : <Globe size={18} />}
                         </div>
                         <input 
                             id="product-url-search"
                             name="product-url"
                             type="text" 
-                            placeholder="Type product URL to scan..."
+                            placeholder={isLocked ? "Website set in Tracking Setup" : "Type product URL to scan..."}
                             value={url}
-                            onChange={(e) => setUrl(e.target.value)}
+                            onChange={(e) => !isLocked && setUrl(e.target.value)}
                             disabled={isScanning}
+                            readOnly={isLocked}
                             suppressHydrationWarning
-                            className="w-full bg-black/20 border border-border-subtle rounded-2xl py-4 sm:py-6 pl-12 sm:pl-16 pr-24 sm:pr-32 text-base sm:text-lg focus:outline-none focus:bg-black/30 focus:border-primary/20 transition-all placeholder:text-text-secondary font-medium tracking-tight text-text-primary shadow-inner"
+                            className={`w-full bg-black/20 border border-border-subtle rounded-2xl py-4 sm:py-6 pl-12 sm:pl-16 pr-24 sm:pr-32 text-base sm:text-lg focus:outline-none focus:bg-black/30 focus:border-primary/20 transition-all placeholder:text-text-secondary font-medium tracking-tight text-text-primary shadow-inner ${isLocked ? 'cursor-default' : ''}`}
                         />
                         <button 
                             type="submit"
@@ -192,7 +194,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                     : 'bg-white/5 text-text-secondary cursor-not-allowed opacity-50'
                             }`}
                         >
-                            {isScanning ? 'Analyzing' : 'Power Scan'}
+                            {isScanning ? 'Analyzing' : 'Power Search'}
                         </button>
                     </div>
 
@@ -272,8 +274,8 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                                                 <div className="space-y-3">
                                                                     <div className="flex items-center justify-between">
                                                                         <div className="flex items-center gap-2">
-                                                                            <span className="text-[10px] font-black text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded-md">r/{lead.subreddit}</span>
-                                                                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider ${
+                                                                            <span className="text-[9px] font-black text-orange-500 bg-orange-500/10 px-2.5 py-1 rounded-full uppercase tracking-widest border border-orange-500/10">r/{lead.subreddit}</span>
+                                                                            <span className={`text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-widest ${
                                                                                 lead.relevance === 'High' ? 'bg-green-500/10 text-green-500 border border-green-500/20' :
                                                                                 lead.relevance === 'Medium' ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' :
                                                                                 'bg-gray-500/10 text-gray-500 border border-gray-500/20'
@@ -286,16 +288,16 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                                                                     e.stopPropagation();
                                                                                     setDraftingLead(lead as any);
                                                                                 }}
-                                                                                className="ml-2 px-3 py-1.5 rounded-lg bg-primary text-white border border-primary text-[10px] font-black uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center gap-1.5 group/btn whitespace-nowrap"
+                                                                                className="ml-2 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground border border-primary text-[10px] font-black uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center gap-1.5 group/btn whitespace-nowrap"
                                                                                 title="Open Reply Generator"
                                                                             >
-                                                                                <MessageSquarePlus size={12} className="text-white" />
+                                                                                <MessageSquarePlus size={12} className="text-primary-foreground" />
                                                                                 Draft Reply
                                                                             </button>
                                                                         </div>
                                                                         <ExternalLink size={12} className="text-gray-600 group-hover:text-white transition-colors" />
                                                                     </div>
-                                                                    <h4 className="text-sm font-semibold text-gray-200 group-hover:text-white leading-relaxed line-clamp-3 transition-colors">{lead.title}</h4>
+                                                                    <h4 className="text-xs sm:text-sm font-bold text-text-secondary group-hover:text-text-primary leading-relaxed tracking-tight line-clamp-3 transition-all">{lead.title}</h4>
                                                                 </div>
                                                             </div>
                                                         </Link>

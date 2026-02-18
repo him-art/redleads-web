@@ -26,6 +26,10 @@ const faqs = [
   {
     question: "Can I monitor multiple products or competitors?",
     answer: "Yes. Our Growth plan is designed exactly for that—allowing you to track up to 15 different keywords or competitor names across all of Reddit simultaneously."
+  },
+  {
+    question: "What is Power Search?",
+    answer: "Power Search is designed to find up to 50 top ranking, SEO optimized Reddit posts for your project. While our live feed tracks new conversations, Power Search scans historical high-traffic threads where your brand can gain the most visibility."
   }
 ];
 

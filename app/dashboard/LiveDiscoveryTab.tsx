@@ -203,17 +203,38 @@ export default function LiveDiscoveryTab({
                     <div className="px-4 sm:px-6 py-4 border-b border-border-subtle flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                            <span className="text-xs font-bold uppercase tracking-widest text-text-secondary">Power Scan</span>
+                            <span className="text-xs font-bold uppercase tracking-widest text-text-secondary">Power Search</span>
                         </div>
                     </div>
                     <div className="p-4 sm:p-6">
-                        <LeadSearch 
-                            user={user} 
-                            isDashboardView={true} 
-                            initialUrl={initialSearch || profile?.website_url || ''} 
-                            autoScan={false}
-                            onResultsFound={(count) => setHasResults(count > 0)}
-                        />
+                        {profile?.website_url ? (
+                            <LeadSearch 
+                                user={user} 
+                                isDashboardView={true} 
+                                initialUrl={profile?.website_url} 
+                                autoScan={false}
+                                isLocked={true}
+                                onResultsFound={(count) => setHasResults(count > 0)}
+                            />
+                        ) : (
+                            <div className="flex flex-col items-center justify-center py-10 space-y-6 text-center">
+                                <div className="p-4 bg-orange-500/10 rounded-2xl text-primary">
+                                    <ShieldCheck size={40} className="animate-pulse" />
+                                </div>
+                                <div className="space-y-2 max-w-sm">
+                                    <h3 className="text-lg font-bold text-text-primary">Tracking Setup Incomplete</h3>
+                                    <p className="text-xs text-text-secondary leading-relaxed uppercase tracking-widest font-black opacity-60">
+                                        Connect your website in settings to unlock target-specific power searching.
+                                    </p>
+                                </div>
+                                <button 
+                                    onClick={() => onNavigate('settings')}
+                                    className="px-8 py-3 bg-primary text-white font-black uppercase text-[10px] tracking-[0.2em] rounded-xl hover:bg-primary/90 transition-all shadow-[0_0_20px_rgba(255,88,54,0.2)]"
+                                >
+                                    Go to Tracking Setup
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

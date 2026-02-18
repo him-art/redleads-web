@@ -19,11 +19,25 @@ export default async function DashboardPage(props: { searchParams: Promise<{ sea
     }
 
     // Fetch Profile (Settings + Billing + Effective Admin/Pro status)
-    const { data: profile } = await supabase
-        .from('user_access_status')
-        .select('*, subscription_tier:effective_tier')
-        .eq('id', user.id)
-        .single();
+    const [{ data: profile }, { data: accessStatus }] = await Promise.all([
+        supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single(),
+        supabase
+            .from('user_access_status')
+            .select('*, subscription_tier:effective_tier')
+            .eq('id', user.id)
+            .single()
+    ]);
+    
+    // Merge data: profiles has website_url, accessStatus has effective_tier
+    const mergedProfile = {
+        ...profile,
+        ...accessStatus,
+        subscription_tier: accessStatus?.subscription_tier || profile?.subscription_tier
+    };
     
     // Fetch Reports (Drafts + Sent) - Removed as Daily Reports feature is decommissioned
     const reports: any[] = [];
@@ -36,7 +50,7 @@ export default async function DashboardPage(props: { searchParams: Promise<{ sea
                 </div>
             }>
                 <DashboardClient 
-                    profile={profile} 
+                    profile={mergedProfile as any} 
                     reports={reports || []} 
                     user={user}
                     initialSearch={initialSearch}

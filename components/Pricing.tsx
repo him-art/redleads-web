@@ -60,7 +60,7 @@ const Pricing = () => {
             description: 'Perfect for getting started with Reddit marketing',
             features: {
                 inbound: [
-                    { name: '2 website power scan per day', icon: <Globe size={14} /> },
+                    { name: '2 Power Search for top ranking post /day', icon: <Globe size={14} /> },
                     { name: '5 tracked keywords', icon: <Search size={14} /> },
                     { name: 'Daily SEO opportunities', icon: <Activity size={14} /> },
                     { name: 'Live Reddit monitoring', icon: <ZapIcon size={14} /> },
@@ -83,7 +83,7 @@ const Pricing = () => {
             badge: 'BEST VALUE',
             features: {
                 inbound: [
-                    { name: '5 website power scan per day', icon: <Globe size={14} /> },
+                    { name: '5 Power Search for top ranking post /day', icon: <Globe size={14} /> },
                     { name: '15 tracked keywords', icon: <Search size={14} /> },
                     { name: 'Daily SEO opportunities', icon: <Activity size={14} /> },
                     { name: 'Live Reddit monitoring', icon: <ZapIcon size={14} /> },

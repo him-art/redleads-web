@@ -112,9 +112,15 @@ export default function ReportsTab({ reports, profile, user, isGrowth, isAdmin }
                 {/* SaaS 2.0: Actionable Intelligence Section */}
                 {leadAnalyses.length > 0 && (
                     <div className="space-y-4">
-                        <div className="flex items-center gap-2 px-2">
-                            <Sparkles size={14} className="text-primary" />
-                            <h3 className="text-[10px] font-black uppercase tracking-widest text-text-secondary">High-Intent Intelligence</h3>
+                        <div className="flex items-center gap-3">
+                            <div className="relative">
+                                <Sparkles className="text-primary" size={14} />
+                                <div className="absolute inset-0 bg-primary/20 blur-md animate-pulse rounded-full" />
+                            </div>
+                            <div className="space-y-0.5">
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary">automated</h3>
+                                <p className="text-sm font-bold text-text-primary tracking-tight leading-none">High-Intent Intelligence</p>
+                            </div>
                         </div>
                         <div className="grid grid-cols-1 gap-4">
                             {leadAnalyses.map((analysis: LeadAnalysis) => (
@@ -128,8 +134,8 @@ export default function ReportsTab({ reports, profile, user, isGrowth, isAdmin }
                                                 <Brain size={16} className="text-primary" />
                                             </div>
                                             <div>
-                                                <p className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] text-primary/60 leading-none mb-1">Neural Synthesis</p>
-                                                <h4 className="text-xs sm:text-sm font-black text-text-primary uppercase tracking-tight">Pattern Analysis</h4>
+                                                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/60 leading-none mb-1">Neural Synthesis</p>
+                                                <h4 className="text-sm font-bold text-text-primary tracking-tight">Pattern Analysis</h4>
                                             </div>
                                         </div>
                                          <div className="text-xs sm:text-sm text-text-secondary leading-relaxed font-medium whitespace-pre-wrap">
@@ -189,10 +195,9 @@ export default function ReportsTab({ reports, profile, user, isGrowth, isAdmin }
                                     {leads.map((lead) => (
                                         <div key={lead.id} className="p-2 sm:p-3 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors flex flex-col sm:flex-row gap-3 sm:gap-4 group">
                                             <div className="flex-grow space-y-1">
-                                                <div className="flex items-center gap-2 text-[10px] uppercase font-bold text-text-secondary">
-                                                    <span className="text-primary">r/{lead.subreddit}</span>
-                                                    <span>•</span>
-                                                     <span className="flex items-center gap-1">
+                                                <div className="flex items-center gap-2.5">
+                                                    <span className="text-[9px] font-black text-primary/80 bg-primary/5 px-2.5 py-1 rounded-full uppercase tracking-widest border border-primary/10">r/{lead.subreddit}</span>
+                                                     <div className="flex items-center gap-1.5 text-[9px] font-bold text-text-secondary/50 uppercase tracking-widest">
                                                         <Clock size={10} />
                                                         {(() => {
                                                             try {
@@ -204,26 +209,26 @@ export default function ReportsTab({ reports, profile, user, isGrowth, isAdmin }
                                                                 return '--:--';
                                                             }
                                                             })()}
-                                                     </span>
-                                                     <span>•</span>
-                                                     <span className="text-text-primary italic">
-                                                        {lead.match_category || 'Medium'} Match
-                                                     </span>
+                                                     </div>
+                                                     <div className="px-2 py-0.5 rounded bg-white/5 border border-white/5">
+                                                        <span className="text-[9px] font-black uppercase tracking-widest text-text-secondary whitespace-nowrap">
+                                                            {lead.match_category || 'Medium'} Match
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                                <a href={lead.url} target="_blank" rel="noreferrer" className="flex items-start gap-2 text-sm font-medium text-text-primary group-hover:text-text-primary leading-snug transition-colors">
-                                                    <span className="mt-0.5">🧠</span>
-                                                    <span className="flex-1">{lead.title}</span>
+                                                <a href={lead.url} target="_blank" rel="noreferrer" className="block text-xs sm:text-sm font-bold text-text-secondary group-hover:text-text-primary leading-relaxed tracking-tight transition-all">
+                                                    {lead.title}
                                                 </a>
                                             </div>
                                              <div className="flex items-center gap-1.5 sm:gap-2">
-                                                <button 
-                                                    onClick={() => setDraftingLead(lead)}
-                                                    className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground border border-primary text-[10px] font-black uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center gap-1.5 group/btn whitespace-nowrap"
-                                                    title="Open Reply Generator"
-                                                >
-                                                    <MessageSquarePlus size={14} className="text-primary-foreground" />
-                                                    Draft Reply
-                                                </button>
+                                                    <button 
+                                                        onClick={() => setDraftingLead(lead)}
+                                                        className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground border border-primary text-[10px] font-black uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center gap-1.5 group/btn"
+                                                        title="Open Reply Generator"
+                                                    >
+                                                        <MessageSquarePlus size={12} className="text-primary-foreground" />
+                                                        Draft Reply
+                                                    </button>
                                                 <button 
                                                     onClick={async () => {
                                                         const newStatus = !lead.is_saved;

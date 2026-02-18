@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { Save, Loader2, Plus, X, Sparkles } from 'lucide-react';
+import { Save, Loader2, Plus, X, Sparkles, MessageSquarePlus, Compass } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 
@@ -12,6 +12,7 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
     
     const [description, setDescription] = useState(profile?.description || '');
     const [keywords, setKeywords] = useState<string[]>(profile?.keywords || []);
+    const [websiteUrl, setWebsiteUrl] = useState(profile?.website_url || '');
 
 
     // Sync state if profile prop updates (e.g. after router.refresh)
@@ -19,7 +20,7 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
         if (profile) {
             setDescription(profile.description || '');
             setKeywords(profile.keywords || []);
-
+            setWebsiteUrl(profile.website_url || '');
         }
     }, [profile]);
     
@@ -48,6 +49,7 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                     email: user.email,
                     description: description,
                     keywords: keywords,
+                    website_url: websiteUrl,
                     // subreddits: subreddits -- Deprecated in favor of global monitoring
                 });
 
@@ -64,19 +66,19 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
     };
 
     const handleAutofill = async () => {
-        if (!description || description.length < 10) {
-            setStatusMsg({ type: 'error', text: 'Please provide a more detailed product description (at least 10 characters).' });
+        if (!websiteUrl || websiteUrl.length < 3) {
+            setStatusMsg({ type: 'error', text: 'Please provide a valid website URL to generate configuration.' });
             return;
         }
 
         setAutofilling(true);
         setStatusMsg(null);
         try {
-            const res = await fetch('/api/admin/autofill-settings', {
+            const res = await fetch('/api/onboarding/generate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    description: description,
+                    url: websiteUrl,
                     limit: keywordLimit
                 }),
             });
@@ -85,9 +87,9 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
             
             if (data.error) throw new Error(data.error);
 
-            if (data.keywords || data.subreddits) {
+            if (data.description || data.keywords) {
                 // 1. REPLACE INSTEAD OF APPEND
-                // Clear existing before setting new
+                if (data.description) setDescription(data.description);
                 setKeywords(data.keywords || []);
 
                 
@@ -171,18 +173,65 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
 
     return (
         <div className="space-y-8 max-w-2xl">
-            <div>
-                <h2 className="text-xl sm:text-2xl font-bold mb-2">Tracking Configuration</h2>
-                <p className="text-xs sm:text-sm text-text-secondary">Tell us what to scan for. We use this to fine-tune your daily reports.</p>
+            <div className="flex items-center gap-3 mb-8">
+                <div className="relative">
+                    <Compass className="text-primary" size={18} />
+                    <div className="absolute inset-0 bg-primary/20 blur-md animate-pulse rounded-full" />
+                </div>
+                <div className="space-y-0.5">
+                    <h2 className="text-[10px] font-black tracking-[0.2em] text-text-secondary uppercase">configuration</h2>
+                    <p className="text-sm font-bold text-text-primary tracking-tight">Tracking Radar</p>
+                </div>
             </div>
 
             <div className="space-y-6">
                 {/* Website URL */}
                 <div className="space-y-4">
-                    <div>
-                        <div className="flex items-center justify-between mb-2">
-                            <label htmlFor="product-description" className="block text-sm font-bold text-text-primary">Product Description</label>
-                            <span className={`text-[10px] font-bold ${description.split(/\s+/).filter(Boolean).length > 150 ? 'text-red-500' : 'text-text-secondary'}`}>
+                    <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                            <label htmlFor="website-url" className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Website URL</label>
+                        </div>
+                        <div className="relative group">
+                            <input
+                                id="website-url"
+                                name="url"
+                                type="text"
+                                value={websiteUrl}
+                                onChange={(e) => setWebsiteUrl(e.target.value)}
+                                placeholder="yourproduct.com"
+                                className="w-full bg-black/20 border border-border-subtle rounded-xl py-4 pl-4 pr-4 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none transition-all placeholder:text-text-secondary/50 shadow-inner"
+                            />
+                        </div>
+                        <p className="text-[10px] text-text-secondary/60 leading-relaxed uppercase tracking-widest font-black opacity-60">
+                            Used to pre-fill Power Searches and generate AI configuration
+                        </p>
+                    </div>
+
+                    <button
+                        onClick={handleAutofill}
+                        disabled={autofilling || !websiteUrl || websiteUrl.length < 3}
+                        className="w-full py-4 bg-primary text-white rounded-xl text-[10px] sm:text-sm font-black uppercase tracking-[0.2em] hover:bg-primary/90 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(255,88,54,0.2)]"
+                    >
+                        {autofilling ? (
+                            <>
+                                <Loader2 className="animate-spin" size={20} />
+                                <span>Generating Configuration...</span>
+                            </>
+                        ) : (
+                            <>
+                                <MessageSquarePlus size={20} />
+                                <span>Generate description & keywords using AI</span>
+                            </>
+                        )}
+                    </button>
+                </div>
+
+                {/* Product Description */}
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                            <label htmlFor="product-description" className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Product Description</label>
+                            <span className={`text-[10px] font-black uppercase tracking-widest ${description.split(/\s+/).filter(Boolean).length > 150 ? 'text-red-500' : 'text-text-secondary/60'}`}>
                                 {description.split(/\s+/).filter(Boolean).length}/150 words
                             </span>
                         </div>
@@ -198,49 +247,31 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                             }}
                             placeholder="[Brand Name] is a [Product Type] that helps [Target Audience] solve [Problem] by [Value Proposition]."
                             rows={5}
-                            className="w-full bg-black/20 border border-border-subtle rounded-xl p-4 text-text-primary focus:border-primary/50 outline-none transition-colors resize-none placeholder:text-text-secondary shadow-inner"
+                            className="w-full bg-black/20 border border-border-subtle rounded-xl p-4 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none transition-colors resize-none placeholder:text-text-secondary/50 shadow-inner"
                         />
-                        <p className="text-xs text-text-secondary/70 mt-2">
-                            <span className="text-orange-500/80 font-bold">Pro Tip:</span> Being highly specific (mentioning exact target customers and their specific pain points) helps the AI find much higher quality leads.
+                        <p className="text-[10px] text-text-secondary/60 leading-relaxed uppercase tracking-widest font-black opacity-60">
+                            <span className="text-primary/80">Pro Tip:</span> Being highly specific helps the AI find much higher quality leads.
                         </p>
                     </div>
-
-                    <button
-                        onClick={handleAutofill}
-                        disabled={autofilling || !description || description.length < 10}
-                        className="w-full py-4 bg-primary text-primary-foreground rounded-xl text-[10px] sm:text-sm font-black uppercase tracking-widest hover:bg-primary/90 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                        {autofilling ? (
-                            <>
-                                <Loader2 className="animate-spin" size={20} />
-                                <span>Generating Configuration...</span>
-                            </>
-                        ) : (
-                            <>
-                                <Sparkles size={18} />
-                                <span>Generate with AI</span>
-                            </>
-                        )}
-                    </button>
                 </div>
 
                 {/* Keywords */}
                 <div className="rounded-2xl -m-4 p-4 transition-colors duration-500">
-                    <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
-                            <label className="block text-sm font-bold text-text-primary">Priority Keywords</label>
+                            <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Priority Keywords</label>
                             {isMounted && wasAiGenerated && (
-                                <span className="text-[11px] font-medium text-text-secondary flex items-center gap-1 animate-in fade-in zoom-in duration-500">
-                                    <Sparkles size={10} className="text-orange-500/50" />
+                                <span className="text-[9px] font-black uppercase tracking-widest text-primary/60 flex items-center gap-1 animate-in fade-in zoom-in duration-500">
+                                    <Sparkles size={8} className="text-primary" />
                                     AI selected
                                 </span>
                             )}
                         </div>
-                        <span className={`text-[10px] font-bold ${keywords.length >= keywordLimit ? 'text-primary' : 'text-text-secondary'}`}>
+                        <span className={`text-[10px] font-black uppercase tracking-widest ${keywords.length >= keywordLimit ? 'text-primary' : 'text-text-secondary/60'}`}>
                             {keywords.length}/{keywordLimit}
                         </span>
                     </div>
-                    <p className="text-xs text-text-secondary/70 mb-3 leading-relaxed">
+                    <p className="text-[10px] text-text-secondary/60 leading-relaxed uppercase tracking-widest font-black opacity-60 mb-4">
                         We scan 100+ active SaaS & Tech subreddits for these keywords.
                     </p>
                     <div className="flex gap-2 mb-3">
@@ -252,7 +283,7 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                             onChange={(e) => setNewKeyword(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && addKeyword()}
                             placeholder="Best results with 2-word phrases: 'lead generation', 'sales automation', 'cold outreach'"
-                            className="flex-grow bg-black/20 border border-border-subtle rounded-xl p-3 text-sm sm:text-base text-text-primary focus:border-primary/50 outline-none placeholder:text-text-secondary shadow-inner"
+                            className="flex-grow bg-black/20 border border-border-subtle rounded-xl p-3 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none placeholder:text-text-secondary/50 shadow-inner"
                         />
                         <button 
                             onClick={addKeyword}
@@ -263,10 +294,10 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                     </div>
                     <div className="flex flex-wrap gap-2">
                         {keywords.map((kw, i) => (
-                            <div key={i} className="flex items-center gap-2 bg-primary/10 border border-primary/20 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
+                            <div key={i} className="flex items-center gap-2 bg-primary/5 border border-primary/10 text-primary px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest">
                                 <span>{kw}</span>
-                                <button onClick={() => removeKeyword(i)} className="text-primary/50 hover:text-primary">
-                                    <X size={14} />
+                                <button onClick={() => removeKeyword(i)} className="text-primary/50 hover:text-primary transition-colors">
+                                    <X size={12} />
                                 </button>
                             </div>
                         ))}
@@ -274,13 +305,13 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                 </div>
 
                 {/* Subreddits Section Removed - Global Monitoring Active */}
-                <div className="rounded-2xl -m-4 p-4 mt-2 opacity-50 pointer-events-none grayscale">
-                    <div className="flex items-center gap-2 mb-1.5">
-                        <label className="block text-sm font-bold text-text-secondary">Global Monitoring Active</label>
-                        <span className="text-[10px] bg-green-500/10 text-green-500 px-2 py-0.5 rounded-full border border-green-500/20">100+ Communities</span>
+                <div className="rounded-2xl -m-4 p-4 mt-2 opacity-30 pointer-events-none grayscale">
+                    <div className="flex items-center gap-2 mb-2">
+                        <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Global Monitoring Active</label>
+                        <span className="text-[9px] font-black bg-green-500/10 text-green-500/60 px-2 py-0.5 rounded-full border border-green-500/10 uppercase tracking-widest">100+ Communities</span>
                     </div>
-                     <p className="text-xs text-text-secondary/60 leading-relaxed">
-                        We now automatically scan the top 100 communities for founders and SaaS. No manual selection needed.
+                     <p className="text-[10px] text-text-secondary/60 leading-relaxed uppercase tracking-widest font-black">
+                        Automatically scanning all relevant communities for founders and SaaS signals.
                     </p>
                 </div>
 

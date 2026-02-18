@@ -434,7 +434,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                         <span className="text-xs text-text-secondary/50 font-bold uppercase">/mo</span>
                                     </div>
                                     <ul className="space-y-2.5 my-5 flex-grow">
-                                        {['5 tracked keywords', '2 daily power scans', '100 AI reply drafts /mo', 'Daily email alerts'].map(f => (
+                                        {['5 tracked keywords', '2 daily power searches', '100 AI reply drafts /mo', 'Daily email alerts'].map(f => (
                                             <li key={f} className="text-[10px] font-bold text-text-secondary uppercase tracking-widest flex items-center gap-2">
                                                 <Check size={10} className="text-text-secondary/50" /> {f}
                                             </li>
@@ -461,7 +461,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                         <span className="text-xs text-text-secondary/50 font-bold uppercase">/mo</span>
                                     </div>
                                     <ul className="space-y-2.5 my-5 flex-grow">
-                                        {['15 tracked keywords', '5 daily power scans', '500 AI reply drafts /mo', 'Priority email alerts'].map(f => (
+                                        {['15 tracked keywords', '5 daily power searches', '500 AI reply drafts /mo', 'Priority email alerts'].map(f => (
                                             <li key={f} className="text-[10px] font-bold text-text-primary uppercase tracking-widest flex items-center gap-2">
                                                 <Check size={10} className="text-orange-500" /> {f}
                                             </li>

@@ -283,7 +283,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                                 exit={{ opacity: 0, y: -10 }}
                                                 transition={{ duration: 0.2 }}
                                             >
-                                                <GuideTab user={user} onNavigate={(tab) => setActiveTab(tab as any)} />
+                                                <GuideTab onNavigate={(tab) => setActiveTab(tab as any)} />
                                             </motion.div>
                                         )}
 

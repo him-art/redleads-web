@@ -210,7 +210,7 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {[
                             { label: 'Keywords', value: isLifetime ? '15 Keywords' : isGrowth ? '15 Keywords' : isStarter ? '5 Keywords' : 'Free Trial', icon: <Search size={16} /> },
-                            { label: 'Power Scans', value: isLifetime ? '5/Day' : isGrowth ? '5/Day' : isStarter ? '2/Day' : 'Free Trial', icon: <Compass size={16} /> },
+                            { label: 'Power Searches', value: isLifetime ? '5/Day' : isGrowth ? '5/Day' : isStarter ? '2/Day' : 'Free Trial', icon: <Compass size={16} /> },
                             { label: 'AI Outreach', value: isLifetime ? '500 Drafts / Month' : isGrowth ? '500 Drafts / Month' : isStarter ? '100 Drafts / Month' : '5 Lifetime', icon: <Bot size={16} /> },
                             { label: 'Support', value: isLifetime ? 'Priority Founder' : 'Standard Support', icon: <CheckCircle2 size={16} /> }
                         ].map((stat) => (
@@ -283,7 +283,7 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
                             </h3>
                             
                             <p className="text-text-secondary font-medium max-w-xl mb-8 leading-relaxed">
-                                Stop the monthly "SaaS Tax." Pay once and get every lead, every power scan, and every future AI update without ever seeing another invoice.
+                                Stop the monthly "SaaS Tax." Pay once and get every lead, every power search, and every future AI update without ever seeing another invoice.
                             </p>
 
                             <div className="flex flex-wrap gap-8 mb-8">
@@ -315,7 +315,7 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
                                 <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest text-center mb-2">Growth Features +</p>
                                 {[
                                     '15 Tracked Keywords',
-                                    '5 Power Scans / Day',
+                                    '5 Power Searches / Day',
                                     '500 AI Drafts / Month',
                                     'Priority Beta Access'
                                 ].map((feat) => (

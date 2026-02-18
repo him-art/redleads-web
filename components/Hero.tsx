@@ -89,7 +89,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
         <p 
           className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-12 leading-relaxed font-medium"
         >
-          Stop manual searching. RedLeads uses AI intent scoring to monitor millions of discussions 24/7, delivering warm buyers straight to your inbox.
+          Save hours of manual searching. RedLeads uses AI intent scoring to monitor millions of discussions 24/7, delivering warm buyers straight to your inbox.
         </p>
 
         {/* Search/CTA Component - Card Style */}
@@ -164,12 +164,12 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
 
 
 
-                {/* Header: Power Scan */}
+                {/* Header: Power Search */}
                 <div className="relative flex items-center gap-3 mb-8 md:mb-12">
                     <div className="relative flex h-2.5 w-2.5">
                       <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#ff914d] shadow-[0_0_10px_rgba(255,145,77,0.5)]"></span>
                     </div>
-                    <span className="text-[11px] font-black tracking-[0.2em] text-gray-400 uppercase">Power Scan</span>
+                    <span className="text-[11px] font-black tracking-[0.2em] text-gray-400 uppercase">Power Search</span>
                 </div>
 
                 {/* Search Bar */}

@@ -1,13 +1,9 @@
 'use client';
 
-import { useDashboardData } from '@/app/dashboard/DashboardDataContext';
 import GuideView from './guide/GuideView';
 import { Map } from 'lucide-react';
 
-export default function GuideTab({ user, onNavigate }: { user: { id: string }; onNavigate: (tab: string) => void }) {
-    const { isLoading: loading } = useDashboardData();
-
-    if (loading) return <div className="p-10 text-center text-text-secondary">Loading your path...</div>;
+export default function GuideTab({ onNavigate }: { onNavigate: (tab: string) => void }) {
 
     return (
         <div className="space-y-6">
