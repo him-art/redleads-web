@@ -3,7 +3,7 @@ import { getAllSubredditHubs } from './data';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import { Globe, Users, ArrowRight } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 
 export const metadata: Metadata = {
   title: 'Reddit Intelligence Hubs - Community Growth Guides',
@@ -39,7 +39,7 @@ export default function SubredditsPage() {
             >
               <div className="flex items-start justify-between mb-8">
                 <div className="w-12 h-12 rounded-2xl bg-orange-500/10 flex items-center justify-center text-orange-500">
-                  <Globe size={24} />
+                  <MaterialIcon name="public" size={24} />
                 </div>
                 <div className="px-3 py-1 bg-white/5 rounded-full text-[10px] font-black text-slate-500 border border-white/5">
                   {hub.subreddit}
@@ -56,7 +56,7 @@ export default function SubredditsPage() {
               
               <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
                 <span className="text-slate-400 group-hover:text-white transition-colors">Learn Strategy</span>
-                <ArrowRight size={16} className="text-orange-500 group-hover:translate-x-2 transition-transform" />
+                <MaterialIcon name="arrow_right" size={16} className="text-orange-500 group-hover:translate-x-2 transition-transform" />
               </div>
             </Link>
           ))}

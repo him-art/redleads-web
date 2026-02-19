@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Loader2, Zap, Lock, ArrowRight, Search, Globe, Bot, Mail, Crown, Sparkles } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 import { createClient } from '@/lib/supabase/client';
 
 interface PaywallModalProps {
@@ -37,11 +37,11 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
     };
 
     return (
-        <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-3xl flex items-center justify-center p-4 overflow-y-auto pt-20 pb-20">
+        <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 overflow-y-auto pt-20 pb-20">
             <div className="max-w-4xl w-full bg-[#141414] border border-white/5 rounded-[3rem] p-8 md:p-12 text-center relative overflow-hidden ring-1 ring-white/10 shadow-2xl">
                 <div className="relative z-10">
                     <div className="mx-auto w-16 h-16 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mb-6">
-                        <Lock className="w-8 h-8 text-orange-500" />
+                        <MaterialIcon name="lock" size={32} className="text-orange-500" />
                     </div>
 
                     <h2 className="text-3xl font-black text-white mb-2 tracking-tight">
@@ -62,18 +62,19 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                             </div>
                             <ul className="space-y-3 mb-8 flex-grow">
                                 <li className="text-[9px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                                    <Search size={10} className="text-orange-500/50" /> 5 Key-words
+                                    <MaterialIcon name="search" size={10} className="text-orange-500/50" /> 5 Key-words
                                 </li>
                                 <li className="text-[9px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                                    <Bot size={10} className="text-orange-500/50" /> 100 Replies
+                                    <MaterialIcon name="smart_toy" size={10} className="text-orange-500/50" /> 100 Replies
                                 </li>
                             </ul>
                             <button
                                 onClick={() => handleClick('starter')}
                                 disabled={!!isLoading}
+                                suppressHydrationWarning
                                 className="w-full py-4 rounded-xl bg-white/5 border border-white/10 text-white font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all disabled:opacity-50"
                             >
-                                {isLoading === 'starter' ? <Loader2 size={12} className="animate-spin mx-auto" /> : 'Select'}
+                                {isLoading === 'starter' ? <MaterialIcon name="sync" size={12} className="animate-spin" /> : 'Select'}
                             </button>
                         </div>
 
@@ -86,26 +87,25 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                             </div>
                             <ul className="space-y-3 mb-8 flex-grow">
                                 <li className="text-[9px] font-bold text-white uppercase tracking-widest flex items-center gap-2">
-                                    <Search size={10} className="text-orange-500" /> 15 Key-words
+                                    <MaterialIcon name="search" size={10} className="text-orange-500" /> 15 Key-words
                                 </li>
                                 <li className="text-[9px] font-bold text-white uppercase tracking-widest flex items-center gap-2">
-                                    <Bot size={10} className="text-orange-500" /> 500 Replies
+                                    <MaterialIcon name="smart_toy" size={10} className="text-orange-500" /> 500 Replies
                                 </li>
                             </ul>
                             <button
                                 onClick={() => handleClick('growth')}
                                 disabled={!!isLoading}
+                                suppressHydrationWarning
                                 className="w-full py-4 rounded-xl bg-[#ff914d] text-black font-black text-[10px] uppercase tracking-widest hover:bg-[#ff914d]/90 transition-all disabled:opacity-50 shadow-lg"
                             >
-                                {isLoading === 'growth' ? <Loader2 size={12} className="animate-spin mx-auto" /> : 'Go Pro'}
+                                {isLoading === 'growth' ? <MaterialIcon name="sync" size={12} className="animate-spin" /> : 'Go Pro'}
                             </button>
                         </div>
 
                         {/* Lifetime Option */}
                         <div className="p-6 rounded-[2rem] bg-white text-black flex flex-col relative overflow-hidden border border-white shadow-2xl">
-                            <div className="absolute top-3 right-4 text-[7px] font-black uppercase text-orange-600 tracking-[0.2em] flex items-center gap-1 animate-pulse">
-                                <Crown size={8} /> {slots ? `${slots.total - slots.sold}/${slots.total}` : '...'} Seats Left
-                            </div>
+                                <MaterialIcon name="workspace_premium" size={8} /> {slots ? `${slots.total - slots.sold}/${slots.total}` : '...'} Seats Left
                             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-black mb-2">Life Time</h3>
                             <div className="flex items-baseline gap-2 mb-6">
                                 <span className="text-2xl font-black text-black">$199</span>
@@ -113,18 +113,19 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                             </div>
                             <ul className="space-y-3 mb-8 flex-grow">
                                 <li className="text-[9px] font-black text-black uppercase tracking-widest flex items-center gap-2">
-                                    <Zap size={10} className="text-orange-600" /> Unlimited Discovery
+                                    <MaterialIcon name="bolt" size={10} className="text-orange-600" /> Unlimited Discovery
                                 </li>
                                 <li className="text-[9px] font-black text-black uppercase tracking-widest flex items-center gap-2">
-                                    <Sparkles size={10} className="text-orange-600" /> Future Pro updates
+                                    <MaterialIcon name="auto_awesome" size={10} className="text-orange-600" /> Future Pro updates
                                 </li>
                             </ul>
                             <button
                                 onClick={() => handleClick('lifetime')}
                                 disabled={!!isLoading || (slots ? slots.sold >= slots.total : false)}
+                                suppressHydrationWarning
                                 className="w-full py-4 rounded-xl bg-black text-white font-black text-[9px] uppercase tracking-widest hover:bg-orange-600 transition-all disabled:opacity-50"
                             >
-                                {isLoading === 'lifetime' ? <Loader2 size={12} className="animate-spin mx-auto" /> : 'Claim Seat'}
+                                {isLoading === 'lifetime' ? <MaterialIcon name="sync" size={12} className="animate-spin" /> : 'Claim Seat'}
                             </button>
                         </div>
                     </div>

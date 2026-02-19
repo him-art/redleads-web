@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { getAllSubredditHubs, getSubredditHubBySlug } from '../data';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { ArrowLeft, Clock, Zap, Target, CheckCircle2, Search } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 import Link from 'next/link';
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
@@ -63,7 +63,7 @@ export default function SubredditHubPage({ params }: { params: { slug: string } 
           href="/subreddits"
           className="inline-flex items-center gap-2 text-slate-400 hover:text-white mb-8 transition-colors"
         >
-          <ArrowLeft size={16} />
+          <MaterialIcon name="arrow_left" size={16} />
           View All Community Guides
         </Link>
 
@@ -81,11 +81,11 @@ export default function SubredditHubPage({ params }: { params: { slug: string } 
           
           <div className="flex flex-wrap justify-center gap-4 text-sm text-slate-500">
             <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/10">
-              <Clock size={16} className="text-orange-500" />
+              <MaterialIcon name="schedule" size={16} className="text-orange-500" />
               <span>Best Posting Time: <strong>{hub.bestTime}</strong></span>
             </div>
             <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/10">
-              <Target size={16} className="text-orange-500" />
+              <MaterialIcon name="target" size={16} className="text-orange-500" />
               <span>Target: <strong>Founder Growth</strong></span>
             </div>
           </div>
@@ -98,7 +98,7 @@ export default function SubredditHubPage({ params }: { params: { slug: string } 
             {/* The Strategy Section */}
             <div className="bg-[#141414] rounded-[2rem] p-8 md:p-12 border border-white/5">
               <h2 className="text-3xl font-black text-white mb-8 flex items-center gap-3">
-                <Zap className="text-orange-500" />
+                <MaterialIcon name="bolt" className="text-orange-500" />
                 The Expert Strategy
               </h2>
               <ul className="space-y-8">
@@ -129,7 +129,7 @@ export default function SubredditHubPage({ params }: { params: { slug: string } 
 
             {/* Bottom CTA */}
             <div className="bg-orange-500 rounded-[2.5rem] p-12 text-center relative overflow-hidden">
-               <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-white/10 rounded-full blur-[80px] pointer-events-none -mr-20 -mt-20" />
+               <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-white/5 rounded-full pointer-events-none -mr-20 -mt-20" />
                <h3 className="text-3xl font-black text-black mb-4 relative z-10">
                  Ready to find your first 100 users on {hub.subreddit}?
                </h3>
@@ -151,26 +151,26 @@ export default function SubredditHubPage({ params }: { params: { slug: string } 
               <h3 className="text-xl font-black text-white mb-4">Why use RedLeads?</h3>
               <ul className="space-y-4">
                 <li className="flex gap-3 text-sm text-slate-400">
-                  <CheckCircle2 size={18} className="text-orange-500 flex-shrink-0" />
+                  <MaterialIcon name="check_circle" size={18} className="text-orange-500 flex-shrink-0" />
                   <span>AI intent scoring identifies buyers</span>
                 </li>
                 <li className="flex gap-3 text-sm text-slate-400">
-                  <CheckCircle2 size={18} className="text-orange-500 flex-shrink-0" />
+                  <MaterialIcon name="check_circle" size={18} className="text-orange-500 flex-shrink-0" />
                   <span>24/7 subreddit monitoring</span>
                 </li>
                 <li className="flex gap-3 text-sm text-slate-400">
-                  <CheckCircle2 size={18} className="text-orange-500 flex-shrink-0" />
+                  <MaterialIcon name="check_circle" size={18} className="text-orange-500 flex-shrink-0" />
                   <span>Real-time desktop alerts</span>
                 </li>
                 <li className="flex gap-3 text-sm text-slate-400">
-                  <CheckCircle2 size={18} className="text-orange-500 flex-shrink-0" />
+                  <MaterialIcon name="check_circle" size={18} className="text-orange-500 flex-shrink-0" />
                   <span>Ban-prevention safety filters</span>
                 </li>
               </ul>
             </div>
 
             <div className="bg-[#141414] rounded-2xl p-8 border border-white/5">
-              <Search className="text-orange-500 mb-4" />
+              <MaterialIcon name="search" className="text-orange-500 mb-4" />
               <h3 className="text-xl font-black text-white mb-2">Market Research</h3>
               <p className="text-sm text-slate-500 leading-relaxed mb-6">
                 Discover the pain points of {hub.subreddit} users before you build.

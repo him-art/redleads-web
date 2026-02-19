@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { MessageSquare, Send, CheckCircle2, ArrowRight, MousePointer2, User, Share2, Sparkles, Layout, Zap, MessageCircle } from 'lucide-react';
+
 import Link from 'next/link';
 import InboundVisual from './InboundVisual';
 import OutboundVisual from './OutboundVisual';

@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 
 const faqs = [
   {
@@ -53,7 +53,11 @@ const FAQ = () => {
                 className="flex w-full items-center justify-between p-6 text-left hover:bg-[#282828] transition-colors"
               >
                 <h3 className="text-lg font-black text-white tracking-tight">{faq.question}</h3>
-                <ChevronDown className={`h-5 w-5 text-gray-600 transition-transform ${openIndex === index ? 'rotate-180 text-orange-500' : ''}`} />
+                <MaterialIcon 
+                  name="expand_more" 
+                  size={20} 
+                  className={`text-gray-600 transition-transform ${openIndex === index ? 'rotate-180 text-orange-500' : ''}`} 
+                />
               </button>
               
               <div

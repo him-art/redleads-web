@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Activity, ArrowRight, Compass, ShieldCheck, Clock, Lock } from 'lucide-react';
+import { ShieldCheck, Clock, Activity, Compass, ArrowRight, Lock } from 'lucide-react';
+import LoadingIcon from '@/components/ui/LoadingIcon';
 import { motion } from 'framer-motion';
 import LiveFeed from './LiveFeed';
 import LeadSearch from '@/components/LeadSearch';
@@ -111,7 +112,7 @@ export default function LiveDiscoveryTab({
                     className="relative overflow-hidden rounded-2xl glass-panel p-5 group transition-all hover:bg-white/[0.04]"
                 >
                     <div className="flex items-center justify-between mb-4">
-                        <div className="p-1.5 bg-primary/10 rounded-lg text-primary">
+                        <div className="p-1.5 bg-primary/10 rounded-lg text-primary flex items-center justify-center">
                              {isActuallySubscribed ? <ShieldCheck size={16} /> : <Clock size={16} />}
                         </div>
                         <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Plan Status</span>
@@ -138,7 +139,7 @@ export default function LiveDiscoveryTab({
                     className="relative overflow-hidden rounded-2xl glass-panel p-5 group transition-all hover:bg-white/[0.04]"
                 >
                      <div className="flex items-center justify-between mb-4">
-                        <div className="p-1.5 bg-blue-500/10 rounded-lg text-blue-500">
+                        <div className="p-1.5 bg-blue-500/10 rounded-lg text-blue-500 flex items-center justify-center">
                              <Activity size={16} />
                         </div>
                         <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Usage</span>
@@ -169,7 +170,7 @@ export default function LiveDiscoveryTab({
                     onClick={() => onNavigate('settings')}
                 >
                      <div className="flex items-center justify-between mb-4">
-                        <div className="p-1.5 bg-purple-500/10 rounded-lg text-purple-500">
+                        <div className="p-1.5 bg-purple-500/10 rounded-lg text-purple-500 flex items-center justify-center">
                              <Compass size={16} />
                         </div>
                         <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Tracking</span>
@@ -190,7 +191,7 @@ export default function LiveDiscoveryTab({
                     </div>
                     {/* Hover Hint */}
                      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <ArrowRight size={14} className="text-text-secondary" />
+                         <ArrowRight size={14} className="text-text-secondary" />
                     </div>
                 </motion.div>
             </motion.div>
@@ -218,7 +219,7 @@ export default function LiveDiscoveryTab({
                             />
                         ) : (
                             <div className="flex flex-col items-center justify-center py-10 space-y-6 text-center">
-                                <div className="p-4 bg-orange-500/10 rounded-2xl text-primary">
+                                <div className="p-4 bg-orange-500/10 rounded-2xl text-primary flex items-center justify-center">
                                     <ShieldCheck size={40} className="animate-pulse" />
                                 </div>
                                 <div className="space-y-2 max-w-sm">
@@ -245,9 +246,9 @@ export default function LiveDiscoveryTab({
                 <div className={`${isActuallyExpired ? 'lg:col-span-8' : 'lg:col-span-12'} space-y-6 sm:space-y-8`}>
                     <div className="flex items-center justify-between px-2">
                         <div className="flex items-center gap-3">
-                            <div className="relative">
+                            <div className="relative flex items-center justify-center">
                                 <Activity className="text-primary" size={18} />
-                                <div className="absolute inset-0 bg-primary/20 blur-md animate-pulse rounded-full" />
+                                <div className="absolute inset-0 bg-primary/5 rounded-full" />
                             </div>
                             <div className="space-y-0.5">
                                 <h2 className="text-[10px] font-black tracking-[0.2em] text-text-secondary uppercase">automated</h2>
@@ -299,14 +300,14 @@ export default function LiveDiscoveryTab({
                                             disabled={isUpgrading}
                                             className="w-full py-5 bg-[#ff914d] hover:bg-[#ff914d]/90 text-black font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
-                                            {isUpgrading ? 'Loading...' : <>Get Growth Access   $29/mo <span className="line-through opacity-50 ml-1 text-[10px]">$39</span></>}
+                                            {isUpgrading ? <LoadingIcon className="w-5 h-5" /> : <>Get Growth Access   $29/mo <span className="line-through opacity-50 ml-1 text-[10px]">$39</span></>}
                                         </button>
                                         <button 
                                             onClick={() => handleUpgrade('starter')}
                                             disabled={isUpgrading}
                                             className="w-full py-5 bg-white/10 hover:bg-white/20 text-text-primary font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
-                                            {isUpgrading ? 'Loading...' : <>Get Starter Access   $15/mo <span className="line-through opacity-50 ml-1 text-[10px]">$19</span></>}
+                                            {isUpgrading ? <LoadingIcon className="w-5 h-5" /> : <>Get Starter Access   $15/mo <span className="line-through opacity-50 ml-1 text-[10px]">$19</span></>}
                                         </button>
                                          <p className="text-[10px] text-text-secondary font-bold uppercase tracking-widest">
                                             Trial Ended {isMounted && trialEndsAt ? trialEndsAt?.toLocaleDateString() : '...'}
@@ -333,14 +334,14 @@ export default function LiveDiscoveryTab({
                                         disabled={isUpgrading}
                                         className="w-full py-3 bg-white/10 text-text-primary border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-white/20 transition-all flex items-center justify-center gap-2"
                                     >
-                                        Starter ($15) <span className="line-through text-text-secondary">$19</span>
+                                        {isUpgrading ? <LoadingIcon className="w-4 h-4" /> : <>Starter ($15) <span className="line-through text-text-secondary">$19</span></>}
                                     </button>
                                     <button 
                                         onClick={() => handleUpgrade('growth')}
                                         disabled={isUpgrading}
                                         className="w-full py-3 bg-primary text-primary-foreground rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
                                     >
-                                        Growth ($29) <span className="line-through text-white/50">$39</span>
+                                        {isUpgrading ? <LoadingIcon className="w-4 h-4" /> : <>Growth ($29) <span className="line-through text-white/50">$39</span></>}
                                     </button>
                                 </div>
                            </div>

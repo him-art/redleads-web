@@ -102,6 +102,14 @@ const testimonials: Testimonial[] = [
     content: "Great product for getting users from Reddit Reddit is a channel that people are still sleeping on",
     highlights: ["Great product", "users from Reddit", "still sleeping on"],
   },
+  {
+    name: "Alber Nahas",
+    handle: "@albertonahas92",
+    image: "/alber_new.png",
+    url: "https://x.com/albertonahas92/status/2024380112024535148?s=20",
+    content: "I signed up for it man. It's really impressive. I love it.",
+    highlights: ["signed up", "really impressive", "I love it"],
+  },
 ];
 
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
@@ -274,7 +282,7 @@ export default function FounderNote() {
 
             {/* Column 3 */}
             <div className="flex flex-col gap-4">
-              {[testimonials[7]!, testimonials[8]!, testimonials[5]!].map((testimonial, idx) => (
+              {[testimonials[7]!, testimonials[8]!, testimonials[5]!, testimonials[11]!].map((testimonial, idx) => (
                 <TestimonialCard key={`col3-${idx}`} testimonial={testimonial} />
               ))}
             </div>

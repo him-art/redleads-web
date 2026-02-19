@@ -3,12 +3,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Sparkles, Copy, Check, AlertCircle, ShieldCheck, 
-  Zap, Lock, Search, BrainCircuit, MessageSquare, ArrowRight, User 
-} from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer'; // Assuming this exists as used in Scanner
+import Footer from '@/components/Footer';
 
 // --- Types ---
 type ReplyVariant = {
@@ -22,10 +19,10 @@ type ReplyVariant = {
 const LaborIllusion = ({ onComplete }: { onComplete: () => void }) => {
   const [step, setStep] = useState(0);
   const steps = [
-    { text: "Scanning subreddit rules...", icon: Search, color: "text-blue-400" },
-    { text: "Analyzing audience tone...", icon: MessageSquare, color: "text-purple-400" },
-    { text: "Checking ban-risk factors...", icon: ShieldCheck, color: "text-green-400" },
-    { text: "Drafting high-value replies...", icon: BrainCircuit, color: "text-orange-500" },
+    { text: "Scanning subreddit rules...", icon: "search", color: "text-blue-400" },
+    { text: "Analyzing audience tone...", icon: "chat", color: "text-purple-400" },
+    { text: "Checking ban-risk factors...", icon: "verified_user", color: "text-green-400" },
+    { text: "Drafting high-value replies...", icon: "psychology", color: "text-orange-500" },
   ];
 
   useEffect(() => {
@@ -58,10 +55,9 @@ const LaborIllusion = ({ onComplete }: { onComplete: () => void }) => {
                animate={{ scale: 1, opacity: 1 }}
                exit={{ scale: 0.5, opacity: 0 }}
              >
-               <div className={`w-10 h-10 ${steps[step].color}`}>
-                 { /* Dynamic Icon Rendering */ }
-                 {(() => { const Icon = steps[step].icon; return <Icon size={40} />; })()}
-               </div>
+                <div className={`flex items-center justify-center ${steps[step].color}`}>
+                   <MaterialIcon name={steps[step].icon as any} size={40} />
+                </div>
              </motion.div>
            )}
         </div>
@@ -179,7 +175,7 @@ export default function ReplyPage() {
                 >
                    <div className="flex items-center justify-between border-b border-white/5 pb-6">
                       <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                        <Sparkles className="text-orange-500 fill-orange-500" /> Generated Drafts
+                        <MaterialIcon name="auto_awesome" className="text-orange-500 fill-orange-500" /> Generated Drafts
                       </h2>
                       <button 
                         onClick={() => { setResults(null); }}
@@ -205,9 +201,9 @@ export default function ReplyPage() {
                                        {tag}
                                      </span>
                                    ))}
-                                    <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-green-500/10 text-green-500 rounded-md border border-green-500/20 flex items-center gap-1">
-                                       <ShieldCheck size={10} /> Safe
-                                     </span>
+                                     <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-green-500/10 text-green-500 rounded-md border border-green-500/20 flex items-center gap-1">
+                                        <MaterialIcon name="verified_user" size={10} /> Safe
+                                      </span>
                                  </div>
                                </div>
                            </div>
@@ -228,7 +224,7 @@ export default function ReplyPage() {
                                   }
                                 `}
                               >
-                                {copiedIndex === idx ? <Check size={14} /> : <Copy size={14} />}
+                                {copiedIndex === idx ? <MaterialIcon name="check" size={14} /> : <MaterialIcon name="content_copy" size={14} />}
                                 {copiedIndex === idx ? 'Copied!' : 'Copy Reply'}
                               </button>
                            </div>
@@ -239,7 +235,7 @@ export default function ReplyPage() {
                    {/* Upsell Banner */}
                    <div className="bg-gradient-to-r from-orange-500 to-orange-500 rounded-[2.5rem] p-10 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left relative overflow-hidden group">
                       <div className="absolute top-0 right-0 p-8 opacity-20 transition-transform group-hover:scale-110">
-                          <Zap size={120} fill="white" />
+                          <MaterialIcon name="bolt" size={120} className="text-white/20" />
                       </div>
                       <div className="relative z-10">
                         <h3 className="text-2xl font-black text-black mb-2 leading-tight">Want to automate this?</h3>
@@ -248,7 +244,7 @@ export default function ReplyPage() {
                         </p>
                       </div>
                       <Link href="/#pricing" className="relative z-10 px-8 py-4 bg-black text-white rounded-2xl font-black uppercase text-sm tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl">
-                        Get Extension <ArrowRight size={16} className="inline ml-1" />
+                        Get Extension <MaterialIcon name="arrow_right" size={16} className="inline ml-1" />
                       </Link>
                    </div>
                 </motion.div>
@@ -272,7 +268,7 @@ export default function ReplyPage() {
                     <div className="flex flex-col sm:flex-row items-center gap-4">
                         <div className="w-full relative group">
                           <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-gray-600 group-focus-within:text-orange-500 transition-colors">
-                             <Lock size={18} />
+                             <MaterialIcon name="lock" size={18} />
                           </div>
                           <input 
                             type="url" 
@@ -291,7 +287,7 @@ export default function ReplyPage() {
 
                         <div className="w-full relative group">
                           <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-gray-600 group-focus-within:text-orange-500 transition-colors">
-                             <MessageSquare size={18} />
+                             <MaterialIcon name="chat" size={18} />
                           </div>
                           <input 
                             type="text" 
@@ -337,7 +333,7 @@ export default function ReplyPage() {
                         <>Fill required fields to start</>
                      ) : (
                         <>
-                           <Zap size={18} className="fill-white" />
+                           <MaterialIcon name="bolt" size={18} />
                            Generate Drafts
                         </>
                      )}
@@ -346,7 +342,7 @@ export default function ReplyPage() {
                   {/* Security Badge */}
                   <div className="text-center">
                     <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest flex items-center justify-center gap-2">
-                       <ShieldCheck className="text-green-500" size={12} /> 100% Ban-Safe Guarantee
+                       <MaterialIcon name="verified_user" className="text-green-500" size={12} /> 100% Ban-Safe Guarantee
                     </p>
                   </div>
                </motion.div>

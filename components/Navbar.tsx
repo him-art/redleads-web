@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, LogOut } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 import { type User as SupabaseUser } from '@supabase/supabase-js';
@@ -46,9 +46,9 @@ const Navbar = () => {
         {/* Left: RedLeads Brand */}
         <Link 
           href="/"
-          className="px-5 sm:px-6 py-2 sm:py-2.5 bg-white border border-white/40 rounded-full hover:scale-[1.02] transition-all duration-300 pointer-events-auto flex items-center"
+          className="px-8 py-3 bg-white border border-white/40 rounded-full hover:scale-[1.02] transition-all duration-300 pointer-events-auto flex items-center shadow-sm"
         >
-          <span className="text-xl sm:text-2xl font-black tracking-tighter text-slate-900">
+          <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900">
             RedLeads
           </span>
         </Link>
@@ -90,13 +90,13 @@ const Navbar = () => {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="lg:hidden p-2.5 sm:p-3 bg-white border border-white/40 rounded-full hover:bg-white/90 transition-all duration-300 pointer-events-auto"
+          className="lg:hidden p-2.5 sm:p-3 bg-white border border-white/40 rounded-full hover:bg-white/90 transition-all duration-300 pointer-events-auto flex items-center justify-center font-bold"
           aria-label="Toggle menu"
         >
           {isMenuOpen ? (
-            <X className="w-5 h-5 sm:w-6 sm:h-6 text-slate-800" />
+            <MaterialIcon name="close" size={24} className="text-slate-800" />
           ) : (
-            <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-slate-800" />
+            <MaterialIcon name="menu" size={24} className="text-slate-800" />
           )}
         </button>
       </div>
@@ -109,7 +109,7 @@ const Navbar = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/40 backdrop-blur-md z-40 lg:hidden"
+              className="fixed inset-0 bg-black/60 z-40 lg:hidden"
               onClick={() => setIsMenuOpen(false)}
             />
             <motion.div 
@@ -119,7 +119,7 @@ const Navbar = () => {
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
               className="fixed top-20 sm:top-24 left-4 right-4 z-50 lg:hidden"
             >
-              <div className="bg-white/95 backdrop-blur-2xl border border-white/40 rounded-3xl p-6 sm:p-8 space-y-6">
+              <div className="bg-white border border-white/40 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
                 
                 <div className="space-y-4">
                   <Link 
@@ -170,7 +170,7 @@ const Navbar = () => {
                         onClick={handleLogout}
                         className="w-full bg-slate-100 text-slate-700 text-base font-bold px-6 py-4 rounded-full hover:bg-slate-200 transition-all flex items-center justify-center gap-2"
                       >
-                        <LogOut size={18} />
+                        <MaterialIcon name="logout" size={18} />
                         Log Out
                       </button>
                     </div>

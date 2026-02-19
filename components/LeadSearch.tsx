@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Globe, Search, Compass, ExternalLink, Lock, Loader2, ChevronDown, Activity, MessageSquarePlus } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { type User as SupabaseUser } from '@supabase/supabase-js';
 import { useDashboardData } from '@/app/dashboard/DashboardDataContext';
+import LoadingIcon from '@/components/ui/LoadingIcon';
 
 interface RedditLead {
     subreddit: string;
@@ -170,8 +171,8 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                     )}
 
                     <div className="relative flex items-center">
-                        <div className="absolute left-4 sm:left-6 text-text-secondary group-focus-within:text-primary transition-colors">
-                            {isScanning ? <Loader2 size={18} className="animate-spin" /> : isLocked ? <Lock size={18} className="text-primary/50" /> : <Globe size={18} />}
+                        <div className="absolute left-4 sm:left-6 text-text-secondary group-focus-within:text-primary transition-colors flex items-center justify-center">
+                            {isScanning ? <LoadingIcon className="w-4 h-4" /> : isLocked ? <MaterialIcon name="lock" size={18} className="text-primary/50" /> : <MaterialIcon name="public" size={18} />}
                         </div>
                         <input 
                             id="product-url-search"
@@ -188,13 +189,18 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                         <button 
                             type="submit"
                             disabled={isScanning || url.trim().length < 3}
-                            className={`absolute right-2 sm:right-3 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-black uppercase text-[9px] sm:text-[10px] tracking-widest transition-all ${
+                            className={`absolute right-2 sm:right-3 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-black uppercase text-[9px] sm:text-[10px] tracking-widest transition-all flex items-center gap-2 ${
                                 !isScanning && url.trim().length >= 3 
                                     ? 'bg-primary text-white shadow-[0_0_20px_rgba(255,88,54,0.3)]' 
                                     : 'bg-white/5 text-text-secondary cursor-not-allowed opacity-50'
                             }`}
                         >
-                            {isScanning ? 'Analyzing' : 'Power Search'}
+                            {isScanning ? (
+                                <>
+                                    <LoadingIcon className="w-3.5 h-3.5" />
+                                    <span>Analyzing</span>
+                                </>
+                            ) : 'Power Search'}
                         </button>
                     </div>
 
@@ -206,7 +212,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                 exit={{ opacity: 0 }}
                                 className="mt-4 flex items-center justify-center gap-2"
                             >
-                                <Activity size={12} className="text-primary/50" />
+                                <MaterialIcon name="activity" size={12} className="text-primary/50" />
                                 <span className="text-[10px] font-black uppercase tracking-[0.15em] text-text-secondary animate-pulse">
                                     {scanSteps[scanStep]}
                                 </span>
@@ -228,7 +234,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                     <div className="flex items-center justify-between px-2">
                         <div className="space-y-1">
                             <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                                <Search size={18} className="text-primary" />
+                                <MaterialIcon name="search" size={18} className="text-primary" />
                                 {teaserInfo?.isTeaser ? `Top 3 Sample Leads` : `Intel Report: ${results.length} Matches`}
                             </h2>
                             <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">
@@ -261,7 +267,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                             onClick={() => setOpenGroups(prev => ({ ...prev, [groupKey]: !prev[groupKey] }))}
                                             className="flex items-center gap-2 px-2 text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-gray-300 transition-colors"
                                         >
-                                            <ChevronDown size={14} className={`transition-transform ${isOpen ? '' : '-rotate-90'}`} />
+                                            <MaterialIcon name="expand_more" size={14} className={`transition-transform ${isOpen ? '' : '-rotate-90'}`} />
                                             {groupKey} RELEVANCY • {leads.length}
                                         </button>
 
@@ -291,11 +297,11 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                                                                 className="ml-2 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground border border-primary text-[10px] font-black uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center gap-1.5 group/btn whitespace-nowrap"
                                                                                 title="Open Reply Generator"
                                                                             >
-                                                                                <MessageSquarePlus size={12} className="text-primary-foreground" />
+                                                                                <MaterialIcon name="add_comment" size={12} className="text-primary-foreground" />
                                                                                 Draft Reply
                                                                             </button>
                                                                         </div>
-                                                                        <ExternalLink size={12} className="text-gray-600 group-hover:text-white transition-colors" />
+                                                                        <MaterialIcon name="open_in_new" size={12} className="text-gray-600 group-hover:text-white transition-colors" />
                                                                     </div>
                                                                     <h4 className="text-xs sm:text-sm font-bold text-text-secondary group-hover:text-text-primary leading-relaxed tracking-tight line-clamp-3 transition-all">{lead.title}</h4>
                                                                 </div>
@@ -315,7 +321,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                             <div className="h-[1px] w-20 bg-white/10" />
                             <div className="space-y-2">
                                 <h3 className="text-lg font-bold text-white flex items-center justify-center gap-2">
-                                    <Lock size={16} className="text-gray-500" /> 
+                                    <MaterialIcon name="lock" size={16} className="text-gray-500" /> 
                                     {teaserInfo.totalFound - 3} additional leads filtered
                                 </h3>
                                 <p className="text-xs text-gray-500 max-w-xs mx-auto leading-relaxed">

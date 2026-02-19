@@ -1,4 +1,4 @@
-import { Filter, User, Plus } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 
 export default function InboundVisual() {
     return (
@@ -7,7 +7,7 @@ export default function InboundVisual() {
                  {/* Header Icon */}
                 <div className="flex justify-center mb-3">
                     <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center border-2 border-orange-200">
-                        <Filter className="w-8 h-8 text-orange-500 fill-orange-100" strokeWidth={1.5} />
+                        <MaterialIcon name="filter_alt" size={32} className="text-orange-500" />
                     </div>
                 </div>
 
@@ -38,11 +38,11 @@ export default function InboundVisual() {
                     {/* Middle Card (Highlighted) */}
                     <div className="w-full h-28 bg-[#FFEEE6] rounded-[1.25rem] border-2 border-[#FFBD9B] shadow-lg flex items-center px-4 gap-3 relative z-20">
                          <div className="absolute top-3 right-3 text-slate-400">
-                            <Plus size={18} strokeWidth={3} />
+                            <MaterialIcon name="add" size={18} />
                         </div>
                         <div className="w-9 h-9 bg-[#FF4500] rounded-full flex-shrink-0 flex items-center justify-center text-white">
                              {/* Simplified Reddit Face/User */}
-                             <User className="w-5 h-5" />
+                             <MaterialIcon name="person" size={20} />
                         </div>
                         <div className="flex-1 space-y-2">
                              <div className="h-2.5 bg-slate-600/80 rounded-full w-1/3"></div>

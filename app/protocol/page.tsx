@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { ShieldCheck, Info, AlertTriangle, CheckCircle2, MessageSquare, Target, Zap, ArrowRight, ShieldAlert } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ export default function ProtocolPage() {
       <section className="container mx-auto px-4 pt-40 pb-20 text-center">
         <div className="max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-orange-500/20 rounded-full mb-8">
-            <ShieldCheck size={16} className="text-orange-500" />
+            <MaterialIcon name="verified_user" size={16} className="text-orange-500" />
             <span className="text-orange-500 text-[10px] font-black uppercase tracking-widest">Master Protocol 2.0</span>
           </div>
           <h1 className="text-5xl md:text-8xl font-black text-white mb-8 tracking-tighter leading-[0.95]">
@@ -36,10 +36,10 @@ export default function ProtocolPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
           <div className="bg-[#141414] p-10 rounded-[2.5rem] border border-white/5 relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-              <ShieldAlert size={120} className="text-orange-500" />
+              <MaterialIcon name="shield" size={120} className="text-orange-500" />
             </div>
             <h2 className="text-3xl font-black text-white mb-6 flex items-center gap-3">
-              <AlertTriangle className="text-orange-500" />
+              <MaterialIcon name="warning" size={24} className="text-orange-500" />
               The Ban Trap
             </h2>
             <p className="text-slate-400 leading-relaxed mb-8">
@@ -47,19 +47,19 @@ export default function ProtocolPage() {
             </p>
             <div className="space-y-4 text-sm text-slate-500">
               <div className="flex items-center gap-2">
-                <CheckCircle2 size={16} className="text-red-500/50" />
+                <MaterialIcon name="check_circle" size={16} className="text-red-500/50" />
                 <span>Zero-context link dropping</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 size={16} className="text-red-500/50" />
+                <MaterialIcon name="check_circle" size={16} className="text-red-500/50" />
                 <span>Automated generic replies</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 size={16} className="text-red-500/50" />
+                <MaterialIcon name="check_circle" size={16} className="text-red-500/50" />
                 <span>Multiple dummy accounts</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 size={16} className="text-red-500/50" />
+                <MaterialIcon name="check_circle" size={16} className="text-red-500/50" />
                 <span className="text-red-400">Silent "Shadowbanning" (invisible posts)</span>
               </div>
             </div>
@@ -67,10 +67,10 @@ export default function ProtocolPage() {
 
           <div className="bg-orange-500 p-10 rounded-[2.5rem] relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-8 opacity-10">
-              <Zap size={120} className="text-black" />
+              <MaterialIcon name="bolt" size={120} className="text-black" />
             </div>
             <h2 className="text-3xl font-black text-black mb-6 flex items-center gap-3">
-              <ShieldCheck />
+              <MaterialIcon name="verified_user" size={24} />
               The RedLeads Way
             </h2>
             <p className="text-black/80 font-medium leading-relaxed mb-8">
@@ -78,15 +78,15 @@ export default function ProtocolPage() {
             </p>
             <div className="space-y-4 text-sm text-black/60 font-bold">
               <div className="flex items-center gap-2">
-                <CheckCircle2 size={16} />
+                <MaterialIcon name="check_circle" size={16} />
                 <span>Context-first identification</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 size={16} />
+                <MaterialIcon name="check_circle" size={16} />
                 <span>Human-in-the-loop engagement</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 size={16} />
+                <MaterialIcon name="check_circle" size={16} />
                 <span>Deep community integration</span>
               </div>
             </div>
@@ -170,7 +170,7 @@ export default function ProtocolPage() {
             className="inline-flex items-center gap-3 px-10 py-5 bg-black text-white font-black uppercase tracking-widest rounded-full hover:scale-105 transition-transform"
           >
             Start Ethical Growth
-            <ArrowRight size={20} />
+            <MaterialIcon name="arrow_right" size={20} />
           </Link>
         </div>
       </section>

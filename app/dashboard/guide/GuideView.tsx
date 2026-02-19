@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Star, Sparkles, Target, Rocket, ChevronRight, ChevronLeft, ArrowRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight, Target, Rocket } from 'lucide-react';
 import { GuideNode } from '@/types/guide';
 import { Guide_NODES } from './data';
 import NodeDetail from './NodeDetail';
@@ -9,8 +9,8 @@ import { useState, useRef, useEffect } from 'react';
 
 const PHASE_META: Record<number, { title: string; icon: React.ElementType; color: string; gradient: string; days: string }> = {
     1: { title: 'The Foundation', icon: Target, color: 'text-orange-500', gradient: 'from-orange-500/20 to-orange-500/5', days: 'Days 1-7' },
-    2: { title: 'The Value Drop', icon: Sparkles, color: 'text-blue-500', gradient: 'from-blue-500/20 to-blue-500/5', days: 'Days 8-21' },
-    3: { title: 'Conversion Engine', icon: Rocket, color: 'text-green-500', gradient: 'from-green-500/20 to-green-500/5', days: 'Days 22-45' },
+    2: { title: 'The Value Drop', icon: Rocket, color: 'text-blue-500', gradient: 'from-blue-500/20 to-blue-500/5', days: 'Days 8-21' },
+    3: { title: 'Conversion Engine', icon: Target, color: 'text-green-500', gradient: 'from-green-500/20 to-green-500/5', days: 'Days 22-45' },
     4: { title: 'The Authority', icon: Target, color: 'text-purple-500', gradient: 'from-purple-500/20 to-purple-500/5', days: 'Days 46-75' },
     5: { title: 'The Scale System', icon: Rocket, color: 'text-cyan-500', gradient: 'from-cyan-500/20 to-cyan-500/5', days: 'Days 76-90' },
 };
@@ -68,7 +68,7 @@ export default function GuideView({ onNavigate }: { onNavigate: (tab: string) =>
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={() => scroll('left')}
-                        className="absolute left-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-[#111]/90 border border-white/10 flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-white/10 transition-all backdrop-blur-sm shadow-lg"
+                        className="absolute left-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-[#111] border border-white/10 flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-white/10 transition-all shadow-lg"
                     >
                         <ChevronLeft size={20} />
                     </motion.button>
@@ -81,7 +81,7 @@ export default function GuideView({ onNavigate }: { onNavigate: (tab: string) =>
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={() => scroll('right')}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-[#111]/90 border border-white/10 flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-white/10 transition-all backdrop-blur-sm shadow-lg"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-[#111] border border-white/10 flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-white/10 transition-all shadow-lg"
                     >
                         <ChevronRight size={20} />
                     </motion.button>
@@ -107,7 +107,7 @@ export default function GuideView({ onNavigate }: { onNavigate: (tab: string) =>
                     <div className="flex items-center gap-0 relative z-10" style={{ minHeight: '480px' }}>
                         {allNodes.map(({ node, globalIndex }, i) => {
                             const isTop = i % 2 === 0;
-                            const phaseMeta = PHASE_META[node.phase] || { title: `Phase ${node.phase}`, icon: Star, color: 'text-text-secondary', gradient: 'from-white/10 to-transparent', days: '' };
+                            const phaseMeta = PHASE_META[node.phase] || { title: `Phase ${node.phase}`, icon: Target, color: 'text-text-secondary', gradient: 'from-white/10 to-transparent', days: '' };
                             const PhaseIcon = phaseMeta.icon;
                             const isSelected = selectedNode?.id === node.id;
                             
@@ -130,7 +130,7 @@ export default function GuideView({ onNavigate }: { onNavigate: (tab: string) =>
                                             className="w-[240px] cursor-pointer mb-4 transition-all duration-300 group"
                                             style={{ marginTop: '0px' }}
                                         >
-                                            <div className={`rounded-2xl border p-5 space-y-3 transition-all duration-300 backdrop-blur-sm
+                                            <div className={`rounded-2xl border p-5 space-y-3 transition-all duration-300
                                                 ${isSelected 
                                                     ? `bg-gradient-to-b ${phaseMeta.gradient} border-white/20 shadow-lg` 
                                                     : 'bg-white/[0.03] border-white/[0.06] hover:border-white/15 hover:bg-white/[0.05]'}
@@ -162,7 +162,7 @@ export default function GuideView({ onNavigate }: { onNavigate: (tab: string) =>
                                                         {formatTime((node as any).estimated_minutes)}
                                                     </span>
                                                     <span className={`text-[9px] font-black uppercase tracking-widest flex items-center gap-1 ${phaseMeta.color} opacity-0 group-hover:opacity-100 transition-opacity`}>
-                                                        Learn More <ArrowRight size={10} />
+                                                    Learn More <ArrowRight size={10} />
                                                     </span>
                                                 </div>
                                             </div>
@@ -198,7 +198,7 @@ export default function GuideView({ onNavigate }: { onNavigate: (tab: string) =>
                                             onClick={() => setSelectedNode(node)}
                                             className="w-[240px] cursor-pointer mt-4 transition-all duration-300 group"
                                         >
-                                            <div className={`rounded-2xl border p-5 space-y-3 transition-all duration-300 backdrop-blur-sm
+                                            <div className={`rounded-2xl border p-5 space-y-3 transition-all duration-300
                                                 ${isSelected 
                                                     ? `bg-gradient-to-b ${phaseMeta.gradient} border-white/20 shadow-lg` 
                                                     : 'bg-white/[0.03] border-white/[0.06] hover:border-white/15 hover:bg-white/[0.05]'}
@@ -230,7 +230,7 @@ export default function GuideView({ onNavigate }: { onNavigate: (tab: string) =>
                                                         {formatTime((node as any).estimated_minutes)}
                                                     </span>
                                                     <span className={`text-[9px] font-black uppercase tracking-widest flex items-center gap-1 ${phaseMeta.color} opacity-0 group-hover:opacity-100 transition-opacity`}>
-                                                        Learn More <ArrowRight size={10} />
+                                                    Learn More <ArrowRight size={10} />
                                                     </span>
                                                 </div>
                                             </div>

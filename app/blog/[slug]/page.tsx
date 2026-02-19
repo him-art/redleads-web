@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Clock, Calendar, Tag } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 import { getPostBySlug, getAllPosts } from '../posts';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -124,7 +124,7 @@ export default async function BlogPostPage({ params }: Props) {
           href="/blog"
           className="inline-flex items-center gap-2 text-slate-400 hover:text-white mb-8 transition-colors"
         >
-          <ArrowLeft size={16} />
+          <MaterialIcon name="arrow_left" size={16} />
           Back to Blog
         </Link>
 
@@ -145,11 +145,11 @@ export default async function BlogPostPage({ params }: Props) {
           {/* Meta */}
           <div className="flex items-center justify-center gap-6 text-sm text-slate-500">
             <span className="flex items-center gap-2">
-              <Calendar size={14} />
+              <MaterialIcon name="calendar_today" size={14} />
               {new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
             </span>
             <span className="flex items-center gap-2">
-              <Clock size={14} />
+              <MaterialIcon name="schedule" size={14} />
               {post.readTime}
             </span>
           </div>
@@ -180,7 +180,7 @@ export default async function BlogPostPage({ params }: Props) {
         {/* Keywords */}
         <div className="max-w-3xl mx-auto mt-12 pt-8 border-t border-white/10">
           <div className="flex items-center gap-2 flex-wrap">
-            <Tag size={14} className="text-slate-500" />
+            <MaterialIcon name="sell" size={14} className="text-slate-500" />
             {post.keywords.map((keyword) => (
               <span 
                 key={keyword}
@@ -205,7 +205,7 @@ export default async function BlogPostPage({ params }: Props) {
               href="/"
               className="inline-flex items-center gap-2 px-8 py-4 bg-orange-500 text-white font-black text-xs uppercase tracking-widest rounded-xl hover:bg-orange-600 transition-colors"
             >
-              Start Free Trial <ArrowRight size={14} />
+              Start Free Trial <MaterialIcon name="arrow_right" size={14} />
             </Link>
           </div>
         </div>

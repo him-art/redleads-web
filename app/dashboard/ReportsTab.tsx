@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, ChevronDown, ExternalLink, Clock, Radar, Bookmark, Trash2, Brain, Sparkles, MessageSquarePlus } from 'lucide-react';
+import { Bookmark, Sparkles, Brain, Calendar, ChevronDown, Clock, MessageSquarePlus, ExternalLink, Trash2, Activity } from 'lucide-react';
+import LoadingIcon from '@/components/ui/LoadingIcon';
 import { createClient } from '@/lib/supabase/client';
 import { useDashboardData, MonitoredLead, LeadAnalysis } from '@/app/dashboard/DashboardDataContext';
 
@@ -18,7 +19,7 @@ export default function ReportsTab({ reports, profile, user, isGrowth, isAdmin }
     if (isDataLoading) {
         return (
             <div className="flex flex-col items-center justify-center py-24 space-y-6">
-                 <div className="w-12 h-12 border border-orange-500/10 border-t-orange-500 rounded-full animate-spin" />
+                 <LoadingIcon className="w-12 h-12 text-orange-500" />
             </div>
         );
     }
@@ -86,7 +87,7 @@ export default function ReportsTab({ reports, profile, user, isGrowth, isAdmin }
                             filter === 'saved' ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' : 'text-text-secondary hover:text-text-primary'
                         }`}
                     >
-                        <Bookmark size={12} fill={filter === 'saved' ? "currentColor" : "none"} />
+                        <Bookmark size={12} fill={filter === 'saved' ? 'currentColor' : 'none'} />
                         Saved
                     </button>
                 </div>
@@ -115,7 +116,7 @@ export default function ReportsTab({ reports, profile, user, isGrowth, isAdmin }
                         <div className="flex items-center gap-3">
                             <div className="relative">
                                 <Sparkles className="text-primary" size={14} />
-                                <div className="absolute inset-0 bg-primary/20 blur-md animate-pulse rounded-full" />
+                                <div className="absolute inset-0 bg-primary/5 rounded-full" />
                             </div>
                             <div className="space-y-0.5">
                                 <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary">automated</h3>
@@ -128,10 +129,10 @@ export default function ReportsTab({ reports, profile, user, isGrowth, isAdmin }
                                     <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-10 transition-opacity">
                                         <Brain size={80} className="text-text-primary" />
                                     </div>
-                                    <div className="relative z-10 space-y-4">
-                                        <div className="flex items-center gap-3">
-                                             <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
-                                                <Brain size={16} className="text-primary" />
+                                             <div className="relative z-10 space-y-4">
+                                            <div className="flex items-center gap-3">
+                                                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
+                                                    <Brain size={16} className="text-primary" />
                                             </div>
                                             <div>
                                                 <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/60 leading-none mb-1">Neural Synthesis</p>
@@ -167,7 +168,7 @@ export default function ReportsTab({ reports, profile, user, isGrowth, isAdmin }
 
                 {Object.keys(groupedLeads).length === 0 ? (
                     <div className="text-center py-20 bg-black/20 rounded-2xl border border-dashed border-white/5">
-                        <Radar className="mx-auto text-text-secondary/60 mb-4" size={40} />
+                        <Activity className="mx-auto text-text-secondary/60 mb-4" size={40} />
                         <h3 className="text-lg font-bold text-text-primary">No Archived Leads Yet</h3>
                         <p className="text-sm text-text-secondary max-w-xs mx-auto">
                             The most recent 20 leads appear in your Command Center. 
@@ -246,7 +247,7 @@ export default function ReportsTab({ reports, profile, user, isGrowth, isAdmin }
                                                     }`}
                                                     title={lead.is_saved ? "Unsave Lead" : "Save Lead"}
                                                 >
-                                                    <Bookmark size={14} fill={lead.is_saved ? "currentColor" : "none"} />
+                                                    <Bookmark size={14} fill={lead.is_saved ? 'currentColor' : 'none'} />
                                                 </button>
 
                                                 <button 
@@ -260,7 +261,7 @@ export default function ReportsTab({ reports, profile, user, isGrowth, isAdmin }
                                                             alert('Failed to delete lead.');
                                                         }
                                                     }}
-                                                    className="p-2 rounded-lg bg-white/5 text-text-secondary hover:text-red-500 hover:bg-red-500/10 transition-all"
+                                                    className="p-2 rounded-lg bg-white/5 text-text-secondary hover:text-red-500 hover:bg-red-500/10 transition-all flex items-center justify-center"
                                                     title="Delete Lead"
                                                 >
                                                     <Trash2 size={14} />
@@ -270,7 +271,7 @@ export default function ReportsTab({ reports, profile, user, isGrowth, isAdmin }
                                                     href={lead.url} 
                                                     target="_blank" 
                                                     rel="noopener noreferrer"
-                                                    className="p-2 rounded-lg bg-white/5 text-text-secondary hover:text-text-primary hover:bg-primary transition-all"
+                                                    className="p-2 rounded-lg bg-white/5 text-text-secondary hover:text-text-primary hover:bg-primary transition-all flex items-center justify-center"
                                                     title="View on Reddit"
                                                 >
                                                     <ExternalLink size={14} />

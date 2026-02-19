@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { Search, MessageSquare, ArrowBigUp, ArrowBigDown, Share2, MoreHorizontal, Bot, Globe, Check, ArrowRight } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 import AnimatedCounter from './AnimatedCounter';
 
 const StatItem = ({ value, label }: { value: string, label: string }) => (
@@ -122,19 +122,19 @@ export default function RedditOpportunity() {
                 href="/login?next=/#pricing" 
                 className="bg-[#ff6900] hover:bg-[#ff814d] text-white text-lg md:text-xl font-bold py-4 px-10 rounded-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2 border-t border-white/20"
             >
-                Get Customers From Reddit <ArrowRight size={20} strokeWidth={3} />
+                Get Customers From Reddit <MaterialIcon name="arrow_right" size={20} />
             </a>
             
             <div className="mt-6 flex flex-row justify-center items-center gap-6 md:gap-12 text-gray-500 text-[10px] md:text-xs font-bold uppercase tracking-[0.15em]">
                 <div className="flex items-center gap-3">
                     <div className="w-5 h-5 rounded-full border border-gray-600 flex items-center justify-center">
-                        <Check size={10} className="text-gray-400" strokeWidth={3} />
+                        <MaterialIcon name="check" size={10} className="text-gray-400" />
                     </div>
                     <span>No card required</span>
                 </div>
                 <div className="flex items-center gap-3">
                      <div className="w-5 h-5 rounded-full border border-gray-600 flex items-center justify-center">
-                        <Check size={10} className="text-gray-400" strokeWidth={3} />
+                        <MaterialIcon name="check" size={10} className="text-gray-400" />
                     </div>
                     <span>3-day free trial</span>
                 </div>

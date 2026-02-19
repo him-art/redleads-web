@@ -1,29 +1,29 @@
-import { User, Terminal, Users, Briefcase } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 
 const TargetAudience = () => {
   const personas = [
     {
       title: "Solopreneurs",
       description: "Build and iterate faster with fewer resources.",
-      icon: <User className="h-6 w-6 text-orange-400" />,
+      icon: <MaterialIcon name="person" size={24} className="text-orange-400" />,
       avatarParams: "bg-orange-500/10 border-orange-500/20"
     },
     {
       title: "Vibe Coders",
       description: "Once you start vibe coding, you need to start vibe marketing.",
-      icon: <Terminal className="h-6 w-6 text-pink-400" />,
+      icon: <MaterialIcon name="terminal" size={24} className="text-pink-400" />,
       avatarParams: "bg-pink-500/10 border-pink-500/20"
     },
     {
       title: "SaaS Teams",
       description: "Do marketing that actually works for SaaS, not just e-commerce.",
-      icon: <Users className="h-6 w-6 text-blue-400" />,
+      icon: <MaterialIcon name="group" size={24} className="text-blue-400" />,
       avatarParams: "bg-blue-500/10 border-blue-500/20"
     },
     {
       title: "Agencies",
       description: "Double your efficiency and impress your clients.",
-      icon: <Briefcase className="h-6 w-6 text-green-400" />,
+      icon: <MaterialIcon name="work" size={24} className="text-green-400" />,
       avatarParams: "bg-green-500/10 border-green-500/20"
     }
   ];

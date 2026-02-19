@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, TrendingUp, DollarSign, Search, Users, ArrowUpRight } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 import { motion } from 'framer-motion';
 
 const ROI = () => {
@@ -34,21 +34,21 @@ const ROI = () => {
                         {/* Left Column: Stats List */}
                         <div className="space-y-8">
                             <StatItem 
-                                icon={<Search size={20} />}
+                                icon={<MaterialIcon name="search" size={20} />}
                                 color="bg-green-500/20 text-green-400 border-green-500/20"
                                 title="Relevant posts found weekly"
                                 description="AI finds highly relevant Reddit opportunities automatically"
                                 value="50+"
                             />
                             <StatItem 
-                                icon={<Users size={20} />}
+                                icon={<MaterialIcon name="group" size={20} />}
                                 color="bg-blue-500/20 text-blue-400 border-blue-500/20"
                                 title="Conversion rate to customers"
                                 description="Conservative estimate from engaging with quality leads"
                                 value="5%"
                             />
                             <StatItem 
-                                icon={<DollarSign size={20} />}
+                                icon={<MaterialIcon name="attach_money" size={20} />}
                                 color="bg-purple-500/20 text-purple-400 border-purple-500/20"
                                 title="Your average customer value"
                                 description="Most businesses have $500+ customer lifetime value"
@@ -75,7 +75,7 @@ const ROI = () => {
                                 
                                 <div className="flex flex-col items-center gap-3 relative z-10">
                                     <div className="bg-green-500 text-black rounded-full p-1.5 mb-1">
-                                        <Check size={16} strokeWidth={4} />
+                                        <MaterialIcon name="check" size={16} />
                                     </div>
                                     <h3 className="text-3xl font-black text-green-400 tracking-tight">
                                         ROI: 2,500%+

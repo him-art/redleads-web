@@ -2,10 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-    MessageSquare, Copy, Check, X, Search, BrainCircuit, 
-    ShieldCheck, Activity, RotateCcw, Globe
-} from 'lucide-react';
+import { Search, MessageCircle, ShieldCheck, Brain, X, Check, Copy, RotateCcw } from 'lucide-react';
 import axios from 'axios';
 
 interface MonitoredLead {
@@ -36,9 +33,9 @@ const LaborIllusion = () => {
     const [step, setStep] = useState(0);
     const steps = [
         { text: "Scanning subreddit rules...", icon: Search, color: "text-blue-400" },
-        { text: "Analyzing audience tone...", icon: MessageSquare, color: "text-purple-400" },
+        { text: "Analyzing audience tone...", icon: MessageCircle, color: "text-purple-400" },
         { text: "Checking ban-risk factors...", icon: ShieldCheck, color: "text-green-400" },
-        { text: "Drafting high-value replies...", icon: BrainCircuit, color: "text-orange-500" },
+        { text: "Drafting high-value replies...", icon: Brain, color: "text-orange-500" },
     ];
 
     useEffect(() => {
@@ -52,7 +49,7 @@ const LaborIllusion = () => {
         <div className="flex flex-col items-center justify-center py-12 space-y-6">
             <div className="relative">
                 <div className="w-16 h-16 bg-white/[0.03] rounded-2xl flex items-center justify-center relative z-10 border border-white/5 shadow-inner">
-                    {(() => { const Icon = steps[step].icon; return <Icon size={28} className={steps[step].color} />; })()}
+                    {(() => { const StepIcon = steps[step].icon; return <StepIcon size={28} className={steps[step].color} />; })()}
                 </div>
             </div>
             
@@ -138,7 +135,7 @@ export default function ReplyModal({ lead, productContext, onClose }: ReplyModal
                         animate={{ opacity: 1 }} 
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="absolute inset-0 bg-black/85 backdrop-blur-md"
+                        className="absolute inset-0 bg-black/85"
                     />
                     <motion.div 
                         initial={{ scale: 0.98, opacity: 0, y: 10 }}
@@ -150,8 +147,8 @@ export default function ReplyModal({ lead, productContext, onClose }: ReplyModal
                         <div className="p-6 sm:p-8 border-b border-white/5 flex items-center justify-between">
                             <div className="space-y-1">
                                 <h3 className="text-lg font-bold text-white flex items-center gap-3">
-                                    <div className="p-2 bg-white/[0.03] border border-white/10 rounded-xl">
-                                        <BrainCircuit size={18} className="text-slate-400" />
+                                    <div className="p-2 bg-white/[0.03] border border-white/10 rounded-xl flex items-center justify-center">
+                                        <Brain size={18} className="text-slate-400" />
                                     </div>
                                     Reply Generator
                                 </h3>
@@ -165,7 +162,7 @@ export default function ReplyModal({ lead, productContext, onClose }: ReplyModal
                             </div>
                             <button 
                                 onClick={onClose}
-                                className="p-2 hover:bg-white/5 rounded-full text-gray-600 hover:text-white transition-all duration-300"
+                                className="p-2 hover:bg-white/5 rounded-full text-gray-600 hover:text-white transition-all duration-300 flex items-center justify-center"
                             >
                                 <X size={20} />
                             </button>

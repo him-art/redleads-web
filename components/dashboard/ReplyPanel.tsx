@@ -2,10 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-    MessageSquare, Copy, Check, X, Search, BrainCircuit, 
-    ShieldCheck, RotateCcw, Sparkles, ExternalLink
-} from 'lucide-react';
+import { Search, MessageCircle, ShieldCheck, Brain, Sparkles, ExternalLink, X, Check, Copy, RotateCcw } from 'lucide-react';
 import axios from 'axios';
 
 interface MonitoredLead {
@@ -36,9 +33,9 @@ const LaborIllusion = () => {
     const [step, setStep] = useState(0);
     const steps = [
         { text: "Scanning subreddit rules...", icon: Search, color: "text-blue-400" },
-        { text: "Analyzing audience tone...", icon: MessageSquare, color: "text-purple-400" },
+        { text: "Analyzing audience tone...", icon: MessageCircle, color: "text-purple-400" },
         { text: "Checking ban-risk factors...", icon: ShieldCheck, color: "text-green-400" },
-        { text: "Drafting high-value replies...", icon: BrainCircuit, color: "text-orange-500" },
+        { text: "Drafting high-value replies...", icon: Brain, color: "text-orange-500" },
     ];
 
     useEffect(() => {
@@ -52,7 +49,7 @@ const LaborIllusion = () => {
         <div className="flex flex-col items-center justify-center py-16 space-y-6 h-full">
             <div className="relative">
                 <div className="w-14 h-14 bg-white/[0.03] rounded-2xl flex items-center justify-center relative z-10 border border-white/5 shadow-inner">
-                    {(() => { const Icon = steps[step].icon; return <Icon size={24} className={steps[step].color} />; })()}
+                    {(() => { const StepIcon = steps[step].icon; return <StepIcon size={24} className={steps[step].color} />; })()}
                 </div>
                 <div className="absolute inset-0 bg-white/5 rounded-2xl animate-ping opacity-20" />
             </div>
@@ -140,7 +137,7 @@ export default function ReplyPanel({ lead, productContext, onClose, isSidebar = 
                 flex flex-col overflow-hidden h-full w-full
                 ${isSidebar 
                     ? 'bg-transparent border-0 shadow-none' 
-                    : 'sticky top-6 bg-[#0A0A0A]/95 backdrop-blur-xl border border-white/10 shadow-2xl rounded-[2rem] max-h-[85vh]'
+                    : 'sticky top-6 bg-[#0A0A0A]/95 border border-white/10 shadow-2xl rounded-[2rem] max-h-[85vh]'
                 }
             `}
         >
@@ -167,7 +164,7 @@ export default function ReplyPanel({ lead, productContext, onClose, isSidebar = 
                     </a>
                     <button 
                         onClick={onClose}
-                        className="p-2 hover:bg-white/10 rounded-xl text-text-secondary hover:text-text-primary transition-all"
+                        className="p-2 hover:bg-white/10 rounded-xl text-text-secondary hover:text-text-primary transition-all flex items-center justify-center"
                     >
                         <X size={16} />
                     </button>

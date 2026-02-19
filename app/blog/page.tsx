@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Metadata } from 'next';
-import { ArrowRight, Clock, Calendar } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 import { getAllPosts } from './posts';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -62,11 +62,11 @@ export default function BlogPage() {
                   {/* Meta */}
                   <div className="flex items-center gap-4 text-xs text-slate-500">
                     <span className="flex items-center gap-1">
-                      <Calendar size={12} />
+                      <MaterialIcon name="calendar_today" size={12} />
                       {new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </span>
                     <span className="flex items-center gap-1">
-                      <Clock size={12} />
+                      <MaterialIcon name="schedule" size={12} />
                       {post.readTime}
                     </span>
                   </div>
@@ -75,7 +75,7 @@ export default function BlogPage() {
                 {/* Read More */}
                 <div className="px-6 pb-6">
                   <span className="inline-flex items-center gap-2 text-sm font-bold text-orange-500 group-hover:gap-3 transition-all">
-                    Read Article <ArrowRight size={14} />
+                    Read Article <MaterialIcon name="arrow_right" size={14} />
                   </span>
                 </div>
               </article>
@@ -96,7 +96,7 @@ export default function BlogPage() {
               href="/"
               className="inline-flex items-center gap-2 px-8 py-4 bg-orange-500 text-white font-black text-xs uppercase tracking-widest rounded-xl hover:bg-orange-600 transition-colors"
             >
-              Start Free Trial <ArrowRight size={14} />
+              Start Free Trial <MaterialIcon name="arrow_right" size={14} />
             </Link>
           </div>
         </div>

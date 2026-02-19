@@ -1,6 +1,6 @@
 'use client';
 
-import { X, Check, Clock, TrendingUp, Search, Zap, CheckCircle2, Globe } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 import { motion } from 'framer-motion';
 
 const Comparison = () => {
@@ -48,7 +48,7 @@ const Comparison = () => {
                 </ul>
 
                 <div className="mt-auto bg-red-500/10 border border-red-500/20 rounded-2xl p-6 flex items-center justify-center gap-3 text-red-400">
-                    <Clock size={20} />
+                    <MaterialIcon name="schedule" size={20} />
                     <span className="text-xs md:text-sm font-black uppercase tracking-widest">
                         2-3 hours daily + $120+/month tools
                     </span>
@@ -64,7 +64,7 @@ const Comparison = () => {
                 className="bg-[#FF9154] rounded-[2.5rem] p-8 md:p-12 border border-[#FF9154] flex flex-col h-full relative overflow-hidden shadow-2xl shadow-orange-500/20"
             >
                 {/* Subtle sheen effect */}
-                <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-white/10 rounded-full blur-[80px] pointer-events-none -mr-20 -mt-20" />
+                <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-white/5 rounded-full pointer-events-none -mr-20 -mt-20" />
                 
                 <div className="relative z-10 mb-10 text-center">
                     <h3 className="text-2xl font-black text-[#141414] mb-2 flex items-center justify-center gap-2">
@@ -92,7 +92,7 @@ const Comparison = () => {
                 </ul>
 
                 <div className="relative z-10 mt-auto bg-white rounded-2xl p-6 flex items-center justify-center gap-3 text-[#141414] border-2 border-black">
-                    <CheckCircle2 size={20} />
+                    <MaterialIcon name="check_circle" size={20} />
                     <span className="text-xs md:text-sm font-black uppercase tracking-widest">
                         Effective growth marketing in 20 min/day
                     </span>
@@ -108,7 +108,7 @@ const Comparison = () => {
 const ManualItem = ({ text }: { text: string }) => (
     <li className="flex items-start gap-4">
         <div className="mt-1 flex-shrink-0 text-red-500/50">
-            <X size={16} strokeWidth={3} />
+            <MaterialIcon name="close" size={16} weight={700} />
         </div>
         <span className="text-[13px] font-medium text-gray-500 leading-relaxed">
             {text}
@@ -119,8 +119,8 @@ const ManualItem = ({ text }: { text: string }) => (
 const BenefitItem = ({ title, description }: { title: string, description: string }) => (
     <li className="flex items-start gap-4">
         {/* Updated Icon: White Bg with Orange Check */}
-        <div className="mt-1 flex-shrink-0 bg-white text-[#FF9154] rounded-full p-1 shadow-sm">
-            <Check size={12} strokeWidth={4} />
+        <div className="mt-1 flex-shrink-0 bg-white text-[#FF9154] rounded-full p-1 shadow-sm flex items-center justify-center">
+            <MaterialIcon name="check" size={12} weight={700} />
         </div>
         <div>
             {/* Updated Text: Warm Black */}

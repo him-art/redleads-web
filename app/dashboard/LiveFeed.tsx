@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, ExternalLink, Clock, Navigation, Bookmark, ChevronRight, MessageSquarePlus } from 'lucide-react';
+import { Activity, Clock, MessageSquarePlus, Bookmark, ExternalLink, Navigation, ChevronRight } from 'lucide-react';
+import LoadingIcon from '@/components/ui/LoadingIcon';
 import { createClient } from '@/lib/supabase/client';
 import { useDashboardData, MonitoredLead } from '@/app/dashboard/DashboardDataContext';
 
@@ -31,10 +32,7 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
     if (isDataLoading) {
         return (
             <div className="flex flex-col items-center justify-center py-24 space-y-6">
-                <div className="relative">
-                    <div className="w-12 h-12 border border-primary/10 border-t-primary rounded-full animate-spin" />
-                    <Activity className="absolute inset-0 m-auto text-primary/50 animate-pulse" size={16} />
-                </div>
+                <LoadingIcon className="w-12 h-12 text-orange-500" />
                 <p className="text-[9px] font-black uppercase tracking-[0.4em] text-text-secondary">Syncing Stream</p>
             </div>
         );
@@ -76,7 +74,7 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
                                             <span className="text-[9px] font-black text-primary/80 bg-primary/5 px-2.5 py-1 rounded-full uppercase tracking-widest border border-primary/10">
                                                 r/{lead.subreddit}
                                             </span>
-                                             <div className="flex items-center gap-1.5 text-[9px] font-bold text-text-secondary/50 uppercase tracking-widest">
+                                            <div className="flex items-center gap-1.5 text-[9px] font-bold text-text-secondary/50 uppercase tracking-widest">
                                                 <Clock size={10} />
                                                 {(() => {
                                                     try {
@@ -127,13 +125,13 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
                                                         : 'bg-white/5 text-text-secondary hover:text-text-primary hover:bg-white/10'
                                                 }`}
                                             >
-                                                <Bookmark size={14} fill={lead.is_saved ? "currentColor" : "none"} />
+                                                <Bookmark size={14} fill={lead.is_saved ? 'currentColor' : 'none'} />
                                             </button>
                                             <a 
                                                 href={(lead.url.startsWith('http') ? lead.url : `https://${lead.url}`)}
                                                 target="_blank" 
                                                 rel="noopener noreferrer"
-                                                className="p-1.5 rounded-lg bg-white/5 text-text-secondary hover:text-text-primary hover:bg-white/10 transition-all duration-200"
+                                                className="p-1.5 rounded-lg bg-white/5 text-text-secondary hover:text-text-primary hover:bg-white/10 transition-all duration-200 flex items-center justify-center"
                                             >
                                                 <ExternalLink size={14} />
                                             </a>
@@ -147,10 +145,10 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
                     <div className="py-24 text-center space-y-4">
                         <div className="relative inline-block">
                             <Activity className="mx-auto text-text-secondary/30" size={32} />
-                            <div className="absolute inset-0 bg-primary/5 blur-xl rounded-full" />
+                            <div className="absolute inset-0 bg-primary/5 rounded-full" />
                         </div>
                         <div className="space-y-1">
-                            <h4 className="text-text-secondary font-black text-xs tracking-[0.2em] uppercase">monitoring communities</h4>
+                            <h4 className="text-text-secondary font-black text-xs tracking-[0.2em] uppercase">monitoring communities 24/7</h4>
                             <p className="text-[9px] text-text-secondary max-w-[240px] mx-auto leading-relaxed uppercase font-black tracking-widest opacity-60">
                                 Live leads will be displayed here
                             </p>

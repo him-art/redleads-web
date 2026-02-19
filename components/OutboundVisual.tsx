@@ -1,4 +1,4 @@
-import { MessageCircle, User, Plus } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 
 export default function OutboundVisual() {
     return (
@@ -7,7 +7,7 @@ export default function OutboundVisual() {
                  {/* Header Icon */}
                 <div className="flex justify-center mb-3">
                     <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center border-2 border-blue-200">
-                        <MessageCircle className="w-8 h-8 text-blue-500 fill-blue-100" strokeWidth={1.5} />
+                        <MaterialIcon name="chat" size={32} className="text-blue-500" />
                     </div>
                 </div>
 
@@ -47,10 +47,10 @@ export default function OutboundVisual() {
                     {/* Middle Comment (Highlighted Reply) */}
                     <div className="w-full h-24 bg-[#E6F0FF] rounded-[1.25rem] border-2 border-[#9BBDFC] shadow-lg flex items-center px-4 gap-3 relative z-20 my-3 transform translate-x-[-0.75rem]">
                          <div className="absolute top-2.5 right-3 text-slate-400">
-                            <Plus size={18} strokeWidth={3} />
+                            <MaterialIcon name="add" size={18} />
                         </div>
                          <div className="w-8 h-8 bg-[#FF4500] rounded-full flex-shrink-0 flex items-center justify-center text-white">
-                             <User className="w-4 h-4" />
+                             <MaterialIcon name="person" size={16} />
                         </div>
                         <div className="flex-1 space-y-2">
                              <div className="h-2.5 bg-slate-600/80 rounded-full w-1/3"></div>

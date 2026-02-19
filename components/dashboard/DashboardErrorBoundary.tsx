@@ -1,7 +1,7 @@
 'use client';
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { AlertTriangle, RotateCcw } from 'lucide-react';
 
 interface Props {
   children: ReactNode;
@@ -47,7 +47,7 @@ class DashboardErrorBoundary extends Component<Props, State> {
             onClick={this.handleReset}
             className="flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-all"
           >
-            <RefreshCw size={14} />
+            <RotateCcw size={14} />
             Try Again
           </button>
           {process.env.NODE_ENV === 'development' && (

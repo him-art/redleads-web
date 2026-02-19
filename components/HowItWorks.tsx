@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, Settings, MessageCircle, ArrowRight, Sparkles, X, MousePointer2 } from 'lucide-react';
+
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 

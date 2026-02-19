@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, CheckCircle, XCircle, ThumbsUp, ThumbsDown } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 import { getComparisonBySlug, getAllComparisons } from '../data';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -65,7 +65,7 @@ export default async function ComparisonPage({ params }: Props) {
           href="/compare"
           className="inline-flex items-center gap-2 text-slate-400 hover:text-white mb-8 transition-colors"
         >
-          <ArrowLeft size={16} />
+          <MaterialIcon name="arrow_left" size={16} />
           All Comparisons
         </Link>
 
@@ -105,9 +105,9 @@ export default async function ComparisonPage({ params }: Props) {
                     <td className="p-4 text-center">
                       {typeof feature.redleads === 'boolean' ? (
                         feature.redleads ? (
-                          <CheckCircle className="inline text-green-500" size={18} />
+                          <MaterialIcon name="check_circle" size={18} className="inline text-green-500" />
                         ) : (
-                          <XCircle className="inline text-red-500" size={18} />
+                          <MaterialIcon name="cancel" size={18} className="inline text-red-500" />
                         )
                       ) : (
                         <span className="text-slate-400 text-sm">{feature.redleads}</span>
@@ -116,9 +116,9 @@ export default async function ComparisonPage({ params }: Props) {
                     <td className="p-4 text-center">
                       {typeof feature.competitor === 'boolean' ? (
                         feature.competitor ? (
-                          <CheckCircle className="inline text-green-500" size={18} />
+                          <MaterialIcon name="check_circle" size={18} className="inline text-green-500" />
                         ) : (
-                          <XCircle className="inline text-red-500" size={18} />
+                          <MaterialIcon name="cancel" size={18} className="inline text-red-500" />
                         )
                       ) : (
                         <span className="text-slate-400 text-sm">{feature.competitor}</span>
@@ -156,12 +156,12 @@ export default async function ComparisonPage({ params }: Props) {
               <div className="space-y-6">
                 <div className="p-4 bg-[#222] border border-white/5 rounded-xl">
                   <h4 className="text-sm font-bold text-green-500 mb-3 flex items-center gap-2">
-                    <ThumbsUp size={14} /> Pros
+                    <MaterialIcon name="thumb_up" size={14} /> Pros
                   </h4>
                   <ul className="space-y-2">
                     {comparison.pros.redleads.map((pro, i) => (
                       <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-                        <CheckCircle className="text-green-500 shrink-0 mt-0.5" size={14} />
+                        <MaterialIcon name="check_circle" size={14} className="text-green-500 shrink-0 mt-0.5" />
                         {pro}
                       </li>
                     ))}
@@ -169,12 +169,12 @@ export default async function ComparisonPage({ params }: Props) {
                 </div>
                 <div className="p-4 bg-[#222] border border-white/5 rounded-xl">
                   <h4 className="text-sm font-bold text-red-500 mb-3 flex items-center gap-2">
-                    <ThumbsDown size={14} /> Cons
+                    <MaterialIcon name="thumb_down" size={14} /> Cons
                   </h4>
                   <ul className="space-y-2">
                     {comparison.cons.redleads.map((con, i) => (
                       <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-                        <XCircle className="text-red-500 shrink-0 mt-0.5" size={14} />
+                        <MaterialIcon name="cancel" size={14} className="text-red-500 shrink-0 mt-0.5" />
                         {con}
                       </li>
                     ))}
@@ -189,12 +189,12 @@ export default async function ComparisonPage({ params }: Props) {
               <div className="space-y-6">
                 <div className="p-4 bg-[#222] border border-white/5 rounded-xl">
                   <h4 className="text-sm font-bold text-green-500 mb-3 flex items-center gap-2">
-                    <ThumbsUp size={14} /> Pros
+                    <MaterialIcon name="thumb_up" size={14} /> Pros
                   </h4>
                   <ul className="space-y-2">
                     {comparison.pros.competitor.map((pro, i) => (
                       <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-                        <CheckCircle className="text-green-500 shrink-0 mt-0.5" size={14} />
+                        <MaterialIcon name="check_circle" size={14} className="text-green-500 shrink-0 mt-0.5" />
                         {pro}
                       </li>
                     ))}
@@ -202,12 +202,12 @@ export default async function ComparisonPage({ params }: Props) {
                 </div>
                 <div className="p-4 bg-[#222] border border-white/5 rounded-xl">
                   <h4 className="text-sm font-bold text-red-500 mb-3 flex items-center gap-2">
-                    <ThumbsDown size={14} /> Cons
+                    <MaterialIcon name="thumb_down" size={14} /> Cons
                   </h4>
                   <ul className="space-y-2">
                     {comparison.cons.competitor.map((con, i) => (
                       <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-                        <XCircle className="text-red-500 shrink-0 mt-0.5" size={14} />
+                        <MaterialIcon name="cancel" size={14} className="text-red-500 shrink-0 mt-0.5" />
                         {con}
                       </li>
                     ))}
@@ -243,7 +243,7 @@ export default async function ComparisonPage({ params }: Props) {
             href="/"
             className="inline-flex items-center gap-2 px-8 py-4 bg-orange-500 text-white font-black text-xs uppercase tracking-widest rounded-xl hover:bg-orange-600 transition-colors"
           >
-            Start Free Trial <ArrowRight size={14} />
+            Start Free Trial <MaterialIcon name="arrow_right" size={14} />
           </Link>
         </div>
 

@@ -2,10 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-    MessageSquare, Copy, Check, X, Search, BrainCircuit, 
-    ShieldCheck, Activity, RotateCcw, Globe, ArrowRight, Sparkles, ExternalLink
-} from 'lucide-react';
+import { Search, MessageCircle, ShieldCheck, Brain, Sparkles, ExternalLink, X, CheckCircle2, Copy, Check, RotateCcw } from 'lucide-react';
 import axios from 'axios';
 
 interface MonitoredLead {
@@ -36,9 +33,9 @@ const LaborIllusion = () => {
     const [step, setStep] = useState(0);
     const steps = [
         { text: "Scanning subreddit rules...", icon: Search, color: "text-blue-400" },
-        { text: "Analyzing audience tone...", icon: MessageSquare, color: "text-purple-400" },
+        { text: "Analyzing audience tone...", icon: MessageCircle, color: "text-purple-400" },
         { text: "Checking ban-risk factors...", icon: ShieldCheck, color: "text-green-400" },
-        { text: "Drafting high-value replies...", icon: BrainCircuit, color: "text-orange-500" },
+        { text: "Drafting high-value replies...", icon: Brain, color: "text-orange-500" },
     ];
 
     useEffect(() => {
@@ -52,7 +49,7 @@ const LaborIllusion = () => {
         <div className="flex flex-col items-center justify-center py-24 space-y-6 h-full">
             <div className="relative">
                 <div className="w-16 h-16 bg-white/[0.03] rounded-2xl flex items-center justify-center relative z-10 border border-white/5 shadow-inner">
-                    {(() => { const Icon = steps[step].icon; return <Icon size={28} className={steps[step].color} />; })()}
+                    {(() => { const StepIcon = steps[step].icon; return <StepIcon size={28} className={steps[step].color} />; })()}
                 </div>
                 {/* Pulse ring */}
                 <div className="absolute inset-0 bg-white/5 rounded-2xl animate-ping opacity-20" />
@@ -141,7 +138,7 @@ export default function ReplySidebar({ lead, productContext, onClose }: ReplySid
                         animate={{ opacity: 1 }} 
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="fixed inset-0 z-[90] bg-black/40 backdrop-blur-sm lg:backdrop-blur-none lg:bg-transparent"
+                        className="fixed inset-0 z-[90] bg-black/40 lg:bg-transparent"
                     />
 
                     {/* Sidebar Panel */}
@@ -150,7 +147,7 @@ export default function ReplySidebar({ lead, productContext, onClose }: ReplySid
                         animate={{ x: 0, opacity: 1 }}
                         exit={{ x: "100%", opacity: 0 }}
                         transition={{ type: "spring", damping: 30, stiffness: 300 }}
-                        className="fixed top-4 bottom-4 right-4 left-4 sm:left-auto sm:w-[500px] z-[100] bg-[#0A0A0A]/95 backdrop-blur-xl border border-white/10 shadow-2xl rounded-[2.5rem] flex flex-col overflow-hidden"
+                        className="fixed top-4 bottom-4 right-4 left-4 sm:left-auto sm:w-[500px] z-[100] bg-[#0A0A0A]/95 border border-white/10 shadow-2xl rounded-[2.5rem] flex flex-col overflow-hidden"
                     >
                         {/* Header */}
                         <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
@@ -177,7 +174,7 @@ export default function ReplySidebar({ lead, productContext, onClose }: ReplySid
                                 </a>
                                 <button 
                                     onClick={onClose}
-                                    className="p-2 hover:bg-white/10 rounded-full text-text-secondary hover:text-text-primary transition-all duration-300"
+                                    className="p-2 hover:bg-white/10 rounded-full text-text-secondary hover:text-text-primary transition-all duration-300 flex items-center justify-center"
                                 >
                                     <X size={20} />
                                 </button>

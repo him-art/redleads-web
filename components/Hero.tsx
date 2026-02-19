@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { Search, Globe, CheckCircle2, Zap, ArrowRight, ExternalLink, ShieldCheck } from 'lucide-react';
+import { Globe, ArrowRight, CheckCircle2, Lock, Search, ChevronRight, Activity, Clock, PenLine, Bookmark, ExternalLink, Navigation, Map, Archive, SlidersHorizontal, Shield, Plus } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
@@ -104,7 +104,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
               onSubmit={handleSearch}
               className="relative flex items-center bg-[#1a1a1a] rounded-xl overflow-hidden border-2 border-[#ff914d]/30"
             >
-              <div className="pl-4 pr-3 text-slate-500">
+              <div className="pl-4 pr-3 text-slate-500 flex items-center">
                 <Globe size={20} />
               </div>
               
@@ -143,122 +143,203 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
 
           <div className="mt-6 flex items-center justify-center gap-6 opacity-60">
              <div className="flex items-center gap-2 text-xs text-slate-400 uppercase tracking-wider font-medium">
-                <CheckCircle2 className="w-3 h-3" /> No Card Required
+                <CheckCircle2 size={12} /> No Card Required
              </div>
              <div className="flex items-center gap-2 text-xs text-slate-400 uppercase tracking-wider font-medium">
-                <CheckCircle2 className="w-3 h-3" /> 3-Day Free Trial
+                <CheckCircle2 size={12} /> 3-Day Free Trial
              </div>
              <div className="flex items-center gap-2 text-xs text-slate-400 uppercase tracking-wider font-medium">
-                <CheckCircle2 className="w-3 h-3" /> For SaaS Founders
+                <CheckCircle2 size={12} /> For SaaS Founders
              </div>
           </div>
         </motion.div>
 
-        {/* Product Visual - Static Demo */}
-        <div
-           className="relative w-full max-w-5xl mx-auto mt-0 md:mt-0 pointer-events-none select-none"
+        {/* Sneak Peek Dashboard Demo */}
+        <motion.div 
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
+          onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+          className="relative w-full max-w-6xl mx-auto mt-6 -translate-y-4 cursor-pointer select-none perspective-2000 group/demo"
+          style={{ perspective: "2000px" }}
         >
-            <div className="relative rounded-t-[2rem] border-x-2 border-t-2 border-b-0 border-[#ff914d]/20 bg-[#050505] overflow-hidden shadow-2xl p-6 md:p-10 text-left">
-                {/* Background Glow */}
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#ff914d]/5 rounded-full blur-[100px] pointer-events-none" />
+          <motion.div 
+            initial={{ rotateX: 12, scale: 0.95 }}
+            whileInView={{ rotateX: 0, scale: 1 }}
+            viewport={{ margin: "0px 0px -200px 0px" }}
+            transition={{ duration: 0.8 }}
+            className="relative rounded-2xl border border-white/5 bg-[#141414] p-2 text-left flex max-h-[620px] origin-top"
+          >
+            <div className="flex w-full rounded-xl overflow-hidden bg-[#080808] border border-white/5">
 
-
-
-                {/* Header: Power Search */}
-                <div className="relative flex items-center gap-3 mb-8 md:mb-12">
-                    <div className="relative flex h-2.5 w-2.5">
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#ff914d] shadow-[0_0_10px_rgba(255,145,77,0.5)]"></span>
-                    </div>
-                    <span className="text-[11px] font-black tracking-[0.2em] text-gray-400 uppercase">Power Search</span>
+            {/* ── SIDEBAR ── */}
+            <div className="hidden md:flex flex-col w-[200px] flex-shrink-0 bg-[#0e0e0e] border-r border-white/5 p-5">
+              {/* Brand */}
+              <div className="mb-6">
+                <p className="text-[9px] font-black tracking-[0.2em] text-[#444] uppercase mb-4">Command Center</p>
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 flex items-center justify-center relative">
+                    <Image
+                      src="/redleads-logo-white.png" 
+                      alt="RedLeads Logo" 
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-white font-black text-[12px] leading-none tracking-tight">RedLeads</p>
+                    <p className="text-primary text-[8px] font-medium uppercase tracking-[0.2em] mt-0.5 opacity-90">Intelligence</p>
+                  </div>
                 </div>
+              </div>
 
-                {/* Search Bar */}
-                <div className="relative w-full bg-[#F0F4FF] rounded-2xl h-16 md:h-20 flex items-center justify-between pl-6 pr-2 mb-12 md:mb-16 shadow-[0_0_60px_-15px_rgba(255,255,255,0.1)]">
-                    <div className="flex items-center gap-4">
-                        <Globe className="text-[#ff914d]" size={24} strokeWidth={2} />
-                        <span className="text-xl md:text-2xl font-bold text-black tracking-tight">RedLeads.app</span>
-                    </div>
-                    <button 
-                        suppressHydrationWarning
-                        className="bg-[#ff914d] text-white text-[10px] md:text-xs font-black uppercase tracking-widest px-6 md:px-8 py-3 md:py-4 rounded-xl"
-                    >
-                        Scan
-                    </button>
-                </div>
+              {/* Nav */}
+              <p className="text-[9px] font-black tracking-[0.15em] text-[#444] uppercase mb-3">Menu</p>
+              <nav className="flex flex-col gap-0.5">
+                <SidebarItem icon="navigation" label="Command Center" active />
+                <SidebarItem icon="map" label="Guide" />
+                <SidebarItem icon="archive" label="Leads Archive" />
+                <SidebarItem icon="sliders" label="Tracking Setup" />
+                <SidebarItem icon="shield" label="Billing &amp; Plan" />
+              </nav>
 
-                {/* Results Header */}
-                <div className="relative mb-8">
-                   <div className="flex items-center gap-3 mb-2">
-                       <Search className="text-[#ff914d]" size={22} strokeWidth={3} />
-                       <h3 className="text-2xl md:text-3xl font-black text-white tracking-tight">
-                           Intel Report: <span className="text-white">18 Matches</span>
-                       </h3>
-                   </div>
-                   <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.15em] pl-0.5">
-                       High-Intent Conversations Identified
-                   </p>
-                </div>
-
-                {/* Relevancy Section */}
-                <div className="relative mb-5 flex items-center gap-2 text-gray-500">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-[#444]">High Relevancy • 8</span>
-                </div>
-
-                {/* Grid */}
-                <div className="relative grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <DemoCard 
-                        subreddit="b2bmarketing" 
-                        title="Reddit > LinkedIn for high-intent B2B leads in 2026 (if you know where to look)"
-                        matchScore="High Match"
-                    />
-                    <DemoCard 
-                        subreddit="webmarketing" 
-                        title="5 Best Reddit Tools for Lead Generation in 2026"
-                         matchScore="High Match"
-                    />
-                    <DemoCard 
-                        subreddit="SaaS" 
-                        title="The 10 Best Reddit Marketing Tools for SaaS Growth in 2026"
-                         matchScore="High Match"
-                    />
-                     <DemoCard 
-                        subreddit="Entrepreneur" 
-                        title="I am trying to find leads for AI lead qualifying, but standard tools aren't working."
-                         matchScore="High Match"
-                    />
-                     <DemoCard 
-                        subreddit="AI_Sales" 
-                        title="How AI is Transforming Lead Generation, What Actually Works?"
-                         matchScore="High Match"
-                    />
-                     <DemoCard 
-                        subreddit="SaaS" 
-                        title="Best Reddit marketing tools in 2025 - what's actually legit?"
-                         matchScore="High Match"
-                    />
-                </div>
             </div>
-        </div>
+
+            {/* ── MAIN PANEL ── */}
+            <div className="flex-1 min-w-0 overflow-y-auto custom-scrollbar p-6 flex flex-col gap-6 bg-[#080808]">
+
+              {/* Power Search Container */}
+              <div className="bg-[#0c0c0c] border border-white/5 rounded-[1.5rem] p-6 space-y-4 shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                
+                {/* Power Search */}
+                <section>
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="inline-flex h-1.5 w-1.5 rounded-full bg-[#ff3d00] shadow-[0_0_10px_rgba(255,61,0,0.8)] animate-pulse" />
+                    <span className="text-[9px] font-black tracking-[0.25em] text-[#555] uppercase">Power Search</span>
+                  </div>
+
+                  {/* Search bar */}
+                  <div className="flex items-center gap-4 bg-black/40 border border-white/5 rounded-xl px-5 h-12 group focus-within:border-primary/20 transition-all shadow-inner">
+                    <Lock size={14} className="text-[#333] group-focus-within:text-primary transition-colors" />
+                    <span className="flex-1 text-xs font-medium text-[#777] tracking-tight">RedLeads.app</span>
+                    <button suppressHydrationWarning className="bg-[#ff5836] hover:bg-[#ff6900] text-[9px] font-black uppercase tracking-[0.15em] px-6 py-2 rounded-lg shadow-[0_6px_16px_rgba(255,88,54,0.3)] transition-all transform hover:scale-[1.02] active:scale-95 leading-none text-white whitespace-nowrap">
+                      Power Search
+                    </button>
+                  </div>
+                </section>
+              </div>
+
+              {/* Live Intelligence */}
+              <section className="px-2 mt-2">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-7 h-7 flex items-center justify-center rounded-lg bg-[#ff3d00]/10 border border-[#ff3d00]/20">
+                      <Activity size={16} className="text-[#ff3d00]" />
+                    </div>
+                    <div>
+                      <p className="text-[9px] font-black uppercase tracking-[0.25em] text-[#444]">Automated</p>
+                      <p className="text-lg font-black text-white tracking-tighter">Live Intelligence</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-[#22c55e]/5 border border-[#22c55e]/10 rounded-full">
+                    <span className="inline-flex h-1.5 w-1.5 rounded-full bg-[#22c55e] shadow-[0_0_8px_rgba(34,197,94,0.5)] animate-pulse" />
+                    <span className="text-[9px] font-black text-[#22c55e]/80 uppercase tracking-[0.2em]">System Online</span>
+                  </div>
+                </div>
+
+                {/* Cards */}
+                <div className="flex flex-col gap-4">
+                  <LiveCard
+                    subreddit="R/SAAS"
+                    time="21:20"
+                    matchLevel="HIGH MATCH"
+                    title="Does anyone has a solution for x problem?"
+                  />
+                  <LiveCard
+                    subreddit="R/buildinpublic"
+                    time="21:20"
+                    matchLevel="MEDIUM MATCH"
+                    title="Does someone know a better alternative to Y?"
+                  />
+                </div>
+              </section>
+
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
       </div>
     </div>
   );
 }
 
-function DemoCard({ subreddit, title, matchScore }: { subreddit: string, title: string, matchScore: string }) {
+function SidebarItem({ icon, label, active }: { icon: string; label: string; active?: boolean }) {
+  const IconComponent = {
+    "navigation": Navigation,
+    "map": Map,
+    "archive": Archive,
+    "sliders": SlidersHorizontal,
+    "shield": Shield,
+  }[icon];
+
   return (
-    <div className="relative bg-[#111] border border-white/5 rounded-2xl p-5">
-       <div className="flex items-center gap-2 mb-3">
-          <span className="bg-[#33180b] text-[#ff7826] border border-[#52250d] px-2 py-1 rounded text-[9px] font-black uppercase tracking-wider">
-             r/{subreddit}
-          </span>
-          <span className="bg-[#0b2413] text-[#2ebd59] border border-[#0f3b1e] px-2 py-1 rounded text-[9px] font-black uppercase tracking-wider">
-             {matchScore}
-          </span>
-       </div>
-       
-       <h4 className="text-sm font-bold text-gray-200 leading-snug pr-6">
+    <div className={`relative flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[11px] font-medium transition-all group ${
+      active 
+        ? 'bg-white/[0.08] text-white shadow-[0_4px_12px_rgba(0,0,0,0.5)] border border-white/5' 
+        : 'text-[#666] hover:text-[#aaa] hover:bg-white/[0.02]'
+    }`}>
+      {active && (
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 bg-primary rounded-r-full shadow-[0_0_8px_rgba(255,88,54,0.5)]" />
+      )}
+      {IconComponent && <IconComponent size={14} className={active ? 'text-primary' : 'text-[#444] group-hover:text-[#666]'} />}
+      <span className={active ? 'tracking-wide' : ''}>{label}</span>
+    </div>
+  );
+}
+
+function LiveCard({ subreddit, time, matchLevel, title }: { subreddit: string; time: string; matchLevel: string; title: string }) {
+  const isHigh = matchLevel === "HIGH MATCH";
+  return (
+    <div className="bg-[#0b0b0b] border border-white/5 rounded-[1rem] flex overflow-hidden hover:bg-white/[0.03] transition-all group shadow-xl relative">
+      {/* Left Column - Match Label */}
+      <div className="w-20 flex-shrink-0 flex items-center justify-center bg-black/40 border-r border-white/5">
+        <span className={`text-[7px] font-black uppercase tracking-[0.15em] px-1 text-center leading-tight ${
+          isHigh ? 'text-primary' : 'text-[#444]'
+        }`}>
+          {matchLevel.split(' ')[0]}<br/>{matchLevel.split(' ')[1]}
+        </span>
+      </div>
+      
+      {/* Right Column - Content */}
+      <div className="flex-1 p-4 space-y-3">
+        <div className="flex items-center gap-3">
+          <div className="px-2 py-0.5 bg-primary/10 border border-primary/20 rounded-md">
+            <span className="text-[8px] font-black text-primary uppercase tracking-[0.15em]">{subreddit}</span>
+          </div>
+          <div className="flex items-center gap-2 text-[8px] font-black text-text-secondary opacity-30 uppercase tracking-widest leading-none">
+            <Clock size={10} className="mt-[-1px]" />
+            {time}
+          </div>
+        </div>
+        
+        <p className="text-[13px] font-black text-white tracking-tight leading-[1.4] opacity-90">
           {title}
-       </h4>
+        </p>
+        
+        <div className="flex items-center gap-3 pt-0.5">
+          <button suppressHydrationWarning className="flex items-center gap-2 bg-[#ff5836] hover:bg-[#ff6900] text-white text-[8px] font-black uppercase tracking-[0.15em] px-3.5 py-1.5 rounded-lg shadow-[0_4px_12px_rgba(255,88,54,0.3)] transition-all transform hover:translate-y-[-1px] active:translate-y-[1px]">
+            <Plus size={10} className="text-white" />
+            Draft Reply
+          </button>
+          <button suppressHydrationWarning className="w-7 h-7 rounded-lg flex items-center justify-center border border-white/5 bg-white/[0.03] text-[#444] hover:text-text-primary hover:border-white/10 transition-all">
+            <Bookmark size={12} />
+          </button>
+          <button suppressHydrationWarning className="w-7 h-7 rounded-lg flex items-center justify-center border border-white/5 bg-white/[0.03] text-[#444] hover:text-text-primary hover:border-white/10 transition-all">
+            <ExternalLink size={12} />
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

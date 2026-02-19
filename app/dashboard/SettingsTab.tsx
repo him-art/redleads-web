@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { Save, Loader2, Plus, X, Sparkles, MessageSquarePlus, Compass } from 'lucide-react';
+import { Compass, MessageSquarePlus, Sparkles, Plus, X, Save } from 'lucide-react';
+import LoadingIcon from '@/components/ui/LoadingIcon';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 
@@ -174,9 +175,9 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
     return (
         <div className="space-y-8 max-w-2xl">
             <div className="flex items-center gap-3 mb-8">
-                <div className="relative">
+                <div className="relative flex items-center justify-center">
                     <Compass className="text-primary" size={18} />
-                    <div className="absolute inset-0 bg-primary/20 blur-md animate-pulse rounded-full" />
+                    <div className="absolute inset-0 bg-primary/5 rounded-full" />
                 </div>
                 <div className="space-y-0.5">
                     <h2 className="text-[10px] font-black tracking-[0.2em] text-text-secondary uppercase">configuration</h2>
@@ -214,7 +215,7 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                     >
                         {autofilling ? (
                             <>
-                                <Loader2 className="animate-spin" size={20} />
+                                <LoadingIcon className="w-5 h-5" />
                                 <span>Generating Configuration...</span>
                             </>
                         ) : (
@@ -262,7 +263,7 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                             <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Priority Keywords</label>
                             {isMounted && wasAiGenerated && (
                                 <span className="text-[9px] font-black uppercase tracking-widest text-primary/60 flex items-center gap-1 animate-in fade-in zoom-in duration-500">
-                                    <Sparkles size={8} className="text-primary" />
+                                    <Sparkles size={10} className="text-primary" />
                                     AI selected
                                 </span>
                             )}
@@ -287,7 +288,7 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                         />
                         <button 
                             onClick={addKeyword}
-                            className="bg-white/10 hover:bg-white/20 text-text-primary p-3 rounded-xl transition-colors"
+                            className="bg-white/10 hover:bg-white/20 text-text-primary p-3 rounded-xl transition-colors flex items-center justify-center"
                         >
                             <Plus size={20} />
                         </button>
@@ -296,7 +297,7 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                         {keywords.map((kw, i) => (
                             <div key={i} className="flex items-center gap-2 bg-primary/5 border border-primary/10 text-primary px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest">
                                 <span>{kw}</span>
-                                <button onClick={() => removeKeyword(i)} className="text-primary/50 hover:text-primary transition-colors">
+                                <button onClick={() => removeKeyword(i)} className="text-primary/50 hover:text-primary transition-colors flex items-center justify-center">
                                     <X size={12} />
                                 </button>
                             </div>
@@ -321,7 +322,7 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                             statusMsg.type === 'success' ? 'bg-green-900/20 text-green-500 border border-green-500/20' : 'bg-red-500/10 text-red-500'
                         }`}>
                             <span>{statusMsg.text}</span>
-                            <button onClick={() => setStatusMsg(null)} className="ml-2 hover:opacity-70 transition-opacity">
+                            <button onClick={() => setStatusMsg(null)} className="ml-2 hover:opacity-70 transition-opacity flex items-center justify-center">
                                 <X size={14} />
                             </button>
                         </div>
@@ -330,9 +331,9 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
                     <button
                         onClick={handleSave}
                         disabled={saving}
-                        className="px-8 py-3 bg-white text-black font-bold rounded-xl hover:bg-gray-200 transition-all shadow-lg flex items-center gap-2 disabled:opacity-50"
+                        className="px-8 py-3 bg-white text-black font-bold rounded-xl hover:bg-gray-200 transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
                     >
-                        {saving ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
+                        {saving ? <LoadingIcon className="w-5 h-5" /> : <Save size={20} />}
                         {saving ? 'Saving Changes...' : 'Save Configuration'}
                     </button>
                 </div>

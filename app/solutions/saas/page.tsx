@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { Rocket, Target, Users, Zap, CheckCircle2, ArrowRight, MessageSquare, BarChart3, ShieldCheck } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ export default function SaaSPage() {
       <section className="container mx-auto px-4 pt-40 pb-20 text-center">
         <div className="max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-orange-500/20 rounded-full mb-8">
-            <Rocket size={16} className="text-orange-500" />
+            <MaterialIcon name="rocket_launch" size={16} className="text-orange-500" />
             <span className="text-orange-500 text-[10px] font-black uppercase tracking-widest">SaaS Growth Engine</span>
           </div>
           <h1 className="text-5xl md:text-8xl font-black text-white mb-8 tracking-tighter leading-[0.95]">
@@ -39,7 +39,7 @@ export default function SaaSPage() {
               href="/protocol"
               className="px-10 py-5 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest rounded-full hover:bg-white/10 transition-colors w-full sm:w-auto flex items-center gap-2 justify-center"
             >
-              <ShieldCheck size={18} />
+              <MaterialIcon name="verified_user" size={18} />
               Safe Engagement
             </Link>
           </div>
@@ -51,7 +51,7 @@ export default function SaaSPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           <div className="p-8 bg-[#141414] rounded-3xl border border-white/5">
             <div className="w-12 h-12 bg-red-500/10 rounded-2xl flex items-center justify-center mb-6">
-              <Users size={24} className="text-red-500" />
+              <MaterialIcon name="group" size={24} className="text-red-500" />
             </div>
             <h3 className="text-xl font-black text-white mb-4">High CAC</h3>
             <p className="text-slate-400 text-sm leading-relaxed">
@@ -60,7 +60,7 @@ export default function SaaSPage() {
           </div>
           <div className="p-8 bg-[#141414] rounded-3xl border border-white/5">
             <div className="w-12 h-12 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-6">
-              <BarChart3 size={24} className="text-orange-500" />
+              <MaterialIcon name="bar_chart" size={24} className="text-orange-500" />
             </div>
             <h3 className="text-xl font-black text-white mb-4">Low Conversion</h3>
             <p className="text-slate-400 text-sm leading-relaxed">
@@ -69,7 +69,7 @@ export default function SaaSPage() {
           </div>
           <div className="p-8 bg-[#141414] rounded-3xl border border-white/5">
             <div className="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-6">
-              <Target size={24} className="text-blue-500" />
+              <MaterialIcon name="target" size={24} className="text-blue-500" />
             </div>
             <h3 className="text-xl font-black text-white mb-4">Feature Blindness</h3>
             <p className="text-slate-400 text-sm leading-relaxed">
@@ -128,7 +128,7 @@ export default function SaaSPage() {
             href="/login"
             className="inline-flex items-center gap-3 text-orange-500 font-bold hover:gap-5 transition-all"
           >
-            START YOUR FREE TRIAL <ArrowRight size={20} />
+            START YOUR FREE TRIAL <MaterialIcon name="arrow_right" size={20} />
           </Link>
         </div>
       </section>

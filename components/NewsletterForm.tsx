@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Mail, Globe, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 import { subscribeToNewsletter } from '@/app/actions/newsletter';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -33,7 +33,7 @@ export default function NewsletterForm() {
             className="flex flex-col items-center justify-center p-6 bg-green-500/10 border border-green-500/20 rounded-2xl text-center"
           >
             <div className="bg-green-500/20 p-3 rounded-full mb-3">
-              <CheckCircle2 className="w-6 h-6 text-green-500" />
+              <MaterialIcon name="check_circle" size={24} className="text-green-500" />
             </div>
             <h3 className="text-white font-semibold text-lg">You're on the list!</h3>
             <p className="text-gray-400 text-sm mt-1">
@@ -61,7 +61,7 @@ export default function NewsletterForm() {
             {/* URL Input */}
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Globe className="h-4 w-4 text-gray-500 group-focus-within:text-orange-500 transition-colors" />
+                <MaterialIcon name="public" size={16} className="text-gray-500 group-focus-within:text-orange-500 transition-colors" />
               </div>
               <input
                 type="url"
@@ -78,7 +78,7 @@ export default function NewsletterForm() {
             {/* Email Input */}
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Mail className="h-4 w-4 text-gray-500 group-focus-within:text-orange-500 transition-colors" />
+                <MaterialIcon name="mail" size={16} className="text-gray-500 group-focus-within:text-orange-500 transition-colors" />
               </div>
               <input
                 type="email"
@@ -99,11 +99,11 @@ export default function NewsletterForm() {
               className="mt-1 w-full flex items-center justify-center gap-2 bg-[#f25e36] hover:bg-[#d94a24] text-white py-3 rounded-xl font-medium transition-all shadow-lg shadow-orange-500/20 disabled:opacity-50 disabled:cursor-not-allowed group"
             >
               {isPending ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <MaterialIcon name="sync" size={16} className="animate-spin" />
               ) : (
                 <>
                   Get My Leads
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <MaterialIcon name="arrow_right" size={16} className="group-hover:translate-x-1 transition-transform" />
                 </>
               )}
             </button>

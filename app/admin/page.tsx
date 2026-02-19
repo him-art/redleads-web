@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 // Daily Reports components removed
 // ConfigToggle removed
-import { CheckCircle, XCircle, Send, Edit, Clock, Users, Activity } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 import TrendGraph from '@/components/admin/TrendGraph';
 
 
@@ -95,7 +95,7 @@ export default async function AdminDashboard() {
                 <header className="flex flex-col md:flex-row md:items-center justify-between border-b border-white/5 pb-10 gap-8">
                     <div>
                         <div className="flex items-center gap-3 mb-2">
-                             <CheckCircle className="text-orange-500" size={24} />
+                             <MaterialIcon name="check_circle" size={24} className="text-orange-500" />
                              <h1 className="text-4xl font-black tracking-tighter uppercase italic">HQ Command</h1>
                         </div>
                         {/* eslint-disable-next-line */}
@@ -133,7 +133,7 @@ export default async function AdminDashboard() {
                         {/* 1. User intelligence list */}
                         <section className="space-y-6">
                             <h2 className="text-xs font-black uppercase tracking-[0.3em] text-gray-600 flex items-center gap-2">
-                                <Users size={14} /> Agent Manifest
+                                <MaterialIcon name="group" size={14} /> Agent Manifest
                             </h2>
                             <div className="bg-[#0A0A0A] border border-white/5 rounded-3xl overflow-hidden">
                                 <div className="overflow-x-auto">
@@ -189,7 +189,7 @@ export default async function AdminDashboard() {
                         {/* 2. Email Transmission Logs */}
                         <section className="space-y-6">
                             <h2 className="text-xs font-black uppercase tracking-[0.3em] text-gray-600 flex items-center gap-2">
-                                <Send size={14} /> Transmission Feed
+                                <MaterialIcon name="send" size={14} /> Transmission Feed
                             </h2>
                             <div className="space-y-3">
                                 {recentEmails?.length === 0 ? (
@@ -201,7 +201,7 @@ export default async function AdminDashboard() {
                                         <div key={log.id} className="bg-[#0A0A0A] border border-white/5 p-5 rounded-2xl flex items-center justify-between group hover:border-white/10 transition-colors">
                                             <div className="flex items-center gap-4">
                                                 <div className="p-3 bg-white/5 rounded-xl group-hover:bg-orange-500/10 transition-colors">
-                                                    <Edit size={16} className="text-gray-500 group-hover:text-orange-500" />
+                                                    <MaterialIcon name="edit" size={16} className="text-gray-500 group-hover:text-orange-500" />
                                                 </div>
                                                 <div className="space-y-1">
                                                     <p className="text-xs font-black text-white">{log.to_email}</p>
@@ -300,7 +300,7 @@ export default async function AdminDashboard() {
                             </div>
 
                             <button className="w-full py-4 bg-orange-500 text-black rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-orange-400 transition-all flex items-center justify-center gap-2 shadow-xl shadow-orange-500/20">
-                                <Activity size={16} /> Broadcast System Pulse
+                                <MaterialIcon name="monitoring" size={16} /> Broadcast System Pulse
                             </button>
                          </section>
                     </div>

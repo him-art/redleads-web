@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 import { signInWithEmail, signUpWithEmail, signInWithGoogle } from '../actions/auth';
 
 export default function LoginForm({ 
@@ -99,7 +99,7 @@ export default function LoginForm({
             className="w-full py-3 px-4 bg-white hover:bg-gray-100 text-black rounded-xl font-bold flex items-center justify-center gap-3 transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
-                <Loader2 className="w-5 h-5 animate-spin text-orange-500" />
+                <MaterialIcon name="sync" size={20} className="animate-spin text-orange-500" />
             ) : (
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path
@@ -147,7 +147,7 @@ export default function LoginForm({
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-400 uppercase ml-1">Email Address</label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                <MaterialIcon name="mail" size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
                 <input
                   suppressHydrationWarning
                   type="email"
@@ -163,7 +163,7 @@ export default function LoginForm({
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-400 uppercase ml-1">Password</label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                <MaterialIcon name="lock" size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
                 <input
                   suppressHydrationWarning
                   type="password"
@@ -183,11 +183,11 @@ export default function LoginForm({
               className="w-full py-4 bg-[#f25e36] hover:bg-[#d94a24] text-white rounded-xl font-black text-lg shadow-lg shadow-orange-500/20 transition-all transform hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
-                <Loader2 className="w-6 h-6 animate-spin" />
+                <MaterialIcon name="sync" size={24} className="animate-spin" />
               ) : (
                 <>
                     {isSignUp ? 'Create Account' : 'Sign In Now'}
-                    <ArrowRight className="w-5 h-5" />
+                    <MaterialIcon name="arrow_right" size={20} />
                 </>
               )}
             </button>

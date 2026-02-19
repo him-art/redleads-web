@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Check, Zap, Loader2, ArrowRight, Globe, Search, Activity, ZapIcon, Mail, MessageSquare, Bot, ShieldCheck, Crown, Sparkles } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 import { createClient } from '@/lib/supabase/client';
 
 const Pricing = () => {
@@ -60,17 +60,17 @@ const Pricing = () => {
             description: 'Perfect for getting started with Reddit marketing',
             features: {
                 inbound: [
-                    { name: '2 Power Search for top ranking post /day', icon: <Globe size={14} /> },
-                    { name: '5 tracked keywords', icon: <Search size={14} /> },
-                    { name: 'Daily SEO opportunities', icon: <Activity size={14} /> },
-                    { name: 'Live Reddit monitoring', icon: <ZapIcon size={14} /> },
-                    { name: 'AI Intent Scoring', icon: <Zap size={14} /> },
-                    { name: 'Daily Email notifications', icon: <Mail size={14} /> }
+                    { name: '2 Power Search for top ranking post /day', icon: <MaterialIcon name="public" size={14} /> },
+                    { name: '5 tracked keywords', icon: <MaterialIcon name="search" size={14} /> },
+                    { name: 'Daily SEO opportunities', icon: <MaterialIcon name="monitoring" size={14} /> },
+                    { name: 'Live Reddit monitoring', icon: <MaterialIcon name="bolt" size={14} /> },
+                    { name: 'AI Intent Scoring', icon: <MaterialIcon name="bolt" size={14} /> },
+                    { name: 'Daily Email notifications', icon: <MaterialIcon name="mail" size={14} /> }
                 ],
                 engage: [
-                    { name: '100 AI Replies /mo', icon: <Bot size={14} /> },
-                    { name: 'Anti-Ban Safety Engine', icon: <ShieldCheck size={14} className="text-green-500" /> },
-                    { name: '30 daily auto DMs', icon: <MessageSquare size={14} />, soon: true }
+                    { name: '100 AI Replies /mo', icon: <MaterialIcon name="smart_toy" size={14} /> },
+                    { name: 'Anti-Ban Safety Engine', icon: <MaterialIcon name="verified_user" size={14} className="text-green-500" /> },
+                    { name: '30 daily auto DMs', icon: <MaterialIcon name="chat" size={14} />, soon: true }
                 ]
             }
         },
@@ -83,17 +83,17 @@ const Pricing = () => {
             badge: 'BEST VALUE',
             features: {
                 inbound: [
-                    { name: '5 Power Search for top ranking post /day', icon: <Globe size={14} /> },
-                    { name: '15 tracked keywords', icon: <Search size={14} /> },
-                    { name: 'Daily SEO opportunities', icon: <Activity size={14} /> },
-                    { name: 'Live Reddit monitoring', icon: <ZapIcon size={14} /> },
-                    { name: 'AI Intent Scoring', icon: <Zap size={14} className="text-orange-500" /> },
-                    { name: 'Daily Email notifications', icon: <Mail size={14} /> }
+                    { name: '5 Power Search for top ranking post /day', icon: <MaterialIcon name="public" size={14} /> },
+                    { name: '15 tracked keywords', icon: <MaterialIcon name="search" size={14} /> },
+                    { name: 'Daily SEO opportunities', icon: <MaterialIcon name="monitoring" size={14} /> },
+                    { name: 'Live Reddit monitoring', icon: <MaterialIcon name="bolt" size={14} /> },
+                    { name: 'AI Intent Scoring', icon: <MaterialIcon name="bolt" size={14} className="text-orange-500" /> },
+                    { name: 'Daily Email notifications', icon: <MaterialIcon name="mail" size={14} /> }
                 ],
                 engage: [
-                    { name: '500 AI Replies /mo', icon: <Bot size={14} /> },
-                    { name: 'Anti-Ban Safety Engine', icon: <ShieldCheck size={14} className="text-green-500" /> },
-                    { name: '100 daily auto DMs', icon: <MessageSquare size={14} />, soon: true }
+                    { name: '500 AI Replies /mo', icon: <MaterialIcon name="smart_toy" size={14} /> },
+                    { name: 'Anti-Ban Safety Engine', icon: <MaterialIcon name="verified_user" size={14} className="text-green-500" /> },
+                    { name: '100 daily auto DMs', icon: <MaterialIcon name="chat" size={14} />, soon: true }
                 ]
             }
         }
@@ -130,7 +130,7 @@ const Pricing = () => {
                             {plan.badge && (
                                 <div className="absolute -top-4 right-10 bg-[#ff824d] px-6 py-2.5 rounded-2xl flex items-center gap-3 z-20 shadow-2xl border-none">
                                     <span className="text-xs font-black uppercase tracking-[0.3em] text-black flex items-center gap-3">
-                                        <Bot size={14} className="text-black/80" />
+                                        <MaterialIcon name="smart_toy" size={14} className="text-black/80" />
                                         {plan.badge}
                                     </span>
                                 </div>
@@ -152,7 +152,7 @@ const Pricing = () => {
                                 {/* Inbound Group */}
                                 <div>
                                     <div className="flex items-center gap-2 mb-6">
-                                        <Globe size={14} className="text-gray-700" />
+                                        <MaterialIcon name="public" size={14} className="text-gray-700" />
                                         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-600">INBOUND</span>
                                         <div className="h-[1px] bg-white/5 flex-grow ml-2" />
                                     </div>
@@ -173,7 +173,7 @@ const Pricing = () => {
                                 {/* Engage Group */}
                                 <div>
                                     <div className="flex items-center gap-2 mb-6">
-                                        <ZapIcon size={14} className="text-gray-700" />
+                                        <MaterialIcon name="bolt" size={14} className="text-gray-700" />
                                         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-600">ENGAGE</span>
                                         <div className="h-[1px] bg-white/5 flex-grow ml-2" />
                                     </div>
@@ -208,7 +208,7 @@ const Pricing = () => {
                                             : 'bg-white/5 border-white/5 text-white hover:bg-white hover:text-black'
                                     }`}
                                 >
-                                    {isLoading === plan.name ? <Loader2 size={16} className="animate-spin" /> : <>Start 3-day free trial <ArrowRight size={16} /></>}
+                                    {isLoading === plan.name ? <MaterialIcon name="sync" size={16} className="animate-spin" /> : <>Start 3-day free trial <MaterialIcon name="arrow_right" size={16} /></>}
                                 </button>
                                 <p className="mt-6 text-center text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 transition-colors">
                                     7 DAY MONEY BACK GUARANTEE
@@ -221,7 +221,7 @@ const Pricing = () => {
                     <div className="relative h-full p-8 md:p-12 bg-gradient-to-br from-[#1a1a1a] to-black border-2 border-red-500/50 rounded-[2.5rem] group flex flex-col">
                         {/* Sold Out Overlay */}
                         {slots && slots.sold >= slots.total && (
-                            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center rounded-[2.5rem]">
+                            <div className="absolute inset-0 bg-black/80 z-50 flex items-center justify-center rounded-[2.5rem]">
                                 <div className="text-center">
                                     <div className="bg-red-500 text-white px-6 py-2 rounded-full font-black uppercase tracking-widest text-xs mb-4">Sold Out</div>
                                     <p className="text-gray-400 text-sm font-bold uppercase tracking-widest">Join the waitlist</p>
@@ -231,8 +231,8 @@ const Pricing = () => {
                         
                         <div className="absolute -top-4 right-10 bg-yellow-500 text-black px-6 py-2.5 rounded-2xl flex items-center gap-3 z-20 shadow-2xl border-none">
                             <span className="text-xs font-black uppercase tracking-[0.3em] flex items-center gap-3">
-                                <Crown size={14} className="text-black" />
-                                ONLY 10 SEATS LEFT
+                                <MaterialIcon name="workspace_premium" size={14} className="text-black" />
+                                10 SEATS LEFT
                             </span>
                         </div>
 
@@ -252,20 +252,20 @@ const Pricing = () => {
                             {/* Everything in Growth callout */}
                             <div className="p-5 rounded-2xl bg-orange-500/5 border border-orange-500/10 mb-8">
                                 <p className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 flex items-center gap-2">
-                                    <Check size={14} /> Everything in Growth
+                                    <MaterialIcon name="check" size={14} /> Everything in Growth
                                 </p>
                             </div>
 
                             <div className="flex items-center gap-2 mb-6">
-                                <Crown size={14} className="text-gray-600" />
+                                <MaterialIcon name="workspace_premium" size={14} className="text-gray-600" />
                                 <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">PLUS</span>
                                 <div className="h-[1px] bg-white/5 flex-grow ml-2" />
                             </div>
                             <ul className="space-y-5">
                                 {[
-                                    { name: 'All future features included', icon: <Crown size={14} /> },
-                                    { name: '24/7 personal support', icon: <Bot size={14} /> },
-                                    { name: 'Life time access', icon: <Crown size={14} /> }
+                                    { name: 'All future features included', icon: <MaterialIcon name="workspace_premium" size={14} /> },
+                                    { name: '24/7 personal support', icon: <MaterialIcon name="smart_toy" size={14} /> },
+                                    { name: 'Life time access', icon: <MaterialIcon name="workspace_premium" size={14} /> }
                                     
                                 ].map((item) => (
                                     <li key={item.name} className="flex items-center gap-4">
@@ -284,11 +284,12 @@ const Pricing = () => {
                             <button
                                 onClick={() => handleCheckout('Lifetime')}
                                 disabled={!!isLoading || (slots ? slots.sold >= slots.total : false)}
+                                suppressHydrationWarning
                                 className="w-full py-6 rounded-2xl bg-white text-black font-black text-xs uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95 shadow-2xl shadow-white/5"
                             >
-                                {isLoading === 'Lifetime' ? <Loader2 size={16} className="animate-spin" /> : <>Get Lifetime Access <ArrowRight size={16} /></>}
+                                {isLoading === 'Lifetime' ? <MaterialIcon name="sync" size={16} className="animate-spin" /> : <>Get Lifetime Access <MaterialIcon name="arrow_right" size={16} /></>}
                             </button>
-                            <p className="mt-6 text-center text-[10px] font-black uppercase tracking-[0.3em] text-orange-500/70">
+                            <p className="mt-6 text-center text-[10px] font-black uppercase tracking-[0.3em] text-black">
                                 14-DAY MONEY BACK GUARANTEE
                             </p>
                         </div>

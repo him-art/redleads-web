@@ -2,7 +2,7 @@
 
 import { GuideNode } from '@/types/guide';
 import { motion } from 'framer-motion';
-import { ExternalLink, X } from 'lucide-react';
+import { X, ExternalLink } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useRouter } from 'next/navigation';
@@ -44,7 +44,7 @@ export default function NodeDetail({ node, onNavigate, onClose }: NodeDetailProp
                     </span>
                     <h2 className="text-2xl font-bold text-text-primary leading-tight">{node.title}</h2>
                 </div>
-                <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-lg text-text-secondary hover:text-text-primary transition-colors">
+                <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-lg text-text-secondary hover:text-text-primary transition-colors flex items-center justify-center">
                     <X size={20} />
                 </button>
             </div>

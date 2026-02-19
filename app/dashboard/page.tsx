@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import DashboardClient from './DashboardClient';
 import { Suspense } from 'react';
-import { Loader2 } from 'lucide-react';
+import LoadingIcon from '@/components/ui/LoadingIcon';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
@@ -46,7 +46,7 @@ export default async function DashboardPage(props: { searchParams: Promise<{ sea
         <main className="min-h-screen bg-[#050505]">
             <Suspense fallback={
                 <div className="flex h-screen items-center justify-center bg-[#050505] text-orange-500">
-                    <Loader2 className="animate-spin" size={40} />
+                    <LoadingIcon className="w-10 h-10 text-orange-500" />
                 </div>
             }>
                 <DashboardClient 

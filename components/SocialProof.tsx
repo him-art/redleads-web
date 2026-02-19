@@ -1,6 +1,6 @@
 'use client';
 
-import { Star } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
@@ -75,6 +75,13 @@ const testimonials = [
     content: "Great product for getting users from Reddit Reddit is a channel that people are still sleeping on",
     highlights: ["Great product", "users from Reddit", "still sleeping on"],
   },
+  {
+    name: "Alber Nahas",
+    handle: "@albertonahas92",
+    image: "/alber_new.png",
+    content: "I signed up for it man. It's really impressive. I love it.",
+    highlights: ["signed up", "really impressive", "I love it"],
+  },
 ];
 
 const TestimonialCard = ({ testimonial, index }: { testimonial: typeof testimonials[0], index: number }) => {
@@ -113,7 +120,7 @@ const TestimonialCard = ({ testimonial, index }: { testimonial: typeof testimoni
         {/* Stars */}
         <div className="flex gap-1 mb-5">
           {[...Array(5)].map((_, i) => (
-            <Star key={i} size={14} className="fill-orange-400 text-orange-400" />
+            <MaterialIcon key={i} name="grade" size={14} className="text-orange-400" />
           ))}
         </div>
 
@@ -153,8 +160,8 @@ export default function SocialProof() {
     <section className="py-24 bg-[#141414] relative overflow-hidden border-t border-white/5">
       {/* Background Blobs */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20">
-        <div className="absolute top-[-5%] left-[-5%] w-[30%] h-[30%] bg-orange-500/10 rounded-full blur-[100px]" />
-        <div className="absolute bottom-[-5%] right-[-5%] w-[30%] h-[30%] bg-orange-600/10 rounded-full blur-[100px]" />
+        <div className="absolute top-[-5%] left-[-5%] w-[30%] h-[30%] bg-orange-500/5 rounded-full" />
+        <div className="absolute bottom-[-5%] right-[-5%] w-[30%] h-[30%] bg-orange-600/5 rounded-full" />
       </div>
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">

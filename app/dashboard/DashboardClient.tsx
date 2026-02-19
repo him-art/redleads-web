@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Archive, Sliders, ShieldCheck, Navigation, Layout, Search, Menu, X, Sparkles, Clock, AlertTriangle, Zap, Loader2, GraduationCap, Lock } from 'lucide-react';
+import { X, Menu, Sparkles, Lock, Navigation, Archive, BookOpen, SlidersHorizontal, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
+import LoadingIcon from '@/components/ui/LoadingIcon';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 import ReportsTab from './ReportsTab';
@@ -42,7 +43,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
     // Trial expiration check - Moved up to use for initialization
     const isGrowth = profile?.subscription_tier === 'growth' || profile?.effective_tier === 'growth';
     const isStarter = profile?.subscription_tier === 'starter' || profile?.effective_tier === 'starter' || isGrowth;
-    const isAdmin = profile?.is_admin === true || user?.email === 'hjayaswar@gmail.com';
+    const isAdmin = profile?.is_admin === true;
     
     const trialEndsAtString = profile?.trial_ends_at || (profile?.created_at ? (() => {
         const d = new Date(profile.created_at);
@@ -90,9 +91,9 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
 
     const tabs = [
         { id: 'live', label: 'Command Center', icon: Navigation, protected: true },
-        { id: 'Guide', label: 'Guide', icon: GraduationCap, protected: true },
+        { id: 'Guide', label: 'Guide', icon: BookOpen, protected: true },
         { id: 'reports', label: 'Leads Archive', icon: Archive, protected: true },
-        { id: 'settings', label: 'Tracking Setup', icon: Sliders, protected: true },
+        { id: 'settings', label: 'Tracking Setup', icon: SlidersHorizontal, protected: true },
         { id: 'billing', label: 'Billing & Plan', icon: ShieldCheck, protected: false },
     ];
 
@@ -100,7 +101,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
     if (!isMounted) {
         return (
             <div className="flex items-center justify-center min-h-[calc(100vh-12rem)]">
-                <Loader2 className="animate-spin text-orange-500" size={40} />
+                <LoadingIcon className="w-10 h-10 text-orange-500" />
             </div>
         );
     }
@@ -127,7 +128,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                 <div className="flex h-screen bg-void text-text-primary overflow-hidden font-sans selection:bg-primary/30 relative">
                 
                 {/* Mobile Header Toggle */}
-                <div className="lg:hidden absolute top-0 left-0 right-0 z-50 p-4 bg-void/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between">
+                <div className="lg:hidden absolute top-0 left-0 right-0 z-50 p-4 bg-void border-b border-white/5 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                          <div className="w-8 h-8 relative">
                             <Image 
@@ -141,7 +142,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                     </div>
                     <button 
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className="p-2 text-text-secondary hover:text-text-primary transition-colors"
+                        className="p-2 text-text-secondary hover:text-text-primary transition-colors flex items-center justify-center"
                     >
                         {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                     </button>
@@ -185,7 +186,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                              <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest opacity-60">Menu</span>
                         </div>
                         {tabs.map((tab) => {
-                            const Icon = tab.icon;
+                            const TabIcon = tab.icon;
                             const isActive = activeTab === tab.id;
                             const isLocked = isActuallyExpired && tab.protected;
 
@@ -208,7 +209,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                     {isActive && !isLocked && (
                                         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-primary rounded-r-full shadow-[0_0_10px_rgba(255,88,54,0.5)]" />
                                     )}
-                                    <Icon size={18} className={`relative z-10 transition-colors ${isLocked ? 'text-text-secondary' : isActive ? 'text-primary' : 'group-hover:text-text-primary'}`} />
+                                    <TabIcon size={18} className={`relative z-10 transition-colors ${isLocked ? 'text-text-secondary' : isActive ? 'text-primary' : 'group-hover:text-text-primary'}`} />
                                     <span className={`relative z-10 text-sm font-medium tracking-wide ${isActive && !isLocked ? 'text-text-primary' : ''}`}>
                                         {tab.label}
                                     </span>
@@ -222,7 +223,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
 
                     {/* User Profile / Footer */}
                     <div className="mt-auto pt-6 border-t border-border-subtle">
-                        <div className="p-3 rounded-xl bg-white/[0.03] border border-border-subtle flex items-center gap-3 backdrop-blur-sm">
+                        <div className="p-3 rounded-xl bg-white/[0.03] border border-border-subtle flex items-center gap-3">
                             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-zinc-800 to-black flex items-center justify-center border border-white/10 text-text-primary">
                                 <span className="text-xs font-bold">
                                     {user.email?.[0].toUpperCase()}
@@ -231,7 +232,11 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                             <div className="overflow-hidden">
                                 <p className="text-xs font-bold text-text-primary truncate">{user.email}</p>
                                 <p className="text-[10px] text-text-secondary truncate">
-                                    {isAdmin ? 'Administrator' : profile?.subscription_tier === 'lifetime' ? 'Lifetime Founder' : isGrowth ? 'Growth Member' : isStarter ? 'Starter Member' : 'Free Trial'}
+                                    {isAdmin ? 'Administrator' : 
+                                     profile?.subscription_tier === 'lifetime' ? 'Lifetime Plan' : 
+                                     isGrowth ? 'Growth Plan' : 
+                                     isStarter ? 'Starter Plan' : 
+                                     'Trial Plan'}
                                 </p>
                             </div>
                         </div>
@@ -329,9 +334,9 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                             className="fixed top-0 right-0 z-[60] w-full sm:w-[500px] h-screen bg-[#0A0A0A] border-l border-white/5 shadow-2xl flex flex-col pt-20 lg:pt-0"
                         >
                             {/* Sidebar Header */}
-                            <div className="flex items-center justify-between p-6 border-b border-white/5 bg-void/50 backdrop-blur-md">
+                            <div className="flex items-center justify-between p-6 border-b border-white/5 bg-void/80">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+                                    <div className="p-2 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
                                         <Sparkles size={18} className="text-primary" />
                                     </div>
                                     <div>
@@ -341,7 +346,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                 </div>
                                 <button 
                                     onClick={() => setDraftingLead(null)}
-                                    className="p-2 rounded-xl hover:bg-white/5 text-text-secondary hover:text-text-primary transition-all"
+                                    className="p-2 rounded-xl hover:bg-white/5 text-text-secondary hover:text-text-primary transition-all flex items-center justify-center"
                                 >
                                     <X size={20} />
                                 </button>

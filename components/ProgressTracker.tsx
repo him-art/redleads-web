@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Target, TrendingUp, Users, ShieldAlert, Award, Zap, Clock } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 
 interface ProgressTrackerProps {
     contactedCount: number;
@@ -32,7 +32,7 @@ export default function ProgressTracker({ contactedCount, dailyCount, goal = 100
                     <div className="flex-shrink-0 text-center md:text-left space-y-2">
                         <div className="flex items-center justify-center md:justify-start gap-3 mb-1">
                             <div className={`${levelBg[level-1]} p-2.5 rounded-2xl ${levelColors[level-1]}`}>
-                                <Award size={24} />
+                                <MaterialIcon name="military_tech" size={24} />
                             </div>
                             <div>
                                 <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">Expert Level {level}</h4>
@@ -53,7 +53,7 @@ export default function ProgressTracker({ contactedCount, dailyCount, goal = 100
                         <div className="flex justify-between items-end">
                             <div className="space-y-1">
                                 <span className="text-xs font-black text-white uppercase tracking-widest flex items-center gap-2">
-                                    <Target size={14} className="text-orange-500" />
+                                    <MaterialIcon name="target" size={14} className="text-orange-500" />
                                     The First 100 Users
                                 </span>
                             </div>
@@ -82,7 +82,7 @@ export default function ProgressTracker({ contactedCount, dailyCount, goal = 100
             <div className="relative overflow-hidden rounded-[2rem] bg-[#0A0A0A] border border-white/5 p-6 flex flex-col justify-between group">
                 <div className="flex justify-between items-start">
                     <div className={`p-2 rounded-xl border ${safetyStatus === 'SAFE' ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'}`}>
-                        <ShieldAlert size={20} />
+                        <MaterialIcon name="shield" size={20} />
                     </div>
                     <div className="text-right">
                         <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Safety Radar</span>
@@ -105,7 +105,7 @@ export default function ProgressTracker({ contactedCount, dailyCount, goal = 100
                     </div>
 
                     <div className="flex items-center gap-2 pt-1">
-                        <Clock size={12} className="text-gray-600" />
+                        <MaterialIcon name="schedule" size={12} className="text-gray-600" />
                         <p className="text-[9px] font-bold text-gray-600 uppercase tracking-tight">
                             {safetyStatus === 'STOP' 
                                 ? "Critical! Take a 2-hour break." 

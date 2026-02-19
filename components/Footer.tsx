@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Twitter } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 
 const Footer = () => {
   return (
@@ -53,14 +53,6 @@ const Footer = () => {
           {/* LEGAL & CONTACT */}
           <div className="flex flex-col gap-4">
              <h3 className="font-bold text-gray-500 text-[10px] tracking-widest uppercase">Legal</h3>
-             <a 
-              href="https://x.com/timjayas" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-gray-400 hover:text-white transition-colors"
-             >
-               Twitter
-             </a>
              <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</Link>
              <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">Terms & Conditions</Link>
              

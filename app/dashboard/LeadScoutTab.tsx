@@ -11,7 +11,7 @@ export default function LeadScoutTab({ user, profile }: LeadScoutTabProps) {
         <section className="space-y-6">
             <div>
                 <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2 rounded-lg bg-white/5 text-text-secondary">
+                    <div className="p-2 rounded-lg bg-white/5 text-text-secondary flex items-center justify-center">
                         <Search size={22} />
                     </div>
                     <h2 className="text-3xl font-black tracking-tight text-text-primary">Deep Scout</h2>

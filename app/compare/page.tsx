@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Metadata } from 'next';
-import { ArrowRight, CheckCircle, XCircle, Scale } from 'lucide-react';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 import { getAllComparisons } from './data';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -38,26 +38,26 @@ export default function ComparePage() {
         <div className="max-w-4xl mx-auto mb-16">
           <div className="p-8 bg-[#222] border border-white/5 rounded-3xl">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-              <Scale className="text-orange-500" size={24} />
+              <MaterialIcon name="balance" size={24} className="text-orange-500" />
               Why Choose RedLeads?
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="flex items-start gap-3">
-                <CheckCircle className="text-green-500 shrink-0 mt-1" size={18} />
+                        <MaterialIcon name="check_circle" size={16} className="text-green-500" />
                 <div>
                   <p className="font-bold text-white">AI Lead Scoring</p>
                   <p className="text-sm text-slate-400">Automatically identifies high-intent leads</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <CheckCircle className="text-green-500 shrink-0 mt-1" size={18} />
+                        <MaterialIcon name="check_circle" size={16} className="text-green-500" />
                 <div>
                   <p className="font-bold text-white">Buyer Intent Detection</p>
                   <p className="text-sm text-slate-400">Understands context, not just keywords</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <CheckCircle className="text-green-500 shrink-0 mt-1" size={18} />
+                        <MaterialIcon name="check_circle" size={16} className="text-green-500" />
                 <div>
                   <p className="font-bold text-white">No Ban Risk</p>
                   <p className="text-sm text-slate-400">Human-in-the-loop for authentic engagement</p>
@@ -80,7 +80,7 @@ export default function ComparePage() {
                 <div className="p-6 border-b border-white/5">
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-xl font-bold text-white">RedLeads</span>
-                    <span className="text-slate-500 text-sm">vs</span>
+                        <MaterialIcon name="cancel" size={14} className="text-red-500 shrink-0 mt-0.5" />
                     <span className="text-xl font-bold text-slate-400">{comparison.competitor}</span>
                   </div>
                   <p className="text-sm text-slate-400 line-clamp-2">
@@ -94,29 +94,29 @@ export default function ComparePage() {
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-slate-400">AI Lead Scoring</span>
                       <div className="flex items-center gap-4">
-                        <CheckCircle className="text-green-500" size={16} />
+                        <MaterialIcon name="check_circle" size={16} className="text-green-500" />
                         {comparison.features.find(f => f.name === 'AI-Powered Lead Scoring')?.competitor ? (
-                          <CheckCircle className="text-green-500" size={16} />
+                          <MaterialIcon name="check_circle" size={16} className="text-green-500" />
                         ) : (
-                          <XCircle className="text-red-500" size={16} />
+                          <MaterialIcon name="cancel" size={16} className="text-red-500" />
                         )}
                       </div>
                     </div>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-slate-400">Buyer Intent</span>
                       <div className="flex items-center gap-4">
-                        <CheckCircle className="text-green-500" size={16} />
-                        <XCircle className="text-red-500" size={16} />
+                        <MaterialIcon name="check_circle" size={16} className="text-green-500" />
+                          <MaterialIcon name="cancel" size={16} className="text-red-500" />
                       </div>
                     </div>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-slate-400">Free Trial</span>
                       <div className="flex items-center gap-4">
-                        <CheckCircle className="text-green-500" size={16} />
+                        <MaterialIcon name="check_circle" size={16} className="text-green-500" />
                         {comparison.pricing.competitor.toLowerCase().includes('free') ? (
-                          <CheckCircle className="text-green-500" size={16} />
+                          <MaterialIcon name="check_circle" size={16} className="text-green-500" />
                         ) : (
-                          <XCircle className="text-red-500" size={16} />
+                          <MaterialIcon name="cancel" size={16} className="text-red-500" />
                         )}
                       </div>
                     </div>
@@ -126,7 +126,7 @@ export default function ComparePage() {
                 {/* Read More */}
                 <div className="px-6 pb-6">
                   <span className="inline-flex items-center gap-2 text-sm font-bold text-orange-500 group-hover:gap-3 transition-all">
-                    Full Comparison <ArrowRight size={14} />
+                    Full Comparison <MaterialIcon name="arrow_right" size={14} />
                   </span>
                 </div>
               </article>
@@ -147,7 +147,7 @@ export default function ComparePage() {
               href="/"
               className="inline-flex items-center gap-2 px-8 py-4 bg-orange-500 text-white font-black text-xs uppercase tracking-widest rounded-xl hover:bg-orange-600 transition-colors"
             >
-              Start Free Trial <ArrowRight size={14} />
+              Start Free Trial <MaterialIcon name="arrow_right" size={14} />
             </Link>
           </div>
         </div>
