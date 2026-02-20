@@ -27,7 +27,7 @@ export default function ComparePage() {
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight">
-            RedLeads <span className="text-orange-500 font-serif italic">vs</span> description
+            RedLeads <span className="text-orange-500 font-serif italic">vs</span> The Competition
           </h1>
           <p className="text-lg text-slate-400 max-w-2xl mx-auto">
             See how RedLeads compares to other Reddit marketing tools. Find the best solution for finding customers on Reddit.

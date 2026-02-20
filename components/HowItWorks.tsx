@@ -38,6 +38,7 @@ const HowItWorks = () => {
                     src="/how-it-works-step1.png" 
                     alt="Scan your website" 
                     fill 
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-contain"
                   />
               </div>
@@ -62,6 +63,7 @@ const HowItWorks = () => {
                     src="/how-it-works-step2.png" 
                     alt="Research threads" 
                     fill 
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-contain"
                   />
               </div>
@@ -86,6 +88,7 @@ const HowItWorks = () => {
                     src="/how-it-works-step3.png" 
                     alt="Engage via comments and DMs" 
                     fill 
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-contain"
                   />
               </div>

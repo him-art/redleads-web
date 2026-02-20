@@ -137,6 +137,7 @@ const TestimonialCard = ({ testimonial, index }: { testimonial: typeof testimoni
                 src={testimonial.image} 
                 alt={testimonial.name} 
                 fill 
+                sizes="40px"
                 className="object-cover"
               />
             </div>

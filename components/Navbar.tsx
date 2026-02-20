@@ -46,9 +46,9 @@ const Navbar = () => {
         {/* Left: RedLeads Brand */}
         <Link 
           href="/"
-          className="px-8 py-3 bg-white border border-white/40 rounded-full hover:scale-[1.02] transition-all duration-300 pointer-events-auto flex items-center shadow-sm"
+          className="px-8 py-3 bg-white border border-white/40 rounded-full pointer-events-auto flex items-center"
         >
-          <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900">
+          <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
             RedLeads
           </span>
         </Link>
@@ -57,6 +57,7 @@ const Navbar = () => {
         <div className="hidden lg:flex items-center gap-8 px-8 py-3 bg-white border border-white/40 rounded-full pointer-events-auto">
           <div className="flex gap-8 text-sm font-bold text-slate-600">
             <Link href="/#how-it-works" className="hover:text-slate-900 transition-colors">How it Works</Link>
+            <Link href="/#features" className="hover:text-slate-900 transition-colors">Features</Link>
             {user && (
               <Link href="/dashboard" className="text-[#f25e36] hover:text-[#d94a24] transition-colors">Dashboard</Link>
             )}
@@ -128,6 +129,14 @@ const Navbar = () => {
                     onClick={() => setIsMenuOpen(false)}
                   >
                     How it Works
+                  </Link>
+
+                  <Link 
+                    href="/#features" 
+                    className="block text-lg font-bold text-slate-800 hover:text-[#f25e36] transition-colors py-2"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Features
                   </Link>
                   
                   {user && (

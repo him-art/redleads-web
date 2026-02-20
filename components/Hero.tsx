@@ -57,17 +57,17 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
       {/* Floating Elements - Hidden on mobile, visible on large screens */}
       <div className="absolute inset-0 max-w-[1800px] mx-auto pointer-events-none overflow-hidden z-0">
          {/* Left Side */}
-         <FloatingBubble className="top-[15%] left-[5%] xl:left-[8%]" delay={0} duration={3.2} floatDelay={0} />
-         <FloatingBubble className="top-[32%] left-[2%] xl:left-[4%]" delay={1.5} scale={1.1} duration={3.8} floatDelay={1.2} />
-         <FloatingBubble className="top-[50%] left-[8%] xl:left-[10%]" delay={0.8} duration={3.5} floatDelay={0.5} />
+         <FloatingBubble className="top-[18%] left-[5%] xl:left-[8%]" delay={0} duration={3.2} floatDelay={0} />
+         <FloatingBubble className="top-[28%] left-[2%] xl:left-[4%]" delay={1.5} scale={1.1} duration={3.8} floatDelay={1.2} />
+         <FloatingBubble className="top-[38%] left-[8%] xl:left-[10%]" delay={0.8} duration={3.5} floatDelay={0.5} />
 
          {/* Right Side */}
-         <FloatingBubble className="top-[18%] right-[5%] xl:right-[8%]" delay={0.5} scale={1.05} duration={3.4} floatDelay={0.8} />
-         <FloatingBubble className="top-[35%] right-[2%] xl:right-[4%]" delay={2} duration={3.9} floatDelay={1.5} />
-         <FloatingBubble className="top-[55%] right-[7%] xl:right-[10%]" delay={1.2} scale={0.95} duration={3.3} floatDelay={0.2} />
-      </div>
+         <FloatingBubble className="top-[20%] right-[5%] xl:right-[8%]" delay={0.5} scale={1.05} duration={3.4} floatDelay={0.8} />
+         <FloatingBubble className="top-[30%] right-[2%] xl:right-[4%]" delay={2} duration={3.9} floatDelay={1.5} />
+         <FloatingBubble className="top-[40%] right-[7%] xl:right-[10%]" delay={1.2} scale={0.95} duration={3.3} floatDelay={0.2} />
+         </div>
 
-      <div className="relative z-10 container mx-auto px-4 pt-32 pb-0 md:pt-40 md:pb-0 flex flex-col items-center text-center">
+      <div className="relative z-10 container mx-auto px-4 pt-32 pb-0 md:pt-27 md:pb-0 flex flex-col items-center text-center">
       
 
         {/* Main Headline - Serif & Minimal */}
@@ -77,11 +77,11 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
           {/* Forced three lines for branding presence */}
         
           <span className="flex flex-wrap items-center font-medium justify-center gap-x-3 sm:gap-x-6 sm:whitespace-nowrap">
-            <span>Find your</span>
-            <span className="text-[#ff6900] font-bold font-medium">first 100 users</span>
+            <span>Get Your</span>
+            <span className="text-orange-500 font-serif-italic">First 100 Users</span>
           </span>
           <span className="block font-medium sm:whitespace-nowrap">
-            <span>on Reddit</span>
+            <span>From Reddit</span>
           </span>
         </h1>
 
@@ -168,7 +168,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
             whileInView={{ rotateX: 0, scale: 1 }}
             viewport={{ margin: "0px 0px -200px 0px" }}
             transition={{ duration: 0.8 }}
-            className="relative rounded-2xl border border-white/5 bg-[#141414] p-2 text-left flex max-h-[620px] origin-top"
+            className="relative rounded-2xl border border-white/5 bg-white/5 p-2 text-left flex max-h-[620px] origin-top"
           >
             <div className="flex w-full rounded-xl overflow-hidden bg-[#080808] border border-white/5">
 
@@ -183,6 +183,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                       src="/redleads-logo-white.png" 
                       alt="RedLeads Logo" 
                       fill
+                      sizes="32px"
                       className="object-contain"
                     />
                   </div>
@@ -353,22 +354,22 @@ function FloatingBubble({ className, delay = 0, scale = 1, duration = 3, floatDe
         opacity: { duration: 1, delay },
         y: { duration, repeat: Infinity, ease: "easeInOut", delay: floatDelay } 
       }}
-      className={`absolute hidden xl:flex items-center gap-3 p-3 bg-white/7 border border-white/5 rounded-full w-[180px] shadow-xl shadow-black/5 ${className}`}
+      className={`absolute hidden xl:flex items-center gap-2 p-2 bg-white/7 border border-white/5 rounded-full w-[140px] shadow-xl shadow-black/5 ${className}`}
       style={{ scale }}
     >
-      <div className="w-8 h-8 rounded-full bg-transparent flex items-center justify-center flex-shrink-0 overflow-hidden">
+      <div className="w-6 h-6 rounded-full bg-transparent flex items-center justify-center flex-shrink-0 overflow-hidden">
            <Image 
              src="/reddit-new-logo.png" 
              alt="Reddit" 
-             width={32} 
-             height={32} 
+             width={24} 
+             height={24} 
              priority
              className="w-full h-full object-contain"
            />
       </div>
-      <div className="flex-1 space-y-2">
-         <div className="h-1.5 bg-slate-200 rounded-full w-3/4" />
-         <div className="h-1.5 bg-slate-100 rounded-full w-1/2" />
+      <div className="flex-1 space-y-1">
+         <div className="h-1 bg-slate-200 rounded-full w-3/4" />
+         <div className="h-1 bg-slate-100 rounded-full w-1/2" />
       </div>
     </motion.div>
   );

@@ -41,7 +41,7 @@ export default function RedditOpportunity() {
         {/* Section Heading */}
         <div className="text-center max-w-[90vw] mx-auto mb-16 px-4">
             <h2 className="text-4xl md:text-[5rem] font-black text-white leading-[1.05] tracking-tighter mb-4">
-                <span className="block whitespace-nowrap">How <span className="text-[#ff914d] font-serif-italic">Reddit Marketing</span></span>
+                <span className="block whitespace-nowrap">How <span className="text-orange-500 font-serif-italic">Reddit Marketing</span></span>
                 <span className="block whitespace-nowrap">Helps You Get Customers</span>
             </h2>
         </div>
@@ -55,6 +55,7 @@ export default function RedditOpportunity() {
                             src="/reddit-logo.png" 
                             alt="Reddit Logo" 
                             fill
+                            sizes="56px"
                             priority
                             className="object-contain" 
                          />
@@ -83,6 +84,7 @@ export default function RedditOpportunity() {
                     src="/reddit-opportunity-step1.png" 
                     alt="Reddit discussions example" 
                     fill 
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover"
                 />
             </Card>
@@ -97,6 +99,7 @@ export default function RedditOpportunity() {
                     src="/reddit-opportunity-step2.png" 
                     alt="AI Training Funnel" 
                     fill 
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover"
                 />
             </Card>
@@ -110,6 +113,7 @@ export default function RedditOpportunity() {
                     src="/reddit-opportunity-step3.png" 
                     alt="Authentic Reddit Conversations" 
                     fill 
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover"
                 />
             </Card>

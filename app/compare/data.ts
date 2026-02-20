@@ -24,6 +24,7 @@ export interface ComparisonData {
     competitor: string[];
   };
   verdict: string;
+  mainToolName?: string;
 }
 
 export const comparisons: ComparisonData[] = [
@@ -509,7 +510,62 @@ export const comparisons: ComparisonData[] = [
       competitor: ['Too much noise', 'Generic scoring', 'Pricey for simple needs'],
     },
     verdict: 'Mention is great for **PR teams** tracking brand sentiment. RedLeads is designed for **Solofounders** who need to find and talk to customers on Reddit specifically.',
-  }
+  },
+  {
+    slug: 'f5bot-vs-brand24',
+    mainToolName: 'F5Bot',
+    competitor: 'Brand24',
+    competitorDescription: 'A premium social listening tool for enterprise brands.',
+    title: 'F5Bot vs Brand24: Free Monitoring vs Enterprise Listening (2026)',
+    description: 'Compare the free F5Bot with the enterprise-grade Brand24. See which tool is right for your Reddit monitoring needs.',
+    keywords: ['F5Bot vs Brand24', 'free reddit monitoring vs paid', 'social listening comparison'],
+    features: [
+      { name: 'Cost', redleads: 'Free', competitor: 'Expensive ($99+/mo)' }, // redleads = F5Bot
+      { name: 'Reddit Monitoring', redleads: true, competitor: true },
+      { name: 'Web Monitoring', redleads: false, competitor: true },
+      { name: 'Real-Time Alerts', redleads: true, competitor: true },
+      { name: 'Sentiment Analysis', redleads: false, competitor: true },
+      { name: 'Lead Scoring', redleads: false, competitor: false }, // Neither has it
+    ],
+    pricing: { redleads: 'Free', competitor: 'Starts at $99/mo' },
+    pros: {
+      redleads: ['Completely free', 'Simple setup', 'Good for basic keywords'], // F5Bot Pros
+      competitor: ['Monitors entire web', 'Sentiment analysis', 'Professional reports'], // Brand24 Pros
+    },
+    cons: {
+      redleads: ['Reddit/HN only', 'No analytics', 'No team features'], // F5Bot Cons
+      competitor: ['Very expensive', 'Overkill for just Reddit', 'No intent filter'], // Brand24 Cons
+    },
+    verdict: 'This is a classic "Free vs Enterprise" choice. Use **F5Bot** if you have zero budget and just want keyword emails. Use **Brand24** if you are a large brand needing to track global sentiment. <br/><br/>**However, if you are a founder actually trying to get customers from Reddit, neither tool is ideal.** F5Bot is too basic, and Brand24 is too broad. Give **RedLeads** a try - it\'s built specifically for lead generation.',
+  },
+  {
+    slug: 'redleads-vs-google-alerts',
+    competitor: 'Google Alerts',
+    competitorDescription: 'The free, ubiquitous web monitoring tool by Google.',
+    title: 'RedLeads vs Google Alerts: Why Google Misses 90% of Reddit Leads',
+    description: 'Google Alerts is great for news, but terrible for Reddit lead generation. See why RedLeads is the superior choice for finding customers.',
+    keywords: ['RedLeads vs Google Alerts', 'google alerts for reddit', 'better than google alerts'],
+    features: [
+      { name: 'Cost', redleads: 'Paid', competitor: 'Free' },
+      { name: 'Reddit Coverage', redleads: 'Real-time', competitor: 'Slow/Sparse' },
+      { name: 'Buying Intent AI', redleads: true, competitor: false },
+      { name: 'Lead Scoring', redleads: true, competitor: false },
+      { name: 'Email Alerts', redleads: true, competitor: true },
+    ],
+    pricing: {
+      redleads: 'Starts at $29/mo',
+      competitor: 'Free',
+    },
+    pros: {
+      redleads: ['Built for Reddit', 'AI filters spam', 'Finds customers, not just keywords'], // RedLeads Pros
+      competitor: ['Completely free', 'Monitors entire web', 'Simple setup'], // Google Alerts Pros
+    },
+    cons: {
+      redleads: ['Reddit only (currently)', 'Paid tool'], // RedLeads Cons
+      competitor: ['Misses most Reddit posts', 'No context/intent analysis', 'Floods inbox with noise'], // Google Alerts Cons
+    },
+    verdict: 'Google Alerts is for **PR**, RedLeads is for **Sales**. <br/><br/>If you want to know when your brand is mentioned in the New York Times, use Google Alerts. If you want to find a guy in r/SaaS asking for a product exactly like yours, use **RedLeads**. Google Alerts simply cannot understand the context of a Reddit discussion.',
+  },
 ];
 
 export function getComparisonBySlug(slug: string): ComparisonData | undefined {

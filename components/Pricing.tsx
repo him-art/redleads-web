@@ -107,7 +107,7 @@ const Pricing = () => {
                     <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ff914d] mb-6 font-mono">PRICING</p>
                     <h2 className="text-4xl md:text-[5rem] font-black text-white mb-6 tracking-tighter leading-[1.05] max-w-[90vw] mx-auto">
                         <span className="block whitespace-nowrap">Start getting</span>
-                        <span className="block text-[#ff914d] font-serif-italic whitespace-nowrap">customers from Reddit</span>
+                        <span className="block text-orange-500 font-serif-italic whitespace-nowrap">customers from Reddit</span>
                     </h2>
                     <p className="text-sm md:text-base text-gray-500 max-w-xl mx-auto font-medium uppercase tracking-widest leading-relaxed mb-10">
                         Find the perfect conversations from Reddit to promote your product.

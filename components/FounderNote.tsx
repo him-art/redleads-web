@@ -162,6 +162,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
                 src={testimonial.image} 
                 alt={testimonial.name} 
                 fill 
+                sizes="48px"
                 className="object-cover"
               />
             </div>
@@ -208,6 +209,7 @@ export default function FounderNote() {
                   src="/founder.png" 
                   alt="Tim Jayas" 
                   fill 
+                  sizes="(max-width: 768px) 160px, 192px"
                   className="object-cover"
                 />
               </div>
@@ -224,7 +226,7 @@ export default function FounderNote() {
               </div>
               
               <h2 className="text-3xl md:text-[2.75rem] font-bold text-white leading-tight tracking-tight mb-8">
-                Built by a founder tired of missing <span className="text-orange-500">Reddit opportunities</span>
+                Built by a founder tired of missing <span className="text-orange-500 font-serif-italic">Reddit opportunities</span>
               </h2>
               
               <div className="space-y-6 text-gray-400 text-sm md:text-[15px] leading-relaxed max-w-2xl">

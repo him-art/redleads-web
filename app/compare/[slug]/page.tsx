@@ -31,9 +31,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: comparison.title,
     description: comparison.description,
     keywords: comparison.keywords,
+    alternates: {
+      canonical: `/compare/${comparison.slug}`,
+    },
     openGraph: {
       title: comparison.title,
       description: comparison.description,
+      url: `https://www.redleads.app/compare/${comparison.slug}`,
       type: 'article',
     },
     twitter: {
@@ -51,12 +55,40 @@ export default async function ComparisonPage({ params }: Props) {
   if (!comparison) {
     notFound();
   }
+  
+  const mainToolName = comparison.mainToolName || 'RedLeads';
 
   const allComparisons = getAllComparisons();
   const otherComparisons = allComparisons.filter(c => c.slug !== slug).slice(0, 3);
 
   return (
     <main className="min-h-screen bg-[#1a1a1a]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "TechArticle",
+            "headline": comparison.title,
+            "description": comparison.description,
+            "image": "https://www.redleads.app/og-image.png",
+            "author": {
+              "@type": "Organization",
+              "name": "RedLeads"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "RedLeads",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://www.redleads.app/icon.png"
+              }
+            },
+            "datePublished": new Date().toISOString(),
+            "dateModified": new Date().toISOString()
+          })
+        }}
+      />
       <Navbar />
       
       <article className="container mx-auto px-4 pt-32 pb-24">
@@ -72,7 +104,7 @@ export default async function ComparisonPage({ params }: Props) {
         {/* Header */}
         <header className="max-w-4xl mx-auto text-center mb-16">
           <div className="flex items-center justify-center gap-4 mb-8">
-            <span className="text-3xl md:text-4xl font-black text-orange-500">RedLeads</span>
+            <span className="text-3xl md:text-4xl font-black text-orange-500">{mainToolName}</span>
             <span className="text-2xl text-slate-500">vs</span>
             <span className="text-3xl md:text-4xl font-black text-slate-400">{comparison.competitor}</span>
           </div>
@@ -94,7 +126,7 @@ export default async function ComparisonPage({ params }: Props) {
               <thead>
                 <tr className="border-b border-white/10">
                   <th className="text-left p-4 text-slate-400 font-medium">Feature</th>
-                  <th className="p-4 text-center text-orange-500 font-bold">RedLeads</th>
+                  <th className="p-4 text-center text-orange-500 font-bold">{mainToolName}</th>
                   <th className="p-4 text-center text-slate-400 font-bold">{comparison.competitor}</th>
                 </tr>
               </thead>
@@ -136,7 +168,7 @@ export default async function ComparisonPage({ params }: Props) {
           <h2 className="text-2xl font-bold text-white mb-6">Pricing</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="p-6 bg-[#222] border border-orange-500/30 rounded-2xl">
-              <h3 className="text-lg font-bold text-orange-500 mb-2">RedLeads</h3>
+              <h3 className="text-lg font-bold text-orange-500 mb-2">{mainToolName}</h3>
               <p className="text-white text-xl font-bold">{comparison.pricing.redleads}</p>
             </div>
             <div className="p-6 bg-[#222] border border-white/5 rounded-2xl">
@@ -152,7 +184,7 @@ export default async function ComparisonPage({ params }: Props) {
           <div className="grid md:grid-cols-2 gap-8">
             {/* RedLeads */}
             <div>
-              <h3 className="text-lg font-bold text-orange-500 mb-4">RedLeads</h3>
+              <h3 className="text-lg font-bold text-orange-500 mb-4">{mainToolName}</h3>
               <div className="space-y-6">
                 <div className="p-4 bg-[#222] border border-white/5 rounded-xl">
                   <h4 className="text-sm font-bold text-green-500 mb-3 flex items-center gap-2">
@@ -259,7 +291,7 @@ export default async function ComparisonPage({ params }: Props) {
                   className="group p-6 bg-[#222] border border-white/5 rounded-2xl hover:border-orange-500/30 transition-all"
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-orange-500 font-bold">RedLeads</span>
+                    <span className="text-orange-500 font-bold">{other.mainToolName || 'RedLeads'}</span>
                     <span className="text-slate-500 text-sm">vs</span>
                     <span className="text-slate-400 font-bold">{other.competitor}</span>
                   </div>

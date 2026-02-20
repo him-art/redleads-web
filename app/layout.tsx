@@ -3,6 +3,7 @@ import { Outfit, EB_Garamond } from "next/font/google";
 import "./globals.css";
 import AnalyticsListener from "@/components/AnalyticsListener";
 import ClarityProvider from "@/components/providers/ClarityProvider";
+import StickyLeadMagnet from "@/components/StickyLeadMagnet";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -210,6 +211,7 @@ export default function RootLayout({
         <ClarityProvider>
           {children}
           <AnalyticsListener />
+          <StickyLeadMagnet />
         </ClarityProvider>
       </body>
     </html>

@@ -135,6 +135,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                 src="/redleads-logo-white.png" 
                                 alt="RedLeads Logo" 
                                 fill
+                                sizes="32px"
                                 className="object-contain" 
                             />
                         </div>
@@ -170,6 +171,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                     src="/redleads-logo-white.png" 
                                     alt="RedLeads Logo" 
                                     fill
+                                    sizes="40px"
                                     className="object-contain"
                                 />
                             </div>
