@@ -10,7 +10,7 @@ const features = [
     id: 'scoring',
     icon: 'target',
     title: "AI-Powered Scoring",
-    description: "Every post is scored 0-100 based on relevance to your product.",
+    description: "Every post is scored based on relevance to your product.",
     color: "text-orange-500",
     bg: "bg-orange-500/10"
   },
@@ -352,7 +352,7 @@ const SEOPreview = () => (
       <div className="p-4 border-b border-white/5 bg-white/[0.02] flex items-center gap-3">
         <MaterialIcon name="public" size={16} className="text-gray-600" />
         <div className="flex-1 h-8 rounded-full bg-white/5 border border-white/5 flex items-center px-4">
-          <span className="text-xs text-gray-400">google.com/search?q=best+reddit+marketing+tool</span>
+          <span className="text-xs text-gray-400">google.com</span>
         </div>
       </div>
       

@@ -14,7 +14,7 @@ export default function OpportunityFinderPage() {
         <main className="min-h-screen bg-[#1a1a1a]">
             <Navbar />
             
-            <section className="container mx-auto px-4 pt-40 pb-20">
+            <section className="container mx-auto px-4 pt-25 pb-20 border-b border-white/5">
                 <div className="max-w-4xl mx-auto text-center mb-16">
                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-orange-500/20 rounded-full mb-8">
                         <MaterialIcon name="search" size={16} className="text-orange-500" />

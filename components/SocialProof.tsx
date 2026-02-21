@@ -82,6 +82,20 @@ const testimonials = [
     content: "I signed up for it man. It's really impressive. I love it.",
     highlights: ["signed up", "really impressive", "I love it"],
   },
+  {
+    name: "Yaser Abbass",
+    handle: "@yaserabbass",
+    image: "/yaser.png",
+    content: "Finding users on Reddit usually takes hours of manual searching. Having a tool that pulls relevant threads automatically is huge.",
+    highlights: ["hours of manual searching", "pulls relevant threads automatically"],
+  },
+  {
+    name: "Udayan",
+    handle: "@ud_ambwani",
+    image: "/Udayan.png",
+    content: "Reddit as a user discovery channel is massively slept on for SaaS. Most founders are fighting for attention on X while people are literally typing their problems into Reddit search bars every day. Smart move building a tool around that.",
+    highlights: ["massively slept on for SaaS", "typing their problems into Reddit search bars", "Smart move"],
+  },
 ];
 
 const TestimonialCard = ({ testimonial, index }: { testimonial: typeof testimonials[0], index: number }) => {

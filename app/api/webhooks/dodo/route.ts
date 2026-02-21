@@ -93,6 +93,7 @@ export async function POST(req: Request) {
                             keyword_limit: keywordLimit,
                             subscription_started_at: new Date().toISOString(),
                             dodo_customer_id: data.customer?.customer_id || data.customer_id || null,
+                            dodo_subscription_id: data.subscription_id || null,
                         })
                         .eq('id', userId);
 

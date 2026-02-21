@@ -66,7 +66,7 @@ const Footer = () => {
           {/* Column 5: Company */}
           <div className="flex flex-col gap-4">
              <h3 className="font-bold text-gray-400 text-[10px] tracking-widest uppercase">Company</h3>
-             <a href="mailto:RedLeads.app@gmail.com" className="text-gray-400 hover:text-white transition-colors text-[13px]">Contact Support</a>
+              <a href="mailto:RedLeads.app@gmail.com" className="text-gray-400 hover:text-white transition-colors text-[13px]">Contact Support</a>
              <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors text-[13px]">Privacy Policy</Link>
              <Link href="/terms" className="text-gray-400 hover:text-white transition-colors text-[13px]">Terms of Service</Link>
              <div className="mt-4 pt-4 border-t border-white/5">

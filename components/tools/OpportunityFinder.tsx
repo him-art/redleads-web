@@ -64,9 +64,7 @@ export default function OpportunityFinder() {
 
     return (
         <div className="w-full max-w-3xl mx-auto">
-            <div className="bg-[#1a1a1a] border border-white/5 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden group">
-                {/* Visual Flair */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 group-hover:bg-orange-500/10 transition-all duration-1000" />
+            <div className="bg-[#1a1a1a] border border-white/5 rounded-3xl p-8 md:p-12 relative overflow-hidden group">
                 
                 <h3 className="text-2xl font-black text-white mb-2 relative z-10">See who's talking about your product</h3>
                 <p className="text-slate-400 mb-8 relative z-10">Enter your product URL to find high-intent Reddit threads instantly.</p>
@@ -143,7 +141,7 @@ export default function OpportunityFinder() {
                             
                             {/* Upsell Blur */}
                             <div className="relative p-6 bg-gradient-to-b from-white/5 to-white/[0.02] border border-white/5 rounded-xl text-center overflow-hidden">
-                                <div className="absolute inset-0 backdrop-blur-[2px] z-0" />
+
                                 <div className="relative z-10">
                                     <MaterialIcon name="lock" size={24} className="text-orange-500 mb-3 mx-auto" />
                                     <h4 className="text-white font-bold mb-2">Unlock {results.totalFound - 5}+ More Leads</h4>

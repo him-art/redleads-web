@@ -87,10 +87,33 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
 
         {/* Subheadline - Clean Sans */}
         <p 
-          className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-12 leading-relaxed font-medium"
+          className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-8 leading-relaxed font-medium"
         >
           Save hours of manual searching. RedLeads uses AI intent scoring to monitor millions of discussions 24/7, delivering warm buyers straight to your inbox.
         </p>
+
+        {/* Social Proof Widget */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.15, ease: [0.2, 0.65, 0.3, 0.9] }}
+          className="flex justify-center mb-8"
+        >
+          <div className="flex items-center gap-4">
+            {/* Overlapping Avatars - Gravatar from real user emails */}
+            <div className="flex items-center -space-x-2.5">
+              {['/vivek.png', '/umair.png', '/konny.png', '/marc.png', '/alber_new.png', '/sachanh.png'].map((src, i) => (
+                <div key={i} className="w-8 h-8 rounded-full border-2 border-[#1a1a1a] overflow-hidden relative flex-shrink-0">
+                  <Image src={src} alt="User" fill sizes="32px" className="object-cover" />
+                </div>
+              ))}
+            </div>
+            {/* Text */}
+            <span className="text-white text-[11px] font-black tracking-[0.08em] uppercase leading-tight">
+              Join 70+ Founders
+            </span>
+          </div>
+        </motion.div>
 
         {/* Search/CTA Component - Card Style */}
         <motion.div 

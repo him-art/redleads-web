@@ -110,6 +110,22 @@ const testimonials: Testimonial[] = [
     content: "I signed up for it man. It's really impressive. I love it.",
     highlights: ["signed up", "really impressive", "I love it"],
   },
+  {
+    name: "Yaser Abbass",
+    handle: "@yaserabbass",
+    image: "/yaser.png",
+    url: "https://x.com/yaserabbass/status/2024905608101503386?s=20",
+    content: "Finding users on Reddit usually takes hours of manual searching. Having a tool that pulls relevant threads automatically is huge.",
+    highlights: ["hours of manual searching", "pulls relevant threads automatically"],
+  },
+  {
+    name: "Udayan",
+    handle: "@ud_ambwani",
+    image: "/Udayan.png",
+    url: "https://x.com/ud_ambwani/status/2024967898851410062?s=20",
+    content: "Reddit as a user discovery channel is massively slept on for SaaS. Most founders are fighting for attention on X while people are literally typing their problems into Reddit search bars every day. Smart move building a tool around that.",
+    highlights: ["massively slept on for SaaS", "typing their problems into Reddit search bars", "Smart move"],
+  },
 ];
 
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
@@ -270,14 +286,14 @@ export default function FounderNote() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
             {/* Column 1 */}
             <div className="flex flex-col gap-4">
-              {[testimonials[6]!, testimonials[10]!, testimonials[2]!, testimonials[3]!].map((testimonial, idx) => (
+              {[testimonials[6]!, testimonials[10]!, testimonials[12]!, testimonials[2]!, testimonials[3]!].map((testimonial, idx) => (
                 <TestimonialCard key={`col1-${idx}`} testimonial={testimonial} />
               ))}
             </div>
             
             {/* Column 2 */}
             <div className="flex flex-col gap-4">
-              {[testimonials[4]!, testimonials[9]!, testimonials[1]!, testimonials[0]!].map((testimonial, idx) => (
+              {[testimonials[4]!, testimonials[9]!, testimonials[13]!, testimonials[1]!, testimonials[0]!].map((testimonial, idx) => (
                 <TestimonialCard key={`col2-${idx}`} testimonial={testimonial} />
               ))}
             </div>

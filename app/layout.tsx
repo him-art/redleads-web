@@ -123,7 +123,7 @@ export default function RootLayout({
                   },
                   "contactPoint": {
                     "@type": "ContactPoint",
-                    "email": "support@redleads.app",
+                    "email": "RedLeads.app@gmail.com",
                     "contactType": "customer service"
                   },
                   "sameAs": [
