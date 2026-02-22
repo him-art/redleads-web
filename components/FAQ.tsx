@@ -21,7 +21,7 @@ const faqs = [
   },
   {
     question: "Can I really cancel with one click?",
-    answer: "Yes. We hate 'subscription traps' as much as you do. You can cancel directly from your billing dashboard at any time. No emails to send, no phone calls to make, and no questions asked."
+    answer: "Yes. We hate 'subscription traps' as much as you do. You can cancel directly from your billing dashboard. No emails to send, no phone calls to make, and no questions asked."
   },
   {
     question: "Can I monitor multiple products or competitors?",
@@ -36,37 +36,68 @@ const faqs = [
 const FAQ = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map((faq) => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  };
+
   return (
     <section id="faq" className="bg-[#1a1a1a] py-24 border-t border-white/5">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <h2 className="text-center text-4xl sm:text-[4.5rem] font-black text-white leading-[1.1] tracking-tighter">
           <span className="block sm:whitespace-nowrap">Frequently Asked</span>
           <span className="block text-orange-500 font-serif-italic sm:whitespace-nowrap">Questions</span>
         </h2>
         
-        <div className="mt-12 space-y-4">
+        <div className="mt-12 space-y-3">
           {faqs.map((faq, index) => (
-            <div key={index} className="overflow-hidden rounded-2xl border border-white/5 bg-[#222]">
-              <button
-                suppressHydrationWarning
-                onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="flex w-full items-center justify-between p-6 text-left hover:bg-[#282828] transition-colors"
-              >
-                <h3 className="text-lg font-black text-white tracking-tight">{faq.question}</h3>
-                <MaterialIcon 
-                  name="expand_more" 
-                  size={20} 
-                  className={`text-gray-600 transition-transform ${openIndex === index ? 'rotate-180 text-orange-500' : ''}`} 
-                />
-              </button>
-              
-              <div
-                className={`transition-all duration-300 ease-in-out ${
-                  openIndex === index ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
-                }`}
-              >
-                <div className="px-6 pb-6 text-[13px] font-medium leading-relaxed tracking-wide text-gray-500">
-                  {faq.answer}
+            <div 
+              key={index} 
+              className={`p-2 rounded-[2.5rem] border transition-all duration-500 bg-white/5 ${
+                openIndex === index ? 'border-orange-500/20' : 'border-white/5'
+              }`}
+            >
+              <div className={`overflow-hidden rounded-[2rem] border transition-all duration-300 relative ${
+                openIndex === index ? 'bg-[#0c0c0c] border-orange-500/30 shadow-none' : 'bg-[#0c0c0c] border-white/5 shadow-none'
+              }`}>
+                {openIndex === index && (
+                  <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                )}
+                <button
+                  suppressHydrationWarning
+                  onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                  className="flex w-full items-center justify-between p-6 text-left transition-colors relative z-10"
+                >
+                  <h3 className={`text-lg font-black transition-colors tracking-tight ${openIndex === index ? 'text-white' : 'text-gray-300'}`}>
+                    {faq.question}
+                  </h3>
+                  <MaterialIcon 
+                    name="expand_more" 
+                    size={20} 
+                    className={`text-gray-600 transition-transform ${openIndex === index ? 'rotate-180 text-orange-500' : ''}`} 
+                  />
+                </button>
+                
+                <div
+                  className={`transition-all duration-300 ease-in-out relative z-10 ${
+                    openIndex === index ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
+                  }`}
+                >
+                  <div className="px-6 pb-6 text-[13px] font-medium leading-relaxed tracking-wide text-gray-500">
+                    {faq.answer}
+                  </div>
                 </div>
               </div>
             </div>

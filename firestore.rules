@@ -5,5 +5,11 @@ service cloud.firestore {
       // Allow anyone to create a document in the waitlist collection
       allow create: if true;
     }
+    match /free_tool_logs/{document} {
+      // Allow creation and reading for rate limiting logic
+      // In a real production environment, these would be restricted by a service account 
+      // or specific User IDs, but given the current project setup, we need them open for the API.
+      allow create, read: if true;
+    }
   }
 }

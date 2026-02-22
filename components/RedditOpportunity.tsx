@@ -13,22 +13,25 @@ const StatItem = ({ value, label }: { value: string, label: string }) => (
 );
 
 const Card = ({ title, description, children, delay }: { title: string, description: string, children: React.ReactNode, delay: number }) => (
-  <motion.div 
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ delay, duration: 0.5 }}
-    viewport={{ once: true }}
-    className="bg-[#2a2a2a] rounded-[2.5rem] p-8 border border-white/5 flex flex-col h-full hover:border-white/10 transition-colors group"
-  >
-    <div className="flex-grow flex items-center justify-center w-full aspect-video mb-8 relative rounded-2xl bg-[#141414] overflow-hidden border border-white/5">
-        {children}
-    </div>
-    
-    <div className="mt-auto">
-        <h3 className="text-xl font-black text-white mb-4 tracking-tight">{title}</h3>
-        <p className="text-gray-500 text-[13px] font-medium leading-relaxed tracking-wide">{description}</p>
-    </div>
-  </motion.div>
+  <div className="p-2 bg-white/5 border border-white/5 rounded-[2.5rem]">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ delay, duration: 0.5 }}
+      viewport={{ once: true }}
+      className="bg-[#0c0c0c] rounded-[2rem] p-8 border border-white/5 flex flex-col h-full relative overflow-hidden group"
+    >
+      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+      <div className="flex-grow flex items-center justify-center w-full aspect-video mb-8 relative rounded-2xl bg-[#080808] overflow-hidden border border-white/5 shadow-none">
+          {children}
+      </div>
+      
+      <div className="mt-auto">
+          <h3 className="text-xl font-black text-white mb-4 tracking-tighter uppercase uppercase">{title}</h3>
+          <p className="text-gray-500 text-[13px] font-medium leading-relaxed tracking-wide">{description}</p>
+      </div>
+    </motion.div>
+  </div>
 );
 
 
@@ -47,7 +50,9 @@ export default function RedditOpportunity() {
         </div>
 
         {/* Stats Banner */}
-        <div className="bg-[#1f1614] rounded-[2rem] p-8 mb-20 border border-white/5">
+        <div className="p-2 bg-white/5 border border-orange-500/10 rounded-[2.5rem] mb-20">
+            <div className="bg-[#0c0c0c] rounded-[2rem] p-8 border border-orange-500/20 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
             <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 gap-8 md:gap-0">
                 <div className="flex items-center justify-center gap-4 md:border-r border-white/10">
                     <div className="w-14 h-14 relative">
@@ -70,6 +75,7 @@ export default function RedditOpportunity() {
                 </div>
             </div>
         </div>
+    </div>
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

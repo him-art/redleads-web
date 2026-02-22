@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Globe, ArrowRight, CheckCircle2, Lock, Search, ChevronRight, Activity, Clock, PenLine, Bookmark, ExternalLink, Navigation, Map, Archive, SlidersHorizontal, Shield, Plus } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import MaterialIcon from '@/components/ui/MaterialIcon';
 import { createClient } from '@/lib/supabase/client';
 import { type User as SupabaseUser } from '@supabase/supabase-js';
 
@@ -93,12 +94,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
         </p>
 
         {/* Social Proof Widget */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.15, ease: [0.2, 0.65, 0.3, 0.9] }}
-          className="flex justify-center mb-8"
-        >
+        <div className="flex justify-center mb-8">
           <div className="flex items-center gap-4">
             {/* Overlapping Avatars - Gravatar from real user emails */}
             <div className="flex items-center -space-x-2.5">
@@ -113,15 +109,10 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
               Join 70+ Founders
             </span>
           </div>
-        </motion.div>
+        </div>
 
         {/* Search/CTA Component - Card Style */}
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: [0.2, 0.65, 0.3, 0.9] }}
-          className="w-full max-w-xl mx-auto mb-12"
-        >
+        <div className="w-full max-w-xl mx-auto mb-12">
           <div className="p-2 bg-white/5 border border-[#ff914d]/10 rounded-2xl">
             <form 
               onSubmit={handleSearch}
@@ -153,6 +144,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
               >
                 {isScanning ? (
                   <>
+                    <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     Scanning...
                   </>
                 ) : (
@@ -175,13 +167,10 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                 <CheckCircle2 size={12} /> For SaaS Founders
              </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Sneak Peek Dashboard Demo */}
-        <motion.div 
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
+        <div 
           onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
           className="relative w-full max-w-6xl mx-auto mt-6 -translate-y-4 cursor-pointer select-none perspective-2000 group/demo"
           style={{ perspective: "2000px" }}
@@ -191,9 +180,10 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
             whileInView={{ rotateX: 0, scale: 1 }}
             viewport={{ margin: "0px 0px -200px 0px" }}
             transition={{ duration: 0.8 }}
-            className="relative rounded-2xl border border-white/5 bg-white/5 p-2 text-left flex max-h-[620px] origin-top"
+            className="relative rounded-[2.5rem] border border-white/5 bg-white/5 p-2 text-left flex max-h-[620px] origin-top"
           >
-            <div className="flex w-full rounded-xl overflow-hidden bg-[#080808] border border-white/5">
+            <div className="flex w-full rounded-[2rem] overflow-hidden bg-[#080808] border border-white/10 relative">
+              <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
             {/* ── SIDEBAR ── */}
             <div className="hidden md:flex flex-col w-[200px] flex-shrink-0 bg-[#0e0e0e] border-r border-white/5 p-5">
@@ -291,8 +281,8 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
 
             </div>
           </div>
-        </motion.div>
-      </motion.div>
+          </motion.div>
+        </div>
       </div>
     </div>
   );
@@ -372,7 +362,9 @@ function FloatingBubble({ className, delay = 0, scale = 1, duration = 3, floatDe
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: [0, -15, 0] }}
+      whileInView={{ opacity: 1, y: [0, -15, 0] }}
+      viewport={{ once: true }}
+      animate={{ y: [0, -15, 0] }}
       transition={{ 
         opacity: { duration: 1, delay },
         y: { duration, repeat: Infinity, ease: "easeInOut", delay: floatDelay } 

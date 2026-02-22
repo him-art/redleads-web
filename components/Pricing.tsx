@@ -121,20 +121,24 @@ const Pricing = () => {
                     {plans.map((plan) => (
                         <div 
                             key={plan.name} 
-                            className={`relative rounded-[2.5rem] border transition-all duration-500 flex flex-col p-8 lg:p-12 ${
-                                plan.highlight 
-                                    ? 'bg-[#ff914d]/[0.02] border-[#ff914d]/20 ring-1 ring-[#ff914d]/10' 
-                                    : 'bg-[#141414]/50 border-white/5 hover:border-white/10'
+                            className={`p-2 rounded-[2.5rem] border transition-all duration-500 bg-white/5 relative ${
+                                plan.highlight ? 'border-orange-500/10' : 'border-white/5'
                             }`}
                         >
                             {plan.badge && (
-                                <div className="absolute -top-4 right-10 bg-[#ff824d] px-6 py-2.5 rounded-2xl flex items-center gap-3 z-20 shadow-2xl border-none">
+                                <div className="absolute -top-3 right-8 bg-[#ff824d] px-6 py-2 rounded-2xl flex items-center gap-3 z-30 shadow-none border-none">
                                     <span className="text-xs font-black uppercase tracking-[0.3em] text-black flex items-center gap-3">
                                         <MaterialIcon name="smart_toy" size={14} className="text-black/80" />
                                         {plan.badge}
                                     </span>
                                 </div>
                             )}
+                            <div className={`relative rounded-[2rem] border flex flex-col p-8 lg:p-12 h-full overflow-hidden ${
+                                plan.highlight 
+                                    ? 'bg-[#0c0c0c] border-[#ff914d]/20 shadow-none' 
+                                    : 'bg-[#0c0c0c] border-white/5 shadow-none'
+                            }`}>
+                                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
                             <div className="mb-10">
                                 <h3 className="text-2xl font-black mb-6 text-white">{plan.name}</h3>
@@ -208,101 +212,108 @@ const Pricing = () => {
                                             : 'bg-white/5 border-white/5 text-white hover:bg-white hover:text-black'
                                     }`}
                                 >
-                                    {isLoading === plan.name ? <MaterialIcon name="sync" size={16} className="animate-spin" /> : <>Start 3-day free trial <MaterialIcon name="arrow_right" size={16} /></>}
+                                    {isLoading === plan.name ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <>Start 3-day free trial <MaterialIcon name="arrow_right" size={16} /></>}
                                 </button>
                                 <p className="mt-6 text-center text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 transition-colors">
                                     7 DAY MONEY BACK GUARANTEE
                                 </p>
                             </div>
+                            </div>
                         </div>
                     ))}
 
                     {/* Lifetime Plan (Obsidian Style) */}
-                    <div className="relative h-full p-8 md:p-12 bg-gradient-to-br from-[#1a1a1a] to-black border-2 border-red-500/50 rounded-[2.5rem] group flex flex-col">
-                        {/* Sold Out Overlay */}
-                        {slots && slots.sold >= slots.total && (
-                            <div className="absolute inset-0 bg-black/80 z-50 flex items-center justify-center rounded-[2.5rem]">
-                                <div className="text-center">
-                                    <div className="bg-red-500 text-white px-6 py-2 rounded-full font-black uppercase tracking-widest text-xs mb-4">Sold Out</div>
-                                    <p className="text-gray-400 text-sm font-bold uppercase tracking-widest">Join the waitlist</p>
-                                </div>
-                            </div>
-                        )}
-                        
-                        <div className="absolute -top-4 right-10 bg-yellow-500 text-black px-6 py-2.5 rounded-2xl flex items-center gap-3 z-20 shadow-2xl border-none">
+                    <div className="p-2 bg-white/5 border border-red-500/10 rounded-[2.5rem] relative">
+                        <div className="absolute -top-3 right-8 bg-yellow-500 text-black px-6 py-2 rounded-2xl flex items-center gap-3 z-30 shadow-none border-none">
                             <span className="text-xs font-black uppercase tracking-[0.3em] flex items-center gap-3">
                                 <MaterialIcon name="workspace_premium" size={14} className="text-black" />
                                 10 SEATS LEFT
                             </span>
                         </div>
+                        <div className="relative h-full p-8 md:p-12 bg-gradient-to-br from-[#0c0c0c] to-black border-2 border-red-500/50 rounded-[2rem] group flex flex-col overflow-hidden">
+                            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                            {/* Sold Out Overlay */}
+                            {slots && slots.sold >= slots.total && (
+                                <div className="absolute inset-0 bg-black/80 z-50 flex items-center justify-center rounded-[2rem]">
+                                    <div className="text-center">
+                                        <div className="bg-red-500 text-white px-6 py-2 rounded-full font-black uppercase tracking-widest text-xs mb-4">Sold Out</div>
+                                        <p className="text-gray-400 text-sm font-bold uppercase tracking-widest">Join the waitlist</p>
+                                    </div>
+                                </div>
+                            )}
+                            
+                            
 
-                        <div className="mb-10 relative">
-                            <h3 className="text-2xl font-black mb-6 text-white flex items-center gap-2">
-                                Lifetime Plan
-                            </h3>
-                            <div className="flex items-baseline gap-2 mb-4">
-                                <span className="text-6xl font-black text-white tracking-tighter">$199</span>
-                                <span className="text-sm font-bold text-gray-600 uppercase tracking-widest ml-1">One-time</span>
+                            <div className="mb-10 relative">
+                                <h3 className="text-2xl font-black mb-6 text-white flex items-center gap-2">
+                                    Lifetime Plan
+                                </h3>
+                                <div className="flex items-baseline gap-2 mb-4">
+                                    <span className="text-6xl font-black text-white tracking-tighter">$199</span>
+                                    <span className="text-sm font-bold text-gray-600 uppercase tracking-widest ml-1">One-time</span>
+                                </div>
+                                <p className="text-xs font-bold text-gray-500 leading-relaxed max-w-[240px] uppercase tracking-wider">Full lifetime access and all future features included.</p>
                             </div>
-                            <p className="text-xs font-bold text-gray-500 leading-relaxed max-w-[240px] uppercase tracking-wider">Full lifetime access and all future features included.</p>
-                        </div>
 
 
-                        <div className="flex-grow mb-14">
-                            {/* Everything in Growth callout */}
-                            <div className="p-5 rounded-2xl bg-orange-500/5 border border-orange-500/10 mb-8">
-                                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 flex items-center gap-2">
-                                    <MaterialIcon name="check" size={14} /> Everything in Growth
+                            <div className="flex-grow mb-14">
+                                {/* Everything in Growth callout */}
+                                <div className="p-5 rounded-2xl bg-orange-500/5 border border-orange-500/10 mb-8 shadow-none">
+                                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 flex items-center gap-2">
+                                        <MaterialIcon name="check" size={14} /> Everything in Growth
+                                    </p>
+                                </div>
+
+                                <div className="flex items-center gap-2 mb-6">
+                                    <MaterialIcon name="workspace_premium" size={14} className="text-gray-600" />
+                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">PLUS</span>
+                                    <div className="h-[1px] bg-white/5 flex-grow ml-2" />
+                                </div>
+                                <ul className="space-y-5">
+                                    {[
+                                        { name: 'All future features included', icon: <MaterialIcon name="workspace_premium" size={14} /> },
+                                        { name: '24/7 personal support', icon: <MaterialIcon name="smart_toy" size={14} /> },
+                                        { name: 'Life time access', icon: <MaterialIcon name="workspace_premium" size={14} /> }
+                                        
+                                    ].map((item) => (
+                                        <li key={item.name} className="flex items-center gap-4">
+                                            <div className="p-1.5 rounded-lg text-white bg-white/5 border border-white/10">
+                                                {item.icon}
+                                            </div>
+                                            <span className="text-xs font-bold uppercase tracking-widest text-white">
+                                                {item.name}
+                                            </span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            <div className="mt-auto">
+                                <button
+                                    onClick={() => handleCheckout('Lifetime')}
+                                    disabled={!!isLoading || (slots ? slots.sold >= slots.total : false)}
+                                    suppressHydrationWarning
+                                    className="w-full py-6 rounded-2xl bg-white text-black font-black text-xs uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95 shadow-none"
+                                >
+                                    {isLoading === 'Lifetime' ? <div className="w-4 h-4 border-2 border-white/30 border-t-black rounded-full animate-spin" /> : <>Get Lifetime Access <MaterialIcon name="arrow_right" size={16} /></>}
+                                </button>
+                                <p className="mt-6 text-center text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
+                                    14-DAY MONEY BACK GUARANTEE
                                 </p>
                             </div>
-
-                            <div className="flex items-center gap-2 mb-6">
-                                <MaterialIcon name="workspace_premium" size={14} className="text-gray-600" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">PLUS</span>
-                                <div className="h-[1px] bg-white/5 flex-grow ml-2" />
-                            </div>
-                            <ul className="space-y-5">
-                                {[
-                                    { name: 'All future features included', icon: <MaterialIcon name="workspace_premium" size={14} /> },
-                                    { name: '24/7 personal support', icon: <MaterialIcon name="smart_toy" size={14} /> },
-                                    { name: 'Life time access', icon: <MaterialIcon name="workspace_premium" size={14} /> }
-                                    
-                                ].map((item) => (
-                                    <li key={item.name} className="flex items-center gap-4">
-                                        <div className="p-1.5 rounded-lg text-white bg-white/5 border border-white/10">
-                                            {item.icon}
-                                        </div>
-                                        <span className="text-xs font-bold uppercase tracking-widest text-white">
-                                            {item.name}
-                                        </span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        <div className="mt-auto">
-                            <button
-                                onClick={() => handleCheckout('Lifetime')}
-                                disabled={!!isLoading || (slots ? slots.sold >= slots.total : false)}
-                                suppressHydrationWarning
-                                className="w-full py-6 rounded-2xl bg-white text-black font-black text-xs uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95 shadow-2xl shadow-white/5"
-                            >
-                                {isLoading === 'Lifetime' ? <MaterialIcon name="sync" size={16} className="animate-spin" /> : <>Get Lifetime Access <MaterialIcon name="arrow_right" size={16} /></>}
-                            </button>
-                            <p className="mt-6 text-center text-[10px] font-black uppercase tracking-[0.3em] text-black">
-                                14-DAY MONEY BACK GUARANTEE
-                            </p>
                         </div>
                     </div>
                 </div>
 
                 {/* Bottom Info Banner */}
-                <div className="mt-20 max-w-3xl mx-auto rounded-[3rem] bg-[#141414] border border-white/5 p-12 md:p-16 text-center relative overflow-hidden group hover:border-orange-500/10 transition-all">
-                    <div className="absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-orange-500/20 to-transparent" />
-                    <h3 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tighter">Start with a 3-day free trial</h3>
-                    <p className="text-gray-500 text-[15px] font-medium tracking-[0.2em] leading-[1.8] max-w-xl mx-auto opacity-70">
-                        Ads can cost you thousands of dollars. RedLeads discovers hidden opportunities on Reddit and drives organic growth for the fraction of the cost. Literally pays itself if you get a single new customer.
-                    </p>
+                <div className="mt-20 max-w-3xl mx-auto p-2 bg-white/5 border border-white/5 rounded-[3.5rem]">
+                    <div className="rounded-[3rem] bg-[#0c0c0c] border border-white/5 p-12 md:p-16 text-center relative overflow-hidden group hover:border-orange-500/20 transition-all shadow-none">
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                        <h3 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tighter">Start with a 3-day free trial</h3>
+                        <p className="text-gray-500 text-[15px] font-medium tracking-[0.2em] leading-[1.8] max-w-xl mx-auto opacity-70">
+                            Ads can cost you thousands of dollars. RedLeads discovers hidden opportunities on Reddit and drives organic growth for the fraction of the cost. Literally pays itself if you get a single new customer.
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>

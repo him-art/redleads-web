@@ -99,7 +99,7 @@ export default function NewsletterForm() {
               className="mt-1 w-full flex items-center justify-center gap-2 bg-[#f25e36] hover:bg-[#d94a24] text-white py-3 rounded-xl font-medium transition-all shadow-lg shadow-orange-500/20 disabled:opacity-50 disabled:cursor-not-allowed group"
             >
               {isPending ? (
-                <MaterialIcon name="sync" size={16} className="animate-spin" />
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
                 <>
                   Get My Leads

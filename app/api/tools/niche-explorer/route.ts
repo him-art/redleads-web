@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { performScan } from '@/lib/scanner-core';
+import { exploreNiche } from '@/lib/niche-explorer';
 import { db } from '@/lib/firebase';
-import { collection, addDoc, query, where, getDocs, Timestamp } from 'firebase/firestore';
+import { collection, addDoc, query, where, getDocs, Timestamp, limit } from 'firebase/firestore';
 import crypto from 'crypto';
 import { createClient } from '@/lib/supabase/server';
 
@@ -11,10 +11,10 @@ const AUTH_DAILY_LIMIT = 10;
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { url } = body;
+        const { query: searchQuery } = body;
 
-        if (!url) {
-            return NextResponse.json({ error: 'URL is required' }, { status: 400 });
+        if (!searchQuery) {
+            return NextResponse.json({ error: 'Search query is required' }, { status: 400 });
         }
 
         // 1. Auth Check
@@ -37,15 +37,15 @@ export async function POST(req: Request) {
                         logsRef, 
                         where('user_id', '==', userId), 
                         where('date', '==', today),
-                        where('tool', '==', 'opportunity-finder')
+                        where('tool', '==', 'niche-explorer')
                     );
                 } else {
                     // Track by IP for anonymous users
-                    const ipHashForCheck = crypto.createHash('sha256').update(`${remoteIP}-${today}-opportunity`).digest('hex');
+                    const ipHash = crypto.createHash('sha256').update(`${remoteIP}-${today}-niche`).digest('hex');
                     q = query(
                         logsRef, 
-                        where('ip_hash', '==', ipHashForCheck),
-                        where('tool', '==', 'opportunity-finder')
+                        where('ip_hash', '==', ipHash),
+                        where('tool', '==', 'niche-explorer')
                     );
                 }
 
@@ -62,52 +62,35 @@ export async function POST(req: Request) {
                 } else {
                     if (currentCount >= ANON_DAILY_LIMIT) {
                         return NextResponse.json({ 
-                            error: 'Daily limit reached. Sign up for unlimited scans.', 
+                            error: 'Daily limit reached. Sign up for unlimited research.', 
                             code: 'LIMIT_REACHED' 
                         }, { status: 429 });
                     }
                 }
 
                 // Log this attempt
-                const ipHashForLogging = crypto.createHash('sha256').update(`${remoteIP}-${today}-opportunity`).digest('hex');
+                const ipHashForLogging = crypto.createHash('sha256').update(`${remoteIP}-${today}-niche`).digest('hex');
                 await addDoc(logsRef, {
                     ip_hash: ipHashForLogging,
                     user_id: userId || null,
-                    url,
+                    query: searchQuery,
                     created_at: Timestamp.now(),
                     date: today,
-                    tool: 'opportunity-finder'
+                    tool: 'niche-explorer'
                 });
             } catch (authErr) {
                 console.warn('Rate limiting check failed:', authErr);
             }
         }
 
-        // 2. Perform Scan
-        // Note: For free tool, we might not have a description. 
-        // scanner-core handles this by using the URL to infer context via AI.
-        const scanResult = await performScan(url, {
-            tavilyApiKey: process.env.TAVILY_API_KEY,
-            // No custom description or keywords for basic check
-        });
+        // 2. Perform Niche Research
+        const result = await exploreNiche(searchQuery);
 
-        if (scanResult.error) {
-            return NextResponse.json({ error: scanResult.error }, { status: 500 });
-        }
-
-        const leads = scanResult.leads || [];
-
-        // 3. Truncate Results (The "Teaser" Logic)
-        // Return top 3 full leads, and just the COUNT of the rest.
-        // Also ensure we don't return high-value fields for the rest if strictly filtered?
-        // Actually, just returning top 3 is enough. The frontend can say "Found 15 more".
-        
-        const topLeads = leads.slice(0, 10);
-        const totalFound = leads.length;
-
-        // 4. Persistent Supabase Increment (for authenticated users)
+        // 3. Persistent Supabase Increment (for authenticated users)
         if (userId) {
             try {
+                // Fetch current count to increment atomically in application logic
+                // Or better, use a raw increment if available, but profiles table is small
                 const { data: profile } = await supabase
                     .from('profiles')
                     .select('free_tool_usage_count')
@@ -125,14 +108,10 @@ export async function POST(req: Request) {
             }
         }
 
-        return NextResponse.json({
-            leads: topLeads,
-            totalFound,
-            teaser: true
-        });
+        return NextResponse.json(result);
 
     } catch (error: any) {
-        console.error('[Free Tool API Error]', error);
+        console.error('[Niche Explorer API Error]', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }

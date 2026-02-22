@@ -39,9 +39,9 @@ const Footer = () => {
           {/* Column 2: Platform */}
           <div className="flex flex-col gap-4">
              <h3 className="font-bold text-gray-400 text-[10px] tracking-widest uppercase">Platform</h3>
-             <Link href="/tools/reddit-opportunity-finder" className="text-orange-500 font-bold hover:text-white transition-colors text-[13px]">
-               Free Reddit Tool
-             </Link>
+              <Link href="/tools" className="text-orange-500 font-bold hover:text-white transition-colors text-[13px]">
+                Free Reddit Tools
+              </Link>
              <Link href="/protocol" className="text-gray-400 hover:text-white transition-colors text-[13px]">Success Protocol</Link>
              <Link href="/#pricing" className="text-gray-400 hover:text-white transition-colors text-[13px]">Pricing Plans</Link>
              <Link href="/login" className="text-gray-400 hover:text-white transition-colors text-[13px]">Dashboard Login</Link>

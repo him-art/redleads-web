@@ -62,6 +62,7 @@ const Navbar = () => {
               <Link href="/dashboard" className="text-[#f25e36] hover:text-[#d94a24] transition-colors">Dashboard</Link>
             )}
             <Link href="/compare" className="hover:text-slate-900 transition-colors">Compare</Link>
+            <Link href="/tools" className="hover:text-slate-900 transition-colors">Tools</Link>
             <Link href="/#pricing" className="hover:text-slate-900 transition-colors">Pricing</Link>
           </div>
           
@@ -155,6 +156,14 @@ const Navbar = () => {
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Compare
+                  </Link>
+
+                  <Link 
+                    href="/tools" 
+                    className="block text-lg font-bold text-slate-800 hover:text-[#f25e36] transition-colors py-2"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Tools
                   </Link>
                   
                   <Link 

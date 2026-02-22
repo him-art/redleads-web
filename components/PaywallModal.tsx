@@ -74,7 +74,7 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                                 suppressHydrationWarning
                                 className="w-full py-4 rounded-xl bg-white/5 border border-white/10 text-white font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all disabled:opacity-50"
                             >
-                                {isLoading === 'starter' ? <MaterialIcon name="sync" size={12} className="animate-spin" /> : 'Select'}
+                                {isLoading === 'starter' ? <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" /> : 'Select'}
                             </button>
                         </div>
 
@@ -99,7 +99,7 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                                 suppressHydrationWarning
                                 className="w-full py-4 rounded-xl bg-[#ff914d] text-black font-black text-[10px] uppercase tracking-widest hover:bg-[#ff914d]/90 transition-all disabled:opacity-50 shadow-lg"
                             >
-                                {isLoading === 'growth' ? <MaterialIcon name="sync" size={12} className="animate-spin" /> : 'Go Pro'}
+                                {isLoading === 'growth' ? <div className="w-3 h-3 border-2 border-black/30 border-t-black rounded-full animate-spin mx-auto" /> : 'Go Pro'}
                             </button>
                         </div>
 
@@ -125,7 +125,7 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                                 suppressHydrationWarning
                                 className="w-full py-4 rounded-xl bg-black text-white font-black text-[9px] uppercase tracking-widest hover:bg-orange-600 transition-all disabled:opacity-50"
                             >
-                                {isLoading === 'lifetime' ? <MaterialIcon name="sync" size={12} className="animate-spin" /> : 'Claim Seat'}
+                                {isLoading === 'lifetime' ? <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" /> : 'Claim Seat'}
                             </button>
                         </div>
                     </div>

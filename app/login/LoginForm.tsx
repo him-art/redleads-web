@@ -99,7 +99,7 @@ export default function LoginForm({
             className="w-full py-3 px-4 bg-white hover:bg-gray-100 text-black rounded-xl font-bold flex items-center justify-center gap-3 transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
-                <MaterialIcon name="sync" size={20} className="animate-spin text-orange-500" />
+                <div className="w-5 h-5 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" />
             ) : (
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path
@@ -183,7 +183,7 @@ export default function LoginForm({
               className="w-full py-4 bg-[#f25e36] hover:bg-[#d94a24] text-white rounded-xl font-black text-lg shadow-lg shadow-orange-500/20 transition-all transform hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
-                <MaterialIcon name="sync" size={24} className="animate-spin" />
+                <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
                 <>
                     {isSignUp ? 'Create Account' : 'Sign In Now'}

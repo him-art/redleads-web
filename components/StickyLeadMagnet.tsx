@@ -81,10 +81,10 @@ export default function StickyLeadMagnet() {
               Scan Reddit for high-intent leads mentioning your product or competitors.
             </p>
             <Link 
-              href="/tools/reddit-opportunity-finder"
+              href="/tools"
               className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-orange-500 hover:bg-orange-600 text-white text-[9px] md:text-[10px] font-black uppercase tracking-widest rounded-lg transition-colors shadow-lg shadow-orange-500/20"
             >
-              Try Free Tool <MaterialIcon name="arrow_right" size={14} />
+              Try Free Tools <MaterialIcon name="arrow_right" size={14} />
             </Link>
           </div>
         </div>

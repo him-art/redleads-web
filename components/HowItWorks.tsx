@@ -27,77 +27,86 @@ const HowItWorks = () => {
             className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16"
         >
             {/* Step 1 */}
-            <div className="bg-[#2a2a2a] rounded-3xl p-8 border border-white/5 flex flex-col h-full hover:border-white/10 transition-colors">
-              <div className="mb-8">
-                <span className="text-[10px] font-black tracking-[0.3em] text-gray-600 uppercase">STEP 1</span>
-              </div>
-              
-              {/* Illustration: Search Bar PNG */}
-              <div className="w-full aspect-video rounded-2xl mb-8 relative overflow-hidden">
-                  <Image 
-                    src="/how-it-works-step1.png" 
-                    alt="Scan your website" 
-                    fill 
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-contain"
-                  />
-              </div>
+            <div className="p-2 bg-white/5 border border-white/5 rounded-[2.5rem]">
+              <div className="bg-[#0c0c0c] rounded-[2rem] p-8 border border-white/5 flex flex-col h-full relative overflow-hidden group">
+                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                <div className="mb-8">
+                  <span className="text-[10px] font-black tracking-[0.3em] text-gray-600 uppercase">STEP 1</span>
+                </div>
+                
+                {/* Illustration: Search Bar PNG */}
+                <div className="w-full aspect-video rounded-2xl mb-8 relative overflow-hidden">
+                    <Image 
+                      src="/how-it-works-step1.png" 
+                      alt="Scan your website" 
+                      fill 
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-contain"
+                    />
+                </div>
 
-              <div className="mt-auto">
-                <h3 className="text-xl font-black text-white mb-4 tracking-tight">Define Your Target</h3>
-                <p className="text-gray-500 text-[13px] font-medium leading-relaxed tracking-wide">
-                  Enter your website and target audience. RedLeads automatically maps out highly relevant subreddits and potential customer keywords.
-                </p>
+                <div className="mt-auto">
+                  <h3 className="text-xl font-black text-white mb-4 tracking-tight uppercase tracking-tighter">Define Your Target</h3>
+                  <p className="text-gray-500 text-[13px] font-medium leading-relaxed tracking-wide">
+                    Enter your website and target audience. RedLeads automatically maps out highly relevant subreddits and potential customer keywords.
+                  </p>
+                </div>
               </div>
             </div>
 
             {/* Step 2 */}
-            <div className="bg-[#2a2a2a] rounded-3xl p-8 border border-white/5 flex flex-col h-full hover:border-white/10 transition-colors">
-              <div className="mb-8">
-                <span className="text-[10px] font-black tracking-[0.3em] text-gray-600 uppercase">STEP 2</span>
-              </div>
-              
-              {/* Illustration: Reddit Threads PNG */}
-              <div className="w-full aspect-video rounded-2xl mb-8 relative overflow-hidden">
-                  <Image 
-                    src="/how-it-works-step2.png" 
-                    alt="Research threads" 
-                    fill 
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-contain"
-                  />
-              </div>
+            <div className="p-2 bg-white/5 border border-white/5 rounded-[2.5rem]">
+              <div className="bg-[#0c0c0c] rounded-[2rem] p-8 border border-white/5 flex flex-col h-full relative overflow-hidden group">
+                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                <div className="mb-8">
+                  <span className="text-[10px] font-black tracking-[0.3em] text-gray-600 uppercase">STEP 2</span>
+                </div>
+                
+                {/* Illustration: Reddit Threads PNG */}
+                <div className="w-full aspect-video rounded-2xl mb-8 relative overflow-hidden">
+                    <Image 
+                      src="/how-it-works-step2.png" 
+                      alt="Research threads" 
+                      fill 
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-contain"
+                    />
+                </div>
 
-              <div className="mt-auto">
-                <h3 className="text-xl font-black text-white mb-4 tracking-tight">AI Identifies Leads</h3>
-                <p className="text-gray-500 text-[13px] font-medium leading-relaxed tracking-wide">
-                  Our advanced AI monitors 24/7 to find high-intent conversations, surface pain points, and score every lead based on buying signals.
-                </p>
+                <div className="mt-auto">
+                  <h3 className="text-xl font-black text-white mb-4 tracking-tight uppercase tracking-tighter">AI Identifies Leads</h3>
+                  <p className="text-gray-500 text-[13px] font-medium leading-relaxed tracking-wide">
+                    Our advanced AI monitors 24/7 to find high-intent conversations, surface pain points, and score every lead based on buying signals.
+                  </p>
+                </div>
               </div>
             </div>
 
             {/* Step 3 */}
-            <div className="bg-[#2a2a2a] rounded-3xl p-8 border border-white/5 flex flex-col h-full hover:border-white/10 transition-colors">
-              <div className="mb-8">
-                <span className="text-[10px] font-black tracking-[0.3em] text-gray-600 uppercase">STEP 3</span>
-              </div>
-              
-              {/* Illustration: Engage PNG */}
-              <div className="w-full aspect-video rounded-2xl mb-8 relative overflow-hidden">
-                  <Image 
-                    src="/how-it-works-step3.png" 
-                    alt="Engage via comments and DMs" 
-                    fill 
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-contain"
-                  />
-              </div>
+            <div className="p-2 bg-white/5 border border-white/5 rounded-[2.5rem]">
+              <div className="bg-[#0c0c0c] rounded-[2rem] p-8 border border-white/5 flex flex-col h-full relative overflow-hidden group">
+                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                <div className="mb-8">
+                  <span className="text-[10px] font-black tracking-[0.3em] text-gray-600 uppercase">STEP 3</span>
+                </div>
+                
+                {/* Illustration: Engage PNG */}
+                <div className="w-full aspect-video rounded-2xl mb-8 relative overflow-hidden">
+                    <Image 
+                      src="/how-it-works-step3.png" 
+                      alt="Engage via comments and DMs" 
+                      fill 
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-contain"
+                    />
+                </div>
 
-              <div className="mt-auto">
-                <h3 className="text-xl font-black text-white mb-4 tracking-tight">Join the Conversation</h3>
-                <p className="text-gray-500 text-[13px] font-medium leading-relaxed tracking-wide">
-                  Engage with potential customers by providing value first. Build authority by solving problems and naturally introducing your product.
-                </p>
+                <div className="mt-auto">
+                  <h3 className="text-xl font-black text-white mb-4 tracking-tight uppercase tracking-tighter">Join the Conversation</h3>
+                  <p className="text-gray-500 text-[13px] font-medium leading-relaxed tracking-wide">
+                    Engage with potential customers by providing value first. Build authority by solving problems and naturally introducing your product.
+                  </p>
+                </div>
               </div>
             </div>
 

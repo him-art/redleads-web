@@ -1,7 +1,6 @@
 'use client';
 
 import MaterialIcon from '@/components/ui/MaterialIcon';
-import { motion } from 'framer-motion';
 import Image from 'next/image';
 
 const testimonials = [

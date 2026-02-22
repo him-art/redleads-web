@@ -126,6 +126,14 @@ const testimonials: Testimonial[] = [
     content: "Reddit as a user discovery channel is massively slept on for SaaS. Most founders are fighting for attention on X while people are literally typing their problems into Reddit search bars every day. Smart move building a tool around that.",
     highlights: ["massively slept on for SaaS", "typing their problems into Reddit search bars", "Smart move"],
   },
+  {
+    name: "Vishal Mistry",
+    handle: "@vishal_mistry9",
+    image: "/Vishal.png",
+    url: "https://x.com/vishal_mistry9/status/2024053592512946189?s=20",
+    content: "cool i need this.",
+    highlights: ["i need this"],
+  },
 ];
 
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
@@ -160,47 +168,51 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
       href={testimonial.url} 
       target="_blank" 
       rel="noopener noreferrer" 
-      className="break-inside-avoid block group"
+      className="break-inside-avoid block group p-0.5"
     >
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col relative transition-all duration-300 group-hover:shadow-md group-hover:border-gray-200 group-hover:-translate-y-1">
-        {/* X Icon */}
-        <div className="absolute top-6 right-6 text-gray-900 overflow-hidden">
-          <svg viewBox="0 0 24 24" aria-hidden="true" className="w-5 h-5 fill-current">
-            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
-          </svg>
-        </div>
-
-        {/* Header - User Info */}
-        <div className="flex items-center gap-4 mb-4">
-          {testimonial.image ? (
-            <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0 border border-gray-50 shadow-sm">
-              <Image 
-                src={testimonial.image} 
-                alt={testimonial.name} 
-                fill 
-                sizes="48px"
-                className="object-cover"
-              />
-            </div>
-          ) : (
-            <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center font-bold text-orange-600 text-sm uppercase shrink-0">
-              {testimonial.name.charAt(0)}
-            </div>
-          )}
-          <div className="flex flex-col">
-            <span className="font-bold text-gray-900 text-base leading-tight">
-              {testimonial.name}
-            </span>
-            <span className="text-gray-500 text-sm">
-              {testimonial.handle}
-            </span>
+      <div className="p-2 bg-white/5 border border-white/10 rounded-[2.5rem] transition-all duration-300 group-hover:border-orange-500/20">
+        <div className="bg-white rounded-[2rem] p-6 border border-gray-100 flex flex-col relative overflow-hidden h-full shadow-none group-hover:border-orange-500/10 transition-colors">
+          <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-orange-500/10 to-transparent" />
+          
+          {/* X Icon */}
+          <div className="absolute top-6 right-6 text-gray-900 overflow-hidden z-10">
+            <svg viewBox="0 0 24 24" aria-hidden="true" className="w-5 h-5 fill-current opacity-20 group-hover:opacity-100 transition-opacity">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+            </svg>
           </div>
-        </div>
 
-        {/* Content */}
-        <p className="text-gray-800 text-[15px] leading-relaxed font-normal">
-          {getHighlightedText(testimonial.content, testimonial.highlights)}
-        </p>
+          {/* Header - User Info */}
+          <div className="flex items-center gap-4 mb-4 relative z-10">
+            {testimonial.image ? (
+              <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0 border border-gray-50 shadow-sm">
+                <Image 
+                  src={testimonial.image} 
+                  alt={testimonial.name} 
+                  fill 
+                  sizes="48px"
+                  className="object-cover"
+                />
+              </div>
+            ) : (
+              <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center font-bold text-orange-600 text-sm uppercase shrink-0">
+                {testimonial.name.charAt(0)}
+              </div>
+            )}
+            <div className="flex flex-col">
+              <span className="font-bold text-gray-900 text-base leading-tight">
+                {testimonial.name}
+              </span>
+              <span className="text-gray-500 text-sm">
+                {testimonial.handle}
+              </span>
+            </div>
+          </div>
+
+          {/* Content */}
+          <p className="text-gray-800 text-[15px] leading-relaxed font-normal relative z-10">
+            {getHighlightedText(testimonial.content, testimonial.highlights)}
+          </p>
+        </div>
       </div>
     </a>
   );
@@ -212,15 +224,10 @@ export default function FounderNote() {
       <div className="max-w-7xl mx-auto px-6">
         {/* Split Founder Note Layout */}
         <div className="max-w-4xl mx-auto mb-24">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex flex-col md:flex-row gap-12 md:gap-20 items-start"
-          >
+        <div className="flex flex-col md:flex-row gap-12 md:gap-20 items-start">
             {/* Profile Column */}
             <div className="flex-shrink-0 flex flex-col items-center gap-4">
-              <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+              <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-2xl overflow-hidden border border-white/10 shadow-none">
                 <Image 
                   src="/founder.png" 
                   alt="Tim Jayas" 
@@ -267,45 +274,40 @@ export default function FounderNote() {
                 <p className="text-white font-serif-italic italic text-xl opacity-90">- Tim Jayas</p>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Early Impressions Part of Story */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-        >
-          <div className="text-center mb-24">
+        <div>
+          <div className="text-center mb-16">
             
             <h3 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tighter leading-tight">Feedback from the community</h3>
             <p className="text-gray-500 text-sm md:text-base font-medium opacity-60">Reactions from the early RedLeads community</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 items-start">
             {/* Column 1 */}
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-3">
               {[testimonials[6]!, testimonials[10]!, testimonials[12]!, testimonials[2]!, testimonials[3]!].map((testimonial, idx) => (
                 <TestimonialCard key={`col1-${idx}`} testimonial={testimonial} />
               ))}
             </div>
             
             {/* Column 2 */}
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-3">
               {[testimonials[4]!, testimonials[9]!, testimonials[13]!, testimonials[1]!, testimonials[0]!].map((testimonial, idx) => (
                 <TestimonialCard key={`col2-${idx}`} testimonial={testimonial} />
               ))}
             </div>
 
             {/* Column 3 */}
-            <div className="flex flex-col gap-4">
-              {[testimonials[7]!, testimonials[8]!, testimonials[5]!, testimonials[11]!].map((testimonial, idx) => (
+            <div className="flex flex-col gap-3">
+              {[testimonials[7]!, testimonials[8]!, testimonials[5]!, testimonials[11]!, testimonials[14]!].map((testimonial, idx) => (
                 <TestimonialCard key={`col3-${idx}`} testimonial={testimonial} />
               ))}
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

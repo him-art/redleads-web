@@ -26,13 +26,7 @@ export default function SectionCTA({
   return (
     <section className="pt-16 pb-24 bg-[#1a1a1a] border-t border-white/5">
       <div className="max-w-7xl mx-auto px-6">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="flex flex-col items-center text-center"
-        >
+        <div className="flex flex-col items-center text-center">
           <h2 className="text-4xl md:text-[5rem] font-black text-white mb-8 tracking-tighter leading-[1.05]">
           <span className="block sm:whitespace-nowrap">Ready to find your</span>
           <span className="block text-orange-500 font-serif-italic sm:whitespace-nowrap">paying customers?</span>
@@ -47,7 +41,7 @@ export default function SectionCTA({
               <span className="text-[10px] px-2 py-0.5 bg-white/10 text-white rounded-full border border-white/20 group-hover:bg-white/20 transition-colors">PRO</span>
             </Link>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -196,7 +196,7 @@ export default function RootLayout({
                     },
                     {
                       "@type": "Question",
-                      "name": "Can I 7 DAY MONEY BACK GUARANTEE?",
+                      "name": "Do you offer a money-back guarantee?",
                       "acceptedAnswer": {
                         "@type": "Answer",
                         "text": "Absolutely. There are no contracts or lock-in periods. You can cancel your subscription at any time within 7 days."
