@@ -41,7 +41,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
     useEffect(() => { setIsMounted(true); }, []);
 
     // Trial expiration check - Moved up to use for initialization
-    const isGrowth = profile?.subscription_tier === 'growth' || profile?.effective_tier === 'growth';
+    const isGrowth = profile?.subscription_tier === 'growth' || profile?.effective_tier === 'growth' || profile?.subscription_tier === 'lifetime';
     const isStarter = profile?.subscription_tier === 'starter' || profile?.effective_tier === 'starter' || isGrowth;
     const isAdmin = profile?.is_admin === true;
     

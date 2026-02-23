@@ -23,7 +23,7 @@ export default function LiveDiscoveryTab({
     initialSearch?: string, 
     onNavigate: (tab: string) => void 
 }) {
-    const isEffectiveGrowth = isGrowth || isAdmin;
+    const isEffectiveGrowth = isGrowth || isAdmin || profile?.subscription_tier === 'lifetime';
     const isActuallySubscribed = isEffectiveGrowth || isStarter;
     const [isUpgrading, setIsUpgrading] = useState(false);
 

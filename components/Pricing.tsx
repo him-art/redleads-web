@@ -200,7 +200,7 @@ const Pricing = () => {
                                                         {item.name}
                                                     </span>
                                                     {item.soon && (
-                                                        <span className="bg-[#1a1a1a] text-gray-700 text-[8px] px-1.5 py-0.5 rounded-md font-black tracking-[0.2em] border border-white/5">SOON</span>
+                                                        <span className="bg-orange-500/10 text-orange-400 text-[8px] px-1.5 py-0.5 rounded-md font-black tracking-[0.2em] border border-orange-500/20">SOON</span>
                                                     )}
                                                 </div>
                                             </li>
@@ -220,7 +220,7 @@ const Pricing = () => {
                                             : 'bg-white/5 border-white/5 text-white hover:bg-white hover:text-black'
                                     }`}
                                 >
-                                    {isLoading === plan.name ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <>Start 3-day free trial <MaterialIcon name="arrow_right" size={16} /></>}
+                                    {isLoading === plan.name ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <>Get Started <MaterialIcon name="arrow_right" size={16} /></>}
                                 </button>
                                 <p className="mt-6 text-center text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 transition-colors">
                                     CANCEL ANYTIME
