@@ -172,7 +172,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
 
                     <div className="relative flex items-center">
                         <div className="absolute left-4 sm:left-6 text-text-secondary group-focus-within:text-primary transition-colors flex items-center justify-center">
-                            {isScanning ? <LoadingIcon className="w-4 h-4" /> : isLocked ? <MaterialIcon name="lock" size={18} className="text-primary/50" /> : <MaterialIcon name="public" size={18} />}
+                            {isScanning ? <LoadingIcon className="w-4 h-4" /> : isLocked ? <MaterialIcon name="public" size={18} className="text-primary/50" /> : <MaterialIcon name="public" size={18} />}
                         </div>
                         <input 
                             id="product-url-search"
