@@ -28,7 +28,7 @@ export default function PrivacyPolicy() {
               <p>We collect the following personal information from you:</p>
               <ul className="list-disc pl-5 space-y-2">
                 <li><strong>Name & Email:</strong> We collect your name and email address for authentication via Google OAuth, to personalize your experience, and to send you updates regarding relevant Reddit leads.</li>
-                <li><strong>Payment Information:</strong> We collect payment details through Stripe to process subscriptions securely. We do not store your payment information on our servers.</li>
+                <li><strong>Payment Information:</strong> We collect payment details through Dodo Payments to process subscriptions securely. We do not store your payment information on our servers.</li>
                 <li><strong>Website Information:</strong> We collect and analyze your website URL and description to help find relevant Reddit opportunities.</li>
                 <li><strong>Search Data:</strong> We store your search keywords and selected subreddits to monitor Reddit on your behalf.</li>
               </ul>
@@ -48,7 +48,7 @@ export default function PrivacyPolicy() {
               <li>Monitoring Reddit for relevant marketing opportunities.</li>
               <li>Analyzing post relevance using AI.</li>
               <li>Sending notifications about new relevant leads.</li>
-              <li>Subscription and payment processing via Stripe.</li>
+              <li>Subscription and payment processing via Dodo Payments.</li>
             </ul>
           </section>
 
@@ -61,7 +61,7 @@ export default function PrivacyPolicy() {
 
           <section className="space-y-4">
             <h2 className="text-white font-medium">4. Data Sharing</h2>
-            <p>We do not sell your personal data. We only share data with trusted service providers necessary to operate: Stripe (Payments), Supabase (Auth & DB), and OpenAI (AI analysis).</p>
+            <p>We do not sell your personal data. We only share data with trusted service providers necessary to operate: Dodo Payments (Payments), Supabase (Auth & DB), and OpenAI (AI analysis).</p>
           </section>
 
           <section className="space-y-4">

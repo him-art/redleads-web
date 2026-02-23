@@ -240,8 +240,8 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
             {/* Subscription Options - Always Visible */}
             <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-8 pb-12">
                 {[
-                    { id: 'starter', name: 'Starter Plan', price: '$15', oldPrice: '$19', desc: '5 keywords, 2 power searches & 100 AI reply drafts per month', primary: false, active: isStarter },
-                    { id: 'growth', name: 'Growth Plan', price: '$29', oldPrice: '$39', desc: '15 keywords, 5 power searches & 500 AI reply drafts per month', primary: true, active: isGrowth }
+                    { id: 'starter', name: 'Starter Plan', price: '$7', oldPrice: '$15', desc: '5 keywords, 2 power searches & 100 AI reply drafts per month', primary: false, active: isStarter },
+                    { id: 'growth', name: 'Growth Plan', price: '$14', oldPrice: '$29', desc: '15 keywords, 5 power searches & 500 AI reply drafts per month', primary: true, active: isGrowth }
                 ].map((plan) => (
                     <div key={plan.id} className={`p-8 sm:p-10 rounded-[2.5rem] border flex flex-col transition-all relative overflow-hidden ${plan.active ? 'border-primary ring-2 ring-primary/20 bg-primary/[0.03]' : plan.primary ? 'glass-panel border-primary/20' : 'bg-white/[0.02] border-border-subtle'}`}>
                         {plan.active && (
@@ -308,8 +308,8 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
 
                             <div className="flex flex-wrap gap-8 mb-8">
                                 {[
-                                    { label: 'One-Time', value: '$199', icon: <Zap size={14} /> },
-                                    { label: 'Value', value: '$348/Year', icon: <CheckCircle2 size={14} /> }
+                                    { label: 'One-Time', value: '$20', icon: <Zap size={14} /> },
+                                    { label: 'Value', value: '$168/Year', icon: <CheckCircle2 size={14} /> }
                                 ].map((pill) => (
                                     <div key={pill.label} className="flex flex-col">
                                         <div className="flex items-center gap-2 text-text-secondary mb-1">

@@ -9,7 +9,7 @@ export default function TermsOfService() {
         </Link>
         
         <h1 className="text-2xl font-semibold text-white mb-2">Terms of Service</h1>
-        <p className="text-sm text-gray-500 mb-12 border-b border-white/5 pb-4">Last Updated: January 21, 2026</p>
+        <p className="text-sm text-gray-500 mb-12 border-b border-white/5 pb-4">Last Updated: February 23, 2026</p>
 
         <article className="space-y-10 text-[15px] leading-relaxed">
           <section className="space-y-4">
@@ -29,14 +29,17 @@ export default function TermsOfService() {
           <section className="space-y-4">
             <h2 className="text-white font-medium">2. Subscription and Services</h2>
             <p>
-              When you subscribe to RedLeads, you gain access to our Reddit monitoring and AI-powered lead discovery features. Your subscription will automatically renew according to your selected billing cycle unless cancelled. You can cancel your subscription at any time through your account settings or the Stripe customer portal.
+              When you subscribe to RedLeads, you gain access to our Reddit monitoring and AI-powered lead discovery features. Your subscription will automatically renew according to your selected billing cycle unless cancelled. You can cancel your subscription at any time through your account settings or the billing portal.
             </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-white font-medium">3. Refund Policy</h2>
             <p>
-              We offer refunds on a case-by-case basis. If you are not satisfied with our service, please contact us at RedLeads.app@gmail.com to discuss your situation.
+              We offer refunds on a case-by-case basis. If you are not satisfied with our service, please contact us at RedLeads.app@gmail.com. 
+            </p>
+            <p>
+              Please note that in the event of a refund, the amount returned will be the original payment amount minus any non-refundable transaction fees and service charges incurred by our payment processor (Dodo Payments). This ensures we can maintain our service while covering the hard costs of processing your initial transaction.
             </p>
           </section>
 

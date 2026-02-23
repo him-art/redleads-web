@@ -27,7 +27,7 @@ const Card = ({ title, description, children, delay }: { title: string, descript
       </div>
       
       <div className="mt-auto">
-          <h3 className="text-xl font-black text-white mb-4 tracking-tighter uppercase uppercase">{title}</h3>
+          <h3 className="text-2xl font-black text-white mb-4 tracking-tight leading-snug">{title}</h3>
           <p className="text-gray-500 text-[13px] font-medium leading-relaxed tracking-wide">{description}</p>
       </div>
     </motion.div>

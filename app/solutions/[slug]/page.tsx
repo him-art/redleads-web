@@ -66,6 +66,10 @@ export default async function SolutionPage({ params }: Props) {
               "@type": "Offer",
               "price": "0",
               "priceCurrency": "USD"
+            },
+            "areaServed": {
+              "@type": "Country",
+              "name": "United States"
             }
           })
         }}

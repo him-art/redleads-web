@@ -3,6 +3,7 @@ import { getAllPosts } from './blog/posts';
 import { getAllComparisons } from './compare/data';
 import { getAllSubredditHubs } from './subreddits/data';
 import { getAllSolutions } from './solutions/data';
+import masterSubreddits from '@/data/master-subreddits.json';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.redleads.app';
@@ -97,5 +98,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [...staticPages, ...blogPosts, ...comparisonPages, ...subredditPages, ...solutionPages];
+  // Combinatorial pSEO pages
+  const pseoPages = getAllSolutions().flatMap((solution) => 
+    masterSubreddits.map((subreddit) => {
+      const subSlug = subreddit.toLowerCase().replace(/r\//, '').replace(/\//g, '');
+      return {
+        url: `${baseUrl}/solutions/${solution.slug}/${subSlug}`,
+        lastModified: new Date(),
+        changeFrequency: 'monthly' as const,
+        priority: 0.6,
+      };
+    })
+  );
+
+  return [
+    ...staticPages, 
+    {
+      url: `${baseUrl}/solutions/directory`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    },
+    ...blogPosts, 
+    ...comparisonPages, 
+    ...subredditPages, 
+    ...solutionPages,
+    ...pseoPages
+  ];
 }

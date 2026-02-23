@@ -36,6 +36,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Google Indexing API
+service-account.json
+scripts/indexed-cache.json
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

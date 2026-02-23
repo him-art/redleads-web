@@ -104,6 +104,10 @@ export default function RootLayout({
                     "priceCurrency": "USD"
                   },
                   "description": "RedLeads is the official AI lead discovery agent for Reddit. It identifies high-intent leads from Reddit conversations, helping founders find their first users and scale customer acquisition.",
+                  "areaServed": {
+                    "@type": "Country",
+                    "name": "United States"
+                  },
                   "aggregateRating": {
                     "@type": "AggregateRating",
                     "ratingValue": "4.8",

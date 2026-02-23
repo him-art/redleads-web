@@ -8,6 +8,14 @@ const Pricing = () => {
     const [isLoading, setIsLoading] = useState<string | null>(null);
     const [slots, setSlots] = useState<{ sold: number; total: number } | null>(null);
 
+    // New Dynamic Pricing Logic ($10 every 20 users)
+    const currentUsers = slots?.sold || 73; 
+    const isEarlyBird = currentUsers < 80;
+    const currentPrice = isEarlyBird ? 20 : 30 + Math.floor((currentUsers - 80) / 20) * 10;
+    const nextPrice = currentPrice + 10;
+    const nextCheckpoint = isEarlyBird ? 80 : 80 + (Math.floor((currentUsers - 80) / 20) + 1) * 20;
+    const spotsLeft = nextCheckpoint - currentUsers;
+
     useEffect(() => {
         const fetchSlots = async () => {
             const supabase = createClient();
@@ -55,8 +63,8 @@ const Pricing = () => {
     const plans = [
         {
             name: 'Starter',
-            price: 15,
-            originalPrice: 19,
+            price: 7,
+            originalPrice: 15,
             description: 'Perfect for getting started with Reddit marketing',
             features: {
                 inbound: [
@@ -76,8 +84,8 @@ const Pricing = () => {
         },
         {
             name: 'Growth',
-            price: 29,
-            originalPrice: 39,
+            price: 14,
+            originalPrice: 29,
             description: 'For growing startups to get maximum benefits',
             highlight: true,
             badge: 'BEST VALUE',
@@ -215,7 +223,7 @@ const Pricing = () => {
                                     {isLoading === plan.name ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <>Start 3-day free trial <MaterialIcon name="arrow_right" size={16} /></>}
                                 </button>
                                 <p className="mt-6 text-center text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 transition-colors">
-                                    7 DAY MONEY BACK GUARANTEE
+                                    CANCEL ANYTIME
                                 </p>
                             </div>
                             </div>
@@ -227,7 +235,7 @@ const Pricing = () => {
                         <div className="absolute -top-3 right-8 bg-yellow-500 text-black px-6 py-2 rounded-2xl flex items-center gap-3 z-30 shadow-none border-none">
                             <span className="text-xs font-black uppercase tracking-[0.3em] flex items-center gap-3">
                                 <MaterialIcon name="workspace_premium" size={14} className="text-black" />
-                                10 SEATS LEFT
+                                Limited Time Offer
                             </span>
                         </div>
                         <div className="relative h-full p-8 md:p-12 bg-gradient-to-br from-[#0c0c0c] to-black border-2 border-red-500/50 rounded-[2rem] group flex flex-col overflow-hidden">
@@ -245,13 +253,19 @@ const Pricing = () => {
                             
 
                             <div className="mb-10 relative">
-                                <h3 className="text-2xl font-black mb-6 text-white flex items-center gap-2">
+                                <h3 className="text-2xl font-black text-white flex items-center gap-2 mb-6">
                                     Lifetime Plan
                                 </h3>
-                                <div className="flex items-baseline gap-2 mb-4">
-                                    <span className="text-6xl font-black text-white tracking-tighter">$199</span>
+                                
+                                <div className="flex items-baseline gap-2 mb-2">
+                                    <span className="text-6xl font-black text-white tracking-tighter">${currentPrice}</span>
                                     <span className="text-sm font-bold text-gray-600 uppercase tracking-widest ml-1">One-time</span>
                                 </div>
+                                <div className="flex items-center gap-2 mb-8">
+                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest leading-none">Next Price:</span>
+                                    <span className="text-xs font-black text-orange-500/50 tracking-tighter">${nextPrice}</span>
+                                </div>
+
                                 <p className="text-xs font-bold text-gray-500 leading-relaxed max-w-[240px] uppercase tracking-wider">Full lifetime access and all future features included.</p>
                             </div>
 
@@ -285,6 +299,14 @@ const Pricing = () => {
                                             </span>
                                         </li>
                                     ))}
+                                    <li className="flex items-center gap-4 group pt-2 border-t border-white/5">
+                                        <div className="p-1.5 rounded-lg text-red-500 bg-red-500/10 border border-red-500/20">
+                                            <MaterialIcon name="bolt" size={14} />
+                                        </div>
+                                        <span className="text-xs font-black uppercase tracking-widest text-red-500">
+                                            Price increase by $10 after {spotsLeft} users
+                                        </span>
+                                    </li>
                                 </ul>
                             </div>
 
@@ -298,7 +320,7 @@ const Pricing = () => {
                                     {isLoading === 'Lifetime' ? <div className="w-4 h-4 border-2 border-white/30 border-t-black rounded-full animate-spin" /> : <>Get Lifetime Access <MaterialIcon name="arrow_right" size={16} /></>}
                                 </button>
                                 <p className="mt-6 text-center text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
-                                    14-DAY MONEY BACK GUARANTEE
+                                    CANCEL ANYTIME
                                 </p>
                             </div>
                         </div>
@@ -309,10 +331,65 @@ const Pricing = () => {
                 <div className="mt-20 max-w-3xl mx-auto p-2 bg-white/5 border border-white/5 rounded-[3.5rem]">
                     <div className="rounded-[3rem] bg-[#0c0c0c] border border-white/5 p-12 md:p-16 text-center relative overflow-hidden group hover:border-orange-500/20 transition-all shadow-none">
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                        <h3 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tighter">Start with a 3-day free trial</h3>
-                        <p className="text-gray-500 text-[15px] font-medium tracking-[0.2em] leading-[1.8] max-w-xl mx-auto opacity-70">
-                            Ads can cost you thousands of dollars. RedLeads discovers hidden opportunities on Reddit and drives organic growth for the fraction of the cost. Literally pays itself if you get a single new customer.
-                        </p>
+                        
+                        <div className="mb-12">
+                            <div className="flex justify-between items-center mb-6">
+                                <p className="text-[10px] font-black text-[#ff914d] uppercase tracking-[0.4em]">Lifetime Plan</p>
+                                <p className="text-[14px] font-black text-white uppercase tracking-[0.4em] bg-white/5 px-4 py-2 rounded-full border border-white/5">
+                                    {currentUsers} FOUNDERS JOINED
+                                </p>
+                            </div>
+                            
+                            {/* Global Roadmap Visual */}
+                            <div className="relative mb-8 pt-4">
+                                {/* Checkpoints and Price Labels (Above/Below bar for legibility) */}
+                                <div className="absolute inset-0 flex justify-between items-start z-20 pointer-events-none">
+                                    {[60, 80, 100, 120, 140].map((tick) => {
+                                        const pos = ((tick - 50) / 100) * 100;
+                                        const tickPrice = tick < 80 ? 20 : 30 + Math.floor((tick - 80) / 20) * 10;
+                                        return (
+                                            <div key={tick} className="absolute flex flex-col items-center" style={{ left: `${pos}%` }}>
+                                                {/* Vertical Notch */}
+                                                <div className={`w-[2px] h-8 mb-2 ${currentUsers >= tick ? 'bg-green-500' : 'bg-white/10'}`} />
+                                                {/* Price Label (Below) */}
+                                                <span className={`text-[16px] font-black tracking-tighter ${currentUsers >= tick ? 'text-green-500' : 'text-gray-700'}`}>
+                                                    ${tickPrice}
+                                                </span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* Main Progress Bar Track */}
+                                <div className="relative h-4 bg-white/5 rounded-full border border-white/10 overflow-hidden shadow-inner">
+                                    <div 
+                                        className="h-full bg-gradient-to-r from-orange-600 via-orange-500 to-red-500 rounded-r-full shadow-[0_0_40px_rgba(249,115,22,0.4)] transition-all duration-1000 ease-out"
+                                        style={{ width: `${Math.min(100, Math.max(0, ((currentUsers - 50) / 100) * 100))}%` }}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* End Scale Labels */}
+                            <div className="flex justify-between items-center text-[13px] font-black text-white/70 uppercase tracking-[0.2em] px-2">
+                                <div className="flex flex-col items-start gap-1">
+                                    <span className="text-white/20">|</span>
+                                    <span>50 USERS</span>
+                                </div>
+                                <div className="flex flex-col items-end gap-1">
+                                    <span className="text-white/20">|</span>
+                                    <span>150 USERS</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="max-w-xl mx-auto">
+                            <h3 className="text-3xl md:text-4xl font-black text-white mb-6 tracking-tight">Lock In The Lowest Price Forever</h3>
+                            <p className="text-gray-400 text-[14px] font-medium tracking-[0.1em] leading-[1.8] opacity-90">
+                                We reward the fast movers. RedLeads' value grows every day as we ship new features. 
+                                Secure your lifetime access before the next milestone is hit.
+                                <span className="block mt-4 text-orange-500/80 font-black">Once a tier is gone, it never returns.</span>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

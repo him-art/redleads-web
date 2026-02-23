@@ -57,7 +57,7 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                         <div className="p-6 rounded-[2rem] bg-white/5 border border-white/5 flex flex-col">
                             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 mb-2">Starter</h3>
                             <div className="flex items-baseline gap-2 mb-6">
-                                <span className="text-2xl font-black text-white">$15</span>
+                                <span className="text-2xl font-black text-white">$7</span>
                                 <span className="text-xs text-gray-600 font-bold uppercase ml-1">/mo</span>
                             </div>
                             <ul className="space-y-3 mb-8 flex-grow">
@@ -82,7 +82,7 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                         <div className="p-6 rounded-[2rem] bg-orange-500/[0.03] border border-orange-500/20 flex flex-col ring-1 ring-orange-500/10 relative overflow-hidden">
                             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 mb-2">Growth</h3>
                             <div className="flex items-baseline gap-2 mb-6">
-                                <span className="text-2xl font-black text-white">$29</span>
+                                <span className="text-2xl font-black text-white">$14</span>
                                 <span className="text-xs text-gray-600 font-bold uppercase ml-1">/mo</span>
                             </div>
                             <ul className="space-y-3 mb-8 flex-grow">
@@ -108,7 +108,7 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                                 <MaterialIcon name="workspace_premium" size={8} /> {slots ? `${slots.total - slots.sold}/${slots.total}` : '...'} Seats Left
                             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-black mb-2">Life Time</h3>
                             <div className="flex items-baseline gap-2 mb-6">
-                                <span className="text-2xl font-black text-black">$199</span>
+                                <span className="text-2xl font-black text-black">$20</span>
                                 <span className="text-[8px] text-gray-600 font-black uppercase ml-1 tracking-tighter">Founding</span>
                             </div>
                             <ul className="space-y-3 mb-8 flex-grow">
@@ -131,7 +131,7 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                     </div>
 
                     <p className="mt-8 text-[9px] font-bold text-gray-700 uppercase tracking-[0.2em]">
-                        7-Day Guarantee • 7 DAY MONEY BACK GUARANTEE • Secure Dodo Checkout
+                        7-Day Guarantee • CANCEL ANYTIME • Secure Dodo Checkout
                     </p>
                 </div>
             </div>

@@ -46,7 +46,7 @@ const HowItWorks = () => {
                 </div>
 
                 <div className="mt-auto">
-                  <h3 className="text-xl font-black text-white mb-4 tracking-tight uppercase tracking-tighter">Define Your Target</h3>
+                  <h3 className="text-2xl font-black text-white mb-4 tracking-tight leading-snug">Define Your Target</h3>
                   <p className="text-gray-500 text-[13px] font-medium leading-relaxed tracking-wide">
                     Enter your website and target audience. RedLeads automatically maps out highly relevant subreddits and potential customer keywords.
                   </p>
@@ -74,7 +74,7 @@ const HowItWorks = () => {
                 </div>
 
                 <div className="mt-auto">
-                  <h3 className="text-xl font-black text-white mb-4 tracking-tight uppercase tracking-tighter">AI Identifies Leads</h3>
+                  <h3 className="text-2xl font-black text-white mb-4 tracking-tight leading-snug">AI Identifies Leads</h3>
                   <p className="text-gray-500 text-[13px] font-medium leading-relaxed tracking-wide">
                     Our advanced AI monitors 24/7 to find high-intent conversations, surface pain points, and score every lead based on buying signals.
                   </p>
@@ -102,7 +102,7 @@ const HowItWorks = () => {
                 </div>
 
                 <div className="mt-auto">
-                  <h3 className="text-xl font-black text-white mb-4 tracking-tight uppercase tracking-tighter">Join the Conversation</h3>
+                  <h3 className="text-2xl font-black text-white mb-4 tracking-tight leading-snug">Join the Conversation</h3>
                   <p className="text-gray-500 text-[13px] font-medium leading-relaxed tracking-wide">
                     Engage with potential customers by providing value first. Build authority by solving problems and naturally introducing your product.
                   </p>

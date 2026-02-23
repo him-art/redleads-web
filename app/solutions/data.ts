@@ -580,6 +580,251 @@ export const solutions: SolutionData[] = [
       title: 'Find your first 100 users this weekend.',
       buttonText: 'Validate Now'
     }
+  },
+  {
+    slug: 'validate-saas-idea',
+    metaTitle: 'Validate Your SaaS Idea on Reddit | RedLeads',
+    metaDescription: 'Don\'t build in the dark. Use AI to find "hair on fire" problems on Reddit. Validate your SaaS MVP with real user pain points before writing a single line of code.',
+    hero: {
+      badgeIcon: 'fact_check',
+      badgeText: 'Stage: Validation',
+      title: 'Validate Your Idea',
+      titleHighlight: 'Before You Build',
+      description: 'The #1 reason startups fail is lack of market need. RedLeads monitors niche subreddits to find people articulating the exact pain points your SaaS intends to solve.',
+      primaryCta: 'Find Market Demand',
+      secondaryCta: 'See Pain Points'
+    },
+    painPoints: [
+      {
+        icon: 'search',
+        colorClass: 'text-orange-500',
+        bgClass: 'bg-orange-500/10',
+        title: 'Hidden Demand',
+        description: 'People don\'t tell you what they want, they complain about what they have. We find those complaints.'
+      },
+      {
+        icon: 'history_edu',
+        colorClass: 'text-blue-500',
+        bgClass: 'bg-blue-500/10',
+        title: 'Evidence-Based Dev',
+        description: 'Show your investors or co-founders 50+ Reddit threads asking for your feature before you start coding.'
+      },
+      {
+        icon: 'flame_kindling',
+        colorClass: 'text-red-500',
+        bgClass: 'bg-red-500/10',
+        title: 'Hair on Fire Problems',
+        description: 'Target users who are so frustrated they are literally begging for a solution right now.'
+      }
+    ],
+    useCases: {
+      title: 'Validation Strategies for <br /><span class="text-orange-500 italic font-serif">Indie Hackers</span>',
+      items: [
+        {
+          title: 'Problem Intent Search',
+          description: 'Monitor: "I wish there was a tool for", "Why is it so hard to", "Automate [Manual Process]".'
+        },
+        {
+          title: 'Competitor Weakness Analysis',
+          description: 'Monitor: "[Competitor] is too expensive", "[Competitor] UI is bad", "Is [Competitor] down?".'
+        },
+        {
+          title: 'Early Adopter Outreach',
+          description: 'Find people asking "How do I solve X?" and offer a manual solution to validate interest.'
+        },
+        {
+          title: 'Niche Market Mapping',
+          description: 'Identify which subreddits have the highest volume of recurring technical questions.'
+        }
+      ]
+    },
+    footerCta: {
+      title: 'Stop guessing. Start validating with real data.',
+      buttonText: 'Validate My Idea'
+    }
+  },
+  {
+    slug: 'get-first-users',
+    metaTitle: 'Get Your First 100 SaaS Users on Reddit | RedLeads',
+    metaDescription: 'The "Launch Day" peak is a myth. Use RedLeads AI to find your first 100 paying users by engaging with high-intent discussions on Reddit.',
+    hero: {
+      badgeIcon: 'person_add',
+      badgeText: 'Stage: 0 to 1',
+      title: 'Get Your First',
+      titleHighlight: '100 Paying Users',
+      description: 'Forget expensive ads. Your first 100 users are in the comments section. We alert you when someone asks for a tool exactly like yours.',
+      primaryCta: 'Find Initial Users'
+    },
+    painPoints: [
+      {
+        icon: 'trending_down',
+        colorClass: 'text-red-500',
+        bgClass: 'bg-red-500/10',
+        title: 'Ghost Town Syndrome',
+        description: 'You launched on Product Hunt, got a spike, and now traffic is at zero. You need a daily user engine.'
+      },
+      {
+        icon: 'payments',
+        colorClass: 'text-green-500',
+        bgClass: 'bg-green-500/10',
+        title: 'High Burn Rate',
+        description: 'Stop spending $500/mo on FB ads that don\'t convert. Use Reddit for $0 CPA organic growth.'
+      },
+      {
+        icon: 'psychology',
+        colorClass: 'text-purple-500',
+        bgClass: 'bg-purple-500/10',
+        title: 'Ideal Customer Profile',
+        description: 'Don\'t know who your ICP is? See who responds best to your solution on different subreddits.'
+      }
+    ],
+    useCases: {
+      title: 'How to Hit <br /><span class="text-orange-500 italic font-serif">The 100 User Mark</span>',
+      items: [
+        {
+          title: 'The Helpful Expert Angle',
+          description: 'Answer a complex question on r/SaaS and naturally mention how your tool automates that specific part.'
+        },
+        {
+          title: 'The "I built this" Intro',
+          description: 'Monitor "Showoff Saturday" threads or specific "Looking for feedback" requests in niche communities.'
+        },
+        {
+          title: 'Comparison Interjection',
+          description: 'When someone asks "X vs Y?", step in and explain how your "Z" solves the problems of both.'
+        },
+        {
+          title: 'Direct Message Intent',
+          description: 'Identify users with 90+ RedLeads intent scores and send a personal invite to your beta.'
+        }
+      ]
+    },
+    footerCta: {
+      title: 'Your first 100 users are waiting in the subreddits below.',
+      buttonText: 'Find Them Now'
+    }
+  },
+  {
+    slug: 'competitor-alternatives',
+    metaTitle: 'Reddit Strategy for Competitor Churn | RedLeads',
+    metaDescription: 'Target users looking for alternatives to your competitors. Use RedLeads to identify frustrated users the moment they decide to switch.',
+    hero: {
+      badgeIcon: 'swap_horiz',
+      badgeText: 'Stage: Market Grab',
+      title: 'Steal Users From',
+      titleHighlight: 'Your Competitors',
+      description: 'When a competitor has a downtime, a price hike, or a bad update, their users flock to Reddit. RedLeads ensures you are the first one they see.',
+      primaryCta: 'Start Monitoring Competitors'
+    },
+    painPoints: [
+      {
+        icon: 'money_off',
+        colorClass: 'text-red-500',
+        bgClass: 'bg-red-500/10',
+        title: 'Price Gouging',
+        description: 'When your competitor raises prices, their frustrated users search for "Alternative to [X]". Be there.'
+      },
+      {
+        icon: 'cloud_off',
+        colorClass: 'text-orange-500',
+        bgClass: 'bg-orange-500/10',
+        title: 'Unreliability',
+        description: 'If a major player goes down, we alert you instantly so you can offer your stable alternative to the masses.'
+      },
+      {
+        icon: 'mood_bad',
+        colorClass: 'text-blue-500',
+        bgClass: 'bg-blue-500/10',
+        title: 'Feature Overload',
+        description: 'Target users complaining that [Competitor] has become too bloated or hard to use.'
+      }
+    ],
+    useCases: {
+      title: 'The Strategic <br /><span class="text-orange-500 italic font-serif">Competitor Pivot</span>',
+      items: [
+        {
+          title: 'The "X Alternative" Keyword',
+          description: 'Set up high-priority alerts for "[Competitor] alternative" or "switch from [Competitor]".'
+        },
+        {
+          title: 'Service Downtime Monitoring',
+          description: 'Jump in threads during competitor outages with a "While they are down, try us" special offer.'
+        },
+        {
+          title: 'Negative Sentiment Alerts',
+          description: 'Our AI detects negative sentiment towards competitors, giving you the perfect opening.'
+        },
+        {
+          title: 'Pricing Comparison Charts',
+          description: 'Identify users complaining about [Competitor] pricing tiers and show them your better value.'
+        }
+      ]
+    },
+    footerCta: {
+      title: 'Your competitor\'s churn is your growth. Start monitoring.',
+      buttonText: 'Monitor Competitors'
+    }
+  },
+  {
+    slug: 'viral-saas-distribution',
+    metaTitle: 'SaaS Viral Distribution Strategy on Reddit | RedLeads',
+    metaDescription: 'Master Reddit viral loops. Use AI to identify content patterns that drive thousands of visitors to your SaaS landing page.',
+    hero: {
+      badgeIcon: 'auto_graph',
+      badgeText: 'Stage: Expansion',
+      title: 'Master Viral',
+      titleHighlight: 'Reddit Distribution',
+      description: 'One good Reddit post can drive more traffic than a years worth of SEO. Use RedLeads to find the "distribution windows" for your specific niche.',
+      primaryCta: 'Find Viral Opportunities'
+    },
+    painPoints: [
+      {
+        icon: 'visibility_off',
+        colorClass: 'text-red-500',
+        bgClass: 'bg-red-500/10',
+        title: 'Shadow-banning Fear',
+        description: 'Founders are afraid to post because they don\'t want to look like spammers. We show you the right way to engage.'
+      },
+      {
+        icon: 'timer',
+        colorClass: 'text-orange-500',
+        bgClass: 'bg-orange-500/10',
+        title: 'Perfect Timing',
+        description: 'Reddit posts have a short shelf life. We tell you when a community is most active and ready for your story.'
+      },
+      {
+        icon: 'psychology',
+        colorClass: 'text-green-500',
+        bgClass: 'bg-green-500/10',
+        title: 'Content-Market Fit',
+        description: 'Stop guessing which stories will go viral. Analyze successful threads in your niche to replicate their hooks.'
+      }
+    ],
+    useCases: {
+      title: 'Viral Hooks for <br /><span class="text-orange-500 italic font-serif">SaaS Distribution</span>',
+      items: [
+        {
+          title: 'The Transparency Loop',
+          description: 'Share your revenue or "how I built this" story in r/SideProject and r/SaaS for massive organic reach.'
+        },
+        {
+          title: 'The Comparison Anchor',
+          description: 'Post a "Top 10 Tools for X" where your tool is featured alongside famous industry players.'
+        },
+        {
+          title: 'The Problem-Solution Hook',
+          description: 'Describe a massive pain point you solved, sparking a conversation where your tool is the hero.'
+        },
+        {
+          title: 'The Free Tool Strategy',
+          description: 'Offer a free "mini-tool" related to your main SaaS to get users into your marketing funnels.'
+        }
+      ]
+    },
+    footerCta: {
+      title: 'One comment away from 10,000 visitors. Ready?',
+      buttonText: 'Start Distribution'
+    }
   }
 ];
 

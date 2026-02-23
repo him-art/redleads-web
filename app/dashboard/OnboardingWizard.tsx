@@ -388,8 +388,8 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                 <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/5 flex flex-col">
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary mb-3">Starter</h3>
                                     <div className="flex items-baseline gap-2 mb-1">
-                                        <span className="text-sm font-bold text-text-secondary/40 line-through">$19</span>
-                                        <span className="text-3xl font-black text-text-primary">$15</span>
+                                        <span className="text-sm font-bold text-text-secondary/40 line-through">$15</span>
+                                        <span className="text-3xl font-black text-text-primary">$7</span>
                                         <span className="text-xs text-text-secondary/50 font-bold uppercase">/mo</span>
                                     </div>
                                     <ul className="space-y-2.5 my-5 flex-grow">
@@ -415,8 +415,8 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                     </div>
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 mb-3">Growth</h3>
                                     <div className="flex items-baseline gap-2 mb-1">
-                                        <span className="text-sm font-bold text-orange-500/30 line-through">$39</span>
-                                        <span className="text-3xl font-black text-text-primary">$29</span>
+                                        <span className="text-sm font-bold text-orange-500/30 line-through">$29</span>
+                                        <span className="text-3xl font-black text-text-primary">$14</span>
                                         <span className="text-xs text-text-secondary/50 font-bold uppercase">/mo</span>
                                     </div>
                                     <ul className="space-y-2.5 my-5 flex-grow">
@@ -445,7 +445,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                 </button>
                                 <p className="text-[9px] font-bold text-text-secondary/40 uppercase tracking-[0.2em] flex items-center justify-center gap-1">
                                     <Shield size={10} />
-                                    7-Day Money-Back Guarantee • 7 DAY MONEY BACK GUARANTEE • Secure Checkout
+                                    Cancel Anytime • Secure Dodo Checkout
                                 </p>
                             </div>
                         </motion.div>
