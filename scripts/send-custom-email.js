@@ -80,7 +80,7 @@ async function send() {
         console.log('Sending email...');
         const data = await resend.emails.send({
             from: 'Tim Jayas <onboarding@redleads.app>',
-            to: ['hjayaswar@gmail.com'],
+            to: ['USER_EMAIL@example.com'],
             subject: 'Quick feedback on your keywords',
             html: emailHtml,
         });

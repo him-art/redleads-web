@@ -3,21 +3,47 @@
 import { CheckCircle2, Search, Compass, Bot, ShieldCheck, Crown, Zap, ArrowRight, Sparkles } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import LoadingIcon from '@/components/ui/LoadingIcon';
+import { useDashboardData } from '@/app/dashboard/DashboardDataContext';
+import { PLANS } from '@/lib/constants';
 
-export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: any; isGrowth: boolean; isAdmin: boolean }) {
-    const isStarter = profile?.subscription_tier === 'starter';
-    const isLifetime = profile?.subscription_tier === 'lifetime';
-    const isEffectiveGrowth = isGrowth || isAdmin || isLifetime;
-    const isSubscribed = isEffectiveGrowth || isStarter;
+export default function BillingTab() {
+    const { profile, trialStatus, planDetails } = useDashboardData();
+    const { isStarter, isGrowth, isAdmin, isLifetime } = planDetails;
+    const isSubscribed = isStarter || isGrowth || isAdmin;
 
     const [isLoading, setIsLoading] = useState<string | null>(null);
     const [isManaging, setIsManaging] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
+    const [slots, setSlots] = useState<{ sold: number; total: number } | null>(null);
+
+    // Dynamic Pricing Logic ($10 every 20 users) - Aligned with Pricing.tsx
+    const currentUsers = slots?.sold || 73; 
+    const isEarlyBird = currentUsers < 80;
+    const currentPrice = isEarlyBird ? 20 : 30 + Math.floor((currentUsers - 80) / 20) * 10;
+    const spotsLeft = isEarlyBird ? 80 - currentUsers : 80 + (Math.floor((currentUsers - 80) / 20) + 1) * 20 - currentUsers;
+
     useEffect(() => { 
-        setIsMounted(true); 
+        setIsMounted(true);
+        const fetchSlots = async () => {
+            const { createClient } = await import('@/lib/supabase/client');
+            const supabase = createClient();
+            const { data } = await supabase
+                .from('lifetime_slots')
+                .select('sold_slots, total_slots')
+                .single();
+            
+            if (data) {
+                setSlots({ sold: data.sold_slots, total: data.total_slots });
+            }
+        };
+        fetchSlots();
     }, []);
 
     const handleUpgrade = async (plan: 'starter' | 'growth' | 'lifetime') => {
+        if (isLifetime && plan !== 'lifetime') {
+            alert("You already have Lifetime Access! This includes all features from other plans as well.");
+            return;
+        }
         setIsLoading(plan);
         try {
             const res = await fetch('/api/payments/create-checkout', {
@@ -204,7 +230,7 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
                     <div className="mb-12">
                         <p className="text-[10px] font-black text-text-secondary uppercase tracking-[0.4em] mb-4">Membership Status</p>
                         <h3 className="text-4xl sm:text-5xl font-black text-text-primary tracking-tight">
-                            {isAdmin ? 'Administrator' : isLifetime ? 'Lifetime Plan' : isGrowth ? 'Growth Plan' : isStarter ? 'Starter Plan' : (isActuallyExpired ? 'Free Tier' : 'Trial Plan')}
+                            {planDetails.name}
                         </h3>
                     </div>
 
@@ -240,8 +266,8 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
             {/* Subscription Options - Always Visible */}
             <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-8 pb-12">
                 {[
-                    { id: 'starter', name: 'Starter Plan', price: '$7', oldPrice: '$15', desc: '5 keywords, 2 power searches & 100 AI reply drafts per month', primary: false, active: isStarter },
-                    { id: 'growth', name: 'Growth Plan', price: '$14', oldPrice: '$29', desc: '15 keywords, 5 power searches & 500 AI reply drafts per month', primary: true, active: isGrowth }
+                    { id: 'starter', name: 'Starter Plan', price: '$7', oldPrice: '$15', desc: '5 keywords, 2 power searches & 100 AI reply drafts per month', primary: false, active: planDetails.id === 'starter' },
+                    { id: 'growth', name: 'Growth Plan', price: '$14', oldPrice: '$29', desc: '15 keywords, 5 power searches & 500 AI reply drafts per month', primary: true, active: planDetails.id === 'growth' }
                 ].map((plan) => (
                     <div key={plan.id} className={`p-8 sm:p-10 rounded-[2.5rem] border flex flex-col transition-all relative overflow-hidden ${plan.active ? 'border-primary ring-2 ring-primary/20 bg-primary/[0.03]' : plan.primary ? 'glass-panel border-primary/20' : 'bg-white/[0.02] border-border-subtle'}`}>
                         {plan.active && (
@@ -261,20 +287,24 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
                         <p className="text-xs font-medium text-text-secondary/80 leading-relaxed mb-10 max-w-[280px]">{plan.desc}</p>
                         
                         <button 
-                            onClick={() => !plan.active && handleUpgrade(plan.id as any)} 
-                            disabled={!!isLoading || plan.active}
+                            onClick={() => !plan.active && !isLifetime && handleUpgrade(plan.id as any)} 
+                            disabled={!!isLoading || plan.active || isLifetime}
                             className={`mt-auto w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 ${
                                 plan.active 
                                     ? 'bg-white/5 text-primary/40 border border-white/5 cursor-not-allowed'
-                                    : plan.primary 
-                                        ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_30px_rgba(255,88,54,0.2)] active:scale-95' 
-                                        : 'bg-white text-black hover:bg-gray-200 active:scale-95'
+                                    : isLifetime
+                                        ? 'bg-white/5 text-text-secondary/20 border border-white/5 cursor-default'
+                                        : plan.primary 
+                                            ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_30px_rgba(255,88,54,0.2)] active:scale-95' 
+                                            : 'bg-white text-black hover:bg-gray-200 active:scale-95'
                             }`}
                         >
                             {isLoading === plan.id ? (
                                 <LoadingIcon className="w-5 h-5" />
                             ) : plan.active ? (
                                 <CheckCircle2 size={16} />
+                            ) : isLifetime ? (
+                                'Owned via Lifetime'
                             ) : (
                                 `Upgrade to ${plan.id}`
                             )}
@@ -308,8 +338,8 @@ export default function BillingTab({ profile, isGrowth, isAdmin }: { profile: an
 
                             <div className="flex flex-wrap gap-8 mb-8">
                                 {[
-                                    { label: 'One-Time', value: '$20', icon: <Zap size={14} /> },
-                                    { label: 'Value', value: '$168/Year', icon: <CheckCircle2 size={14} /> }
+                                    { label: 'One-Time', value: `$${currentPrice}`, icon: <Zap size={14} /> },
+                                    { label: 'Limited', value: `${spotsLeft} Seats Left`, icon: <CheckCircle2 size={14} /> }
                                 ].map((pill) => (
                                     <div key={pill.label} className="flex flex-col">
                                         <div className="flex items-center gap-2 text-text-secondary mb-1">

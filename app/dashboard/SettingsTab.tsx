@@ -5,8 +5,10 @@ import { Compass, MessageSquarePlus, Sparkles, Plus, X, Save } from 'lucide-reac
 import LoadingIcon from '@/components/ui/LoadingIcon';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import { useDashboardData } from './DashboardDataContext';
 
-export default function SettingsTab({ profile, user }: { profile: any, user: any }) {
+export default function SettingsTab({ user }: { user: any }) {
+    const { profile, planDetails } = useDashboardData();
     const router = useRouter();
     // Strip https:// from initial value for display
     const stripProtocol = (url: string) => url ? url.replace(/^https?:\/\//i, '') : '';
@@ -112,13 +114,8 @@ export default function SettingsTab({ profile, user }: { profile: any, user: any
         }
     };
 
-    // Determine keyword limit
-    const getKeywordLimit = () => {
-        if (profile?.subscription_tier === 'lifetime') return 50;
-        if (profile?.subscription_tier === 'starter') return 5;
-        return 15; // Pro & Trial limit
-    };
-    const keywordLimit = getKeywordLimit();
+    // Determine keyword limit from reactive planDetails
+    const keywordLimit = planDetails?.keywordLimit || 15;
 
     const addKeyword = () => {
         const input = newKeyword.trim();

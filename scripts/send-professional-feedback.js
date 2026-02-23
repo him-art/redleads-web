@@ -99,7 +99,7 @@ async function send() {
         console.log('Sending professional feedback email...');
         const data = await resend.emails.send({
             from: 'Tim Jayas <onboarding@redleads.app>',
-            to: ['hjayaswar@gmail.com'],
+            to: ['USER_EMAIL@example.com'],
             subject: 'Strategy Audit: Unlocking your Reddit Growth',
             html: emailHtml,
         });

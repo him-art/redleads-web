@@ -5,13 +5,13 @@ import LoadingIcon from '@/components/ui/LoadingIcon';
 import { createClient } from '@/lib/supabase/client';
 import { useDashboardData, MonitoredLead } from '@/app/dashboard/DashboardDataContext';
 
-export default function LiveFeed({ userId, onViewArchive }: { userId: string, onViewArchive: () => void }) {
-    const { leads: allLeads, isLoading: isDataLoading, draftingLead, setDraftingLead } = useDashboardData();
+export default function LiveFeed({ onViewArchive }: { onViewArchive: () => void }) {
+    const { leads: allLeads, isLoading: isDataLoading, draftingLead, setDraftingLead, profile } = useDashboardData();
     const [leads, setLeads] = useState<MonitoredLead[]>([]);
     const [isMounted, setIsMounted] = useState(false);
     
-    // Local product Context
-    const [productContext, setProductContext] = useState('');
+    // Use product context from profile
+    const productContext = profile?.description || '';
 
     const supabase = useMemo(() => createClient(), []);
 
@@ -20,14 +20,6 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
         // Map top 20 leads from context
         setLeads(allLeads.slice(0, 20));
     }, [allLeads]);
-
-    useEffect(() => {
-        const fetchProfile = async () => {
-            const { data } = await supabase.from('profiles').select('description').eq('id', userId).single();
-            if (data) setProductContext(data.description);
-        };
-        fetchProfile();
-    }, [userId]);
 
     if (isDataLoading) {
         return (
@@ -81,7 +73,11 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
                                                         if (!isMounted) return '--:--';
                                                         const d = new Date(lead.created_at);
                                                         if (isNaN(d.getTime())) return '--:--';
-                                                        return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                                                        return new Intl.DateTimeFormat('en-US', {
+                                                            hour: '2-digit',
+                                                            minute: '2-digit',
+                                                            hour12: true
+                                                        }).format(d);
                                                     } catch (e) {
                                                         return '--:--';
                                                     }
@@ -148,9 +144,13 @@ export default function LiveFeed({ userId, onViewArchive }: { userId: string, on
                             <div className="absolute inset-0 bg-primary/5 rounded-full" />
                         </div>
                         <div className="space-y-1">
-                            <h4 className="text-text-secondary font-black text-xs tracking-[0.2em] uppercase">monitoring communities 24/7</h4>
+                            <h4 className="text-text-secondary font-black text-xs tracking-[0.2em] uppercase">
+                                {profile?.keywords?.length > 0 ? 'Monitoring communities 24/7' : 'Tracking Setup Incomplete'}
+                            </h4>
                             <p className="text-[9px] text-text-secondary max-w-[240px] mx-auto leading-relaxed uppercase font-black tracking-widest opacity-60">
-                                Live leads will be displayed here
+                                {profile?.keywords?.length > 0 
+                                    ? 'Live leads will be displayed here as they are discovered.' 
+                                    : 'Please configure your keywords and website in settings to start monitoring.'}
                             </p>
                         </div>
                     </div>

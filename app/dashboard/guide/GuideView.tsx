@@ -100,8 +100,6 @@ export default function GuideView({ onNavigate }: { onNavigate: (tab: string) =>
             >
                 <div className="relative min-w-max px-10 py-4">
                     
-                    {/* The Central Timeline Line */}
-                    <div className="absolute left-16 right-16 top-1/2 -translate-y-[1px] h-[2px] bg-gradient-to-r from-transparent via-white/10 to-transparent z-0" />
 
                     {/* Nodes laid out horizontally */}
                     <div className="flex items-center gap-0 relative z-10" style={{ minHeight: '480px' }}>
@@ -170,24 +168,25 @@ export default function GuideView({ onNavigate }: { onNavigate: (tab: string) =>
                                     )}
 
                                     {/* Vertical Connector Stem */}
-                                    <div className={`w-[1px] ${isTop ? 'h-8' : 'h-8'} bg-white/10 group-hover:bg-primary/40 transition-colors`} />
+                                    <div className="flex flex-col items-center">
+                                        <div className="w-[1px] h-0 bg-white/10" />
 
-                                    {/* Timeline Node (on the center line) */}
-                                    <motion.div
-                                        initial={{ scale: 0 }}
-                                        animate={{ scale: 1 }}
-                                        transition={{ delay: i * 0.06, type: 'spring', stiffness: 300 }}
-                                        onClick={() => setSelectedNode(node)}
-                                        className={`w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer z-20 border transition-all duration-300 shrink-0
-                                            bg-white/[0.04] border-white/[0.08] text-text-secondary/50
-                                            ${isSelected ? 'ring-2 ring-white/20 scale-110 bg-primary/10 text-primary border-primary/30' : 'hover:scale-105 hover:bg-white/[0.08] hover:text-text-primary'}
-                                        `}
-                                    >
-                                        <PhaseIcon size={16} />
-                                    </motion.div>
+                                        {/* Timeline Node (on the center line) */}
+                                        <motion.div
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: 1 }}
+                                            transition={{ delay: i * 0.06, type: 'spring', stiffness: 300 }}
+                                            onClick={() => setSelectedNode(node)}
+                                            className={`w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer z-20 border transition-all duration-300 shrink-0
+                                                bg-white/[0.04] border-white/[0.08] text-text-secondary/50
+                                                ${isSelected ? 'ring-2 ring-white/20 scale-110 bg-primary/10 text-primary border-primary/30' : 'hover:scale-105 hover:bg-white/[0.08] hover:text-text-primary'}
+                                            `}
+                                        >
+                                            <PhaseIcon size={16} />
+                                        </motion.div>
 
-                                    {/* Vertical Connector Stem (bottom) */}
-                                    <div className={`w-[1px] ${!isTop ? 'h-8' : 'h-8'} bg-white/10 group-hover:bg-primary/40 transition-colors`} />
+                                        <div className="w-[1px] h-0 bg-white/10" />
+                                    </div>
 
                                     {/* Bottom Card (odd index) */}
                                     {!isTop && (
@@ -237,9 +236,8 @@ export default function GuideView({ onNavigate }: { onNavigate: (tab: string) =>
                                         </motion.div>
                                     )}
 
-                                    {/* Placeholder for card spacing on opposite side */}
-                                    {isTop && <div className="w-[240px] h-0" />}
-                                    {!isTop && <div className="w-[240px] h-0" style={{ order: -1 }} />}
+                                    {/* Static Spacer to maintain vertical alignment of nodes */}
+                                    <div className="w-[240px] flex-1" />
                                 </div>
                             );
                         })}

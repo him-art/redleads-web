@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import MaterialIcon from '@/components/ui/MaterialIcon';
+import { Lock, Search, Bot, Crown, Zap, Sparkles } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 interface PaywallModalProps {
@@ -41,7 +41,7 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
             <div className="max-w-4xl w-full bg-[#141414] border border-white/5 rounded-[3rem] p-8 md:p-12 text-center relative overflow-hidden ring-1 ring-white/10 shadow-2xl">
                 <div className="relative z-10">
                     <div className="mx-auto w-16 h-16 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mb-6">
-                        <MaterialIcon name="lock" size={32} className="text-orange-500" />
+                        <Lock size={32} className="text-orange-500" />
                     </div>
 
                     <h2 className="text-3xl font-black text-white mb-2 tracking-tight">
@@ -62,10 +62,10 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                             </div>
                             <ul className="space-y-3 mb-8 flex-grow">
                                 <li className="text-[9px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                                    <MaterialIcon name="search" size={10} className="text-orange-500/50" /> 5 Key-words
+                                    <Search size={10} className="text-orange-500/50" /> 5 Key-words
                                 </li>
                                 <li className="text-[9px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                                    <MaterialIcon name="smart_toy" size={10} className="text-orange-500/50" /> 100 Replies
+                                    <Bot size={10} className="text-orange-500/50" /> 100 Replies
                                 </li>
                             </ul>
                             <button
@@ -87,10 +87,10 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                             </div>
                             <ul className="space-y-3 mb-8 flex-grow">
                                 <li className="text-[9px] font-bold text-white uppercase tracking-widest flex items-center gap-2">
-                                    <MaterialIcon name="search" size={10} className="text-orange-500" /> 15 Key-words
+                                    <Search size={10} className="text-orange-500" /> 15 Key-words
                                 </li>
                                 <li className="text-[9px] font-bold text-white uppercase tracking-widest flex items-center gap-2">
-                                    <MaterialIcon name="smart_toy" size={10} className="text-orange-500" /> 500 Replies
+                                    <Bot size={10} className="text-orange-500" /> 500 Replies
                                 </li>
                             </ul>
                             <button
@@ -105,7 +105,9 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
 
                         {/* Lifetime Option */}
                         <div className="p-6 rounded-[2rem] bg-white text-black flex flex-col relative overflow-hidden border border-white shadow-2xl">
-                                <MaterialIcon name="workspace_premium" size={8} /> {slots ? `${slots.total - slots.sold}/${slots.total}` : '...'} Seats Left
+                            <div className="absolute top-4 right-4 flex items-center gap-1.5 text-[8px] font-black uppercase tracking-widest text-black/40 bg-black/5 px-2 py-1 rounded-full border border-black/5">
+                                <Crown size={8} /> {slots ? `${slots.total - slots.sold}/${slots.total}` : '...'} Seats Left
+                            </div>
                             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-black mb-2">Life Time</h3>
                             <div className="flex items-baseline gap-2 mb-6">
                                 <span className="text-2xl font-black text-black">$20</span>
@@ -113,10 +115,10 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                             </div>
                             <ul className="space-y-3 mb-8 flex-grow">
                                 <li className="text-[9px] font-black text-black uppercase tracking-widest flex items-center gap-2">
-                                    <MaterialIcon name="bolt" size={10} className="text-orange-600" /> Unlimited Discovery
+                                    <Zap size={10} className="text-orange-600" /> Unlimited Discovery
                                 </li>
                                 <li className="text-[9px] font-black text-black uppercase tracking-widest flex items-center gap-2">
-                                    <MaterialIcon name="auto_awesome" size={10} className="text-orange-600" /> Future Pro updates
+                                    <Sparkles size={10} className="text-orange-600" /> Future Pro updates
                                 </li>
                             </ul>
                             <button

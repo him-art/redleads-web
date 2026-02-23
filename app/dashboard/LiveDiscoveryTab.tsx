@@ -5,26 +5,24 @@ import { motion } from 'framer-motion';
 import LiveFeed from './LiveFeed';
 import LeadSearch from '@/components/LeadSearch';
 import { useRouter } from 'next/navigation';
+import { useDashboardData } from '@/app/dashboard/DashboardDataContext';
+import { calculateTrialStatus, getPlanDetails } from '@/lib/dashboard-utils';
+import { PLANS } from '@/lib/constants';
 
 export default function LiveDiscoveryTab({ 
     user, 
-    profile, 
-    isGrowth,
-    isStarter,
-    isAdmin,
     initialSearch = '', 
     onNavigate 
 }: { 
     user: any, 
-    profile: any, 
-    isGrowth: boolean,
-    isStarter?: boolean,
-    isAdmin: boolean,
     initialSearch?: string, 
     onNavigate: (tab: string) => void 
 }) {
-    const isEffectiveGrowth = isGrowth || isAdmin || profile?.subscription_tier === 'lifetime';
-    const isActuallySubscribed = isEffectiveGrowth || isStarter;
+    const { profile, trialStatus, planDetails } = useDashboardData();
+    const { isActuallyExpired, isInTrial, daysRemaining, trialEndsAt } = trialStatus;
+    const { isStarter, isGrowth, isAdmin, isLifetime, powerSearchLimit: searchLimit } = planDetails;
+
+    const isActuallySubscribed = isStarter || isGrowth || isAdmin;
     const [isUpgrading, setIsUpgrading] = useState(false);
 
     const router = useRouter();
@@ -36,23 +34,7 @@ export default function LiveDiscoveryTab({
     useEffect(() => {
         setIsMounted(true);
     }, []);
-    // Auto-calculate trial status
-    const trialEndsAtString = profile?.trial_ends_at || (profile?.created_at ? (() => {
-        const d = new Date(profile.created_at);
-        if (isNaN(d.getTime())) return null;
-        return new Date(d.getTime() + 3 * 24 * 60 * 60 * 1000).toISOString();
-    })() : null);
-    const trialEndsAt = trialEndsAtString ? new Date(trialEndsAtString) : null;
-    
-    const now = new Date();
-    const trialExpired = trialEndsAt ? trialEndsAt <= now : false; 
-    const daysRemaining = trialEndsAt ? Math.max(0, Math.ceil((trialEndsAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))) : 0;
-    
-    const isActuallyExpired = !isActuallySubscribed && (trialExpired || (trialEndsAt && daysRemaining <= 0));
-    const isInTrial = !isActuallySubscribed && !isActuallyExpired && daysRemaining > 0;
     const canSeeLiveFeed = isActuallySubscribed || isInTrial;
-
-    const searchLimit = isEffectiveGrowth ? 5 : isStarter ? 2 : 5;
     const currentUsage = (() => {
         try {
             if (!isActuallySubscribed || !profile?.last_scan_at) return profile?.scan_count || 0;
@@ -119,7 +101,7 @@ export default function LiveDiscoveryTab({
                     </div>
                     <div>
                         <h3 className="text-xl font-bold text-text-primary mb-0.5 tracking-tight">
-                            {isAdmin ? 'Admin' : isGrowth ? 'Growth' : isStarter ? 'Starter' : 'Free Trial'}
+                            {planDetails.name}
                         </h3>
                         <p className="text-[10px] text-text-secondary font-bold uppercase tracking-widest opacity-60">
                             {isInTrial 
@@ -275,7 +257,7 @@ export default function LiveDiscoveryTab({
                     </div>
 
                     <div className="relative">
-                        <LiveFeed userId={user.id} onViewArchive={() => onNavigate('reports')} />
+                        <LiveFeed onViewArchive={() => onNavigate('reports')} />
                         
                         {/* Trial Expired Overlay */}
                         {isActuallyExpired && (
@@ -334,14 +316,14 @@ export default function LiveDiscoveryTab({
                                         disabled={isUpgrading}
                                         className="w-full py-3 bg-white/10 text-text-primary border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-white/20 transition-all flex items-center justify-center gap-2"
                                     >
-                                        {isUpgrading ? <LoadingIcon className="w-4 h-4" /> : <>Starter ($7) <span className="line-through text-text-secondary">$15</span></>}
+                                        {isUpgrading ? <LoadingIcon className="w-4 h-4" /> : <>Starter (${planDetails.id === 'starter' ? 'Current' : PLANS.STARTER.price}) <span className="line-through text-text-secondary">${PLANS.STARTER.originalPrice}</span></>}
                                     </button>
                                     <button 
                                         onClick={() => handleUpgrade('growth')}
                                         disabled={isUpgrading}
                                         className="w-full py-3 bg-primary text-primary-foreground rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
                                     >
-                                        {isUpgrading ? <LoadingIcon className="w-4 h-4" /> : <>Growth ($14) <span className="line-through text-white/50">$29</span></>}
+                                        {isUpgrading ? <LoadingIcon className="w-4 h-4" /> : <>Growth (${PLANS.GROWTH.price}) <span className="line-through text-white/50">${PLANS.GROWTH.originalPrice}</span></>}
                                     </button>
                                 </div>
                            </div>

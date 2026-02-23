@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { X, Menu, Sparkles, Lock, Navigation, Archive, BookOpen, SlidersHorizontal, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
 import LoadingIcon from '@/components/ui/LoadingIcon';
@@ -17,6 +17,8 @@ import { DashboardDataProvider } from '@/app/dashboard/DashboardDataContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import DashboardErrorBoundary from '@/components/dashboard/DashboardErrorBoundary';
 import ReplyPanel from '@/components/dashboard/ReplyPanel';
+import { calculateTrialStatus, getPlanDetails } from '@/lib/dashboard-utils';
+import { useDashboardData } from '@/app/dashboard/DashboardDataContext';
 
 interface DashboardClientProps {
     profile: any;
@@ -27,53 +29,48 @@ interface DashboardClientProps {
 
 export default function DashboardClient({ profile, reports, user, initialSearch = '' }: DashboardClientProps) {
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const effectiveSearch = searchParams.get('search') || initialSearch;
-
-    const [activeTab, setActiveTab] = useState<'reports' | 'live' | 'settings' | 'billing' | 'Guide'>(effectiveSearch ? 'live' : 'live'); 
-    // Note: It's currently hardcoded to 'live', keeping as is for now but fixed the syntax.
-    
-    // Check onboarding status
-    const hasCompletedOnboarding = profile?.onboarding_completed || (profile?.description && profile?.keywords?.length > 0);
-    const [showOnboarding, setShowOnboarding] = useState(!hasCompletedOnboarding);
-
     const [isMounted, setIsMounted] = useState(false);
     useEffect(() => { setIsMounted(true); }, []);
 
-    // Trial expiration check - Moved up to use for initialization
-    const isGrowth = profile?.subscription_tier === 'growth' || profile?.effective_tier === 'growth' || profile?.subscription_tier === 'lifetime';
-    const isStarter = profile?.subscription_tier === 'starter' || profile?.effective_tier === 'starter' || isGrowth;
-    const isAdmin = profile?.is_admin === true;
-    
-    const trialEndsAtString = profile?.trial_ends_at || (profile?.created_at ? (() => {
-        const d = new Date(profile.created_at);
-        if (isNaN(d.getTime())) return null;
-        const ends = new Date(d.getTime() + 3 * 24 * 60 * 60 * 1000);
-        return ends.toISOString();
-    })() : null);
-    const trialEndsAt = trialEndsAtString ? new Date(trialEndsAtString) : null;
-    const now = new Date();
-    const trialExpired = trialEndsAt ? (trialEndsAt.getTime() <= now.getTime()) : false;
-    const daysRemaining = (() => {
-        try {
-            if (!trialEndsAt) return 0;
-            const diff = trialEndsAt.getTime() - now.getTime();
-            return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
-        } catch (e) {
-            return 0;
-        }
-    })();
-    const isActuallyExpired = !isStarter && !isAdmin && (trialExpired || (trialEndsAt && daysRemaining <= 0));
+    if (!isMounted) {
+        return (
+            <div className="flex items-center justify-center min-h-[calc(100vh-12rem)]">
+                <LoadingIcon className="w-10 h-10 text-orange-500" />
+            </div>
+        );
+    }
 
-    // Force Billing tab if expired on mount
+    return (
+        <DashboardDataProvider userId={user.id} profile={profile}>
+            <InnerDashboard reports={reports} user={user} initialSearch={initialSearch} />
+        </DashboardDataProvider>
+    );
+}
+
+function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user: any, initialSearch: string }) {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const effectiveSearch = searchParams.get('search') || initialSearch;
+    
+    // Consume reactive data from context
+    const { profile, planDetails, trialStatus, draftingLead, setDraftingLead } = useDashboardData();
+    const { isActuallyExpired } = trialStatus;
+
+    const [activeTab, setActiveTab] = useState<'reports' | 'live' | 'settings' | 'billing' | 'Guide'>(effectiveSearch ? 'live' : 'live'); 
+    
+    // Check onboarding status reactive to profile from context
+    const hasCompletedOnboarding = profile?.onboarding_completed || (profile?.description && profile?.keywords?.length > 0);
+    const [showOnboarding, setShowOnboarding] = useState(!hasCompletedOnboarding);
+
+    // Force Billing tab if expired
     useEffect(() => {
         if (isActuallyExpired && activeTab !== 'billing') {
             setActiveTab('billing');
         }
-    }, [isActuallyExpired]);
+    }, [isActuallyExpired, activeTab]);
+
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [draftingLead, setDraftingLead] = useState<any>(null);
-    const showPaywall = isActuallyExpired && !isStarter && !isAdmin;
+    const showPaywall = isActuallyExpired; 
 
     const handleCheckout = async (plan: 'starter' | 'growth' | 'lifetime' = 'growth') => {
         const res = await fetch('/api/payments/create-checkout', {
@@ -97,40 +94,27 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
         { id: 'billing', label: 'Billing & Plan', icon: ShieldCheck, protected: false },
     ];
 
-    // Prevent ANY rendering until mounted to ensure 100% hydration sync on mobile
-    if (!isMounted) {
-        return (
-            <div className="flex items-center justify-center min-h-[calc(100vh-12rem)]">
-                <LoadingIcon className="w-10 h-10 text-orange-500" />
-            </div>
-        );
-    }
-
     return (
         <>
             {showOnboarding && (
                 <OnboardingWizard 
                     userEmail={user.email} 
-                    keywordLimit={isStarter && !isGrowth ? 5 : 15}
+                    keywordLimit={planDetails.keywordLimit}
                     onComplete={(data, onboardingUrl) => {
                         setShowOnboarding(false);
-                        // Redirect with search param to trigger initial scan
                         router.push(`/dashboard?search=${encodeURIComponent(onboardingUrl || '')}`);
                         router.refresh();
                     }} 
                 />
             )}
-            {/* PaywallModal only shows if trial is expired and they aren't on billing yet */}
             {showPaywall && !showOnboarding && activeTab !== 'billing' && <PaywallModal onCheckout={handleCheckout} />}
             
-            <DashboardDataProvider userId={user.id} draftingState={{ draftingLead, setDraftingLead }}>
-                {/* Main Layout Container - Soft Antigravity Theme */}
-                <div className="flex h-screen bg-void text-text-primary overflow-hidden font-sans selection:bg-primary/30 relative">
+            <div className="flex h-screen bg-void text-text-primary overflow-hidden font-sans selection:bg-primary/30 relative">
                 
                 {/* Mobile Header Toggle */}
                 <div className="lg:hidden absolute top-0 left-0 right-0 z-50 p-4 bg-void border-b border-white/5 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                         <div className="w-8 h-8 relative">
+                            <div className="w-8 h-8 relative">
                             <Image 
                                 src="/redleads-logo-white.png" 
                                 alt="RedLeads Logo" 
@@ -149,14 +133,27 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                     </button>
                 </div>
 
+                {/* Mobile Tab Identifier (Subtle) */}
+                {!isMobileMenuOpen && (
+                    <motion.div 
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="lg:hidden fixed top-[4.5rem] left-6 z-40"
+                    >
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 bg-primary/5 px-3 py-1 rounded-full border border-primary/10 backdrop-blur-sm">
+                            {tabs.find(t => t.id === activeTab)?.label || activeTab}
+                        </span>
+                    </motion.div>
+                )}
+
                 {/* Sidebar Navigation - Floating Glass Panel */}
                 <motion.aside 
                     initial={false}
                     animate={isMobileMenuOpen ? { x: 0 } : { x: 0 }}
                     className={`
-                        fixed inset-y-0 left-0 z-40 w-72 
+                        fixed inset-y-0 left-0 z-[70] lg:z-40 w-72 
                         lg:glass-panel lg:bg-card/50
-                        bg-void
+                        bg-[#0A0A0A] lg:bg-transparent
                         transform lg:transform-none transition-transform duration-300 ease-in-out
                         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
                         flex flex-col p-6
@@ -185,7 +182,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                     {/* Navigation Items */}
                     <div className="space-y-1 flex-1">
                         <div className="px-3 mb-2">
-                             <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest opacity-60">Menu</span>
+                                <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest opacity-60">Menu</span>
                         </div>
                         {tabs.map((tab) => {
                             const TabIcon = tab.icon;
@@ -234,11 +231,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                             <div className="overflow-hidden">
                                 <p className="text-xs font-bold text-text-primary truncate">{user.email}</p>
                                 <p className="text-[10px] text-text-secondary truncate">
-                                    {isAdmin ? 'Administrator' : 
-                                     profile?.subscription_tier === 'lifetime' ? 'Lifetime Plan' : 
-                                     isGrowth ? 'Growth Plan' : 
-                                     isStarter ? 'Starter Plan' : 
-                                     'Trial Plan'}
+                                    {planDetails.name}
                                 </p>
                             </div>
                         </div>
@@ -266,7 +259,11 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                                 exit={{ opacity: 0, y: -10 }}
                                                 transition={{ duration: 0.2 }}
                                             >
-                                                <LiveDiscoveryTab user={user} profile={profile} isGrowth={isGrowth} isStarter={isStarter} isAdmin={isAdmin} initialSearch={effectiveSearch} onNavigate={(tab) => setActiveTab(tab as any)} />
+                                                <LiveDiscoveryTab 
+                                                    user={user} 
+                                                    initialSearch={effectiveSearch}
+                                                    onNavigate={(tab) => setActiveTab(tab as any)} 
+                                                />
                                             </motion.div>
                                         )}
 
@@ -278,7 +275,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                                 exit={{ opacity: 0, y: -10 }}
                                                 transition={{ duration: 0.2 }}
                                             >
-                                                <ReportsTab reports={reports} profile={profile} user={user} isGrowth={isGrowth} isAdmin={isAdmin} />
+                                                <ReportsTab reports={reports} user={user} />
                                             </motion.div>
                                         )}
 
@@ -302,7 +299,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                                 exit={{ opacity: 0, y: -10 }}
                                                 transition={{ duration: 0.2 }}
                                             >
-                                                <SettingsTab profile={profile} user={user} />
+                                                <SettingsTab user={user} />
                                             </motion.div>
                                         )}
 
@@ -314,7 +311,7 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                                                 exit={{ opacity: 0, y: -10 }}
                                                 transition={{ duration: 0.2 }}
                                             >
-                                                <BillingTab profile={profile} isGrowth={isGrowth} isAdmin={isAdmin} />
+                                                <BillingTab />
                                             </motion.div>
                                         )}
                                     </AnimatePresence>
@@ -368,7 +365,6 @@ export default function DashboardClient({ profile, reports, user, initialSearch 
                 </AnimatePresence>
 
             </div>
-            </DashboardDataProvider>
         </>
     );
 }

@@ -2,8 +2,10 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { calculateTrialStatus, getPlanDetails } from '@/lib/dashboard-utils';
 
 export interface MonitoredLead {
+// ... (keeping existing interfaces)
     id: string;
     title: string;
     subreddit: string;
@@ -31,20 +33,37 @@ interface DashboardData {
     deleteLead: (id: string) => Promise<void>;
     draftingLead: MonitoredLead | null;
     setDraftingLead: (lead: MonitoredLead | null) => void;
+    trialStatus: {
+        isActuallyExpired: boolean;
+        isInTrial: boolean;
+        daysRemaining: number;
+        trialEndsAt: Date | null;
+    };
+    planDetails: any;
+    profile: any;
 }
 
 const DashboardDataContext = createContext<DashboardData | undefined>(undefined);
 
-export function DashboardDataProvider({ children, userId, draftingState }: { children: React.ReactNode; userId: string; draftingState?: { draftingLead: any, setDraftingLead: (l: any) => void } }) {
+export function DashboardDataProvider({ children, userId, draftingState, profile }: { children: React.ReactNode; userId: string; draftingState?: { draftingLead: any, setDraftingLead: (l: any) => void }, profile: any }) {
     const [leads, setLeads] = useState<MonitoredLead[]>([]);
     const [analyses, setAnalyses] = useState<LeadAnalysis[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [activeProfile, setActiveProfile] = useState(profile);
+    
+    useEffect(() => {
+        if (profile) setActiveProfile(profile);
+    }, [profile]);
+
     // Remove local state if draftingState is provided
     const [localDraftingLead, setLocalDraftingLead] = useState<MonitoredLead | null>(null);
     
     const currentDraftingLead = draftingState?.draftingLead || localDraftingLead;
     const currentSetDraftingLead = draftingState?.setDraftingLead || setLocalDraftingLead;
     
+    const trialStatus = React.useMemo(() => calculateTrialStatus(activeProfile, !!activeProfile?.subscription_tier), [activeProfile]);
+    const planDetails = React.useMemo(() => getPlanDetails(activeProfile), [activeProfile]);
+
     // Use useRef for tracking fetch times to avoid re-triggering memoized fetchers
     const lastLeadsFetch = React.useRef<number>(0);
     
@@ -128,6 +147,15 @@ export function DashboardDataProvider({ children, userId, draftingState }: { chi
                 { event: '*', schema: 'public', table: 'monitored_leads', filter: `user_id=eq.${userId}` },
                 () => { fetchLeads(true); }
             )
+            .on(
+                'postgres_changes',
+                { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${userId}` },
+                (payload) => { 
+                    if (payload.new) {
+                        setActiveProfile((prev: any) => ({ ...prev, ...payload.new }));
+                    }
+                }
+            )
             .subscribe();
 
         return () => {
@@ -144,8 +172,11 @@ export function DashboardDataProvider({ children, userId, draftingState }: { chi
           updateLead,
           deleteLead,
           draftingLead: currentDraftingLead,
-          setDraftingLead: currentSetDraftingLead
-      }), [leads, analyses, isLoading, fetchLeads, updateLead, deleteLead, currentDraftingLead, currentSetDraftingLead]);
+          setDraftingLead: currentSetDraftingLead,
+          trialStatus,
+          planDetails,
+          profile: activeProfile
+      }), [leads, analyses, isLoading, fetchLeads, updateLead, deleteLead, currentDraftingLead, currentSetDraftingLead, trialStatus, planDetails, activeProfile]);
 
     return (
         <DashboardDataContext.Provider value={value}>

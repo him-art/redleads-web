@@ -5,8 +5,19 @@ import LoadingIcon from '@/components/ui/LoadingIcon';
 import { createClient } from '@/lib/supabase/client';
 import { useDashboardData, MonitoredLead, LeadAnalysis } from '@/app/dashboard/DashboardDataContext';
 
-export default function ReportsTab({ reports, profile, user, isGrowth, isAdmin }: { reports: any[], profile: any, user: any, isGrowth: boolean, isAdmin: boolean }) {
-    const { leads: historyLeads, analyses: leadAnalyses, isLoading: isDataLoading, updateLead, deleteLead, draftingLead, setDraftingLead } = useDashboardData();
+export default function ReportsTab({ reports, user }: { reports: any[], user: any }) {
+    const { 
+        profile,
+        leads: historyLeads, 
+        analyses: leadAnalyses, 
+        isLoading: isDataLoading, 
+        updateLead, 
+        deleteLead, 
+        draftingLead, 
+        setDraftingLead, 
+        planDetails 
+    } = useDashboardData();
+    const { isGrowth, isAdmin } = planDetails;
     const [filter, setFilter] = useState<'all' | 'saved'>('all');
     const [expandedDay, setExpandedDay] = useState<string | null>(null);
     const [isMounted, setIsMounted] = useState(false);

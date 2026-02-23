@@ -15,7 +15,7 @@ async function checkUserLeads() {
     const { data: profiles, error: profileError } = await supabase
         .from('profiles')
         .select('id, email')
-        .ilike('email', '%jayaswar%'); // Broad match to catch the user
+        .ilike('email', '%USER_PATTERN%'); // Replace with specific pattern for debugging
 
     if (profileError) {
         console.error('Error fetching profiles:', profileError);
