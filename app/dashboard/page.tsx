@@ -33,10 +33,17 @@ export default async function DashboardPage(props: { searchParams: Promise<{ sea
     ]);
     
     // Merge data: profiles has website_url, accessStatus has effective_tier
+    // We prioritize active tiers from profiles (like lifetime) over the effective_tier from the view if needed
+    const activeTiers = ['lifetime', 'growth', 'starter', 'professional'];
+    const pTier = profile?.subscription_tier;
+    const aTier = accessStatus?.subscription_tier; // this is the aliased effective_tier
+    
+    const finalTier = activeTiers.includes(pTier) ? pTier : (aTier || pTier);
+
     const mergedProfile = {
         ...profile,
         ...accessStatus,
-        subscription_tier: accessStatus?.subscription_tier || profile?.subscription_tier
+        subscription_tier: finalTier
     };
     
     // Fetch Reports (Drafts + Sent) - Removed as Daily Reports feature is decommissioned
