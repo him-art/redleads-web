@@ -69,11 +69,12 @@ async function runDailyDigest() {
 
     console.log(`[Digest] Found ${leads.length} new leads. Fetching user emails...`);
 
-    // 2. Fetch Emails & Descriptions
+    // 2. Fetch Emails, Descriptions & Subscription Status
+    const TRIAL_DAYS = 3;
     const userIds = Array.from(new Set(leads.map(l => l.user_id)));
     const { data: profiles, error: profileError } = await supabase
         .from('profiles')
-        .select('id, email, description')
+        .select('id, email, description, subscription_tier, trial_ends_at, created_at')
         .in('id', userIds);
     
     if (profileError) {
@@ -81,20 +82,43 @@ async function runDailyDigest() {
         return;
     }
 
+    const now = new Date();
     const userEmails: Record<string, string> = {};
-    profiles?.forEach(p => {
-        if (p.email) userEmails[p.id] = p.email;
-    });
+    const activeUserIds = new Set<string>(); // Only users eligible to receive emails
 
-    // 3. Group by User
+    // 3. Group by User & filter by subscription/trial status
     const leadsByUser: Record<string, typeof leads> = {};
-    const userDescriptions: Record<string, string> = {}; // Store descriptions
+    const userDescriptions: Record<string, string> = {};
     
-    // Process profiles to map emails and descriptions
+    // Process profiles: map emails/descriptions AND check eligibility
+    let skippedExpired = 0;
     profiles?.forEach((p: any) => {
         if (p.email) userEmails[p.id] = p.email;
         if (p.description) userDescriptions[p.id] = p.description;
+
+        // Check if user is paid or in active trial
+        const tier = p.subscription_tier?.toLowerCase();
+        const isPaid = tier === 'starter' || tier === 'growth' || tier === 'lifetime';
+
+        if (isPaid) {
+            activeUserIds.add(p.id);
+        } else {
+            const trialEndsAt = p.trial_ends_at
+                ? new Date(p.trial_ends_at)
+                : (p.created_at ? new Date(new Date(p.created_at).getTime() + TRIAL_DAYS * 24 * 60 * 60 * 1000) : null);
+            
+            if (trialEndsAt && trialEndsAt > now) {
+                activeUserIds.add(p.id);
+            } else {
+                skippedExpired++;
+                console.log(`[Digest] 🚫 Skipping expired trial user: ${p.email || p.id}`);
+            }
+        }
     });
+
+    if (skippedExpired > 0) {
+        console.log(`[Digest] 🚫 Total skipped expired trial users: ${skippedExpired}`);
+    }
     
     for (const lead of leads) {
         if (!leadsByUser[lead.user_id]) {
@@ -116,6 +140,11 @@ async function runDailyDigest() {
         
         if (!email) {
             console.warn(`[Digest] No email found for user ${userId}, skipping.`);
+            continue;
+        }
+
+        // Skip expired trial users
+        if (!activeUserIds.has(userId)) {
             continue;
         }
 

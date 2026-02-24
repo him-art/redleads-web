@@ -118,10 +118,12 @@ async function buildKeywordIndex(): Promise<{
     keywordCount: number,
     profiles: any[]
 }> {
-    // 1. Fetch profiles with keywords
+    const TRIAL_DAYS = 3;
+
+    // 1. Fetch profiles with keywords + subscription/trial info
     const { data: profiles, error } = await supabase
         .from('profiles')
-        .select('id, keywords, description')
+        .select('id, keywords, description, subscription_tier, trial_ends_at, created_at')
         .not('keywords', 'is', null);
 
     if (error) {
@@ -129,10 +131,35 @@ async function buildKeywordIndex(): Promise<{
         return { index: new Map(), userCount: 0, keywordCount: 0, profiles: [] };
     }
 
+    const now = new Date();
     const index = new Map<string, string[]>();
     let keywordCount = 0;
+    let skippedExpired = 0;
 
-    profiles.forEach(p => {
+    // 2. Filter: only index keywords for paid users or active trial users
+    const activeProfiles = profiles.filter(p => {
+        const tier = p.subscription_tier?.toLowerCase();
+        const isPaid = tier === 'starter' || tier === 'growth' || tier === 'lifetime';
+        if (isPaid) return true;
+
+        // Calculate trial end date
+        const trialEndsAt = p.trial_ends_at
+            ? new Date(p.trial_ends_at)
+            : (p.created_at ? new Date(new Date(p.created_at).getTime() + TRIAL_DAYS * 24 * 60 * 60 * 1000) : null);
+
+        const isInTrial = trialEndsAt ? trialEndsAt > now : false;
+        if (!isInTrial) {
+            skippedExpired++;
+            return false;
+        }
+        return true;
+    });
+
+    if (skippedExpired > 0) {
+        console.log(`[RSS] 🚫 Skipped ${skippedExpired} expired trial users from keyword index.`);
+    }
+
+    activeProfiles.forEach(p => {
         if (!p.keywords || !Array.isArray(p.keywords)) return;
         
         // Take top 10 keywords only
@@ -149,7 +176,7 @@ async function buildKeywordIndex(): Promise<{
         });
     });
 
-    return { index, userCount: profiles.length, keywordCount, profiles };
+    return { index, userCount: activeProfiles.length, keywordCount, profiles: activeProfiles };
 }
 
 /**
