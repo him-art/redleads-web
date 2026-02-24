@@ -24,25 +24,9 @@ export async function POST(req: Request) {
         const { url, email, action } = validation.data;
 
         // 2. Auth Context
-        const urlSB = process.env.NEXT_PUBLIC_SUPABASE_URL;
-        const keySB = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-        if (!urlSB || !keySB) {
-            return NextResponse.json({ error: 'System configuration error' }, { status: 500 });
-        }
-
-        const jars = await cookies();
-        const supabase = createServerClient(
-            urlSB,
-            keySB,
-            {
-                cookies: {
-                    get(name: string) { return jars.get(name)?.value; },
-                    set(name: string, value: string, options: CookieOptions) { jars.set({ name, value, ...options }); },
-                    remove(name: string, options: CookieOptions) { jars.set({ name, value: '', ...options }); },
-                },
-            }
-        );
+        const { createClient, createAdminClient } = await import('@/lib/supabase/server');
+        const supabase = await createClient();
+        const adminSupabase = createAdminClient();
 
         const { data: { user } } = await supabase.auth.getUser();
 
@@ -51,7 +35,6 @@ export async function POST(req: Request) {
             if (!url) return NextResponse.json({ error: 'No URL' }, { status: 400 });
 
             const remoteIP = req.headers.get('x-forwarded-for')?.split(',')[0] || 'localhost';
-            const hashIP = crypto.createHash('sha256').update(remoteIP).digest('hex');
             
             let isInTrial = false;
 
@@ -62,7 +45,8 @@ export async function POST(req: Request) {
                 }, { status: 401 });
             }
 
-            const { data: profile } = await supabase
+            // Using Admin Supabase to bypass RLS/Triggers for reading usage
+            const { data: profile } = await adminSupabase
                 .from('profiles')
                 .select('scan_count, last_scan_at, subscription_tier, trial_ends_at, scan_allowance, created_at, keywords, description')
                 .eq('id', user.id)
@@ -78,7 +62,7 @@ export async function POST(req: Request) {
 
             if (!(isPaid || isInTrial)) {
                 return NextResponse.json({ 
-                    error: 'Your trial has ended. Please upgrade to a paid plan to continue automated.', 
+                    error: 'Your trial has ended. Please upgrade to a paid plan to continue automated scanning.', 
                     code: 'PAYWALL_REQUIRED' 
                 }, { status: 403 });
             }
@@ -98,22 +82,14 @@ export async function POST(req: Request) {
             let effectiveCount = (today === lastDay) ? (profile?.scan_count || 0) : 0;
 
             if (effectiveCount >= dailyLimit) {
-                const isPaid = profile?.subscription_tier === 'growth' || profile?.subscription_tier === 'starter' || profile?.subscription_tier === 'lifetime';
                 const msg = isPaid 
                     ? `Daily scan limit (${dailyLimit}) reached. Upgrade to increase your limit or check back tomorrow!` 
                     : `You have used your ${dailyLimit} daily trial scans. Upgrade for fresh scans every day!`;
                 return NextResponse.json({ error: msg, code: 'DAILY_LIMIT_REACHED' }, { status: 403 });
             }
 
-            // Atomic increment using RPC
-            // Note: If lastDay !== today, we should technically reset the count in the DB too.
-            // However, the current RPC only increments. To fix this robustly, we can either:
-            // 1. Update the RPC to take a "reset" flag.
-            // 2. Just use a regular update here since we've already read the profile.
-            // Given the race condition risk is low for a single user's scan count, 
-            // and we want to ensure the reset happens, let's use a conditional update.
-            
-            const { error: updateError } = await supabase
+            // Using Admin Supabase to bypass RLS/Triggers for updating usage
+            const { error: updateError } = await adminSupabase
                 .from('profiles')
                 .update({ 
                     scan_count: (today === lastDay) ? (profile?.scan_count || 0) + 1 : 1,
@@ -122,11 +98,7 @@ export async function POST(req: Request) {
                 .eq('id', user.id);
 
             if (updateError) {
-                console.error('[Scanner] Failed to update scan count:', updateError);
-            }
-
-            if (updateError) {
-                console.error('[Scanner] Failed to update scan count:', updateError);
+                console.error('[Scanner] Failed to update scan count (Admin Mode):', updateError);
             }
 
             const scanResult = await performScan(url, {
@@ -160,12 +132,13 @@ export async function POST(req: Request) {
                     console.log(`[Scanner API] Saving ${leadsToSave.length} leads for user ${user.id} (Paid: ${isPaid}, Trial: ${isInTrial})`);
 
                     if (leadsToSave.length > 0) {
-                        const { error: insertError } = await supabase
+                        // Using Admin Supabase to bypass RLS for lead persistence
+                        const { error: insertError } = await adminSupabase
                             .from('monitored_leads')
                             .insert(leadsToSave);
                         
                         if (insertError) {
-                            console.error('[Scanner API] Persistence failed:', insertError.message);
+                            console.error('[Scanner API] Persistence failed (Admin Mode):', insertError.message);
                         } else {
                             console.log(`[Scanner API] Persisted ${leadsToSave.length} leads to monitored_leads.`);
                         }

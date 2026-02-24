@@ -108,20 +108,23 @@ export async function POST(req: Request) {
         // 4. Persistent Supabase Increment (for authenticated users)
         if (userId) {
             try {
-                const { data: profile } = await supabase
+                const { createAdminClient } = await import('@/lib/supabase/server');
+                const adminSupabase = createAdminClient();
+
+                const { data: profile } = await adminSupabase
                     .from('profiles')
                     .select('free_tool_usage_count')
                     .eq('id', userId)
                     .single();
 
-                await supabase
+                await adminSupabase
                     .from('profiles')
                     .update({ 
                         free_tool_usage_count: (profile?.free_tool_usage_count || 0) + 1 
                     })
                     .eq('id', userId);
             } catch (authErr) {
-                console.warn('Supabase usage tracking failed:', authErr);
+                console.warn('Supabase usage tracking failed (Admin Mode):', authErr);
             }
         }
 
