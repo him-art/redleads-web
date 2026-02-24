@@ -8,7 +8,7 @@
   /* Soft Antigravity Palette */
   --color-void: #0A0A0A; /* Softened deep black */
   --color-card: rgba(255, 255, 255, 0.03); /* Subtle dark accent */
-  --color-border-subtle: rgba(255, 255, 255, 0.05);
+  --color-subtle: rgba(255, 255, 255, 0.05);
   
   /* Text Colors */
   --color-text-primary: #EDEDED;
@@ -90,7 +90,7 @@ h1, h2, h3, h4, h5, h6 {
 
 @layer utilities {
   .glass-panel {
-    @apply bg-card border border-border-subtle;
+    @apply bg-card border border-subtle;
   }
   
   .shadow-void {
@@ -100,7 +100,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .border-subtle {
-    border-color: var(--color-border-subtle);
+    border-color: var(--color-subtle);
   }
 }
 
