@@ -183,7 +183,7 @@ export default function LiveDiscoveryTab({
                 <div className={`relative glass-panel rounded-3xl p-1 transition-all ${
                     hasResults ? 'border-primary/50 shadow-[0_0_30px_rgba(255,88,54,0.1)]' : ''
                 }`}>
-                    <div className="px-4 sm:px-6 py-4 border-b border-border-subtle flex items-center justify-between">
+                    <div className="px-4 sm:px-6 py-4 border-b border-subtle flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
                             <span className="text-xs font-bold uppercase tracking-widest text-text-secondary">Power Search</span>

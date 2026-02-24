@@ -83,7 +83,7 @@ export default function ReportsTab({ reports, user }: { reports: any[], user: an
                     Lead History
                 </h2>
 
-                <div className="flex bg-black/20 rounded-xl p-1.5 border border-border-subtle">
+                <div className="flex bg-black/20 rounded-xl p-1.5 border border-subtle">
                      <button
                         onClick={() => setFilter('all')}
                         className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${
@@ -189,7 +189,7 @@ export default function ReportsTab({ reports, user }: { reports: any[], user: an
                 ) : (
                 <div className="space-y-4">
                     {Object.entries(groupedLeads).map(([date, leads]) => (
-                        <div key={date} className="border border-border-subtle rounded-[1.2rem] sm:rounded-[1.5rem] overflow-hidden bg-white/[0.02] mb-4">
+                        <div key={date} className="border border-subtle rounded-[1.2rem] sm:rounded-[1.5rem] overflow-hidden bg-white/[0.02] mb-4">
                             <button 
                                 onClick={() => setExpandedDay(expandedDay === date ? null : date)}
                                 className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-white/[0.02] transition-colors"

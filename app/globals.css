@@ -9,6 +9,7 @@
   --color-void: #0A0A0A; /* Softened deep black */
   --color-card: rgba(255, 255, 255, 0.03); /* Subtle dark accent */
   --color-subtle: rgba(255, 255, 255, 0.05);
+  --color-border-subtle: var(--color-subtle); /* Backward compatibility alias */
   
   /* Text Colors */
   --color-text-primary: #EDEDED;
@@ -116,6 +117,7 @@ h1, h2, h3, h4, h5, h6 {
   word-wrap: normal;
   direction: ltr;
   -webkit-font-feature-settings: 'liga';
+  font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
   user-select: none;
 }

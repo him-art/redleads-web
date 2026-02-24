@@ -197,7 +197,7 @@ export default function SettingsTab({ user }: { user: any }) {
                                 value={websiteUrl}
                                 onChange={(e) => setWebsiteUrl(e.target.value)}
                                 placeholder="yourproduct.com"
-                                className="w-full bg-black/20 border border-border-subtle rounded-xl py-4 pl-4 pr-4 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none transition-all placeholder:text-text-secondary/50 shadow-inner"
+                                className="w-full bg-black/20 border border-subtle rounded-xl py-4 pl-4 pr-4 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none transition-all placeholder:text-text-secondary/50 shadow-inner"
                             />
                         </div>
                         <p className="text-[10px] text-text-secondary/60 leading-relaxed uppercase tracking-widest font-black opacity-60">
@@ -245,7 +245,7 @@ export default function SettingsTab({ user }: { user: any }) {
                             }}
                             placeholder="[Brand Name] is a [Product Type] that helps [Target Audience] solve [Problem] by [Value Proposition]."
                             rows={5}
-                            className="w-full bg-black/20 border border-border-subtle rounded-xl p-4 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none transition-colors resize-none placeholder:text-text-secondary/50 shadow-inner"
+                            className="w-full bg-black/20 border border-subtle rounded-xl p-4 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none transition-colors resize-none placeholder:text-text-secondary/50 shadow-inner"
                         />
                         <p className="text-[10px] text-text-secondary/60 leading-relaxed uppercase tracking-widest font-black opacity-60">
                             <span className="text-primary/80">Pro Tip:</span> Being highly specific helps the AI find much higher quality leads.
@@ -281,7 +281,7 @@ export default function SettingsTab({ user }: { user: any }) {
                             onChange={(e) => setNewKeyword(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && addKeyword()}
                             placeholder="Best results with 2-word phrases: 'lead generation', 'sales automation', 'cold outreach'"
-                            className="flex-grow bg-black/20 border border-border-subtle rounded-xl p-3 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none placeholder:text-text-secondary/50 shadow-inner"
+                            className="flex-grow bg-black/20 border border-subtle rounded-xl p-3 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none placeholder:text-text-secondary/50 shadow-inner"
                         />
                         <button 
                             onClick={addKeyword}

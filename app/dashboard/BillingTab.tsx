@@ -200,7 +200,7 @@ export default function BillingTab() {
                             <button 
                                 key={reason}
                                 onClick={() => setFeedbackReason(reason)}
-                                className={`w-full p-4 rounded-xl border text-left flex justify-between items-center transition-all ${feedbackReason === reason ? 'border-primary bg-primary/10 text-text-primary' : 'border-border-subtle bg-white/[0.02] text-text-secondary hover:border-white/10'}`}
+                                className={`w-full p-4 rounded-xl border text-left flex justify-between items-center transition-all ${feedbackReason === reason ? 'border-primary bg-primary/10 text-text-primary' : 'border-subtle bg-white/[0.02] text-text-secondary hover:border-white/10'}`}
                             >
                                 <span className="text-sm font-bold uppercase tracking-widest">{reason}</span>
                                 {feedbackReason === reason && <CheckCircle2 size={16} className="text-primary" />}
@@ -278,7 +278,7 @@ export default function BillingTab() {
                     { id: 'starter', name: 'Starter Plan', price: '$7', oldPrice: '$15', desc: '5 keywords, 2 power searches & 100 AI reply drafts per month', primary: false, active: planDetails.id === 'starter' },
                     { id: 'growth', name: 'Growth Plan', price: '$14', oldPrice: '$29', desc: '15 keywords, 5 power searches & 500 AI reply drafts per month', primary: true, active: planDetails.id === 'growth' }
                 ].map((plan) => (
-                    <div key={plan.id} className={`p-8 sm:p-10 rounded-[2.5rem] border flex flex-col transition-all relative overflow-hidden ${plan.active ? 'border-primary ring-2 ring-primary/20 bg-primary/[0.03]' : plan.primary ? 'glass-panel border-primary/20' : 'bg-white/[0.02] border-border-subtle'}`}>
+                    <div key={plan.id} className={`p-8 sm:p-10 rounded-[2.5rem] border flex flex-col transition-all relative overflow-hidden ${plan.active ? 'border-primary ring-2 ring-primary/20 bg-primary/[0.03]' : plan.primary ? 'glass-panel border-primary/20' : 'bg-white/[0.02] border-subtle'}`}>
                         {plan.active && (
                             <div className="absolute top-0 right-0 px-5 py-2 bg-primary text-primary-foreground text-[9px] font-black uppercase tracking-widest rounded-bl-2xl flex items-center gap-1.5 shadow-lg">
                                 <Sparkles size={10} /> Current Plan

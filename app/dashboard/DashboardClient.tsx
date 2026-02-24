@@ -221,8 +221,8 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                     </div>
 
                     {/* User Profile / Footer */}
-                    <div className="mt-auto pt-6 border-t border-border-subtle">
-                        <div className="p-3 rounded-xl bg-white/[0.03] border border-border-subtle flex items-center gap-3">
+                    <div className="mt-auto pt-6 border-t border-subtle">
+                        <div className="p-3 rounded-xl bg-white/[0.03] border border-subtle flex items-center gap-3">
                             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-zinc-800 to-black flex items-center justify-center border border-white/10 text-text-primary">
                                 <span className="text-xs font-bold">
                                     {user.email?.[0].toUpperCase()}

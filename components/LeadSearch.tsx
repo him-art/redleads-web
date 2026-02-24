@@ -184,7 +184,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                             disabled={isScanning}
                             readOnly={isLocked}
                             suppressHydrationWarning
-                            className={`w-full bg-black/20 border border-border-subtle rounded-2xl py-4 sm:py-6 pl-12 sm:pl-16 pr-24 sm:pr-32 text-base sm:text-lg focus:outline-none focus:bg-black/30 focus:border-primary/20 transition-all placeholder:text-text-secondary font-medium tracking-tight text-text-primary shadow-inner ${isLocked ? 'cursor-default' : ''}`}
+                            className={`w-full bg-black/20 border border-subtle rounded-2xl py-4 sm:py-6 pl-12 sm:pl-16 pr-24 sm:pr-32 text-base sm:text-lg focus:outline-none focus:bg-black/30 focus:border-primary/20 transition-all placeholder:text-text-secondary font-medium tracking-tight text-text-primary shadow-inner ${isLocked ? 'cursor-default' : ''}`}
                         />
                         <button 
                             type="submit"
