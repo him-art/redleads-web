@@ -99,21 +99,11 @@ export default function BillingTab() {
     const [feedbackReason, setFeedbackReason] = useState('');
     const [submittingFeedback, setSubmittingFeedback] = useState(false);
 
-    const trialEndsAtString = profile?.trial_ends_at || (profile?.created_at ? (() => {
-        const d = new Date(profile.created_at);
-        if (isNaN(d.getTime())) return null;
-        return new Date(d.getTime() + 3 * 24 * 60 * 60 * 1000).toISOString();
-    })() : null);
-    const trialEndsAt = trialEndsAtString ? new Date(trialEndsAtString) : null;
+    const { isActuallyExpired, isInTrial, daysRemaining, trialEndsAt } = trialStatus;
     
+    // Cancellation guarantee logic - specific to BillingTab
     const subStartedAt = profile?.subscription_started_at ? new Date(profile.subscription_started_at) : (isSubscribed ? new Date(profile.created_at) : null);
-    const now = new Date();
-    const isWithinGuarantee = subStartedAt ? (now.getTime() - subStartedAt.getTime()) < (7 * 24 * 60 * 60 * 1000) : false;
-
-    const daysRemaining = trialEndsAt ? Math.max(0, Math.ceil((trialEndsAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))) : 0;
-    const trialExpired = trialEndsAt ? trialEndsAt <= now : false;
-    const isActuallyExpired = !isSubscribed && (trialExpired || (trialEndsAt && daysRemaining <= 0));
-    const isInTrial = !isSubscribed && !isActuallyExpired && daysRemaining > 0;
+    const isWithinGuarantee = subStartedAt ? (new Date().getTime() - subStartedAt.getTime()) < (7 * 24 * 60 * 60 * 1000) : false;
 
     const submitFeedbackAndRedirect = async () => {
         setSubmittingFeedback(true);
@@ -229,47 +219,53 @@ export default function BillingTab() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Current Status Card */}
-                <div className="lg:col-span-3 glass-panel rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-8">
-                        <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${isSubscribed || isAdmin ? (isLifetime ? 'bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'bg-primary/10 text-primary border-primary/20 shadow-[0_0_20px_rgba(255,88,54,0.1)]') : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
-                            {isMounted ? (isSubscribed || isAdmin ? (isLifetime ? 'Lifetime Plan' : 'Active') : (isInTrial ? `${daysRemaining} Days Left` : 'Expired')) : '...'}
-                        </div>
-                    </div>
-
-                    <div className="mb-12">
-                        <p className="text-[10px] font-black text-text-secondary uppercase tracking-[0.4em] mb-4">Membership Status</p>
-                        <h3 className="text-4xl sm:text-5xl font-black text-text-primary tracking-tight">
-                            {planDetails.name}
-                        </h3>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {[
-                            { label: 'Keywords', value: isLifetime ? '15 Keywords' : isGrowth ? '15 Keywords' : isStarter ? '5 Keywords' : 'Trial Plan', icon: <Search size={16} /> },
-                            { label: 'Power Searches', value: isLifetime ? '5/Day' : isGrowth ? '5/Day' : isStarter ? '2/Day' : 'Trial Plan', icon: <Compass size={16} /> },
-                            { label: 'AI Outreach', value: isLifetime ? '500 Drafts / Month' : isGrowth ? '500 Drafts / Month' : isStarter ? '100 Drafts / Month' : '5 Drafts', icon: <Bot size={16} /> },
-                            { label: 'Support', value: isLifetime ? 'Priority Support' : 'Standard Support', icon: <CheckCircle2 size={16} /> }
-                        ].map((stat) => (
-                            <div key={stat.label} className="p-4 rounded-2xl bg-white/5 border border-white/5">
-                                <div className="flex items-center gap-3 mb-2 text-text-secondary">
-                                    {stat.icon}
-                                    <span className="text-[10px] font-black uppercase tracking-widest">{stat.label}</span>
-                                </div>
-                                <p className="text-xs font-black text-text-primary uppercase tracking-wider">{stat.value}</p>
+                <div className="lg:col-span-3 p-1.5 bg-white/5 border border-white/5 rounded-[2.5rem]">
+                    <div className="bg-[#0c0c0c] rounded-[2.2rem] p-8 md:p-12 border border-white/5 relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                        <div className="absolute top-0 right-0 p-8">
+                            <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${isSubscribed || isAdmin ? (isLifetime ? 'bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'bg-primary/10 text-primary border-primary/20 shadow-[0_0_20px_rgba(255,88,54,0.1)]') : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
+                                {isMounted ? (isSubscribed || isAdmin ? (isLifetime ? 'Lifetime Plan' : 'Active') : (isInTrial ? `${daysRemaining} Days Left` : 'Expired')) : '...'}
                             </div>
-                        ))}
-                    </div>
-
-                    {isSubscribed && !isAdmin && !isLifetime && (
-                        <div className="mt-12 pt-8 border-t border-white/5 flex flex-wrap gap-4">
-                            <button onClick={handleManageSubscription} disabled={isManaging} className="px-8 py-4 bg-white/5 text-text-primary font-black rounded-xl hover:bg-white/10 transition-all text-[10px] uppercase tracking-widest border border-white/5 flex items-center justify-center">
-                                {isManaging ? <LoadingIcon className="w-3.5 h-3.5" /> : 'Portal Access'}
-                            </button>
-                            <button onClick={() => setGuardStep(1)} className="px-8 py-4 bg-transparent text-text-secondary font-black rounded-xl hover:text-red-500 transition-all text-[10px] uppercase tracking-widest">
-                                Cancel Subscription
-                            </button>
                         </div>
-                    )}
+
+                        <div className="mb-12">
+                            <p className="text-[10px] font-black text-text-secondary uppercase tracking-[0.4em] mb-4">Membership Status</p>
+                            <h3 className="text-4xl sm:text-5xl font-black text-text-primary tracking-tight">
+                                {planDetails.name}
+                            </h3>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                            {[
+                                { label: 'Keywords', value: isLifetime ? '15 Keywords' : isGrowth ? '15 Keywords' : isStarter ? '5 Keywords' : 'Trial Plan', icon: <Search size={16} /> },
+                                { label: 'Power Searches', value: isLifetime ? '5/Day' : isGrowth ? '5/Day' : isStarter ? '2/Day' : 'Trial Plan', icon: <Compass size={16} /> },
+                                { label: 'AI Outreach', value: isLifetime ? '500 Drafts / Month' : isGrowth ? '500 Drafts / Month' : isStarter ? '100 Drafts / Month' : '5 Drafts', icon: <Bot size={16} /> },
+                                { label: 'Support', value: isLifetime ? 'Priority Support' : 'Standard Support', icon: <CheckCircle2 size={16} /> }
+                            ].map((stat) => (
+                                <div key={stat.label} className="p-0.5 bg-white/5 border border-white/5 rounded-2xl">
+                                    <div className="p-4 rounded-xl bg-[#0c0c0c]/50 border border-white/5 relative overflow-hidden">
+                                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                                        <div className="flex items-center gap-3 mb-2 text-text-secondary">
+                                            {stat.icon}
+                                            <span className="text-[10px] font-black uppercase tracking-widest">{stat.label}</span>
+                                        </div>
+                                        <p className="text-xs font-black text-text-primary uppercase tracking-wider">{stat.value}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {isSubscribed && !isAdmin && !isLifetime && (
+                            <div className="mt-12 pt-8 border-t border-white/5 flex flex-wrap gap-4">
+                                <button onClick={handleManageSubscription} disabled={isManaging} className="px-8 py-4 bg-white/5 text-text-primary font-black rounded-xl hover:bg-white/10 transition-all text-[10px] uppercase tracking-widest border border-white/5 flex items-center justify-center">
+                                    {isManaging ? <LoadingIcon className="w-3.5 h-3.5" /> : 'Portal Access'}
+                                </button>
+                                <button onClick={() => setGuardStep(1)} className="px-8 py-4 bg-transparent text-text-secondary font-black rounded-xl hover:text-red-500 transition-all text-[10px] uppercase tracking-widest">
+                                    Cancel Subscription
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
             {/* Subscription Options - Always Visible */}
@@ -278,46 +274,49 @@ export default function BillingTab() {
                     { id: 'starter', name: 'Starter Plan', price: '$7', oldPrice: '$15', desc: '5 keywords, 2 power searches & 100 AI reply drafts per month', primary: false, active: planDetails.id === 'starter' },
                     { id: 'growth', name: 'Growth Plan', price: '$14', oldPrice: '$29', desc: '15 keywords, 5 power searches & 500 AI reply drafts per month', primary: true, active: planDetails.id === 'growth' }
                 ].map((plan) => (
-                    <div key={plan.id} className={`p-8 sm:p-10 rounded-[2.5rem] border flex flex-col transition-all relative overflow-hidden ${plan.active ? 'border-primary ring-2 ring-primary/20 bg-primary/[0.03]' : plan.primary ? 'glass-panel border-primary/20' : 'bg-white/[0.02] border-subtle'}`}>
-                        {plan.active && (
-                            <div className="absolute top-0 right-0 px-5 py-2 bg-primary text-primary-foreground text-[9px] font-black uppercase tracking-widest rounded-bl-2xl flex items-center gap-1.5 shadow-lg">
-                                <Sparkles size={10} /> Current Plan
-                            </div>
-                        )}
-
-                        <h4 className={`text-base font-black uppercase tracking-[0.25em] mb-6 ${plan.primary || plan.active ? 'text-primary' : 'text-text-secondary'}`}>{plan.name}</h4>
-                        
-                        <div className="flex items-baseline gap-3 mb-4">
-                            {plan.oldPrice && <span className="text-lg font-bold text-text-secondary/30 line-through tracking-tight">{plan.oldPrice}</span>}
-                            <span className="text-5xl font-black text-text-primary tracking-tighter">{plan.price}</span>
-                            <span className="text-xs font-bold text-text-secondary/50 uppercase tracking-widest">/mo</span>
-                        </div>
-
-                        <p className="text-xs font-medium text-text-secondary/80 leading-relaxed mb-10 max-w-[280px]">{plan.desc}</p>
-                        
-                        <button 
-                            onClick={() => !plan.active && !isLifetime && handleUpgrade(plan.id as any)} 
-                            disabled={!!isLoading || plan.active || isLifetime}
-                            className={`mt-auto w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 ${
-                                plan.active 
-                                    ? 'bg-white/5 text-primary/40 border border-white/5 cursor-not-allowed'
-                                    : isLifetime
-                                        ? 'bg-white/5 text-text-secondary/20 border border-white/5 cursor-default'
-                                        : plan.primary 
-                                            ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_30px_rgba(255,88,54,0.2)] active:scale-95' 
-                                            : 'bg-white text-black hover:bg-gray-200 active:scale-95'
-                            }`}
-                        >
-                            {isLoading === plan.id ? (
-                                <LoadingIcon className="w-5 h-5" />
-                            ) : plan.active ? (
-                                <CheckCircle2 size={16} />
-                            ) : isLifetime ? (
-                                'Owned via Lifetime'
-                            ) : (
-                                `Upgrade to ${plan.id}`
+                    <div key={plan.id} className="p-1.5 bg-white/5 border border-white/5 rounded-[2.5rem]">
+                        <div className={`p-8 sm:p-10 rounded-[2.2rem] border flex flex-col h-full transition-all relative overflow-hidden ${plan.active ? 'border-primary ring-2 ring-primary/20 bg-primary/[0.03]' : 'bg-[#0c0c0c] border-white/5'}`}>
+                            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                            {plan.active && (
+                                <div className="absolute top-0 right-0 px-5 py-2 bg-primary text-primary-foreground text-[9px] font-black uppercase tracking-widest rounded-bl-2xl flex items-center gap-1.5 shadow-lg">
+                                    <Sparkles size={10} /> Current Plan
+                                </div>
                             )}
-                        </button>
+
+                            <h4 className={`text-base font-black uppercase tracking-[0.25em] mb-6 ${plan.primary || plan.active ? 'text-primary' : 'text-text-secondary'}`}>{plan.name}</h4>
+                            
+                            <div className="flex items-baseline gap-3 mb-4">
+                                {plan.oldPrice && <span className="text-lg font-bold text-text-secondary/30 line-through tracking-tight">{plan.oldPrice}</span>}
+                                <span className="text-5xl font-black text-text-primary tracking-tighter">{plan.price}</span>
+                                <span className="text-xs font-bold text-text-secondary/50 uppercase tracking-widest">/mo</span>
+                            </div>
+
+                            <p className="text-xs font-medium text-text-secondary/80 leading-relaxed mb-10 max-w-[280px]">{plan.desc}</p>
+                            
+                            <button 
+                                onClick={() => !plan.active && !isLifetime && handleUpgrade(plan.id as any)} 
+                                disabled={!!isLoading || plan.active || isLifetime}
+                                className={`mt-auto w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 ${
+                                    plan.active 
+                                        ? 'bg-white/5 text-primary/40 border border-white/5 cursor-not-allowed'
+                                        : isLifetime
+                                            ? 'bg-white/5 text-text-secondary/20 border border-white/5 cursor-default'
+                                            : plan.primary 
+                                                ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_30px_rgba(255,88,54,0.2)] active:scale-95' 
+                                                : 'bg-white text-black hover:bg-gray-200 active:scale-95'
+                                }`}
+                            >
+                                {isLoading === plan.id ? (
+                                    <LoadingIcon className="w-5 h-5" />
+                                ) : plan.active ? (
+                                    <CheckCircle2 size={16} />
+                                ) : isLifetime ? (
+                                    'Owned via Lifetime'
+                                ) : (
+                                    `Upgrade to ${plan.id}`
+                                )}
+                            </button>
+                        </div>
                     </div>
                 ))}
             </div>
@@ -325,66 +324,72 @@ export default function BillingTab() {
 
             {/* Lifetime Upgrade Invitation for existing users or trial users */}
             {!isLifetime && (
-                <div className="mt-12 relative rounded-[2.5rem] bg-gradient-to-br from-white/[0.05] to-[#141414] border-2 border-red-500/50 p-8 md:p-12 overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <Crown size={180} className="text-white -rotate-12 translate-x-20 -translate-y-20" />
-                    </div>
-                    
-                    <div className="relative z-10 flex flex-col md:flex-row items-center gap-12">
-                        <div className="flex-grow">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 mb-6 font-bold">
-                                <Crown size={12} />
-                                <span className="text-[10px] font-black uppercase tracking-[0.2em]">For Limited Members</span>
-                            </div>
-                            
-                            <h3 className="text-3xl sm:text-4xl font-black text-text-primary mb-4 tracking-tight flex items-center gap-3">
-                                Lock in Growth Forever. <Sparkles size={24} className="text-orange-500 animate-pulse" />
-                            </h3>
-                            
-                            <p className="text-text-secondary font-medium max-w-xl mb-8 leading-relaxed">
-                                Stop the monthly "SaaS Tax." Pay once and get every lead, every power search, and every future AI update without ever seeing another invoice.
-                            </p>
-
-                            <div className="flex flex-wrap gap-8 mb-8">
-                                {[
-                                    { label: 'One-Time', value: `$${currentPrice}`, icon: <Zap size={14} /> },
-                                    { label: 'Limited', value: `${spotsLeft} Seats Left`, icon: <CheckCircle2 size={14} /> }
-                                ].map((pill) => (
-                                    <div key={pill.label} className="flex flex-col">
-                                        <div className="flex items-center gap-2 text-text-secondary mb-1">
-                                            {pill.icon}
-                                            <span className="text-[10px] font-black uppercase tracking-widest">{pill.label}</span>
-                                        </div>
-                                        <p className="text-lg font-black text-text-primary">{pill.value}</p>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <button
-                                onClick={() => handleUpgrade('lifetime')}
-                                disabled={!!isLoading}
-                                className="inline-flex items-center justify-center gap-3 px-10 py-5 bg-white text-black font-black rounded-2xl hover:bg-orange-500 hover:text-white transition-all text-xs uppercase tracking-[0.2em] active:scale-95 disabled:opacity-50"
-                            >
-                                {isLoading === 'lifetime' ? <LoadingIcon className="w-4 h-4" /> : <>Claim My Lifetime Seat <ArrowRight size={16} /></>}
-                            </button>
+                <div className="mt-12 p-1.5 bg-white/5 border border-white/5 rounded-[2.5rem]">
+                    <div className="relative rounded-[2.2rem] bg-[#0c0c0c] border-2 border-red-500/50 p-8 md:p-12 overflow-hidden group">
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                        <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <Crown size={180} className="text-white -rotate-12 translate-x-20 -translate-y-20" />
                         </div>
+                        
+                        <div className="relative z-10 flex flex-col md:flex-row items-center gap-12">
+                            <div className="flex-grow">
+                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 mb-6 font-bold">
+                                    <Crown size={12} />
+                                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">For Limited Members</span>
+                                </div>
+                                
+                                <h3 className="text-3xl sm:text-4xl font-black text-text-primary mb-4 tracking-tight flex items-center gap-3">
+                                    Lock in Growth Forever. <Sparkles size={24} className="text-orange-500 animate-pulse" />
+                                </h3>
+                                
+                                <p className="text-text-secondary font-medium max-w-xl mb-8 leading-relaxed">
+                                    Stop the monthly "SaaS Tax." Pay once and get every lead, every power search, and every future AI update without ever seeing another invoice.
+                                </p>
 
-                        <div className="w-full md:w-72 flex-shrink-0">
-                            <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-4">
-                                <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest text-center mb-2">Growth Features +</p>
-                                {[
-                                    '15 Tracked Keywords',
-                                    '5 Power Searches / Day',
-                                    '500 AI Drafts / Month',
-                                    'Priority Beta Access'
-                                ].map((feat) => (
-                                     <div key={feat} className="flex items-center gap-3">
-                                         <div className="p-1 rounded-md bg-orange-500/10 text-orange-500">
-                                             <CheckCircle2 size={12} />
-                                         </div>
-                                         <span className="text-[10px] font-bold text-text-primary uppercase tracking-wider">{feat}</span>
-                                     </div>
-                                ))}
+                                <div className="flex flex-wrap gap-8 mb-8">
+                                    {[
+                                        { label: 'One-Time', value: `$${currentPrice}`, icon: <Zap size={14} /> },
+                                        { label: 'Limited', value: `${spotsLeft} Seats Left`, icon: <CheckCircle2 size={14} /> }
+                                    ].map((pill) => (
+                                        <div key={pill.label} className="flex flex-col">
+                                            <div className="flex items-center gap-2 text-text-secondary mb-1">
+                                                {pill.icon}
+                                                <span className="text-[10px] font-black uppercase tracking-widest">{pill.label}</span>
+                                            </div>
+                                            <p className="text-lg font-black text-text-primary">{pill.value}</p>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <button
+                                    onClick={() => handleUpgrade('lifetime')}
+                                    disabled={!!isLoading}
+                                    className="inline-flex items-center justify-center gap-3 px-10 py-5 bg-white text-black font-black rounded-2xl hover:bg-orange-500 hover:text-white transition-all text-xs uppercase tracking-[0.2em] active:scale-95 disabled:opacity-50"
+                                >
+                                    {isLoading === 'lifetime' ? <LoadingIcon className="w-4 h-4" /> : <>Claim My Lifetime Seat <ArrowRight size={16} /></>}
+                                </button>
+                            </div>
+
+                            <div className="w-full md:w-72 flex-shrink-0">
+                                <div className="p-1 bg-white/5 border border-white/5 rounded-3xl">
+                                    <div className="p-6 rounded-[1.4rem] bg-[#0c0c0c] border border-white/5 space-y-4 relative overflow-hidden">
+                                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                                        <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest text-center mb-2">Growth Features +</p>
+                                        {[
+                                            '15 Tracked Keywords',
+                                            '5 Power Searches / Day',
+                                            '500 AI Drafts / Month',
+                                            'Priority Beta Access'
+                                        ].map((feat) => (
+                                            <div key={feat} className="flex items-center gap-3">
+                                                <div className="p-1 rounded-md bg-orange-500/10 text-orange-500">
+                                                    <CheckCircle2 size={12} />
+                                                </div>
+                                                <span className="text-[10px] font-bold text-text-primary uppercase tracking-wider">{feat}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -72,30 +72,36 @@ export default function NodeDetail({ node, onNavigate, onClose }: NodeDetailProp
 
                 {/* Sidebar / Context */}
                 <div className="space-y-6">
-                    <div className="p-5 rounded-xl bg-white/[0.02] border border-white/5 space-y-4">
-                        <h3 className="text-sm font-bold text-text-primary flex items-center gap-2">
-                           <span className="w-1 h-4 bg-orange-500 rounded-full"/>
-                           Quick Actions
-                        </h3>
-                        
-                        {node.action_link ? (
-                            <button 
-                                onClick={handleAction}
-                                className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground p-3 rounded-lg font-bold transition-all shadow-lg shadow-primary/10 active:scale-[0.98]"
-                            >
-                                {node.action_label || 'Go to Tool'}
-                                <ExternalLink size={16} />
-                            </button>
-                        ) : (
-                           <div className="text-xs text-text-secondary italic">No external action required.</div>
-                        )}
+                    <div className="p-1 bg-white/5 border border-white/5 rounded-2xl">
+                        <div className="p-5 rounded-xl bg-[#0c0c0c] border border-white/5 space-y-4 relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                            <h3 className="text-sm font-bold text-text-primary flex items-center gap-2">
+                            <span className="w-1 h-4 bg-orange-500 rounded-full"/>
+                            Quick Actions
+                            </h3>
+                            
+                            {node.action_link ? (
+                                <button 
+                                    onClick={handleAction}
+                                    className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground p-3 rounded-lg font-bold transition-all shadow-lg shadow-primary/10 active:scale-[0.98]"
+                                >
+                                    {node.action_label || 'Go to Tool'}
+                                    <ExternalLink size={16} />
+                                </button>
+                            ) : (
+                            <div className="text-xs text-text-secondary italic">No external action required.</div>
+                            )}
+                        </div>
                     </div>
 
-                    <div className="p-5 rounded-xl bg-white/[0.02] border border-white/5 space-y-2">
-                         <h3 className="text-sm font-bold text-text-primary">Estimated Time</h3>
-                         <div className="text-2xl font-black text-text-secondary/50">
-                            ~{(node as any).estimated_minutes || 15} min
-                         </div>
+                    <div className="p-1 bg-white/5 border border-white/5 rounded-2xl">
+                        <div className="p-5 rounded-xl bg-[#0c0c0c] border border-white/5 space-y-2 relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                            <h3 className="text-sm font-bold text-text-primary">Estimated Time</h3>
+                            <div className="text-2xl font-black text-text-secondary/50">
+                                ~{(node as any).estimated_minutes || 15} min
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

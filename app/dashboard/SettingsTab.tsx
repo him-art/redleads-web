@@ -184,133 +184,144 @@ export default function SettingsTab({ user }: { user: any }) {
 
             <div className="space-y-6">
                 {/* Website URL */}
-                <div className="space-y-4">
-                    <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                            <label htmlFor="website-url" className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Website URL</label>
+                <div className="p-1 bg-white/5 border border-white/5 rounded-2xl">
+                    <div className="bg-[#0c0c0c] p-6 rounded-[1.8rem] border border-white/5 relative overflow-hidden space-y-4">
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <label htmlFor="website-url" className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Website URL</label>
+                            </div>
+                            <div className="relative group">
+                                <input
+                                    id="website-url"
+                                    name="url"
+                                    type="text"
+                                    value={websiteUrl}
+                                    onChange={(e) => setWebsiteUrl(e.target.value)}
+                                    placeholder="yourproduct.com"
+                                    className="w-full bg-black/40 border border-white/10 rounded-xl py-4 pl-4 pr-4 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none transition-all placeholder:text-text-secondary/50"
+                                />
+                            </div>
+                            <p className="text-[10px] text-text-secondary/60 leading-relaxed uppercase tracking-widest font-black opacity-60">
+                                Used to pre-fill Power Searches and generate AI configuration
+                            </p>
                         </div>
-                        <div className="relative group">
-                            <input
-                                id="website-url"
-                                name="url"
-                                type="text"
-                                value={websiteUrl}
-                                onChange={(e) => setWebsiteUrl(e.target.value)}
-                                placeholder="yourproduct.com"
-                                className="w-full bg-black/20 border border-subtle rounded-xl py-4 pl-4 pr-4 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none transition-all placeholder:text-text-secondary/50 shadow-inner"
-                            />
-                        </div>
-                        <p className="text-[10px] text-text-secondary/60 leading-relaxed uppercase tracking-widest font-black opacity-60">
-                            Used to pre-fill Power Searches and generate AI configuration
-                        </p>
-                    </div>
 
-                    <button
-                        onClick={handleAutofill}
-                        disabled={autofilling || !websiteUrl || websiteUrl.length < 3}
-                        className="w-full py-4 bg-primary text-white rounded-xl text-[10px] sm:text-sm font-black uppercase tracking-[0.2em] hover:bg-primary/90 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(255,88,54,0.2)]"
-                    >
-                        {autofilling ? (
-                            <>
-                                <LoadingIcon className="w-5 h-5" />
-                                <span>Generating Configuration...</span>
-                            </>
-                        ) : (
-                            <>
-                                <MessageSquarePlus size={20} />
-                                <span>Generate description & keywords using AI</span>
-                            </>
-                        )}
-                    </button>
+                        <button
+                            onClick={handleAutofill}
+                            disabled={autofilling || !websiteUrl || websiteUrl.length < 3}
+                            className="w-full py-4 bg-primary text-white rounded-xl text-[10px] sm:text-sm font-black uppercase tracking-[0.2em] hover:bg-primary/90 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(255,88,54,0.2)]"
+                        >
+                            {autofilling ? (
+                                <>
+                                    <LoadingIcon className="w-5 h-5" />
+                                    <span>Generating Configuration...</span>
+                                </>
+                            ) : (
+                                <>
+                                    <MessageSquarePlus size={20} />
+                                    <span>Generate description & keywords using AI</span>
+                                </>
+                            )}
+                        </button>
+                    </div>
                 </div>
 
                 {/* Product Description */}
-                <div className="space-y-4">
-                    <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                            <label htmlFor="product-description" className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Product Description</label>
-                            <span className={`text-[10px] font-black uppercase tracking-widest ${description.split(/\s+/).filter(Boolean).length > 150 ? 'text-red-500' : 'text-text-secondary/60'}`}>
-                                {description.split(/\s+/).filter(Boolean).length}/150 words
-                            </span>
+                <div className="p-1 bg-white/5 border border-white/5 rounded-2xl">
+                    <div className="bg-[#0c0c0c] p-6 rounded-[1.8rem] border border-white/5 relative overflow-hidden space-y-4">
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <label htmlFor="product-description" className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Product Description</label>
+                                <span className={`text-[10px] font-black uppercase tracking-widest ${description.split(/\s+/).filter(Boolean).length > 150 ? 'text-red-500' : 'text-text-secondary/60'}`}>
+                                    {description.split(/\s+/).filter(Boolean).length}/150 words
+                                </span>
+                            </div>
+                            <textarea
+                                id="product-description"
+                                name="description"
+                                value={description}
+                                onChange={(e) => {
+                                    const words = e.target.value.split(/\s+/).filter(Boolean);
+                                    if (words.length <= 150 || e.target.value.length < description.length) {
+                                        setDescription(e.target.value);
+                                    }
+                                }}
+                                placeholder="[Brand Name] is a [Product Type] that helps [Target Audience] solve [Problem] by [Value Proposition]."
+                                rows={5}
+                                className="w-full bg-black/40 border border-white/10 rounded-xl p-4 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none transition-colors resize-none placeholder:text-text-secondary/50 min-h-[140px]"
+                            />
+                            <p className="text-[10px] text-text-secondary/60 leading-relaxed uppercase tracking-widest font-black opacity-60">
+                                <span className="text-primary/80">Pro Tip:</span> Being highly specific helps the AI find much higher quality leads.
+                            </p>
                         </div>
-                        <textarea
-                            id="product-description"
-                            name="description"
-                            value={description}
-                            onChange={(e) => {
-                                const words = e.target.value.split(/\s+/).filter(Boolean);
-                                if (words.length <= 150 || e.target.value.length < description.length) {
-                                    setDescription(e.target.value);
-                                }
-                            }}
-                            placeholder="[Brand Name] is a [Product Type] that helps [Target Audience] solve [Problem] by [Value Proposition]."
-                            rows={5}
-                            className="w-full bg-black/20 border border-subtle rounded-xl p-4 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none transition-colors resize-none placeholder:text-text-secondary/50 shadow-inner"
-                        />
-                        <p className="text-[10px] text-text-secondary/60 leading-relaxed uppercase tracking-widest font-black opacity-60">
-                            <span className="text-primary/80">Pro Tip:</span> Being highly specific helps the AI find much higher quality leads.
-                        </p>
                     </div>
                 </div>
 
                 {/* Keywords */}
-                <div className="rounded-2xl -m-4 p-4 transition-colors duration-500">
-                    <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                            <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Priority Keywords</label>
-                            {isMounted && wasAiGenerated && (
-                                <span className="text-[9px] font-black uppercase tracking-widest text-primary/60 flex items-center gap-1 animate-in fade-in zoom-in duration-500">
-                                    <Sparkles size={10} className="text-primary" />
-                                    AI selected
-                                </span>
-                            )}
-                        </div>
-                        <span className={`text-[10px] font-black uppercase tracking-widest ${keywords.length >= keywordLimit ? 'text-primary' : 'text-text-secondary/60'}`}>
-                            {keywords.length}/{keywordLimit}
-                        </span>
-                    </div>
-                    <p className="text-[10px] text-text-secondary/60 leading-relaxed uppercase tracking-widest font-black opacity-60 mb-4">
-                        We scan 100+ active SaaS & Tech subreddits for these keywords.
-                    </p>
-                    <div className="flex gap-2 mb-3">
-                        <input
-                            id="new-keyword-input"
-                            name="new-keyword"
-                            type="text"
-                            value={newKeyword}
-                            onChange={(e) => setNewKeyword(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && addKeyword()}
-                            placeholder="Best results with 2-word phrases: 'lead generation', 'sales automation', 'cold outreach'"
-                            className="flex-grow bg-black/20 border border-subtle rounded-xl p-3 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none placeholder:text-text-secondary/50 shadow-inner"
-                        />
-                        <button 
-                            onClick={addKeyword}
-                            className="bg-white/10 hover:bg-white/20 text-text-primary p-3 rounded-xl transition-colors flex items-center justify-center"
-                        >
-                            <Plus size={20} />
-                        </button>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                        {keywords.map((kw, i) => (
-                            <div key={i} className="flex items-center gap-2 bg-primary/5 border border-primary/10 text-primary px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest">
-                                <span>{kw}</span>
-                                <button onClick={() => removeKeyword(i)} className="text-primary/50 hover:text-primary transition-colors flex items-center justify-center">
-                                    <X size={12} />
-                                </button>
+                <div className="p-1 bg-white/5 border border-white/5 rounded-[2rem]">
+                    <div className="bg-[#0c0c0c] p-6 rounded-[1.8rem] border border-white/5 relative overflow-hidden transition-colors duration-500">
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                        <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                                <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Priority Keywords</label>
+                                {isMounted && wasAiGenerated && (
+                                    <span className="text-[9px] font-black uppercase tracking-widest text-primary/60 flex items-center gap-1 animate-in fade-in zoom-in duration-500">
+                                        <Sparkles size={10} className="text-primary" />
+                                        AI selected
+                                    </span>
+                                )}
                             </div>
-                        ))}
+                            <span className={`text-[10px] font-black uppercase tracking-widest ${keywords.length >= keywordLimit ? 'text-primary' : 'text-text-secondary/60'}`}>
+                                {keywords.length}/{keywordLimit}
+                            </span>
+                        </div>
+                        <p className="text-[10px] text-text-secondary/60 leading-relaxed uppercase tracking-widest font-black opacity-60 mb-4">
+                            We scan 100+ active SaaS & Tech subreddits for these keywords.
+                        </p>
+                        <div className="flex gap-2 mb-3">
+                            <input
+                                id="new-keyword-input"
+                                name="new-keyword"
+                                type="text"
+                                value={newKeyword}
+                                onChange={(e) => setNewKeyword(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && addKeyword()}
+                                placeholder="e.g. 'lead generation', 'cold outreach'"
+                                className="flex-grow bg-black/40 border border-white/10 rounded-xl p-3 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none placeholder:text-text-secondary/50"
+                            />
+                            <button 
+                                onClick={addKeyword}
+                                className="bg-white/10 hover:bg-white/20 text-text-primary p-3 rounded-xl transition-colors flex items-center justify-center"
+                            >
+                                <Plus size={20} />
+                            </button>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {keywords.map((kw, i) => (
+                                <div key={i} className="flex items-center gap-2 bg-primary/5 border border-primary/10 text-primary px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest">
+                                    <span>{kw}</span>
+                                    <button onClick={() => removeKeyword(i)} className="text-primary/50 hover:text-primary transition-colors flex items-center justify-center">
+                                        <X size={12} />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
                 {/* Subreddits Section Removed - Global Monitoring Active */}
-                <div className="rounded-2xl -m-4 p-4 mt-2 opacity-30 pointer-events-none grayscale">
-                    <div className="flex items-center gap-2 mb-2">
-                        <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Global Monitoring Active</label>
-                        <span className="text-[9px] font-black bg-green-500/10 text-green-500/60 px-2 py-0.5 rounded-full border border-green-500/10 uppercase tracking-widest">100+ Communities</span>
+                <div className="p-1 bg-white/5 border border-white/5 rounded-2xl opacity-30 pointer-events-none grayscale">
+                    <div className="bg-black/20 p-4 rounded-[0.9rem] space-y-2">
+                        <div className="flex items-center gap-2 mb-1">
+                            <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Global Monitoring Active</label>
+                            <span className="text-[9px] font-black bg-green-500/10 text-green-500/60 px-2 py-0.5 rounded-full border border-green-500/10 uppercase tracking-widest">100+ Communities</span>
+                        </div>
+                        <p className="text-[10px] text-text-secondary/60 leading-relaxed uppercase tracking-widest font-black">
+                            Automatically scanning all relevant communities for founders and SaaS signals.
+                        </p>
                     </div>
-                     <p className="text-[10px] text-text-secondary/60 leading-relaxed uppercase tracking-widest font-black">
-                        Automatically scanning all relevant communities for founders and SaaS signals.
-                    </p>
                 </div>
 
                 <div className="pt-4 border-t border-white/5 space-y-4">

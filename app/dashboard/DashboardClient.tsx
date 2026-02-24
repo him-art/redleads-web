@@ -152,7 +152,7 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                     animate={isMobileMenuOpen ? { x: 0 } : { x: 0 }}
                     className={`
                         fixed inset-y-0 left-0 z-[70] lg:z-40 w-72 
-                        lg:glass-panel lg:bg-card/50
+                        lg:glass-panel lg:bg-card/40 lg:border-r lg:border-white/5
                         bg-[#0A0A0A] lg:bg-transparent
                         transform lg:transform-none transition-transform duration-300 ease-in-out
                         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
@@ -172,17 +172,17 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                                     className="object-contain"
                                 />
                             </div>
-                            <div>
+                            <div className="space-y-0.5">
                                 <h1 className="font-bold text-xl tracking-tight leading-none text-text-primary">RedLeads</h1>
-                                <span className="text-[10px] font-medium text-primary uppercase tracking-widest">Intelligence</span>
+                                <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Intelligence</span>
                             </div>
                         </div>
                     </div>
 
                     {/* Navigation Items */}
-                    <div className="space-y-1 flex-1">
+                    <div className="space-y-1.5 flex-1">
                         <div className="px-3 mb-2">
-                                <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest opacity-60">Menu</span>
+                                <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest opacity-60">Operations</span>
                         </div>
                         {tabs.map((tab) => {
                             const TabIcon = tab.icon;
@@ -197,42 +197,45 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                                         setActiveTab(tab.id as any);
                                         setIsMobileMenuOpen(false);
                                     }}
-                                    className={`relative w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 group overflow-hidden ${
+                                    className={`relative w-full flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-300 group overflow-hidden ${
                                         isLocked
                                             ? 'opacity-40 cursor-not-allowed grayscale'
                                             : isActive 
-                                                ? 'bg-white/[0.08] text-text-primary shadow-void border border-white/5' 
+                                                ? 'bg-white/[0.08] text-text-primary shadow-[0_4px_20px_rgba(0,0,0,0.5)]' 
                                                 : 'text-text-secondary hover:text-text-primary hover:bg-white/[0.04]'
                                     }`}
                                 >
                                     {isActive && !isLocked && (
-                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-primary rounded-r-full shadow-[0_0_10px_rgba(255,88,54,0.5)]" />
+                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-primary rounded-r-full shadow-[0_0_15px_rgba(255,88,54,1)]" />
                                     )}
-                                    <TabIcon size={18} className={`relative z-10 transition-colors ${isLocked ? 'text-text-secondary' : isActive ? 'text-primary' : 'group-hover:text-text-primary'}`} />
-                                    <span className={`relative z-10 text-sm font-medium tracking-wide ${isActive && !isLocked ? 'text-text-primary' : ''}`}>
+                                    <TabIcon size={18} className={`relative z-10 transition-colors duration-300 ${isLocked ? 'text-text-secondary' : isActive ? 'text-primary' : 'group-hover:text-text-primary'}`} />
+                                    <span className={`relative z-10 text-xs font-bold uppercase tracking-widest ${isActive && !isLocked ? 'text-text-primary' : ''}`}>
                                         {tab.label}
                                     </span>
                                     {isLocked && (
-                                        <Lock size={12} className="ml-auto text-text-secondary" />
+                                        <Lock size={12} className="ml-auto text-text-secondary opacity-50" />
                                     )}
                                 </button>
                             );
                         })}
                     </div>
 
-                    {/* User Profile / Footer */}
-                    <div className="mt-auto pt-6 border-t border-subtle">
-                        <div className="p-3 rounded-xl bg-white/[0.03] border border-subtle flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-zinc-800 to-black flex items-center justify-center border border-white/10 text-text-primary">
-                                <span className="text-xs font-bold">
-                                    {user.email?.[0].toUpperCase()}
-                                </span>
-                            </div>
-                            <div className="overflow-hidden">
-                                <p className="text-xs font-bold text-text-primary truncate">{user.email}</p>
-                                <p className="text-[10px] text-text-secondary truncate">
-                                    {planDetails.name}
-                                </p>
+                    {/* User Profile / Footer - Double Framed */}
+                    <div className="mt-auto pt-6 border-t border-white/5">
+                        <div className="p-0.5 bg-white/5 border border-white/5 rounded-2xl group transition-all duration-500">
+                            <div className="bg-[#0c0c0c] p-4 rounded-[0.9rem] border border-white/5 relative overflow-hidden flex items-center gap-3">
+                                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-zinc-800 to-black flex items-center justify-center border border-white/10 text-text-primary shrink-0">
+                                    <span className="text-xs font-black uppercase">
+                                        {user.email?.[0].toUpperCase()}
+                                    </span>
+                                </div>
+                                <div className="overflow-hidden space-y-0.5">
+                                    <p className="text-[11px] font-bold text-text-primary truncate">{user.email}</p>
+                                    <p className="text-[9px] font-black text-primary uppercase tracking-widest opacity-80">
+                                        {planDetails.name}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>

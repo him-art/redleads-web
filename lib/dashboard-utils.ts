@@ -10,8 +10,14 @@ export interface TrialStatus {
 /**
  * Standardized trial status calculation used across the dashboard.
  */
-export function calculateTrialStatus(profile: any, isSubscribed: boolean): TrialStatus {
-    if (isSubscribed) {
+export function isSubscribedPlan(profile: any): boolean {
+    const tier = profile?.subscription_tier?.toLowerCase();
+    return tier === 'starter' || tier === 'growth' || tier === 'lifetime' || profile?.is_admin === true;
+}
+
+export function calculateTrialStatus(profile: any): TrialStatus {
+    const subscribed = isSubscribedPlan(profile);
+    if (subscribed) {
         return { isActuallyExpired: false, isInTrial: false, daysRemaining: 0, trialEndsAt: null };
     }
 
@@ -51,10 +57,11 @@ export function getPlanDetails(profile: any) {
     // Normalize tier (handle professional alias if redirected from legacy systems)
     const tier = rawTier === 'professional' ? 'growth' : rawTier;
     const isAdmin = profile?.is_admin === true;
+    const isSubscribed = isSubscribedPlan(profile);
 
     const baseDetails = {
         isAdmin,
-        isStarter: tier === 'starter' || tier === 'growth' || tier === 'lifetime' || isAdmin,
+        isStarter: isSubscribed,
         isGrowth: tier === 'growth' || tier === 'lifetime' || isAdmin,
         isLifetime: tier === 'lifetime',
     };

@@ -125,14 +125,15 @@ export default function GuideView({ onNavigate }: { onNavigate: (tab: string) =>
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: i * 0.06 }}
                                             onClick={() => setSelectedNode(node)}
-                                            className="w-[240px] cursor-pointer mb-4 transition-all duration-300 group"
-                                            style={{ marginTop: '0px' }}
+                                            className="w-[260px] cursor-pointer mb-4 transition-all duration-300 group p-1 bg-white/5 border border-white/5 rounded-[2rem]"
                                         >
-                                            <div className={`rounded-2xl border p-5 space-y-3 transition-all duration-300
+                                            <div className={`rounded-[1.8rem] border p-5 space-y-3 transition-all duration-300 relative overflow-hidden
                                                 ${isSelected 
                                                     ? `bg-gradient-to-b ${phaseMeta.gradient} border-white/20 shadow-lg` 
-                                                    : 'bg-white/[0.03] border-white/[0.06] hover:border-white/15 hover:bg-white/[0.05]'}
+                                                    : 'bg-[#0c0c0c] border-white/[0.06] hover:border-white/15 hover:bg-white/[0.05]'}
                                             `}>
+                                                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                                                
                                                 {/* Phase Tag */}
                                                 <div className="flex items-center gap-2">
                                                     <span className={`text-[9px] font-black uppercase tracking-widest ${phaseMeta.color}`}>
@@ -195,13 +196,15 @@ export default function GuideView({ onNavigate }: { onNavigate: (tab: string) =>
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: i * 0.06 }}
                                             onClick={() => setSelectedNode(node)}
-                                            className="w-[240px] cursor-pointer mt-4 transition-all duration-300 group"
+                                            className="w-[260px] cursor-pointer mt-4 transition-all duration-300 group p-1 bg-white/5 border border-white/5 rounded-[2rem]"
                                         >
-                                            <div className={`rounded-2xl border p-5 space-y-3 transition-all duration-300
+                                            <div className={`rounded-[1.8rem] border p-5 space-y-3 transition-all duration-300 relative overflow-hidden
                                                 ${isSelected 
                                                     ? `bg-gradient-to-b ${phaseMeta.gradient} border-white/20 shadow-lg` 
-                                                    : 'bg-white/[0.03] border-white/[0.06] hover:border-white/15 hover:bg-white/[0.05]'}
+                                                    : 'bg-[#0c0c0c] border-white/[0.06] hover:border-white/15 hover:bg-white/[0.05]'}
                                             `}>
+                                                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                                                
                                                 {/* Phase Tag */}
                                                 <div className="flex items-center gap-2">
                                                     <span className={`text-[9px] font-black uppercase tracking-widest ${phaseMeta.color}`}>

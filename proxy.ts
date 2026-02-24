@@ -3,7 +3,7 @@ import { updateSession } from '@/lib/supabase/supabase-middleware'
 import { ratelimit } from '@/lib/ratelimit'
 import { isIpBlocked } from '@/lib/ip-block'
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // Use a fallback for IP detection that works in different environments
   const ip = (request as any).ip || request.headers.get('x-forwarded-for') || '127.0.0.1';
 

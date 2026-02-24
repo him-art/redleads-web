@@ -107,17 +107,20 @@ export default function ReportsTab({ reports, user }: { reports: any[], user: an
             <div className="space-y-6">
                 {/* Active Config Summary */}
                 {hasConfig && (
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 text-[10px] font-bold text-text-secondary glass-panel p-4 sm:p-5 rounded-2xl">
-                        <div className="flex items-center gap-3">
-                            <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500/50 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                            </span>
-                            <span className="tracking-wide">Monitoring Active</span>
+                    <div className="p-0.5 bg-white/5 border border-white/5 rounded-2xl">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 text-[10px] font-bold text-text-secondary bg-[#0c0c0c] p-4 sm:p-5 rounded-[0.9rem] relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                            <div className="flex items-center gap-3">
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500/50 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                </span>
+                                <span className="tracking-wide text-text-primary">Monitoring Active</span>
+                            </div>
+                            <div className="hidden sm:block w-px h-6 bg-white/5" />
+                            <div className="tracking-wide">Focusing on <span className="text-text-primary font-black">{profile?.keywords?.length || 0}</span> keywords</div>
                         </div>
-                        <div className="hidden sm:block w-px h-6 bg-white/5" />
-                        <div className="tracking-wide">Focusing on <span className="text-text-primary font-black">{profile?.keywords?.length || 0}</span> keywords</div>
-                      </div>
+                    </div>
                 )}
 
 
@@ -136,38 +139,41 @@ export default function ReportsTab({ reports, user }: { reports: any[], user: an
                         </div>
                         <div className="grid grid-cols-1 gap-4">
                             {leadAnalyses.map((analysis: LeadAnalysis) => (
-                                <div key={analysis.id} className="relative overflow-hidden glass-panel rounded-3xl p-6 group transition-all hover:border-primary/30">
-                                    <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-10 transition-opacity">
-                                        <Brain size={80} className="text-text-primary" />
-                                    </div>
-                                             <div className="relative z-10 space-y-4">
+                                <div key={analysis.id} className="p-1 bg-white/5 border border-white/5 rounded-[2rem]">
+                                    <div className="relative overflow-hidden bg-[#0c0c0c] rounded-[1.8rem] p-6 border border-white/5 group transition-all hover:border-primary/30">
+                                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                                        <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-10 transition-opacity">
+                                            <Brain size={80} className="text-text-primary" />
+                                        </div>
+                                        <div className="relative z-10 space-y-4">
                                             <div className="flex items-center gap-3">
-                                                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
+                                                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
                                                     <Brain size={16} className="text-primary" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/60 leading-none mb-1">Neural Synthesis</p>
+                                                    <h4 className="text-sm font-bold text-text-primary tracking-tight">Pattern Analysis</h4>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/60 leading-none mb-1">Neural Synthesis</p>
-                                                <h4 className="text-sm font-bold text-text-primary tracking-tight">Pattern Analysis</h4>
+                                            <div className="text-xs sm:text-sm text-text-secondary leading-relaxed font-medium whitespace-pre-wrap">
+                                                {analysis.content}
                                             </div>
-                                        </div>
-                                         <div className="text-xs sm:text-sm text-text-secondary leading-relaxed font-medium whitespace-pre-wrap">
-                                            {analysis.content}
-                                        </div>
-                                        <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-2">
-                                            <div className="px-2 py-1 sm:px-3 sm:py-1.5 rounded-full bg-white/5 border border-white/5 text-[8px] sm:text-[9px] font-black text-text-secondary uppercase tracking-widest">
-                                                {analysis.lead_ids.length} Leads Analyzed
-                                            </div>
-                                             <div className="px-2 py-1 sm:px-3 sm:py-1.5 rounded-full bg-white/5 border border-white/5 text-[8px] sm:text-[9px] font-black text-text-secondary uppercase tracking-widest">
-                                                {(() => {
-                                                    try {
-                                                        if (!isMounted) return '...';
-                                                        const d = new Date(analysis.created_at);
-                                                        if (isNaN(d.getTime())) return '...';
-                                                        return d.toLocaleDateString();
-                                                    } catch (e) {
-                                                        return '...';
-                                                    }
-                                                })()}
+                                            <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-2">
+                                                <div className="px-2 py-1 sm:px-3 sm:py-1.5 rounded-full bg-white/5 border border-white/5 text-[8px] sm:text-[9px] font-black text-text-secondary uppercase tracking-widest">
+                                                    {analysis.lead_ids.length} Leads Analyzed
+                                                </div>
+                                                <div className="px-2 py-1 sm:px-3 sm:py-1.5 rounded-full bg-white/5 border border-white/5 text-[8px] sm:text-[9px] font-black text-text-secondary uppercase tracking-widest">
+                                                    {(() => {
+                                                        try {
+                                                            if (!isMounted) return '...';
+                                                            const d = new Date(analysis.created_at);
+                                                            if (isNaN(d.getTime())) return '...';
+                                                            return d.toLocaleDateString();
+                                                        } catch (e) {
+                                                            return '...';
+                                                        }
+                                                    })()}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -178,22 +184,27 @@ export default function ReportsTab({ reports, user }: { reports: any[], user: an
                 )}
 
                 {Object.keys(groupedLeads).length === 0 ? (
-                    <div className="text-center py-20 bg-black/20 rounded-2xl border border-dashed border-white/5">
-                        <Activity className="mx-auto text-text-secondary/60 mb-4" size={40} />
-                        <h3 className="text-lg font-bold text-text-primary">No Archived Leads Yet</h3>
-                        <p className="text-sm text-text-secondary max-w-xs mx-auto">
-                            The most recent 20 leads appear in your Command Center. 
-                            Older leads will effectively be archived here.
-                        </p>
+                    <div className="p-1 bg-white/5 border border-white/5 rounded-[2.5rem]">
+                        <div className="text-center py-20 bg-[#0c0c0c] rounded-[2.2rem] border border-dashed border-white/10 relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                            <Activity className="mx-auto text-text-secondary/60 mb-4" size={40} />
+                            <h3 className="text-lg font-bold text-text-primary">No Archived Leads Yet</h3>
+                            <p className="text-sm text-text-secondary max-w-xs mx-auto">
+                                The most recent 20 leads appear in your Command Center. 
+                                Older leads will effectively be archived here.
+                            </p>
+                        </div>
                     </div>
                 ) : (
                 <div className="space-y-4">
                     {Object.entries(groupedLeads).map(([date, leads]) => (
-                        <div key={date} className="border border-subtle rounded-[1.2rem] sm:rounded-[1.5rem] overflow-hidden bg-white/[0.02] mb-4">
-                            <button 
-                                onClick={() => setExpandedDay(expandedDay === date ? null : date)}
-                                className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-white/[0.02] transition-colors"
-                            >
+                        <div key={date} className="p-0.5 bg-white/5 border border-white/5 rounded-[1.4rem] sm:rounded-[1.7rem] overflow-hidden mb-4">
+                            <div className="bg-[#0c0c0c] rounded-[1.2rem] sm:rounded-[1.5rem] border border-white/5 relative overflow-hidden">
+                                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                                <button 
+                                    onClick={() => setExpandedDay(expandedDay === date ? null : date)}
+                                    className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-white/[0.02] transition-colors"
+                                >
                                 <div className="flex items-center gap-4">
                                     <Calendar size={18} className="text-primary" />
                                     <span className="font-black text-xs uppercase tracking-wider text-text-primary">{date}</span>
@@ -292,6 +303,7 @@ export default function ReportsTab({ reports, user }: { reports: any[], user: an
                                     ))}
                                 </div>
                             )}
+                            </div>
                         </div>
                     ))}
                 </div>

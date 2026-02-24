@@ -87,137 +87,149 @@ export default function LiveDiscoveryTab({
                 className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8"
             >
                 {/* Card 1: Plan Status */}
-                <motion.div 
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3 }}
-                    className="relative overflow-hidden rounded-2xl glass-panel p-5 group transition-all hover:bg-white/[0.04]"
-                >
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="p-1.5 bg-primary/10 rounded-lg text-primary flex items-center justify-center">
-                             {isActuallySubscribed ? <ShieldCheck size={16} /> : <Clock size={16} />}
+                <div className="p-1 bg-white/5 border border-white/5 rounded-[2rem]">
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3 }}
+                        className="relative overflow-hidden rounded-[1.8rem] bg-[#0c0c0c] p-6 border border-white/5 group transition-all hover:bg-white/[0.04]"
+                    >
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="p-1.5 bg-primary/10 rounded-lg text-primary flex items-center justify-center">
+                                {isActuallySubscribed ? <ShieldCheck size={16} /> : <Clock size={16} />}
+                            </div>
+                            <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Plan Status</span>
                         </div>
-                        <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Plan Status</span>
-                    </div>
-                    <div>
-                        <h3 className="text-xl font-bold text-text-primary mb-0.5 tracking-tight">
-                            {planDetails.name}
-                        </h3>
-                        <p className="text-[10px] text-text-secondary font-bold uppercase tracking-widest opacity-60">
-                            {isInTrial 
-                                ? `${daysRemaining} Days Left` 
-                                : isActuallySubscribed 
-                                    ? 'Active' 
-                                    : 'Trial Expired'}
-                        </p>
-                    </div>
-                </motion.div>
+                        <div>
+                            <h3 className="text-xl font-bold text-text-primary mb-0.5 tracking-tight">
+                                {planDetails.name}
+                            </h3>
+                            <p className="text-[10px] text-text-secondary font-bold uppercase tracking-widest opacity-60">
+                                {isInTrial 
+                                    ? `${daysRemaining} Days Left` 
+                                    : isActuallySubscribed 
+                                        ? 'Active' 
+                                        : 'Trial Expired'}
+                            </p>
+                        </div>
+                    </motion.div>
+                </div>
 
                 {/* Card 2: Usage Stats */}
-                <motion.div 
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3, delay: 0.1 }}
-                    className="relative overflow-hidden rounded-2xl glass-panel p-5 group transition-all hover:bg-white/[0.04]"
-                >
-                     <div className="flex items-center justify-between mb-4">
-                        <div className="p-1.5 bg-blue-500/10 rounded-lg text-blue-500 flex items-center justify-center">
-                             <Activity size={16} />
+                <div className="p-1 bg-white/5 border border-white/5 rounded-[2rem]">
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3, delay: 0.1 }}
+                        className="relative overflow-hidden rounded-[1.8rem] bg-[#0c0c0c] p-6 border border-white/5 group transition-all hover:bg-white/[0.04]"
+                    >
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="p-1.5 bg-blue-500/10 rounded-lg text-blue-500 flex items-center justify-center">
+                                <Activity size={16} />
+                            </div>
+                            <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Usage</span>
                         </div>
-                        <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Usage</span>
-                    </div>
-                    <div>
-                        <h3 className="text-xl font-bold text-text-primary mb-0.5 tracking-tight">
-                            {isMounted ? `${currentUsage}/${searchLimit}` : '...'}
-                        </h3>
-                        <p className="text-[10px] text-text-secondary font-bold uppercase tracking-widest opacity-60">
-                            Scans Today
-                        </p>
-                    </div>
-                    {/* Thinner Progress Bar background */}
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/5">
-                        <div 
-                            className="h-full bg-blue-500/50" 
-                            style={{ width: `${Math.min(100, (currentUsage / searchLimit) * 100)}%` }} 
-                        />
-                    </div>
-                </motion.div>
+                        <div>
+                            <h3 className="text-xl font-bold text-text-primary mb-0.5 tracking-tight">
+                                {isMounted ? `${currentUsage}/${searchLimit}` : '...'}
+                            </h3>
+                            <p className="text-[10px] text-text-secondary font-bold uppercase tracking-widest opacity-60">
+                                Scans Today
+                            </p>
+                        </div>
+                        {/* Thinner Progress Bar background */}
+                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/5">
+                            <div 
+                                className="h-full bg-blue-500/50" 
+                                style={{ width: `${Math.min(100, (currentUsage / searchLimit) * 100)}%` }} 
+                            />
+                        </div>
+                    </motion.div>
+                </div>
 
                 {/* Card 3: Keywords / Setup */}
-                <motion.div 
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3, delay: 0.2 }}
-                    className="relative overflow-hidden rounded-2xl glass-panel p-5 group transition-all hover:bg-white/[0.04] cursor-pointer" 
-                    onClick={() => onNavigate('settings')}
-                >
-                     <div className="flex items-center justify-between mb-4">
-                        <div className="p-1.5 bg-purple-500/10 rounded-lg text-purple-500 flex items-center justify-center">
-                             <Compass size={16} />
+                <div className="p-1 bg-white/5 border border-white/5 rounded-[2rem]">
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3, delay: 0.2 }}
+                        className="relative overflow-hidden rounded-[1.8rem] bg-[#0c0c0c] p-6 border border-white/5 group transition-all hover:bg-white/[0.04] cursor-pointer" 
+                        onClick={() => onNavigate('settings')}
+                    >
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="p-1.5 bg-purple-500/10 rounded-lg text-purple-500 flex items-center justify-center">
+                                <Compass size={16} />
+                            </div>
+                            <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Tracking</span>
                         </div>
-                        <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Tracking</span>
-                    </div>
-                    <div>
-                        <h3 className="text-xl font-bold text-text-primary mb-0.5 tracking-tight">
-                            {profile?.keywords?.length || 0}
-                        </h3>
-                        <div className="flex items-center gap-2">
-                            <p className="text-[10px] text-text-secondary font-bold uppercase tracking-widest opacity-60">Active Keywords</p>
-                            {!isSetupComplete && (
-                                <span className="flex h-1.5 w-1.5 relative">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary"></span>
-                                </span>
-                            )}
+                        <div>
+                            <h3 className="text-xl font-bold text-text-primary mb-0.5 tracking-tight">
+                                {profile?.keywords?.length || 0}
+                            </h3>
+                            <div className="flex items-center gap-2">
+                                <p className="text-[10px] text-text-secondary font-bold uppercase tracking-widest opacity-60">Active Keywords</p>
+                                {!isSetupComplete && (
+                                    <span className="flex h-1.5 w-1.5 relative">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary"></span>
+                                    </span>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                    {/* Hover Hint */}
-                     <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                         <ArrowRight size={14} className="text-text-secondary" />
-                    </div>
-                </motion.div>
+                        {/* Hover Hint */}
+                        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <ArrowRight size={14} className="text-text-secondary" />
+                        </div>
+                    </motion.div>
+                </div>
             </motion.div>
 
             {/* 2. Main Search Area */}
             <div className="relative group mb-8">
-                <div className={`relative glass-panel rounded-3xl p-1 transition-all ${
-                    hasResults ? 'border-primary/50 shadow-[0_0_30px_rgba(255,88,54,0.1)]' : ''
-                }`}>
-                    <div className="px-4 sm:px-6 py-4 border-b border-subtle flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                            <span className="text-xs font-bold uppercase tracking-widest text-text-secondary">Power Search</span>
-                        </div>
-                    </div>
-                    <div className="p-4 sm:p-6">
-                        {profile?.website_url ? (
-                            <LeadSearch 
-                                user={user} 
-                                isDashboardView={true} 
-                                initialUrl={profile?.website_url} 
-                                autoScan={false}
-                                isLocked={true}
-                                onResultsFound={(count) => setHasResults(count > 0)}
-                            />
-                        ) : (
-                            <div className="flex flex-col items-center justify-center py-10 space-y-6 text-center">
-                                <div className="p-4 bg-orange-500/10 rounded-2xl text-primary flex items-center justify-center">
-                                    <ShieldCheck size={40} className="animate-pulse" />
-                                </div>
-                                <div className="space-y-2 max-w-sm">
-                                    <h3 className="text-lg font-bold text-text-primary">Tracking Setup Incomplete</h3>
-                                    <p className="text-xs text-text-secondary leading-relaxed uppercase tracking-widest font-black opacity-60">
-                                        Connect your website in settings to unlock target-specific power searching.
-                                    </p>
-                                </div>
-                                <button 
-                                    onClick={() => onNavigate('settings')}
-                                    className="px-8 py-3 bg-primary text-white font-black uppercase text-[10px] tracking-[0.2em] rounded-xl hover:bg-primary/90 transition-all shadow-[0_0_20px_rgba(255,88,54,0.2)]"
-                                >
-                                    Go to Tracking Setup
-                                </button>
+                <div className="p-1.5 bg-white/5 border border-white/5 rounded-[2.5rem]">
+                    <div className={`relative bg-[#0c0c0c] border border-white/5 rounded-[2.2rem] p-1 transition-all overflow-hidden ${
+                        hasResults ? 'border-primary/50 shadow-[0_0_30px_rgba(255,88,54,0.1)]' : ''
+                    }`}>
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                        <div className="px-4 sm:px-6 py-4 border-b border-white/5 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                                <span className="text-xs font-bold uppercase tracking-widest text-text-secondary">Power Search</span>
                             </div>
-                        )}
+                        </div>
+                        <div className="p-4 sm:p-6">
+                            {profile?.website_url ? (
+                                <LeadSearch 
+                                    user={user} 
+                                    isDashboardView={true} 
+                                    initialUrl={profile?.website_url} 
+                                    autoScan={false}
+                                    isLocked={true}
+                                    onResultsFound={(count) => setHasResults(count > 0)}
+                                />
+                            ) : (
+                                <div className="flex flex-col items-center justify-center py-10 space-y-6 text-center">
+                                    <div className="p-4 bg-orange-500/10 rounded-2xl text-primary flex items-center justify-center">
+                                        <ShieldCheck size={40} className="animate-pulse" />
+                                    </div>
+                                    <div className="space-y-2 max-w-sm">
+                                        <h3 className="text-lg font-bold text-text-primary">Tracking Setup Incomplete</h3>
+                                        <p className="text-xs text-text-secondary leading-relaxed uppercase tracking-widest font-black opacity-60">
+                                            Connect your website in settings to unlock target-specific power searching.
+                                        </p>
+                                    </div>
+                                    <button 
+                                        onClick={() => onNavigate('settings')}
+                                        className="px-8 py-3 bg-primary text-white font-black uppercase text-[10px] tracking-[0.2em] rounded-xl hover:bg-primary/90 transition-all shadow-[0_0_20px_rgba(255,88,54,0.2)]"
+                                    >
+                                        Go to Tracking Setup
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -237,22 +249,25 @@ export default function LiveDiscoveryTab({
                                 <p className="text-sm font-bold text-text-primary tracking-tight">Live Intelligence</p>
                             </div>
                         </div>
-                        <div className={`flex items-center gap-3 px-4 py-1.5 rounded-full border ${
-                            isSetupComplete 
-                                ? 'bg-green-500/5 border-green-500/10' 
-                                : 'bg-red-500/5 border-red-500/10'
-                        }`}>
-                            <div className={`w-1.5 h-1.5 rounded-full animate-[pulse_2s_infinite] ${
-                                isSetupComplete ? 'bg-green-500' : 'bg-red-500'
-                            }`} />
-                            <span className={`text-[9px] font-black uppercase tracking-widest ${
-                                isSetupComplete ? 'text-green-500/60' : 'text-red-500/60'
+                        <div className="p-1 bg-white/5 border border-white/5 rounded-full">
+                            <div className={`flex items-center gap-3 px-4 py-1.5 rounded-full border bg-[#0c0c0c] relative overflow-hidden ${
+                                isSetupComplete 
+                                    ? 'border-green-500/20' 
+                                    : 'border-red-500/20'
                             }`}>
-                                {isSetupComplete 
-                                    ? 'System Online' 
-                                    : 'System Offline - Complete Tracking Set-up'
-                                }
-                            </span>
+                                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                                <div className={`w-1.5 h-1.5 rounded-full animate-[pulse_2s_infinite] ${
+                                    isSetupComplete ? 'bg-green-500' : 'bg-red-500'
+                                }`} />
+                                <span className={`text-[9px] font-black uppercase tracking-widest ${
+                                    isSetupComplete ? 'text-green-500/60' : 'text-red-500/60'
+                                }`}>
+                                    {isSetupComplete 
+                                        ? 'System Online' 
+                                        : 'System Offline - Complete Tracking Set-up'
+                                    }
+                                </span>
+                            </div>
                         </div>
                     </div>
 

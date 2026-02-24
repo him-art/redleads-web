@@ -61,7 +61,7 @@ export function DashboardDataProvider({ children, userId, draftingState, profile
     const currentDraftingLead = draftingState?.draftingLead || localDraftingLead;
     const currentSetDraftingLead = draftingState?.setDraftingLead || setLocalDraftingLead;
     
-    const trialStatus = React.useMemo(() => calculateTrialStatus(activeProfile, !!activeProfile?.subscription_tier), [activeProfile]);
+    const trialStatus = React.useMemo(() => calculateTrialStatus(activeProfile), [activeProfile]);
     const planDetails = React.useMemo(() => getPlanDetails(activeProfile), [activeProfile]);
 
     // Use useRef for tracking fetch times to avoid re-triggering memoized fetchers

@@ -48,10 +48,13 @@ const LaborIllusion = () => {
     return (
         <div className="flex flex-col items-center justify-center py-16 space-y-6 h-full">
             <div className="relative">
-                <div className="w-14 h-14 bg-white/[0.03] rounded-2xl flex items-center justify-center relative z-10 border border-white/5 shadow-inner">
-                    {(() => { const StepIcon = steps[step].icon; return <StepIcon size={24} className={steps[step].color} />; })()}
+                <div className="p-1 bg-white/5 border border-white/5 rounded-2xl">
+                    <div className="w-14 h-14 bg-[#0c0c0c] rounded-xl flex items-center justify-center relative z-10 border border-white/5 shadow-inner">
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                        {(() => { const StepIcon = steps[step].icon; return <StepIcon size={24} className={steps[step].color} />; })()}
+                    </div>
                 </div>
-                <div className="absolute inset-0 bg-white/5 rounded-2xl animate-ping opacity-20" />
+                <div className="absolute inset-0 bg-primary/10 rounded-2xl animate-pulse opacity-20 blur-xl" />
             </div>
             
             <div className="text-center space-y-3 px-8">
@@ -137,12 +140,12 @@ export default function ReplyPanel({ lead, productContext, onClose, isSidebar = 
                 flex flex-col overflow-hidden h-full w-full
                 ${isSidebar 
                     ? 'bg-transparent border-0 shadow-none' 
-                    : 'sticky top-6 bg-[#0A0A0A]/95 border border-white/10 shadow-2xl rounded-[2rem] max-h-[85vh]'
+                    : 'sticky top-6 bg-[#0A0A0A] border border-white/5 shadow-2xl rounded-[2rem] max-h-[85vh]'
                 }
             `}
         >
             {/* Header */}
-            <div className="p-5 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+            <div className="p-5 border-b border-white/5 flex items-center justify-between bg-void/50">
                 <div className="space-y-1 overflow-hidden">
                     <h3 className="text-sm font-black uppercase tracking-widest text-text-primary flex items-center gap-2">
                         <Sparkles size={14} className="text-primary" />
@@ -157,7 +160,7 @@ export default function ReplyPanel({ lead, productContext, onClose, isSidebar = 
                         href={lead.url.startsWith('http') ? lead.url : `https://${lead.url}`}
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="p-2 hover:bg-white/10 rounded-xl text-text-secondary hover:text-primary transition-all shadow-inner"
+                        className="p-2 hover:bg-white/10 rounded-xl text-text-secondary hover:text-primary transition-all"
                         title="Open on Reddit"
                     >
                         <ExternalLink size={16} />
@@ -174,9 +177,9 @@ export default function ReplyPanel({ lead, productContext, onClose, isSidebar = 
             {/* Content Area */}
             <div className="flex-1 overflow-y-auto custom-scrollbar">
                 {/* Context */}
-                <div className="px-5 py-3 border-b border-white/5 bg-white/[0.01]">
-                    <h4 className="text-[8px] font-black uppercase tracking-widest text-text-secondary mb-1">Post Context</h4>
-                    <p className="text-[11px] text-text-primary/70 leading-relaxed line-clamp-2">
+                <div className="px-5 py-4 border-b border-white/5 bg-white/[0.01]">
+                    <h4 className="text-[8px] font-black uppercase tracking-widest text-text-secondary mb-1.5 opacity-60">Post Context</h4>
+                    <p className="text-[11px] text-text-primary/70 leading-relaxed line-clamp-2 font-medium">
                         {lead.title}
                     </p>
                 </div>
@@ -187,32 +190,35 @@ export default function ReplyPanel({ lead, productContext, onClose, isSidebar = 
                     <div className="flex flex-col items-center justify-center py-12 text-center space-y-3 px-6">
                         <X size={20} className="text-red-500/50" />
                         <p className="text-[10px] font-black uppercase tracking-widest text-text-primary">{error.includes('Limit') ? 'Quota Exceeded' : 'Failed'}</p>
-                        <p className="text-[10px] text-text-secondary leading-relaxed">
+                        <p className="text-[10px] text-text-secondary leading-relaxed uppercase tracking-widest font-bold opacity-60">
                             {error}
                         </p>
                     </div>
                 ) : (
                     <div className="p-5 space-y-5">
                         {drafts.map((draft, i) => (
-                            <div key={i} className="bg-white/[0.02] border border-white/5 rounded-2xl p-4 space-y-3 hover:bg-white/[0.04] transition-all relative group">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-[8px] font-black uppercase tracking-widest text-text-secondary bg-white/[0.05] px-2 py-0.5 rounded border border-white/5">
-                                        {draft.type}
-                                    </span>
-                                    <button 
-                                        onClick={() => handleCopy(draft.text, i)}
-                                        className={`text-[8px] flex items-center gap-1 px-3 py-1.5 rounded-lg font-black uppercase tracking-widest transition-all ${
-                                            copiedIndex === i 
-                                                ? 'bg-green-500 text-white' 
-                                                : 'bg-white/5 text-text-secondary hover:text-text-primary'
-                                        }`}
-                                    >
-                                        {copiedIndex === i ? <Check size={10} /> : <Copy size={10} />}
-                                        {copiedIndex === i ? 'Copied' : 'Copy'}
-                                    </button>
-                                </div>
-                                <div className="text-xs text-text-primary/90 leading-relaxed whitespace-pre-wrap font-medium">
-                                    {draft.text}
+                            <div key={i} className="p-0.5 bg-white/5 border border-white/5 rounded-2xl group transition-all">
+                                <div className="bg-[#0c0c0c] rounded-[0.9rem] p-5 border border-white/5 relative overflow-hidden space-y-4">
+                                    <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-[8px] font-black uppercase tracking-widest text-primary/80 bg-primary/5 px-2.5 py-1 rounded-full border border-primary/10">
+                                            {draft.type}
+                                        </span>
+                                        <button 
+                                            onClick={() => handleCopy(draft.text, i)}
+                                            className={`text-[8px] flex items-center gap-2 px-3 py-1.5 rounded-lg font-black uppercase tracking-widest transition-all ${
+                                                copiedIndex === i 
+                                                    ? 'bg-green-500 text-white' 
+                                                    : 'bg-white/5 text-text-secondary hover:text-text-primary hover:bg-white/10 border border-white/5'
+                                            }`}
+                                        >
+                                            {copiedIndex === i ? <Check size={10} /> : <Copy size={10} />}
+                                            {copiedIndex === i ? 'Copied' : i === 0 ? 'Copy Best Match' : 'Copy'}
+                                        </button>
+                                    </div>
+                                    <div className="text-xs text-text-primary/90 leading-relaxed whitespace-pre-wrap font-medium">
+                                        {draft.text}
+                                    </div>
                                 </div>
                             </div>
                         ))}
