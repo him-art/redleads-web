@@ -8,8 +8,8 @@ const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
 // Fail-closed ratelimiter for when Redis keys are missing
 const mockRatelimit = {
   limit: async () => {
-    console.error('[RateLimit] CRITICAL: Upstash Redis not configured — denying request. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN.');
-    return { success: false, limit: 0, reset: 0, remaining: 0 };
+    console.warn('[RateLimit] WARNING: Upstash Redis not configured — allowing request but limits are NOT enforced. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN.');
+    return { success: true, limit: 10, reset: 0, remaining: 10 };
   }
 };
 
