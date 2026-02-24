@@ -196,7 +196,7 @@ export async function POST(req: Request) {
     } catch (error: any) {
         console.error('[Scanner API Error]:', error);
         return NextResponse.json(
-            { error: 'An unexpected error occurred while scanning. Please try again later.' }, 
+            { error: error.message || 'An unexpected error occurred while scanning. Please try again later.' }, 
             { status: 500 }
         );
     }

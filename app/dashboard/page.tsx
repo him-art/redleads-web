@@ -19,7 +19,7 @@ export default async function DashboardPage(props: { searchParams: Promise<{ sea
     }
 
     // Fetch Profile (Settings + Billing + Effective Admin/Pro status)
-    const [{ data: profile }, { data: accessStatus }] = await Promise.all([
+    const [profileRes, accessStatusRes] = await Promise.all([
         supabase
             .from('profiles')
             .select('*')
@@ -32,6 +32,12 @@ export default async function DashboardPage(props: { searchParams: Promise<{ sea
             .single()
     ]);
     
+    if (profileRes.error) console.error('[Dashboard] Profile fetch error:', profileRes.error);
+    if (accessStatusRes.error) console.error('[Dashboard] Access status fetch error:', accessStatusRes.error);
+
+    const profile = profileRes.data;
+    const accessStatus = accessStatusRes.data;
+    
     // Merge data: profiles has website_url, accessStatus has effective_tier
     // We prioritize active tiers from profiles (like lifetime) over the effective_tier from the view if needed
     const activeTiers = ['lifetime', 'growth', 'starter', 'professional'];
@@ -41,8 +47,8 @@ export default async function DashboardPage(props: { searchParams: Promise<{ sea
     const finalTier = activeTiers.includes(pTier) ? pTier : (aTier || pTier);
 
     const mergedProfile = {
-        ...profile,
-        ...accessStatus,
+        ...(profile || {}),
+        ...(accessStatus || {}),
         subscription_tier: finalTier
     };
     
