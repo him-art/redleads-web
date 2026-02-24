@@ -81,9 +81,10 @@ export async function POST(req: Request) {
         });
 
     } catch (error: any) {
-        console.error('[Refund Error]', error);
-        return NextResponse.json({ 
-            error: error.message || 'Failed to process refund. Please contact support.' 
-        }, { status: 500 });
+        console.error('[Refund Subscription Error]:', error);
+        return NextResponse.json(
+            { error: 'Failed to process refund. Please contact support.' }, 
+            { status: 500 }
+        );
     }
 }

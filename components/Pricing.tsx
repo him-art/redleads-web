@@ -9,7 +9,7 @@ const Pricing = () => {
     const [slots, setSlots] = useState<{ sold: number; total: number } | null>(null);
 
     // New Dynamic Pricing Logic ($10 every 20 users)
-    const currentUsers = slots?.sold || 73; 
+    const currentUsers = slots?.sold || 0; 
     const isEarlyBird = currentUsers < 80;
     const currentPrice = isEarlyBird ? 20 : 30 + Math.floor((currentUsers - 80) / 20) * 10;
     const nextPrice = currentPrice + 10;
@@ -19,13 +19,26 @@ const Pricing = () => {
     useEffect(() => {
         const fetchSlots = async () => {
             const supabase = createClient();
-            const { data } = await supabase
-                .from('lifetime_slots')
-                .select('sold_slots, total_slots')
-                .single();
-            
-            if (data) {
-                setSlots({ sold: data.sold_slots, total: data.total_slots });
+            try {
+                console.log('Fetching slots from total_users...');
+                const { data, error } = await supabase
+                    .from('total_users')
+                    .select('user_count, total_slots')
+                    .single();
+                
+                if (error) {
+                    console.error('Supabase error fetching slots:', error);
+                    return;
+                }
+
+                if (data && typeof data.user_count === 'number') {
+                    console.log('Successfully fetched slots:', data);
+                    setSlots({ sold: data.user_count, total: data.total_slots || 150 });
+                } else {
+                    console.warn('Fetched data is invalid:', data);
+                }
+            } catch (err) {
+                console.error('Unexpected error in fetchSlots:', err);
             }
         };
         fetchSlots();
@@ -336,7 +349,7 @@ const Pricing = () => {
                             <div className="flex justify-between items-center mb-6">
                                 <p className="text-[10px] font-black text-[#ff914d] uppercase tracking-[0.4em]">Lifetime Plan</p>
                                 <p className="text-[14px] font-black text-white uppercase tracking-[0.4em] bg-white/5 px-4 py-2 rounded-full border border-white/5">
-                                    {currentUsers} FOUNDERS JOINED
+                                    {slots ? `${slots.sold} FOUNDERS JOINED` : 'LOADING...'}
                                 </p>
                             </div>
                             

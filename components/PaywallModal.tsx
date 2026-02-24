@@ -14,12 +14,24 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
 
     useEffect(() => {
         const fetchSlots = async () => {
-            const supabase = createClient();
-            const { data } = await supabase
-                .from('lifetime_slots')
-                .select('sold_slots, total_slots')
-                .single();
-            if (data) setSlots({ sold: data.sold_slots, total: data.total_slots });
+            try {
+                const supabase = createClient();
+                const { data, error } = await supabase
+                    .from('total_users')
+                    .select('user_count, total_slots')
+                    .single();
+                
+                if (error) {
+                    console.error('Supabase error fetching slots (Paywall):', error);
+                    return;
+                }
+
+                if (data && typeof data.user_count === 'number') {
+                    setSlots({ sold: data.user_count, total: data.total_slots || 150 });
+                }
+            } catch (err) {
+                console.error('Unexpected error in fetchSlots (Paywall):', err);
+            }
         };
         fetchSlots();
     }, []);

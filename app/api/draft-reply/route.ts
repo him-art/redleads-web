@@ -135,14 +135,14 @@ export async function POST(req: Request) {
 
         const result = JSON.parse(aiResponse.choices[0]?.message?.content || '{}');
 
-        // 7. Increment Generation Count and Update Timestamp
-        await supabase
-            .from('profiles')
-            .update({ 
-                reply_generation_count: genCount + 1,
-                last_reply_at: new Date().toISOString()
-            })
-            .eq('id', user.id);
+        // Atomic increment using RPC
+        const { error: updateError } = await supabase.rpc('increment_reply_count', { 
+            user_id_hex: user.id 
+        });
+
+        if (updateError) {
+            console.error('[Draft Reply] Failed to increment reply count:', updateError);
+        }
 
         return NextResponse.json({
             ...result,
@@ -151,7 +151,10 @@ export async function POST(req: Request) {
         });
 
     } catch (error: any) {
-        console.error('[Draft Reply API]', error);
-        return NextResponse.json({ error: 'Failed to generate drafts' }, { status: 500 });
+        console.error('[Draft Reply Error]:', error);
+        return NextResponse.json(
+            { error: 'Failed to generate reply. Please try again later.' }, 
+            { status: 500 }
+        );
     }
 }

@@ -2,14 +2,14 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /waitlist/{document} {
-      // Allow anyone to create a document in the waitlist collection
+      // Allow anyone to create a document, but block public reading
       allow create: if true;
+      allow read: if false; 
     }
     match /free_tool_logs/{document} {
-      // Allow creation and reading for rate limiting logic
-      // In a real production environment, these would be restricted by a service account 
-      // or specific User IDs, but given the current project setup, we need them open for the API.
-      allow create, read: if true;
+      // Restrict access to these logs to prevent IP hash/usage enumeration
+      allow create: if true; // API currently needs this to log hits
+      allow read: if false; 
     }
   }
 }

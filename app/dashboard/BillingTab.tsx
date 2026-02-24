@@ -17,7 +17,7 @@ export default function BillingTab() {
     const [slots, setSlots] = useState<{ sold: number; total: number } | null>(null);
 
     // Dynamic Pricing Logic ($10 every 20 users) - Aligned with Pricing.tsx
-    const currentUsers = slots?.sold || 73; 
+    const currentUsers = slots?.sold || 0; 
     const isEarlyBird = currentUsers < 80;
     const currentPrice = isEarlyBird ? 20 : 30 + Math.floor((currentUsers - 80) / 20) * 10;
     const spotsLeft = isEarlyBird ? 80 - currentUsers : 80 + (Math.floor((currentUsers - 80) / 20) + 1) * 20 - currentUsers;
@@ -25,15 +25,24 @@ export default function BillingTab() {
     useEffect(() => { 
         setIsMounted(true);
         const fetchSlots = async () => {
-            const { createClient } = await import('@/lib/supabase/client');
-            const supabase = createClient();
-            const { data } = await supabase
-                .from('lifetime_slots')
-                .select('sold_slots, total_slots')
-                .single();
-            
-            if (data) {
-                setSlots({ sold: data.sold_slots, total: data.total_slots });
+            try {
+                const { createClient } = await import('@/lib/supabase/client');
+                const supabase = createClient();
+                const { data, error } = await supabase
+                    .from('total_users')
+                    .select('user_count, total_slots')
+                    .single();
+                
+                if (error) {
+                    console.error('Supabase error fetching slots (Billing):', error);
+                    return;
+                }
+
+                if (data && typeof data.user_count === 'number') {
+                    setSlots({ sold: data.user_count, total: data.total_slots || 150 });
+                }
+            } catch (err) {
+                console.error('Unexpected error in fetchSlots (Billing):', err);
             }
         };
         fetchSlots();

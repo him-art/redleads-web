@@ -97,25 +97,7 @@ export async function POST(req: Request) {
                         })
                         .eq('id', userId);
 
-                    // Increment lifetime slots if this was a lifetime purchase
-                    if (planType === 'lifetime') {
-                        const { data: slots } = await supabase
-                            .from('lifetime_slots')
-                            .select('*')
-                            .order('created_at', { ascending: false })
-                            .limit(1)
-                            .single();
-
-                        if (slots) {
-                            await supabase
-                                .from('lifetime_slots')
-                                .update({ 
-                                    sold_slots: slots.sold_slots + 1,
-                                    updated_at: new Date().toISOString()
-                                })
-                                .eq('id', slots.id);
-                        }
-                    }
+                    // The profile trigger handles incrementing total_users count automatically
                     
                     await supabase.from('webhook_logs').update({ status: 'success', status_detail: `Updated to ${planType}` }).eq('event_type', eventType).order('created_at', { ascending: false }).limit(1);
                     break;
@@ -144,7 +126,10 @@ export async function POST(req: Request) {
         return NextResponse.json({ received: true });
 
     } catch (error: any) {
-        console.error('[Dodo Webhook Error]', error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        console.error('[Dodo Webhook Error]:', error);
+        return NextResponse.json(
+            { error: 'Internal server error' }, 
+            { status: 500 }
+        );
     }
 }

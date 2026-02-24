@@ -5,9 +5,12 @@ import { Redis } from "@upstash/redis";
 const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
 const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
 
-// Dummy ratelimiter for when keys are missing
+// Fail-closed ratelimiter for when Redis keys are missing
 const mockRatelimit = {
-  limit: async () => ({ success: true, limit: 10, reset: 0, remaining: 10 })
+  limit: async () => {
+    console.error('[RateLimit] CRITICAL: Upstash Redis not configured — denying request. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN.');
+    return { success: false, limit: 0, reset: 0, remaining: 0 };
+  }
 };
 
 export const ratelimit = (redisUrl && redisToken) ? new Ratelimit({

@@ -116,7 +116,10 @@ export async function POST(req: Request) {
         });
 
     } catch (error: any) {
-        console.error('[Cancel Error]', error);
-        return NextResponse.json({ error: error.message || 'Failed to cancel subscription' }, { status: 500 });
+        console.error('[Cancel Subscription Error]:', error);
+        return NextResponse.json(
+            { error: 'Failed to cancel subscription. Please contact support if this persists.' }, 
+            { status: 500 }
+        );
     }
 }

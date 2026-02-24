@@ -5,7 +5,13 @@ import { cookies } from 'next/headers'
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/dashboard'
+  
+  // Safe redirect validation for 'next' parameter
+  let next = searchParams.get('next') ?? '/dashboard'
+  if (next && (next.startsWith('http') || next.includes('//'))) {
+    console.warn(`[Security] Blocked unsafe redirect to: ${next}`);
+    next = '/dashboard';
+  }
   
   // Use origin for local dev (localhost), but respect NEXT_PUBLIC_SITE_URL in production
   const isLocalhost = origin.includes('localhost') || origin.includes('127.0.0.1')

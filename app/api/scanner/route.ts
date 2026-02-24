@@ -87,25 +87,47 @@ export async function POST(req: Request) {
             const lastDay = profile?.last_scan_at ? new Date(profile.last_scan_at).toDateString() : '';
             
             // Usage Guardrails (SaaS 2.0)
-            let currentCount = profile?.scan_count || 0;
-            const dailyLimit = profile?.scan_allowance || (profile?.subscription_tier === 'lifetime' ? 5 : profile?.subscription_tier === 'growth' ? 5 : profile?.subscription_tier === 'starter' ? 2 : 5);
+            const dailyLimit = profile?.scan_allowance || (
+                profile?.subscription_tier === 'lifetime' ? 5 : 
+                profile?.subscription_tier === 'growth' ? 5 : 
+                profile?.subscription_tier === 'starter' ? 2 : 
+                5 // Trial default
+            );
 
-            if (isPaid) {
-                // If Paid, reset if it's a new day
-                currentCount = (today === lastDay) ? (profile?.scan_count || 0) : 0;
-            }
-            
-            if (currentCount >= dailyLimit) {
+            // Effective count resets if it's a new day
+            let effectiveCount = (today === lastDay) ? (profile?.scan_count || 0) : 0;
+
+            if (effectiveCount >= dailyLimit) {
+                const isPaid = profile?.subscription_tier === 'growth' || profile?.subscription_tier === 'starter' || profile?.subscription_tier === 'lifetime';
                 const msg = isPaid 
                     ? `Daily scan limit (${dailyLimit}) reached. Upgrade to increase your limit or check back tomorrow!` 
                     : `You have used your ${dailyLimit} daily trial scans. Upgrade for fresh scans every day!`;
                 return NextResponse.json({ error: msg, code: 'DAILY_LIMIT_REACHED' }, { status: 403 });
             }
 
-            await supabase.from('profiles').update({ 
-                scan_count: currentCount + 1,
-                last_scan_at: new Date().toISOString()
-            }).eq('id', user.id);
+            // Atomic increment using RPC
+            // Note: If lastDay !== today, we should technically reset the count in the DB too.
+            // However, the current RPC only increments. To fix this robustly, we can either:
+            // 1. Update the RPC to take a "reset" flag.
+            // 2. Just use a regular update here since we've already read the profile.
+            // Given the race condition risk is low for a single user's scan count, 
+            // and we want to ensure the reset happens, let's use a conditional update.
+            
+            const { error: updateError } = await supabase
+                .from('profiles')
+                .update({ 
+                    scan_count: (today === lastDay) ? (profile?.scan_count || 0) + 1 : 1,
+                    last_scan_at: new Date().toISOString()
+                })
+                .eq('id', user.id);
+
+            if (updateError) {
+                console.error('[Scanner] Failed to update scan count:', updateError);
+            }
+
+            if (updateError) {
+                console.error('[Scanner] Failed to update scan count:', updateError);
+            }
 
             const scanResult = await performScan(url, {
                 tavilyApiKey: process.env.TAVILY_API_KEY,
@@ -171,8 +193,11 @@ export async function POST(req: Request) {
         }
 
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
-    } catch (apiErr: any) {
-        console.error('[Scanner API Error]', apiErr);
-        return NextResponse.json({ error: apiErr.message }, { status: 500 });
+    } catch (error: any) {
+        console.error('[Scanner API Error]:', error);
+        return NextResponse.json(
+            { error: 'An unexpected error occurred while scanning. Please try again later.' }, 
+            { status: 500 }
+        );
     }
 }

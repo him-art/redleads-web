@@ -11,6 +11,14 @@ const autofillSchema = z.object({
 
 export async function POST(req: Request) {
     try {
+        // Auth Check — protect AI credits
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const body = await req.json();
         const result = autofillSchema.safeParse(body);
 

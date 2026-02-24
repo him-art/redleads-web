@@ -89,20 +89,14 @@ export async function POST(req: Request) {
         // 3. Persistent Supabase Increment (for authenticated users)
         if (userId) {
             try {
-                // Fetch current count to increment atomically in application logic
-                // Or better, use a raw increment if available, but profiles table is small
-                const { data: profile } = await supabase
-                    .from('profiles')
-                    .select('free_tool_usage_count')
-                    .eq('id', userId)
-                    .single();
+                // Atomic increment using RPC
+                const { error: updateError } = await supabase.rpc('increment_usage_count', { 
+                    user_id_hex: userId 
+                });
 
-                await supabase
-                    .from('profiles')
-                    .update({ 
-                        free_tool_usage_count: (profile?.free_tool_usage_count || 0) + 1 
-                    })
-                    .eq('id', userId);
+                if (updateError) {
+                    console.error('[Niche Explorer] Failed to increment usage count:', updateError);
+                }
             } catch (authErr) {
                 console.warn('Supabase usage tracking failed:', authErr);
             }
@@ -111,7 +105,10 @@ export async function POST(req: Request) {
         return NextResponse.json(result);
 
     } catch (error: any) {
-        console.error('[Niche Explorer API Error]', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        console.error('[Niche Explorer Error]:', error);
+        return NextResponse.json(
+            { error: 'Failed to explore niche. Please try again.' }, 
+            { status: 500 }
+        );
     }
 }

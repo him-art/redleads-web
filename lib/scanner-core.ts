@@ -52,14 +52,14 @@ export async function performScan(url: string, options: ScannerOptions): Promise
             temperature: 0.1,
         });
 
-        searchQuery = AIData.choices?.[0]?.message?.content?.trim();
+        searchQuery = AIData.choices?.[0]?.message?.content?.trim() || '';
     } catch (e) {
-        console.error('[ScannerLib] AI API Failed', e);
+        console.error('[ScannerLib] AI API Failed for search query generation:', e);
     }
 
     if (!searchQuery) {
-        console.warn('[ScannerLib] AI analysis failed, falling back to mock.');
-        return { leads: getMockLeads(url), warning: 'AI Analysis Failed' };
+        console.warn('[ScannerLib] AI analysis failed or returned empty query, falling back to mock.');
+        return { leads: getMockLeads(url), warning: 'AI Analysis Failed. Using representative leads instead.' };
     }
 
     let leads: any[] = [];
@@ -79,6 +79,12 @@ export async function performScan(url: string, options: ScannerOptions): Promise
                     max_results: 40
                 })
             });
+            
+            if (!tavilyRes.ok) {
+                const errorBody = await tavilyRes.text();
+                throw new Error(`Tavily API responded with ${tavilyRes.status}: ${errorBody}`);
+            }
+
             const tavilyData = await tavilyRes.json();
             
             if (tavilyData.results && tavilyData.results.length > 0) {
@@ -92,7 +98,7 @@ export async function performScan(url: string, options: ScannerOptions): Promise
                     }));
             }
         } catch (tError) {
-            console.error('[ScannerLib] Tavily Search failed.', tError);
+            console.error('[ScannerLib] Tavily Search failed:', tError);
         }
     }
 
@@ -130,16 +136,25 @@ export async function performScan(url: string, options: ScannerOptions): Promise
 
             const content = aiRes.choices?.[0]?.message?.content;
             if (content) {
-                const parsed = JSON.parse(content);
-                if (parsed.categories) {
-                    leads = leads.map((l, i) => ({
-                        ...l,
-                        match_category: parsed.categories[i.toString()] || 'Medium'
-                    }));
+                try {
+                    const parsed = JSON.parse(content);
+                    if (parsed.categories) {
+                        leads = leads.map((l, i) => ({
+                            ...l,
+                            match_category: parsed.categories[i.toString()] || 'Medium'
+                        }));
+                    } else {
+                        throw new Error('AI response missing "categories" field');
+                    }
+                } catch (parseError) {
+                    console.error('[ScannerLib] JSON Parse Failed for Categorization:', content);
+                    leads = leads.map(l => ({ ...l, match_category: 'Medium' }));
                 }
+            } else {
+                throw new Error('AI returned empty content for categorization');
             }
-        } catch (catError) {
-            console.error('[ScannerLib] Categorization failed:', catError);
+        } catch (catError: any) {
+            console.error('[ScannerLib] Categorization failed:', catError.message);
             // Default to Medium if AI fails
             leads = leads.map(l => ({ ...l, match_category: 'Medium' }));
         }

@@ -98,6 +98,10 @@ h1, h2, h3, h4, h5, h6 {
                 0 4px 6px -1px rgba(0, 0, 0, 0.5), 
                 0 2px 4px -1px rgba(0, 0, 0, 0.3);
   }
+
+  .border-subtle {
+    border-color: var(--color-border-subtle);
+  }
 }
 
 .material-symbols-outlined {

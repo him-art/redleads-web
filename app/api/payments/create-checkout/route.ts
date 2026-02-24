@@ -45,11 +45,11 @@ export async function POST(req: Request) {
         // 3.5 Check Lifetime Slots if applicable
         if (plan === 'lifetime') {
             const { data: slots } = await supabase
-                .from('lifetime_slots')
-                .select('sold_slots, total_slots')
+                .from('total_users')
+                .select('user_count, total_slots')
                 .single();
             
-            if (slots && slots.sold_slots >= slots.total_slots) {
+            if (slots && slots.user_count >= slots.total_slots) {
                 return NextResponse.json({ 
                     error: 'Lifetime slots are sold out! Please select a monthly plan.',
                 }, { status: 410 });
@@ -124,22 +124,10 @@ export async function POST(req: Request) {
         });
 
     } catch (error: any) {
-        console.error('[Checkout Error]', error);
-        
-        // Extract more details from the error
-        const errorMessage = error?.message || 'Unknown error';
-        const statusCode = error?.status || error?.statusCode || 500;
-        
-        // Log full error for debugging
-        console.error('[Checkout Error Details]', {
-            message: errorMessage,
-            status: statusCode,
-            body: error?.body,
-            response: error?.response,
-        });
-        
-        return NextResponse.json({ 
-            error: `${statusCode} ${errorMessage}` 
-        }, { status: 500 });
+        console.error('[Create Checkout Error]:', error);
+        return NextResponse.json(
+            { error: 'Failed to create checkout. Please try again later.' }, 
+            { status: 500 }
+        );
     }
 }
