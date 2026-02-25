@@ -16,7 +16,7 @@ export async function POST(req: Request) {
         // 1. Fetch user profile
         const { data: profile, error: profileError } = await supabase
             .from('profiles')
-            .select('subscription_started_at, dodo_customer_id, dodo_subscription_id, subscription_tier, created_at')
+            .select('subscription_started_at, dodo_customer_id, dodo_subscription_id, dodo_payment_id, subscription_tier, created_at')
             .eq('id', user.id)
             .single();
 
@@ -78,21 +78,34 @@ export async function POST(req: Request) {
 
         if (isWithinGuarantee && profile.dodo_customer_id) {
             try {
-                const payments: any = await dodo.payments.list({
-                    customer_id: profile.dodo_customer_id,
-                    page_size: 1
-                });
-                
-                const latestPayment = payments.data?.[0] || payments.items?.[0] || payments[0];
+                // Use stored payment_id if available, otherwise fetch from Dodo
+                let paymentIdToRefund = profile.dodo_payment_id;
+                let refundAmount: number | null = null;
 
-                if (latestPayment && latestPayment.status === 'succeeded') {
-                     const refund = await (dodo.refunds as any).create({
-                        payment_id: latestPayment.payment_id,
-                        amount: latestPayment.amount,
-                        reason: reason || '7-day guarantee cancellation',
+                if (!paymentIdToRefund) {
+                    const payments: any = await dodo.payments.list({
+                        customer_id: profile.dodo_customer_id,
+                        page_size: 1
                     });
+                    
+                    const latestPayment = payments.data?.[0] || payments.items?.[0] || payments[0];
+
+                    if (latestPayment && latestPayment.status === 'succeeded') {
+                        paymentIdToRefund = latestPayment.payment_id;
+                        refundAmount = latestPayment.amount;
+                    }
+                }
+
+                if (paymentIdToRefund) {
+                    const refundPayload: any = {
+                        payment_id: paymentIdToRefund,
+                        reason: reason || '7-day guarantee cancellation',
+                    };
+                    if (refundAmount) refundPayload.amount = refundAmount;
+
+                    const refund = await (dodo.refunds as any).create(refundPayload);
                     refundId = refund.refund_id;
-                    console.log(`[Cancel] Refunded ${latestPayment.amount} for user ${user.id}`);
+                    console.log(`[Cancel] Refunded for user ${user.id}`);
                 }
             } catch (err) {
                 console.error('[Cancel] Refund failed:', err);

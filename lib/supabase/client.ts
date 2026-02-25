@@ -1,4 +1,7 @@
 import { createBrowserClient } from '@supabase/ssr'
+import { SupabaseClient } from '@supabase/supabase-js'
+
+let client: SupabaseClient | undefined;
 
 export function createClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -14,6 +17,13 @@ export function createClient() {
       supabaseUrl || 'https://placeholder.supabase.co', 
       supabaseAnonKey || 'placeholder'
     );
+  }
+
+  // Singleton for browser environment
+  if (typeof window !== 'undefined') {
+    if (client) return client;
+    client = createBrowserClient(supabaseUrl, supabaseAnonKey);
+    return client;
   }
 
   return createBrowserClient(supabaseUrl, supabaseAnonKey);

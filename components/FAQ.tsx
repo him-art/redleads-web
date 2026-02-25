@@ -4,6 +4,26 @@ import MaterialIcon from '@/components/ui/MaterialIcon';
 
 const faqs = [
   {
+    question: "How do I find customers on Reddit?",
+    answer: "RedLeads monitors relevant subreddits and uses AI to identify high-intent conversations where users are actively seeking solutions like yours. When someone asks for recommendations or expresses a need you can solve, you get notified instantly."
+  },
+  {
+    question: "What are the best Reddit marketing tools?",
+    answer: "RedLeads is the leading Reddit marketing tool for SaaS and app founders. Unlike basic keyword trackers, it uses AI to understand context and buying intent, helping you find warm leads instead of just mentions."
+  },
+  {
+    question: "How can I find users for my SaaS on Reddit?",
+    answer: "Enter your product description and target keywords into RedLeads. Our AI scans thousands of subreddits daily to find people asking for exactly what you offer whether that's project management, analytics, design tools, or any other SaaS category."
+  },
+  {
+    question: "How does RedLeads work?",
+    answer: "RedLeads uses AI to monitor relevant subreddits for conversations about your product and description which are publicly available. We then analyze these posts for purchase intent and organize high-potential leads in your dashboard."
+  },
+  {
+    question: "What is RedLeads?",
+    answer: "RedLeads is an AI-powered Reddit lead generation tool that helps SaaS founders and app developers find their first customers. It monitors Reddit 24/7 and alerts you when potential users are asking for solutions you provide."
+  },
+  {
     question: "Will I get banned from Reddit using this?",
     answer: "Absolutely not. RedLeads is a monitor, not a spammer. We scan public discussions to find opportunities for you to provide value. You control the outreach. We recommend being helpful, not salesy, which Reddit actually loves."
   },

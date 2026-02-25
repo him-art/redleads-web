@@ -45,18 +45,27 @@ export async function POST(req: Request) {
 
         console.log(`[Dodo Webhook] Received event: ${eventType}`);
 
-        // 1. Log the receipt of the webhook for debugging
-        await supabase.from('webhook_logs').insert({
+        // 1. Log the webhook — capture the ID for future updates
+        const { data: logRow } = await supabase.from('webhook_logs').insert({
             event_type: eventType,
             payload: payload,
             status: 'received'
-        });
+        }).select('id').single();
 
-        // Determine user to update
+        const logId = logRow?.id;
+
+        // Helper to update this specific log row
+        const updateLog = async (status: string, statusDetail?: string) => {
+            if (!logId) return;
+            const update: any = { status };
+            if (statusDetail) update.status_detail = statusDetail;
+            await supabase.from('webhook_logs').update(update).eq('id', logId);
+        };
+
+        // 2. Determine user to update
         let userId = data?.metadata?.user_id;
         const customerEmail = data?.customer?.email || data?.customer?.customer_email;
 
-        // ... (rest of the identification logic) ...
         if (!userId && customerEmail) {
             const { data: profile } = await supabase
                 .from('profiles')
@@ -68,20 +77,18 @@ export async function POST(req: Request) {
         }
 
         if (!userId) {
-            await supabase.from('webhook_logs').update({ status: 'unidentified_user' }).eq('event_type', eventType).order('created_at', { ascending: false }).limit(1);
+            await updateLog('unidentified_user');
             return NextResponse.json({ received: true });
         }
 
         try {
             switch (eventType) {
+                // --- Activation events (initial purchase) ---
                 case 'subscription.active':
                 case 'subscription.activated':
-                case 'subscription.created':
-                case 'payment.succeeded':
-                case 'payment.captured':
+                case 'subscription.created': {
                     const planType = data?.metadata?.plan || 'growth';
                     
-                    // Determine keyword limit based on plan
                     let keywordLimit = 5;
                     if (planType === 'growth') keywordLimit = 15;
                     if (planType === 'lifetime') keywordLimit = 15;
@@ -97,11 +104,90 @@ export async function POST(req: Request) {
                         })
                         .eq('id', userId);
 
-                    // The profile trigger handles incrementing total_users count automatically
-                    
-                    await supabase.from('webhook_logs').update({ status: 'success', status_detail: `Updated to ${planType}` }).eq('event_type', eventType).order('created_at', { ascending: false }).limit(1);
+                    await updateLog('success', `Activated ${planType}`);
                     break;
+                }
 
+                // --- Payment events ---
+                case 'payment.succeeded':
+                case 'payment.captured': {
+                    const planType = data?.metadata?.plan || 'growth';
+                    const paymentId = data?.payment_id || null;
+                    
+                    // Fetch current profile to check if this is initial or renewal
+                    const { data: currentProfile } = await supabase
+                        .from('profiles')
+                        .select('subscription_tier, subscription_started_at')
+                        .eq('id', userId)
+                        .single();
+
+                    const isAlreadySubscribed = currentProfile?.subscription_tier === planType 
+                        && currentProfile?.subscription_started_at;
+
+                    let keywordLimit = 5;
+                    if (planType === 'growth') keywordLimit = 15;
+                    if (planType === 'lifetime') keywordLimit = 15;
+
+                    const updateData: any = {
+                        subscription_tier: planType,
+                        keyword_limit: keywordLimit,
+                        dodo_customer_id: data.customer?.customer_id || data.customer_id || null,
+                        dodo_payment_id: paymentId,
+                    };
+
+                    // Only set subscription_started_at on INITIAL purchase, not renewals
+                    if (!isAlreadySubscribed) {
+                        updateData.subscription_started_at = new Date().toISOString();
+                    }
+
+                    await supabase
+                        .from('profiles')
+                        .update(updateData)
+                        .eq('id', userId);
+
+                    await updateLog('success', isAlreadySubscribed 
+                        ? `Renewal payment for ${planType}` 
+                        : `Initial payment for ${planType}`);
+                    break;
+                }
+
+                // --- Subscription updated (plan change, status change) ---
+                case 'subscription.updated': {
+                    const newPlan = data?.metadata?.plan;
+                    const newStatus = data?.status;
+
+                    // If the plan changed (e.g. Starter → Growth upgrade)
+                    if (newPlan) {
+                        let keywordLimit = 5;
+                        if (newPlan === 'growth') keywordLimit = 15;
+                        if (newPlan === 'lifetime') keywordLimit = 15;
+
+                        await supabase
+                            .from('profiles')
+                            .update({
+                                subscription_tier: newPlan,
+                                keyword_limit: keywordLimit,
+                                dodo_subscription_id: data.subscription_id || null,
+                            })
+                            .eq('id', userId);
+
+                        await updateLog('success', `Plan updated to ${newPlan}`);
+                    } else {
+                        // Generic update — log it but no profile change needed
+                        await updateLog('acknowledged', `Subscription updated (status: ${newStatus || 'unknown'})`);
+                    }
+                    break;
+                }
+
+                // --- Subscription renewed ---
+                case 'subscription.renewed': {
+                    // Renewal is a billing event — subscription stays active
+                    // We do NOT reset subscription_started_at here
+                    await updateLog('acknowledged', 'Subscription renewed — no profile change needed');
+                    break;
+                }
+
+                // --- Cancellation / failure events ---
                 case 'subscription.cancelled':
                 case 'subscription.failed':
                 case 'subscription.expired':
@@ -111,15 +197,15 @@ export async function POST(req: Request) {
                         .update({ subscription_tier: 'free' })
                         .eq('id', userId);
                     
-                    await supabase.from('webhook_logs').update({ status: 'downgraded' }).eq('event_type', eventType).order('created_at', { ascending: false }).limit(1);
+                    await updateLog('downgraded', `Downgraded from ${eventType}`);
                     break;
 
                 default:
-                    await supabase.from('webhook_logs').update({ status: 'unhandled_event' }).eq('event_type', eventType).order('created_at', { ascending: false }).limit(1);
+                    await updateLog('unhandled_event', `Unhandled event: ${eventType}`);
             }
         } catch (dbError) {
             console.error('[Dodo Webhook DB Error]', dbError);
-            await supabase.from('webhook_logs').update({ status: 'error' }).eq('event_type', eventType).order('created_at', { ascending: false }).limit(1);
+            await updateLog('error', String(dbError));
             throw dbError;
         }
 

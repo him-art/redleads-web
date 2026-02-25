@@ -19,7 +19,7 @@ export async function POST(req: Request) {
         // 1. Fetch user profile to verify 7-day window
         const { data: profile, error: profileError } = await supabase
             .from('profiles')
-            .select('subscription_started_at, dodo_customer_id, subscription_tier')
+            .select('subscription_started_at, dodo_customer_id, dodo_payment_id, subscription_tier')
             .eq('id', user.id)
             .single();
 
@@ -51,26 +51,37 @@ export async function POST(req: Request) {
             throw new Error('Dodo client not initialized');
         }
 
-        // For Dodo, we usually need the payment_id. 
-        // We'll fetch the customer's payments and refund the most recent one.
-        // Note: In a production environment, we should probably store the payment_id in the database.
-        
-        const payments: any = await dodo.payments.list({
-            customer_id: profile.dodo_customer_id,
-            page_size: 1
-        });
+        // Use stored payment_id if available, otherwise fetch from Dodo
+        let paymentIdToRefund = profile.dodo_payment_id;
+        let refundAmount: number | null = null;
 
-        const latestPayment = payments.data?.[0] || payments.items?.[0] || payments[0];
+        if (!paymentIdToRefund) {
+            const payments: any = await dodo.payments.list({
+                customer_id: profile.dodo_customer_id,
+                page_size: 1
+            });
 
-        if (!latestPayment || latestPayment.status !== 'succeeded') {
-            return NextResponse.json({ error: 'No successful payment found to refund' }, { status: 404 });
+            const latestPayment = payments.data?.[0] || payments.items?.[0] || payments[0];
+
+            if (!latestPayment || latestPayment.status !== 'succeeded') {
+                return NextResponse.json({ error: 'No successful payment found to refund' }, { status: 404 });
+            }
+
+            paymentIdToRefund = latestPayment.payment_id;
+            refundAmount = latestPayment.amount;
         }
 
-        const refund = await (dodo.refunds as any).create({
-            transaction_id: latestPayment.transaction_id || latestPayment.payment_id,
-            amount: latestPayment.amount, // Full refund
+        if (!paymentIdToRefund) {
+            return NextResponse.json({ error: 'No payment ID found to refund' }, { status: 404 });
+        }
+
+        const refundPayload: any = {
+            payment_id: paymentIdToRefund,
             reason: reason || '7-day guarantee cancellation',
-        });
+        };
+        if (refundAmount) refundPayload.amount = refundAmount;
+
+        const refund = await (dodo.refunds as any).create(refundPayload);
 
         console.log(`[Refund] Successfully triggered for user ${user.id}:`, refund.refund_id);
 

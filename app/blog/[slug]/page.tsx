@@ -31,6 +31,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${post.title} | RedLeads Blog`,
     description: post.description,
     keywords: post.keywords,
+    alternates: {
+      canonical: `/blog/${slug}`,
+    },
     openGraph: {
       title: post.title,
       description: post.description,
@@ -76,7 +79,7 @@ export default async function BlogPostPage({ params }: Props) {
                 "author": { "@id": "https://www.redleads.app/#organization" },
                 "headline": post.title,
                 "datePublished": post.date,
-                "dateModified": post.date,
+                "dateModified": post.lastModified || post.date,
                 "mainEntityOfPage": { "@id": `https://www.redleads.app/blog/${slug}` },
                 "publisher": { "@id": "https://www.redleads.app/#organization" },
                 "description": post.description,

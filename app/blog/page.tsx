@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Blog | RedLeads - Reddit Lead Generation Insights',
     description: 'Expert guides on Reddit marketing, lead generation, and SaaS growth strategies.',
-    url: 'https://redleads.app/blog',
+    url: 'https://www.redleads.app/blog',
   },
 };
 
