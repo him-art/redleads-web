@@ -44,6 +44,11 @@ export async function POST(req: Request) {
 
     } catch (error: any) {
         console.error('[Onboarding Complete Error]', error);
+        // Log more details if it's a supabase error
+        if (error.message) console.error('Error message:', error.message);
+        if (error.details) console.error('Error details:', error.details);
+        if (error.hint) console.error('Error hint:', error.hint);
+        
         return NextResponse.json({ error: 'Failed to complete setup' }, { status: 500 });
     }
 }

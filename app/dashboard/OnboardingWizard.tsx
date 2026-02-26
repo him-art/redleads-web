@@ -177,7 +177,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
     const canProceed = () => {
         switch (step) {
             case 0: return url.trim().length >= 3;
-            case 1: return description.trim().length > 10;
+            case 1: return description.trim().length >= 20;
             case 2: return keywords.length >= 1;
             case 3: return true;
             default: return true;
@@ -248,7 +248,27 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                 </div>
 
                 {/* Main Content Scrollable Area */}
-                <div className="flex-1 overflow-hidden p-6 sm:p-10 flex flex-col items-center justify-center">
+                <div className="flex-1 overflow-hidden p-6 sm:p-10 flex flex-col items-center justify-center relative">
+                    {/* Global Error Message */}
+                    <AnimatePresence>
+                        {error && (
+                            <motion.div 
+                                initial={{ opacity: 0, y: -20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                className="absolute top-4 left-0 right-0 z-[60] flex justify-center"
+                            >
+                                <div className="bg-red-500/10 border border-red-500/20 rounded-full px-4 py-2 flex items-center gap-2 shadow-lg backdrop-blur-md">
+                                    <Shield size={12} className="text-red-400" />
+                                    <span className="text-[10px] font-bold text-red-400 uppercase tracking-widest">{error}</span>
+                                    <button onClick={() => setError('')} className="ml-1 text-red-400/50 hover:text-red-400">
+                                        <X size={12} />
+                                    </button>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
                     <AnimatePresence mode="wait">
                         
                         {/* ═══════════════════════════════ */}
@@ -286,11 +306,6 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                         className="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-5 pl-14 pr-6 text-lg focus:outline-none focus:border-primary/30 focus:bg-white/[0.05] transition-all placeholder:text-text-secondary/40 font-medium tracking-tight"
                                     />
                                 </div>
-                                {error && (
-                                    <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-400 text-xs font-bold text-center">
-                                        {error}
-                                    </motion.p>
-                                )}
                                 <p className="text-center text-[10px] text-text-secondary/40 font-bold uppercase tracking-widest">
                                     We&apos;ll scan your landing page to understand your product
                                 </p>
@@ -455,9 +470,18 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                             <div className="flex flex-col items-center space-y-4">
                                 <button
                                     onClick={handleSkipToTrial}
-                                    className="group px-10 py-4 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-xs tracking-[0.2em] rounded-2xl shadow-lg transition-all active:scale-[0.98] w-full sm:w-auto flex items-center justify-center mx-auto"
+                                    disabled={isCompletingSetup}
+                                    className="group px-10 py-4 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-xs tracking-[0.2em] rounded-2xl shadow-lg transition-all active:scale-[0.98] w-full sm:w-auto flex items-center justify-center mx-auto disabled:opacity-50"
                                 >
-                                    Start free 3 day trial <ArrowRight size={14} className="inline ml-2 group-hover:translate-x-1 transition-transform" />
+                                    {isCompletingSetup ? (
+                                        <div className="flex items-center gap-2">
+                                            <LoadingIcon className="w-4 h-4" /> Setting Up...
+                                        </div>
+                                    ) : (
+                                        <>
+                                            Start free 3 day trial <ArrowRight size={14} className="inline ml-2 group-hover:translate-x-1 transition-transform" />
+                                        </>
+                                    )}
                                 </button>
                                 <p className="text-[9px] font-bold text-text-secondary/40 uppercase tracking-[0.2em] flex items-center justify-center gap-1">
                                     <Shield size={10} />
