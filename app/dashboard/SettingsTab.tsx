@@ -99,12 +99,10 @@ export default function SettingsTab({ user }: { user: any }) {
                 // 2. SUCCESS FEEDBACK
                 setWasAiGenerated(true);
                 setPulseSections(true);
-                setStatusMsg({ type: 'success', text: '✓ Configuration generated! Review and edit as needed.' });
                 
-                // Clear pulsing and reset message after delay
+                // Clear pulsing after delay
                 setTimeout(() => {
                     setPulseSections(false);
-                    setStatusMsg(null);
                 }, 4000);
             }
         } catch (err: any) {

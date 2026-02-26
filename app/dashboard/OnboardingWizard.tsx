@@ -34,8 +34,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
 
     const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
 
-    // Profile save promise ref
-    const saveProfileRef = useRef<Promise<any> | null>(null);
+    // Profile save status ref
     const saveResolvedRef = useRef(false);
 
     // Auto-focus input refs
@@ -88,23 +87,23 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
     // ──────────────────────────────
     // Step 3 → 4: Save profile when leaving keywords step
     // ──────────────────────────────
-    const saveProfile = useCallback(() => {
-        if (saveProfileRef.current) return; // Already fired
-
-        const promise = axios.post('/api/onboarding/complete', {
-            url,
-            description,
-            keywords
-        }).then(res => {
+    const saveProfile = useCallback(async () => {
+        setIsCompletingSetup(true);
+        try {
+            await axios.post('/api/onboarding/complete', {
+                url,
+                description,
+                keywords
+            });
             saveResolvedRef.current = true;
             return true;
-        }).catch(err => {
+        } catch (err: any) {
             console.error('[Onboarding] Profile save error:', err);
-            saveResolvedRef.current = true;
+            setError('Failed to save your profile. Please try again.');
             return false;
-        });
-
-        saveProfileRef.current = promise;
+        } finally {
+            setIsCompletingSetup(false);
+        }
     }, [url, description, keywords]);
 
     // ──────────────────────────────
@@ -119,6 +118,13 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
     const handleSelectPlan = async (plan: 'starter' | 'growth') => {
         setCheckoutLoading(plan);
         try {
+            // Ensure latest profile data is saved before redirected
+            const saved = await saveProfile();
+            if (!saved) {
+                setCheckoutLoading(null);
+                return;
+            }
+
             const res = await fetch('/api/payments/create-checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -136,8 +142,18 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
         }
     };
 
-    const handleSkipToTrial = () => {
-        onComplete({ description, keywords }, url);
+    const handleSkipToTrial = async () => {
+        setIsCompletingSetup(true);
+        try {
+            const saved = await saveProfile();
+            if (saved) {
+                onComplete({ description, keywords }, url);
+            }
+        } catch (err) {
+            console.error('Skip to trial error:', err);
+        } finally {
+            setIsCompletingSetup(false);
+        }
     };
 
     // ──────────────────────────────
