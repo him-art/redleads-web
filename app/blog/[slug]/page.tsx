@@ -76,7 +76,7 @@ export default async function BlogPostPage({ params }: Props) {
                 "@type": "Article",
                 "@id": `https://www.redleads.app/blog/${slug}#article`,
                 "isPartOf": { "@id": `https://www.redleads.app/blog/${slug}` },
-                "author": { "@id": "https://www.redleads.app/#organization" },
+                "author": { "@id": "https://www.redleads.app/#founder" },
                 "headline": post.title,
                 "datePublished": post.date,
                 "dateModified": post.lastModified || post.date,

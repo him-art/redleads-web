@@ -1,12 +1,9 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { Webhook } from 'standardwebhooks';
+import { createAdminClient } from '@/lib/supabase/server';
 
-// Use service role for admin operations
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Use admin client for elevated privileges
+const supabase = createAdminClient();
 
 /**
  * Dodo Payments Webhook Handler
@@ -64,20 +61,25 @@ export async function POST(req: Request) {
 
         // 2. Determine user to update
         let userId = data?.metadata?.user_id;
-        const customerEmail = data?.customer?.email || data?.customer?.customer_email;
-
+        const customerEmail = data?.customer?.email || data?.customer?.customer_email || data?.email;
+ 
         if (!userId && customerEmail) {
+            console.log(`[Dodo Webhook] No userId in metadata, looking up by email: ${customerEmail}`);
             const { data: profile } = await supabase
                 .from('profiles')
                 .select('id')
                 .eq('email', customerEmail)
                 .single();
             
-            if (profile) userId = profile.id;
+            if (profile) {
+                userId = profile.id;
+                console.log(`[Dodo Webhook] Found user via email: ${userId}`);
+            }
         }
-
+ 
         if (!userId) {
-            await updateLog('unidentified_user');
+            console.error('[Dodo Webhook] UNIDENTIFIED USER. Payload data:', JSON.stringify(data, null, 2));
+            await updateLog('unidentified_user', `Email found: ${customerEmail || 'none'}`);
             return NextResponse.json({ received: true });
         }
 
@@ -201,7 +203,8 @@ export async function POST(req: Request) {
                     break;
 
                 default:
-                    await updateLog('unhandled_event', `Unhandled event: ${eventType}`);
+                    console.log(`[Dodo Webhook] Unhandled event type: ${eventType}`);
+                    await updateLog('unhandled_event', `Event: ${eventType}`);
             }
         } catch (dbError) {
             console.error('[Dodo Webhook DB Error]', dbError);

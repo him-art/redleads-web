@@ -12,15 +12,16 @@ export interface ScannerOptions {
     keywords?: string[];
     subreddits?: string[];
     description?: string;
+    timeRange?: 'all' | '7d' | '30d' | '1y';
 }
 
 
 export async function performScan(url: string, options: ScannerOptions): Promise<ScannerResult> {
-    const { tavilyApiKey, keywords, subreddits, description } = options;
+    const { tavilyApiKey, keywords, subreddits, description, timeRange } = options;
 
     const normalizedUrl = url.toLowerCase().trim().replace(/^https?:\/\//, '').replace(/\/$/, '');
 
-    console.log(`[ScannerLib] Analyzing site: ${url}`);
+    console.log(`[ScannerLib] Analyzing site: ${url} with timeRange: ${timeRange}`);
 
     let searchQuery = '';
     // B. STEP A: Let AI Generate Search Queries
@@ -33,7 +34,7 @@ export async function performScan(url: string, options: ScannerOptions): Promise
             Focus Subreddits: ${subreddits?.join(', ') || 'General Reddit'}
             
             Generate 1 ADVANCED and HIGH-INTENT search query for "site:reddit.com" that a professional lead hunter would use.
-            The query MUST include the current year "2026" or "2025" to ensure results are RECENT.
+            The query MUST target people with PAIN POINTS or specific needs.
             Combine intent signals like (recommend OR "best" OR "alternative to" OR "how to" OR "problem with").
             
             1. If focus subreddits are provided, target them using "site:reddit.com/r/subredditname".
@@ -41,7 +42,7 @@ export async function performScan(url: string, options: ScannerOptions): Promise
             3. Use the Keywords to find people with PAIN POINTS. (e.g. if keyword is "linkedin reach", search for people complaining about low reach).
             4. EXCLUDE unrelated generic niches.
             
-            Example: site:reddit.com/r/SaaS "outreach" (recommend OR "best" OR "tool") 2026
+            Example: site:reddit.com/r/SaaS "outreach" (recommend OR "best" OR "tool")
             
             ONLY return the query string, nothing else. No quotes, no intro text.
         `;
@@ -67,17 +68,31 @@ export async function performScan(url: string, options: ScannerOptions): Promise
     // C. STEP B: PRIMARY SEARCH (Tavily AI Search)
     if (tavilyApiKey) {
         try {
-            console.log(`[ScannerLib] Attempting Tavily Search for: ${searchQuery}`);
+            // Map our timeRange to Tavily time_range
+            // Tavily options: "day", "week", "month", "year" or shorthands "d", "w", "m", "y"
+            const tavilyTimeRange = 
+                timeRange === '7d' ? 'week' :
+                timeRange === '30d' ? 'month' :
+                timeRange === '1y' ? 'year' : undefined;
+
+            console.log(`[ScannerLib] Attempting Tavily Search for: ${searchQuery} (Tavily Range: ${tavilyTimeRange})`);
+            
+            const fetchBody: any = {
+                api_key: tavilyApiKey,
+                query: searchQuery.includes('site:reddit.com') ? searchQuery : `site:reddit.com ${searchQuery}`,
+                search_depth: "advanced",
+                include_domains: ["reddit.com"],
+                max_results: 40
+            };
+
+            if (tavilyTimeRange) {
+                fetchBody.time_range = tavilyTimeRange;
+            }
+
             const tavilyRes = await fetch('https://api.tavily.com/search', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    api_key: tavilyApiKey,
-                    query: searchQuery.includes('site:reddit.com') ? searchQuery : `site:reddit.com ${searchQuery}`,
-                    search_depth: "advanced",
-                    include_domains: ["reddit.com"],
-                    max_results: 40
-                })
+                body: JSON.stringify(fetchBody)
             });
             
             if (!tavilyRes.ok) {
@@ -94,7 +109,8 @@ export async function performScan(url: string, options: ScannerOptions): Promise
                         subreddit: extractSubreddit(item.url),
                         title: item.title,
                         url: item.url,
-                        body_text: item.content
+                        body_text: item.content,
+                        post_created_at: item.published_date || null
                     }));
             }
         } catch (tError) {

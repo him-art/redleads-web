@@ -69,8 +69,7 @@ export default async function PseoCombinationPage({ params }: Props) {
               "headline": data.title,
               "description": data.description,
               "author": {
-                "@type": "Organization",
-                "name": "RedLeads AI"
+                "@id": "https://www.redleads.app/#founder"
               },
               "publisher": {
                 "@type": "Organization",

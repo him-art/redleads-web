@@ -37,10 +37,18 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
     const [teaserInfo, setTeaserInfo] = useState<{ isTeaser: boolean, totalFound: number } | null>(null);
     const { draftingLead, setDraftingLead } = useDashboardData();
     const [productContext, setProductContext] = useState('');
+    const [timeRange, setTimeRange] = useState<'all' | '7d' | '30d' | '1y'>('30d');
     const supabase = useMemo(() => createClient(), []);
     const router = useRouter();
     const searchParams = useSearchParams();
     const hasAutoScanned = useRef(false);
+
+    const timeRanges = [
+        { label: '7 Days', value: '7d' },
+        { label: '30 Days', value: '30d' },
+        { label: '1 Year', value: '1y' },
+        { label: 'All Time', value: 'all' }
+    ];
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -111,7 +119,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
 
         const scannerPromise = fetch('/api/scanner', {
             method: 'POST',
-            body: JSON.stringify({ url: normalizedUrl, action: 'SCAN' }),
+            body: JSON.stringify({ url: normalizedUrl, action: 'SCAN', timeRange }),
             headers: { 'Content-Type': 'application/json' }
         });
 
@@ -169,6 +177,26 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                             />
                         </div>
                     )}
+
+                    <div className="flex items-center gap-2 mb-6 ml-1">
+                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-text-secondary opacity-50 mr-2">time frame:</span>
+                        <div className="flex items-center p-1 bg-white/5 border border-white/5 rounded-full">
+                            {timeRanges.map((range) => (
+                                <button
+                                    key={range.value}
+                                    type="button"
+                                    onClick={() => setTimeRange(range.value as any)}
+                                    className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all ${
+                                        timeRange === range.value 
+                                            ? 'bg-primary text-white shadow-lg' 
+                                            : 'text-text-secondary hover:text-text-primary'
+                                    }`}
+                                >
+                                    {range.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
 
                     <div className="relative flex items-center">
                         <div className="absolute left-4 sm:left-6 text-text-secondary group-focus-within:text-primary transition-colors flex items-center justify-center">

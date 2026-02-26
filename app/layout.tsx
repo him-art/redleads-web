@@ -146,6 +146,25 @@ export default function RootLayout({
                     "target": "https://www.redleads.app/blog?s={search_term_string}",
                     "query-input": "required name=search_term_string"
                   }
+                },
+                {
+                  "@type": "Person",
+                  "@id": "https://www.redleads.app/#founder",
+                  "name": "Tim Jayas",
+                  "url": "https://www.redleads.app",
+                  "image": {
+                    "@type": "ImageObject",
+                    "url": "https://www.redleads.app/founder.png",
+                    "width": 400,
+                    "height": 400
+                  },
+                  "jobTitle": "Founding Engineer",
+                  "worksFor": { "@id": "https://www.redleads.app/#organization" },
+                  "sameAs": [
+                    "https://twitter.com/timjayas",
+                    "https://www.linkedin.com/in/timjayas"
+                  ],
+                  "description": "Founder and lead developer of RedLeads. Expert in Reddit growth strategies and AI-powered automation."
                 }
               ]
             })

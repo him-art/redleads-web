@@ -21,7 +21,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: validation.error.format() }, { status: 400 });
         }
         
-        const { url, email, action } = validation.data;
+        const { url, email, action, timeRange } = validation.data;
 
         // 2. Auth Context
         const { createClient, createAdminClient } = await import('@/lib/supabase/server');
@@ -104,7 +104,8 @@ export async function POST(req: Request) {
             const scanResult = await performScan(url, {
                 tavilyApiKey: process.env.TAVILY_API_KEY,
                 keywords: profile?.keywords,
-                description: profile?.description
+                description: profile?.description,
+                timeRange: timeRange as any
             });
 
             if (scanResult.error) {
@@ -126,7 +127,8 @@ export async function POST(req: Request) {
                         status: 'scanner',
                         match_score: lead.match_category === 'High' ? 0.95 : lead.match_category === 'Medium' ? 0.75 : 0.45,
                         match_category: lead.match_category || 'Medium',
-                        is_saved: false
+                        is_saved: false,
+                        post_created_at: lead.post_created_at || null
                     }));
 
                     console.log(`[Scanner API] Saving ${leadsToSave.length} leads for user ${user.id} (Paid: ${isPaid}, Trial: ${isInTrial})`);

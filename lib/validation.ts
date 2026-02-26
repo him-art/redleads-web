@@ -4,6 +4,7 @@ export const scannerSchema = z.object({
   url: z.string().url().optional(),
   email: z.string().email().optional(),
   action: z.enum(['SCAN', 'UNLOCK']),
+  timeRange: z.enum(['all', '7d', '30d', '1y']).optional(),
 }).refine((data) => {
   if (data.action === 'SCAN' && !data.url) return false;
   if (data.action === 'UNLOCK' && (!data.email || !data.url)) return false;
