@@ -17,7 +17,7 @@ const testimonials: Testimonial[] = [
   {
     name: "Vivek ps",
     handle: "@vivekps143",
-    image: "/vivek.png",
+    image: "/vivek.webp",
     url: "https://x.com/vivekps143/status/2020137623403077861",
     content: "Smart approach to Reddit lead gen! Finding relevant conversations where people are actively looking for solutions is way more effective than cold outreach. How are you handling the notification system?",
     highlights: ["Smart approach to Reddit lead gen!", "way more effective than cold outreach"],
@@ -25,7 +25,7 @@ const testimonials: Testimonial[] = [
   {
     name: "Umair Shaikh",
     handle: "@1Umairshaikh",
-    image: "/umair.png",
+    image: "/umair.webp",
     url: "https://x.com/1Umairshaikh/status/2019638482986283216",
     content: "I like this, this will make life easier for sure",
     highlights: ["make life easier for sure"],
@@ -33,7 +33,7 @@ const testimonials: Testimonial[] = [
   {
     name: "Konny",
     handle: "@konnydev",
-    image: "/konny.png",
+    image: "/konny.webp",
     url: "https://x.com/konnydev/status/2020141367507275965",
     content: "Thats useful I guess👀",
     highlights: ["useful I guess"],
@@ -41,7 +41,7 @@ const testimonials: Testimonial[] = [
   {
     name: "Martin B",
     handle: "@MartinB293887",
-    image: "/martin.png",
+    image: "/martin.webp",
     url: "https://x.com/MartinB293887/status/2020161251280654610",
     content: "Seems very helpful",
     highlights: ["very helpful"],
@@ -49,7 +49,7 @@ const testimonials: Testimonial[] = [
   {
     name: "sachanh.farcaster.eth",
     handle: "@DefiHimanshu",
-    image: "/sachanh.png",
+    image: "/sachanh.webp",
     url: "https://x.com/DefiHimanshu/status/2019656252553675000",
     content: "Wow this is nice, love to explore.",
     highlights: ["this is nice", "love to explore"],
@@ -57,7 +57,7 @@ const testimonials: Testimonial[] = [
   {
     name: "Henry Labs",
     handle: "@Henrylabss",
-    image: "/henry.png",
+    image: "/henry.webp",
     url: "https://x.com/Henrylabss/status/2015720468632727655",
     content: "This is a good tool reddit monitoring for leads",
     highlights: ["good tool", "monitoring for leads"],
@@ -65,7 +65,7 @@ const testimonials: Testimonial[] = [
   {
     name: "Pranav Alone",
     handle: "@MaDAxe__",
-    image: "/pranav.png",
+    image: "/pranav.webp",
     url: "https://x.com/MaDAxe__/status/2020689774043095365",
     content: "This is great man! Just signed up on the site and search the url of my app and i got tons of reddit posts related to it which would have taken me hours to search manually.",
     highlights: ["Just signed up", "tons of reddit posts", "taken me hours to search manually"],
@@ -73,7 +73,7 @@ const testimonials: Testimonial[] = [
   {
     name: "Marc Hanson",
     handle: "@bubbling_sort",
-    image: "/marc.png",
+    image: "/marc.webp",
     url: "https://x.com/bubbling_sort/status/2019875214805635222",
     content: "Interesting. Bookmarking this to check out. Connected!",
     highlights: ["Bookmarking this", "Connected!"],
@@ -81,7 +81,7 @@ const testimonials: Testimonial[] = [
   {
     name: "Bishopi.io",
     handle: "@Bishopi_io",
-    image: "/bishopi.png",
+    image: "/bishopi.webp",
     url: "https://x.com/Bishopi_io/status/2019828568281546848",
     content: "That looks super useful",
     highlights: ["super useful"],
@@ -89,7 +89,7 @@ const testimonials: Testimonial[] = [
   {
     name: "Naivaidya",
     handle: "@NaivaidyaY66600",
-    image: "/navi.png",
+    image: "/navi.webp",
     url: "https://x.com/NaivaidyaY66600/status/2020386987744850381",
     content: "I am telling you it's a game changer 🔥",
     highlights: ["game changer"],
@@ -97,7 +97,7 @@ const testimonials: Testimonial[] = [
   {
     name: "Manish | Building PinTheFrame",
     handle: "@manish_saraan",
-    image: "/manish.png",
+    image: "/manish.webp",
     url: "https://x.com/manish_saraan",
     content: "Great product for getting users from Reddit Reddit is a channel that people are still sleeping on",
     highlights: ["Great product", "users from Reddit", "still sleeping on"],
@@ -105,7 +105,7 @@ const testimonials: Testimonial[] = [
   {
     name: "Alber Nahas",
     handle: "@albertonahas92",
-    image: "/alber_new.png",
+    image: "/alber_new.webp",
     url: "https://x.com/albertonahas92/status/2024380112024535148?s=20",
     content: "I signed up for it man. It's really impressive. I love it.",
     highlights: ["signed up", "really impressive", "I love it"],
@@ -113,7 +113,7 @@ const testimonials: Testimonial[] = [
   {
     name: "Yaser Abbass",
     handle: "@yaserabbass",
-    image: "/yaser.png",
+    image: "/yaser.webp",
     url: "https://x.com/yaserabbass/status/2024905608101503386?s=20",
     content: "Finding users on Reddit usually takes hours of manual searching. Having a tool that pulls relevant threads automatically is huge.",
     highlights: ["hours of manual searching", "pulls relevant threads automatically"],
@@ -121,7 +121,7 @@ const testimonials: Testimonial[] = [
   {
     name: "Udayan",
     handle: "@ud_ambwani",
-    image: "/Udayan.png",
+    image: "/Udayan.webp",
     url: "https://x.com/ud_ambwani/status/2024967898851410062?s=20",
     content: "Reddit as a user discovery channel is massively slept on for SaaS. Most founders are fighting for attention on X while people are literally typing their problems into Reddit search bars every day. Smart move building a tool around that.",
     highlights: ["massively slept on for SaaS", "typing their problems into Reddit search bars", "Smart move"],
@@ -129,10 +129,18 @@ const testimonials: Testimonial[] = [
   {
     name: "Vishal Mistry",
     handle: "@vishal_mistry9",
-    image: "/Vishal.png",
+    image: "/Vishal.webp",
     url: "https://x.com/vishal_mistry9/status/2024053592512946189?s=20",
     content: "cool i need this.",
     highlights: ["i need this"],
+  },
+  {
+    name: "Jacob",
+    handle: "@Jacob660245",
+    image: "/jacob.webp",
+    url: "https://x.com/Jacob660245/status/2027081829522477062?s=20",
+    content: "I got the lifetime plan! I have been using it every day!",
+    highlights: ["lifetime plan", "using it every day"],
   },
 ];
 
@@ -288,7 +296,7 @@ export default function FounderNote() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 items-start">
             {/* Column 1 */}
             <div className="flex flex-col gap-3">
-              {[testimonials[6]!, testimonials[10]!, testimonials[12]!, testimonials[2]!, testimonials[3]!].map((testimonial, idx) => (
+              {[testimonials[6]!, testimonials[10]!, testimonials[12]!, testimonials[2]!, testimonials[3]!, testimonials[15]!].map((testimonial, idx) => (
                 <TestimonialCard key={`col1-${idx}`} testimonial={testimonial} />
               ))}
             </div>
@@ -299,7 +307,7 @@ export default function FounderNote() {
                 <TestimonialCard key={`col2-${idx}`} testimonial={testimonial} />
               ))}
             </div>
-
+ 
             {/* Column 3 */}
             <div className="flex flex-col gap-3">
               {[testimonials[7]!, testimonials[8]!, testimonials[5]!, testimonials[11]!, testimonials[14]!].map((testimonial, idx) => (

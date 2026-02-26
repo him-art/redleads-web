@@ -361,7 +361,7 @@ const Pricing = () => {
                                         const pos = ((tick - 50) / 100) * 100;
                                         const tickPrice = tick < 80 ? 20 : 30 + Math.floor((tick - 80) / 20) * 10;
                                         return (
-                                            <div key={tick} className="absolute flex flex-col items-center" style={{ left: `${pos}%` }}>
+                                            <div key={tick} className="absolute flex flex-col items-center -translate-x-1/2" style={{ left: `${pos}%` }}>
                                                 {/* Vertical Notch */}
                                                 <div className={`w-[2px] h-8 mb-2 ${currentUsers >= tick ? 'bg-green-500' : 'bg-white/10'}`} />
                                                 {/* Price Label (Below) */}
