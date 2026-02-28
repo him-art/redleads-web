@@ -33,7 +33,8 @@ const solutionSlugs = [
   'validate-saas-idea',
   'get-first-users',
   'competitor-alternatives',
-  'viral-saas-distribution'
+  'viral-saas-distribution',
+  'agencies' // Added agencies
 ];
 
 async function indexPages() {

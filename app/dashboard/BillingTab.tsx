@@ -16,10 +16,10 @@ export default function BillingTab() {
     const [isMounted, setIsMounted] = useState(false);
     const [slots, setSlots] = useState<{ sold: number; total: number } | null>(null);
 
-    // Dynamic Pricing Logic ($10 every 20 users) - Aligned with Pricing.tsx
+    // Dynamic Pricing Logic ($20 every 20 users) - Aligned with Pricing.tsx
     const currentUsers = slots?.sold || 0; 
     const isEarlyBird = currentUsers < 80;
-    const currentPrice = isEarlyBird ? 20 : 30 + Math.floor((currentUsers - 80) / 20) * 10;
+    const currentPrice = isEarlyBird ? 59 : 79 + Math.floor((currentUsers - 80) / 20) * 20;
     const spotsLeft = isEarlyBird ? 80 - currentUsers : 80 + (Math.floor((currentUsers - 80) / 20) + 1) * 20 - currentUsers;
 
     useEffect(() => { 
