@@ -8,11 +8,11 @@ const Pricing = () => {
     const [isLoading, setIsLoading] = useState<string | null>(null);
     const [slots, setSlots] = useState<{ sold: number; total: number } | null>(null);
 
-    // New Dynamic Pricing Logic ($10 every 20 users)
+    // New Dynamic Pricing Logic ($20 every 20 users)
     const currentUsers = slots?.sold || 0; 
     const isEarlyBird = currentUsers < 80;
-    const currentPrice = isEarlyBird ? 20 : 30 + Math.floor((currentUsers - 80) / 20) * 10;
-    const nextPrice = currentPrice + 10;
+    const currentPrice = isEarlyBird ? 59 : 79 + Math.floor((currentUsers - 80) / 20) * 20;
+    const nextPrice = currentPrice + 20;
     const nextCheckpoint = isEarlyBird ? 80 : 80 + (Math.floor((currentUsers - 80) / 20) + 1) * 20;
     const spotsLeft = nextCheckpoint - currentUsers;
 
@@ -90,8 +90,7 @@ const Pricing = () => {
                 ],
                 engage: [
                     { name: '100 AI Replies /mo', icon: <MaterialIcon name="smart_toy" size={14} /> },
-                    { name: 'Anti-Ban Safety Engine', icon: <MaterialIcon name="verified_user" size={14} className="text-green-500" /> },
-                    { name: '30 daily auto DMs', icon: <MaterialIcon name="chat" size={14} />, soon: true }
+                    { name: 'Anti-Ban Safety Engine', icon: <MaterialIcon name="verified_user" size={14} className="text-green-500" /> }
                 ]
             }
         },
@@ -113,8 +112,7 @@ const Pricing = () => {
                 ],
                 engage: [
                     { name: '500 AI Replies /mo', icon: <MaterialIcon name="smart_toy" size={14} /> },
-                    { name: 'Anti-Ban Safety Engine', icon: <MaterialIcon name="verified_user" size={14} className="text-green-500" /> },
-                    { name: '100 daily auto DMs', icon: <MaterialIcon name="chat" size={14} />, soon: true }
+                    { name: 'Anti-Ban Safety Engine', icon: <MaterialIcon name="verified_user" size={14} className="text-green-500" /> }
                 ]
             }
         }
@@ -212,9 +210,6 @@ const Pricing = () => {
                                                     <span className={`text-xs font-bold tracking-tight uppercase tracking-widest ${plan.highlight ? 'text-gray-200' : 'text-gray-400'}`}>
                                                         {item.name}
                                                     </span>
-                                                    {item.soon && (
-                                                        <span className="bg-orange-500/10 text-orange-400 text-[8px] px-1.5 py-0.5 rounded-md font-black tracking-[0.2em] border border-orange-500/20">SOON</span>
-                                                    )}
                                                 </div>
                                             </li>
                                         ))}
@@ -317,7 +312,7 @@ const Pricing = () => {
                                             <MaterialIcon name="bolt" size={14} />
                                         </div>
                                         <span className="text-xs font-black uppercase tracking-widest text-red-500">
-                                            Price increase by $10 after {spotsLeft} users
+                                            Price increase by $20 after {spotsLeft} users
                                         </span>
                                     </li>
                                 </ul>
@@ -359,7 +354,7 @@ const Pricing = () => {
                                 <div className="absolute inset-0 flex justify-between items-start z-20 pointer-events-none">
                                     {[60, 80, 100, 120, 140].map((tick) => {
                                         const pos = ((tick - 50) / 100) * 100;
-                                        const tickPrice = tick < 80 ? 20 : 30 + Math.floor((tick - 80) / 20) * 10;
+                                        const tickPrice = tick < 80 ? 59 : 79 + Math.floor((tick - 80) / 20) * 20;
                                         return (
                                             <div key={tick} className="absolute flex flex-col items-center -translate-x-1/2" style={{ left: `${pos}%` }}>
                                                 {/* Vertical Notch */}
