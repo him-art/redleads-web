@@ -122,7 +122,7 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                             </div>
                             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-black mb-2">Life Time</h3>
                             <div className="flex items-baseline gap-2 mb-6">
-                                <span className="text-2xl font-black text-black">$20</span>
+                                <span className="text-2xl font-black text-black">$59</span>
                                 <span className="text-[8px] text-gray-600 font-black uppercase ml-1 tracking-tighter">Founding</span>
                             </div>
                             <ul className="space-y-3 mb-8 flex-grow">
@@ -145,7 +145,7 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                     </div>
 
                     <p className="mt-8 text-[9px] font-bold text-gray-700 uppercase tracking-[0.2em]">
-                        7-Day Guarantee • CANCEL ANYTIME • Secure Dodo Checkout
+                        7-Day Guarantee • LIMITED TIME OFFER • Secure Dodo Checkout
                     </p>
                 </div>
             </div>

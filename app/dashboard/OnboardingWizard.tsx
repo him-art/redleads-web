@@ -539,7 +539,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                          <div className="w-full text-center">
                             <div className="flex items-center justify-center gap-2 text-[10px] font-bold text-text-secondary/50 uppercase tracking-widest">
                                 <Users size={12} />
-                                70+ founders using RedLeads.app
+                                80+ founders using RedLeads.app
                             </div>
                          </div>
                     )}

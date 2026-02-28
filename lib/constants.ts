@@ -1,7 +1,7 @@
 export const TRIAL_DAYS = 3;
 
 export const LIFETIME_TOTAL_SLOTS = 10;
-export const LIFETIME_BASE_PRICE = 20;
+export const LIFETIME_BASE_PRICE = 59;
 
 export const PLANS = {
     STARTER: {

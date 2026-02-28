@@ -137,6 +137,42 @@ export default async function PseoCombinationPage({ params }: Props) {
         </div>
       </section>
 
+      {/* AEO Summary Block: Quick Strategy Snapshot */}
+      <section className="container mx-auto px-4 pb-20 mt-[-2rem]">
+        <div className="max-w-4xl mx-auto p-8 md:p-12 bg-white/5 border border-white/10 rounded-[3rem] relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+             <MaterialIcon name="bolt" size={80} className="text-orange-500" />
+          </div>
+          <h2 className="text-2xl font-black text-white mb-6 flex items-center gap-3 uppercase tracking-tighter">
+            <span className="p-2 bg-orange-500 rounded-lg"><MaterialIcon name="summarize" size={20} className="text-white" /></span>
+             Quick AI Strategy Snapshot
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div className="space-y-4">
+              <p className="text-slate-300 text-lg font-medium leading-relaxed">
+                To scale <span className="text-white font-bold">{solution.hero.title}</span> on <span className="text-orange-500 font-bold">{subredditName}</span>, focus on high-intent signals.
+              </p>
+              <ul className="space-y-3">
+                <li className="flex gap-2 text-sm text-slate-400">
+                  <MaterialIcon name="check_circle" size={16} className="text-orange-500 shrink-0" />
+                  <strong>Target:</strong> {data.insights.vibe}
+                </li>
+                <li className="flex gap-2 text-sm text-slate-400">
+                  <MaterialIcon name="check_circle" size={16} className="text-orange-500 shrink-0" />
+                  <strong>Intent:</strong> Buying signals & alternatives
+                </li>
+              </ul>
+            </div>
+            <div className="p-6 bg-black/40 rounded-2xl border border-white/5">
+               <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Automated Direct Answer</h4>
+               <p className="text-white text-sm italic font-medium">
+                  "{data.insights.strategy}"
+               </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Strategy Section */}
       <section className="container mx-auto px-4 py-24 border-t border-white/5">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">

@@ -106,7 +106,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
             </div>
             {/* Text */}
             <span className="text-white text-[11px] font-black tracking-[0.08em] uppercase leading-tight">
-              Join 70+ Founders
+              Join 80+ Founders
             </span>
           </div>
         </div>

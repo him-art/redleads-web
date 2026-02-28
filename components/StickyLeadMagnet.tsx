@@ -25,8 +25,7 @@ export default function StickyLeadMagnet() {
       pathname.includes('/compare') || 
       pathname.includes('/solutions') || 
       pathname.includes('/blog') ||
-      pathname.includes('/subreddits') ||
-      pathname === '/';
+      pathname.includes('/subreddits');
     
     const isExcluded = 
       pathname.includes('/dashboard') || 

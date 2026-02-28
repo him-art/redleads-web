@@ -328,7 +328,7 @@ const Pricing = () => {
                                     {isLoading === 'Lifetime' ? <div className="w-4 h-4 border-2 border-white/30 border-t-black rounded-full animate-spin" /> : <>Get Lifetime Access <MaterialIcon name="arrow_right" size={16} /></>}
                                 </button>
                                 <p className="mt-6 text-center text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
-                                    CANCEL ANYTIME
+                                    LIMITED TIME OFFER
                                 </p>
                             </div>
                         </div>

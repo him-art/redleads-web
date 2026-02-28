@@ -39,6 +39,24 @@ const Card = ({ title, description, children, delay }: { title: string, descript
 export default function RedditOpportunity() {
   return (
     <section className="py-24 bg-[#1a1a1a] border-t border-white/5">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "RedLeads Reddit Opportunity Finder",
+            "applicationCategory": "BusinessApplication",
+            "operatingSystem": "Web",
+            "description": "Identify high-intent opportunities on Reddit for your business or SaaS.",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          })
+        }}
+      />
       <div className="max-w-7xl mx-auto px-6">
         
         {/* Section Heading */}

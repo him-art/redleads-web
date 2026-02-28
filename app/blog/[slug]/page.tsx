@@ -195,6 +195,28 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         </div>
 
+        {/* Dynamic Solution Recommendation (Internal Linking) */}
+        <div className="max-w-3xl mx-auto mt-16 p-8 bg-black border border-white/10 rounded-3xl relative overflow-hidden">
+           <div className="absolute top-0 right-0 p-4 opacity-5">
+              <MaterialIcon name="explore" size={100} className="text-white" />
+           </div>
+           <div className="relative z-10">
+              <h3 className="text-white font-black text-xl mb-4 tracking-tight">Applied Growth Strategy</h3>
+              <p className="text-slate-400 text-sm mb-6 max-w-lg">
+                 Learn how to apply the principles in this article specifically for <span className="text-white font-bold">{post.category}</span> acquisition on Reddit.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                 {post.category === 'Growth' && (
+                    <Link href="/solutions/saas" className="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-[10px] font-black uppercase text-slate-300 hover:border-orange-500/50 hover:text-white transition-all">SaaS Growth Strategy</Link>
+                 )}
+                 {post.category === 'Lead Generation' && (
+                    <Link href="/solutions/agencies" className="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-[10px] font-black uppercase text-slate-300 hover:border-orange-500/50 hover:text-white transition-all">Agency Lead Gen</Link>
+                 )}
+                 <Link href="/solutions/directory" className="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-[10px] font-black uppercase text-slate-300 hover:border-orange-500/50 hover:text-white transition-all">All Strategies</Link>
+              </div>
+           </div>
+        </div>
+
         {/* CTA */}
         <div className="max-w-3xl mx-auto mt-16">
           <div className="p-8 bg-gradient-to-br from-orange-500/10 to-transparent border border-orange-500/20 rounded-3xl text-center">
