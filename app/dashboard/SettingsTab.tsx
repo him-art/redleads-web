@@ -113,7 +113,7 @@ export default function SettingsTab({ user }: { user: any }) {
     };
 
     // Determine keyword limit from reactive planDetails
-    const keywordLimit = planDetails?.keywordLimit || 15;
+    const keywordLimit = planDetails?.keywordLimit || 20;
 
     const addKeyword = () => {
         const input = newKeyword.trim();

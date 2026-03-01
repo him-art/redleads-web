@@ -237,7 +237,7 @@ export default function BillingTab() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                             {[
-                                { label: 'Keywords', value: isLifetime ? '15 Keywords' : isGrowth ? '15 Keywords' : isStarter ? '5 Keywords' : 'Trial Plan', icon: <Search size={16} /> },
+                                { label: 'Keywords', value: isLifetime ? '20 Keywords' : isGrowth ? '20 Keywords' : isStarter ? '10 Keywords' : 'Trial Plan', icon: <Search size={16} /> },
                                 { label: 'Power Searches', value: isLifetime ? '5/Day' : isGrowth ? '5/Day' : isStarter ? '2/Day' : 'Trial Plan', icon: <Compass size={16} /> },
                                 { label: 'AI Outreach', value: isLifetime ? '500 Drafts / Month' : isGrowth ? '500 Drafts / Month' : isStarter ? '100 Drafts / Month' : '5 Drafts', icon: <Bot size={16} /> },
                                 { label: 'Support', value: isLifetime ? 'Priority Support' : 'Standard Support', icon: <CheckCircle2 size={16} /> }
@@ -271,8 +271,8 @@ export default function BillingTab() {
             {/* Subscription Options - Always Visible */}
             <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-8 pb-12">
                 {[
-                    { id: 'starter', name: 'Starter Plan', price: '$7', oldPrice: '$15', desc: '5 keywords, 2 power searches & 100 AI reply drafts per month', primary: false, active: planDetails.id === 'starter' },
-                    { id: 'growth', name: 'Growth Plan', price: '$14', oldPrice: '$29', desc: '15 keywords, 5 power searches & 500 AI reply drafts per month', primary: true, active: planDetails.id === 'growth' }
+                    { id: 'starter', name: 'Starter Plan', price: '$7', oldPrice: '$15', desc: '10 keywords, 2 power searches & 100 AI reply drafts per month', primary: false, active: planDetails.id === 'starter' },
+                    { id: 'growth', name: 'Growth Plan', price: '$14', oldPrice: '$29', desc: '20 keywords, 5 power searches & 500 AI reply drafts per month', primary: true, active: planDetails.id === 'growth' }
                 ].map((plan) => (
                     <div key={plan.id} className="p-1.5 bg-white/5 border border-white/5 rounded-[2.5rem]">
                         <div className={`p-8 sm:p-10 rounded-[2.2rem] border flex flex-col h-full transition-all relative overflow-hidden ${plan.active ? 'border-primary ring-2 ring-primary/20 bg-primary/[0.03]' : 'bg-[#0c0c0c] border-white/5'}`}>
@@ -376,7 +376,7 @@ export default function BillingTab() {
                                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                                         <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest text-center mb-2">Growth Features +</p>
                                         {[
-                                            '15 Tracked Keywords',
+                                            '20 Tracked Keywords',
                                             '5 Power Searches / Day',
                                             '500 AI Drafts / Month',
                                             'Priority Beta Access'

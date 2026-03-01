@@ -91,9 +91,9 @@ export async function POST(req: Request) {
                 case 'subscription.created': {
                     const planType = data?.metadata?.plan || 'growth';
                     
-                    let keywordLimit = 5;
-                    if (planType === 'growth') keywordLimit = 15;
-                    if (planType === 'lifetime') keywordLimit = 15;
+                    let keywordLimit = 10;
+                    if (planType === 'growth') keywordLimit = 20;
+                    if (planType === 'lifetime') keywordLimit = 20;
                     
                     await supabase
                         .from('profiles')
@@ -126,9 +126,9 @@ export async function POST(req: Request) {
                     const isAlreadySubscribed = currentProfile?.subscription_tier === planType 
                         && currentProfile?.subscription_started_at;
 
-                    let keywordLimit = 5;
-                    if (planType === 'growth') keywordLimit = 15;
-                    if (planType === 'lifetime') keywordLimit = 15;
+                    let keywordLimit = 10;
+                    if (planType === 'growth') keywordLimit = 20;
+                    if (planType === 'lifetime') keywordLimit = 20;
 
                     const updateData: any = {
                         subscription_tier: planType,
@@ -160,9 +160,9 @@ export async function POST(req: Request) {
 
                     // If the plan changed (e.g. Starter → Growth upgrade)
                     if (newPlan) {
-                        let keywordLimit = 5;
-                        if (newPlan === 'growth') keywordLimit = 15;
-                        if (newPlan === 'lifetime') keywordLimit = 15;
+                        let keywordLimit = 10;
+                        if (newPlan === 'growth') keywordLimit = 20;
+                        if (newPlan === 'lifetime') keywordLimit = 20;
 
                         await supabase
                             .from('profiles')

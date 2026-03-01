@@ -18,7 +18,7 @@ interface OnboardingWizardProps {
 const TOTAL_STEPS = 4; // 0-3
 
 
-export default function OnboardingWizard({ onComplete, userEmail, keywordLimit = 15 }: OnboardingWizardProps) {
+export default function OnboardingWizard({ onComplete, userEmail, keywordLimit = 20 }: OnboardingWizardProps) {
     const [step, setStep] = useState(0);
     const [url, setUrl] = useState('');
     const [isGenerating, setIsGenerating] = useState(false);

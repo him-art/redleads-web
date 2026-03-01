@@ -82,7 +82,7 @@ const Pricing = () => {
             features: {
                 inbound: [
                     { name: '2 Power Search for top ranking post /day', icon: <MaterialIcon name="public" size={14} /> },
-                    { name: '5 tracked keywords', icon: <MaterialIcon name="search" size={14} /> },
+                    { name: '10 tracked keywords', icon: <MaterialIcon name="search" size={14} /> },
                     { name: 'Daily SEO opportunities', icon: <MaterialIcon name="monitoring" size={14} /> },
                     { name: 'Live Reddit monitoring', icon: <MaterialIcon name="bolt" size={14} /> },
                     { name: 'AI Intent Scoring', icon: <MaterialIcon name="bolt" size={14} /> },
@@ -104,7 +104,7 @@ const Pricing = () => {
             features: {
                 inbound: [
                     { name: '5 Power Search for top ranking post /day', icon: <MaterialIcon name="public" size={14} /> },
-                    { name: '15 tracked keywords', icon: <MaterialIcon name="search" size={14} /> },
+                    { name: '20 tracked keywords', icon: <MaterialIcon name="search" size={14} /> },
                     { name: 'Daily SEO opportunities', icon: <MaterialIcon name="monitoring" size={14} /> },
                     { name: 'Live Reddit monitoring', icon: <MaterialIcon name="bolt" size={14} /> },
                     { name: 'AI Intent Scoring', icon: <MaterialIcon name="bolt" size={14} className="text-orange-500" /> },
