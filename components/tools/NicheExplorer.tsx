@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import MaterialIcon from '@/components/ui/MaterialIcon';
 import Link from 'next/link';
+import { useRateLimit } from '@/lib/useRateLimit';
+import RateLimitBanner from '@/components/tools/RateLimitBanner';
 
 interface NicheData {
     subreddits: Array<{ name: string; relevance: number; reason: string }>;
@@ -19,6 +21,7 @@ export default function NicheExplorer() {
     const [dataPoints, setDataPoints] = useState(0);
     const [data, setData] = useState<NicheData | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const { remaining, isLimited, resetTime, consume } = useRateLimit('niche-explorer', 3);
 
     const loadingMessages = [
         "Initializing deep scan of Reddit clusters...",
@@ -32,6 +35,7 @@ export default function NicheExplorer() {
     const handleSearch = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!query.trim()) return;
+        if (!consume()) return;
 
         setIsLoading(true);
         setLoadingStep(0);
@@ -91,6 +95,8 @@ export default function NicheExplorer() {
                     <h3 className="text-2xl font-black text-white mb-2 uppercase tracking-tighter">Reddit Niche Intelligence</h3>
                     <p className="text-slate-400 text-sm font-medium uppercase tracking-[0.1em]">Discover where your audience hangs out and what makes them frustrated.</p>
                 </div>
+
+                <RateLimitBanner remaining={remaining} isLimited={isLimited} resetTime={resetTime} maxUses={3} />
 
                 <form onSubmit={handleSearch} className="mb-12 relative z-20">
                     <div className="relative flex items-center max-w-2xl mx-auto">

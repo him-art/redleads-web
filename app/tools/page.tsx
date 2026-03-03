@@ -5,8 +5,8 @@ import MaterialIcon from '@/components/ui/MaterialIcon';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-    title: 'Free Reddit Marketing Toolkit | RedLeads.app',
-    description: 'Explore our collection of free tools for Reddit lead generation, audience research, and niche analysis. No account required to start.',
+    title: 'Free Reddit Marketing Toolkit | 4 Essential Tools | RedLeads.app',
+    description: 'Explore our essential collection of free tools for Reddit marketing: opportunity finders, niche explorers, and engagement calculators. No account required.',
 };
 
 const tools = [
@@ -23,8 +23,24 @@ const tools = [
         description: "Analyze any niche or keyword to find the best subreddits and extract real user pain points using AI.",
         href: "/tools/reddit-niche-explorer",
         icon: "explore",
-        badge: "New",
+        badge: "Discovery",
         color: "blue"
+    },
+    {
+        title: "Reddit Engagement Calculator",
+        description: "Calculate the engagement rate of any Reddit post. Get a letter grade (S to D) and actionable optimization tips.",
+        href: "/tools/reddit-engagement-calculator",
+        icon: "leaderboard",
+        badge: "Analytics",
+        color: "yellow"
+    },
+    {
+        title: "Reddit Ad Cost Calculator",
+        description: "See how much you're wasting on Reddit ads vs organic marketing. Compare CPA and discover the organic advantage.",
+        href: "/tools/reddit-ad-cost-calculator",
+        icon: "savings",
+        badge: "ROI",
+        color: "red"
     }
 ];
 
@@ -39,11 +55,11 @@ export default function ToolsHubPage() {
                         Reddit <span className="text-orange-500 font-serif-italic">Toolkit</span>
                     </h1>
                     <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-                        Free AI-powered tools to help you find your first 100 users on Reddit.
+                        Essential free tools to help you master Reddit marketing and find your first 100 users.
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
                     {tools.map((tool, i) => (
                         <div key={i} className="p-2 bg-white/5 border border-orange-500/10 rounded-[2.5rem]">
                             <Link 

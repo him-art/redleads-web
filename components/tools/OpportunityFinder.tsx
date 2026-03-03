@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import MaterialIcon from '@/components/ui/MaterialIcon';
 import Link from 'next/link';
 import LoadingIcon from '@/components/ui/LoadingIcon';
+import { useRateLimit } from '@/lib/useRateLimit';
+import RateLimitBanner from '@/components/tools/RateLimitBanner';
 
 interface SimpleLead {
     subreddit: string;
@@ -20,6 +22,7 @@ export default function OpportunityFinder() {
     const [dataPoints, setDataPoints] = useState(0);
     const [results, setResults] = useState<{ leads: SimpleLead[], totalFound: number } | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const { remaining, isLimited, resetTime, consume } = useRateLimit('opportunity-finder', 3);
 
     const loadingMessages = [
         "Crawling target website for semantic signals...",
@@ -36,6 +39,7 @@ export default function OpportunityFinder() {
         setResults(null);
 
         if (!url.trim()) return;
+        if (!consume()) return;
 
         let normalizedUrl = url.trim();
         if (!/^https?:\/\//i.test(normalizedUrl)) {
@@ -101,6 +105,8 @@ export default function OpportunityFinder() {
                 
                 <h3 className="text-2xl font-black text-white mb-2 relative z-10 uppercase tracking-tighter">Market Opportunity Scanner</h3>
                 <p className="text-slate-400 mb-8 relative z-10 text-sm font-medium uppercase tracking-[0.1em]">Enter your product URL to find high-intent Reddit threads instantly.</p>
+
+                <RateLimitBanner remaining={remaining} isLimited={isLimited} resetTime={resetTime} maxUses={3} />
 
                 <form onSubmit={handleScan} className="relative z-20 mb-8">
                     <div className="relative flex items-center">

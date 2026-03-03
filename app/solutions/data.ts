@@ -825,6 +825,144 @@ export const solutions: SolutionData[] = [
       title: 'One comment away from 10,000 visitors. Ready?',
       buttonText: 'Start Distribution'
     }
+  },
+  {
+    slug: 'real-estate',
+    metaTitle: 'Reddit Marketing for Real Estate Agents | RedLeads',
+    metaDescription: 'Find homebuyers, sellers, and investors on Reddit. Monitor local subreddits for real estate leads. The first tool built specifically for Realtors on Reddit.',
+    hero: {
+      badgeIcon: 'home',
+      badgeText: 'Real Estate Growth',
+      title: 'Find Homebuyers',
+      titleHighlight: 'On Reddit',
+      description: 'Homebuyers and investors research neighborhoods on Reddit before contacting an agent. RedLeads ensures you are the first professional they see.',
+      primaryCta: 'Find Buyers Now'
+    },
+    painPoints: [
+      {
+        icon: 'location_city',
+        colorClass: 'text-red-500',
+        bgClass: 'bg-red-500/10',
+        title: 'Missed Local Leads',
+        description: 'People post "Moving to [City]" or "Best neighborhood for families in [Area]" daily. Without monitoring, you miss every one of them.'
+      },
+      {
+        icon: 'money_off',
+        colorClass: 'text-orange-500',
+        bgClass: 'bg-orange-500/10',
+        title: 'Expensive Zillow Leads',
+        description: 'Zillow and Realtor.com leads cost $20-$100 each and are shared with 5 agents. Reddit leads are exclusive and free.'
+      },
+      {
+        icon: 'groups',
+        colorClass: 'text-blue-500',
+        bgClass: 'bg-blue-500/10',
+        title: 'Trust Building',
+        description: 'Cold calls have a 1% conversion rate. Helping someone on Reddit with local advice builds instant trust and rapport.'
+      }
+    ],
+    useCases: {
+      title: 'How Realtors <br /><span class="text-orange-500 italic font-serif">Win on Reddit</span>',
+      items: [
+        {
+          title: 'Relocation Leads',
+          description: 'Monitor: "Moving to [City]", "Best neighborhoods in [Area]", "Is [City] a good place to live?".',
+          targeting: 'r/[city], r/RealEstate, r/FirstTimeHomeBuyer',
+          colorClass: 'text-orange-500'
+        },
+        {
+          title: 'Investor Pipeline',
+          description: 'Monitor: "Best rental markets", "Where to invest in real estate 2026", "Cash flow properties".',
+          targeting: 'r/realestateinvesting, r/landlord, r/FIRE',
+          colorClass: 'text-green-500'
+        },
+        {
+          title: 'First-Time Buyers',
+          description: 'Monitor: "How to buy first home", "Down payment help", "FHA vs conventional".',
+          targeting: 'r/FirstTimeHomeBuyer, r/personalfinance',
+          colorClass: 'text-blue-500'
+        },
+        {
+          title: 'Market Expert Status',
+          description: 'Answer questions about local markets consistently. Become the go-to agent for your area on Reddit.',
+          targeting: 'Local city subreddits',
+          colorClass: 'text-purple-500'
+        }
+      ]
+    },
+    footerCta: {
+      title: 'Your next client is asking about your city on Reddit right now.',
+      buttonText: 'Find Local Leads'
+    }
+  },
+  {
+    slug: 'freelancers',
+    metaTitle: 'Reddit Lead Generation for Freelancers | RedLeads',
+    metaDescription: 'Stop competing on Upwork. Find high-paying freelance clients on Reddit where they are asking for help with design, development, writing, and more.',
+    hero: {
+      badgeIcon: 'workspace_premium',
+      badgeText: 'Freelance Growth',
+      title: 'Find Clients',
+      titleHighlight: 'Without Upwork',
+      description: 'Upwork takes 20% and forces you to race to the bottom. On Reddit, clients post their problems publicly. Be the first expert to respond.',
+      primaryCta: 'Find Freelance Gigs'
+    },
+    painPoints: [
+      {
+        icon: 'percent',
+        colorClass: 'text-red-500',
+        bgClass: 'bg-red-500/10',
+        title: 'Platform Fees',
+        description: 'Upwork, Fiverr, and Toptal take 10-20% of your earnings. Reddit clients pay you directly with zero middleman fees.'
+      },
+      {
+        icon: 'speed',
+        colorClass: 'text-orange-500',
+        bgClass: 'bg-orange-500/10',
+        title: 'Race to the Bottom',
+        description: 'On freelance platforms, you compete on price. On Reddit, you compete on expertise by answering real questions.'
+      },
+      {
+        icon: 'visibility',
+        colorClass: 'text-blue-500',
+        bgClass: 'bg-blue-500/10',
+        title: 'Portfolio Visibility',
+        description: 'Showcase your work by helping people for free on Reddit. Your comment history becomes your living portfolio.'
+      }
+    ],
+    useCases: {
+      title: 'How Freelancers <br /><span class="text-orange-500 italic font-serif">Land Premium Clients</span>',
+      items: [
+        {
+          title: 'Web Developers',
+          description: 'Monitor: "Need a website built", "Looking for React developer", "Shopify customization help".',
+          targeting: 'r/webdev, r/forhire, r/smallbusiness',
+          colorClass: 'text-blue-500'
+        },
+        {
+          title: 'Designers',
+          description: 'Monitor: "Need a logo", "Landing page design feedback", "Brand identity help".',
+          targeting: 'r/graphic_design, r/forhire, r/startups',
+          colorClass: 'text-purple-500'
+        },
+        {
+          title: 'Copywriters',
+          description: 'Monitor: "Website copy review", "Email marketing help", "Sales page writer needed".',
+          targeting: 'r/copywriting, r/forhire, r/Entrepreneur',
+          colorClass: 'text-green-500'
+        },
+        {
+          title: 'Consultants',
+          description: 'Monitor: "Need advice on [Your Expertise]", "Looking for a [Your Role] consultant".',
+          targeting: 'r/consulting, r/smallbusiness, r/startups',
+          colorClass: 'text-orange-500'
+        }
+      ]
+    },
+    footerCta: {
+      title: 'Your next $5,000 client is asking for help on Reddit right now.',
+      buttonText: 'Find Clients Today'
+    }
   }
 ];
 
