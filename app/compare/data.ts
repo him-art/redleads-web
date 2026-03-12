@@ -553,7 +553,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'Email Alerts', redleads: true, competitor: true },
     ],
     pricing: {
-      redleads: 'Starts at $7/mo',
+      redleads: 'Starts at $14/mo',
       competitor: 'Free',
     },
     pros: {

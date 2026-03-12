@@ -45,3 +45,6 @@ scripts/indexed-cache.json
 next-env.d.ts
 
 .vercel
+
+.vercel
+.env*.local

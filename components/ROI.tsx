@@ -73,8 +73,8 @@ const ROI = () => {
                         {/* Header */}
                         <div className="text-center max-w-3xl mx-auto mb-12 relative z-10">
                             <h2 className="text-3xl md:text-5xl font-black text-white leading-[1.1] tracking-tighter mb-6">
-                                How <span className="text-orange-500">RedLeads</span> pays for <br />
-                                itself in days
+                                Why $29/mo is the <span className="text-orange-500">easiest investment</span> <br />
+                                you&apos;ll make this year
                             </h2>
                             
                             <p className="text-gray-400 text-lg font-medium leading-relaxed max-w-2xl mx-auto">
@@ -171,7 +171,7 @@ const ROI = () => {
                         {/* Footer disclaimer */}
                         <div className="mt-16 text-center pt-8 border-t border-white/5">
                             <p className="text-gray-500 text-sm font-serif-italic">
-                                <span className="font-bold text-gray-400 font-sans not-italic">Based on the $14/mo Growth plan.</span> You might get different results but you get the idea.
+                                <span className="font-bold text-gray-400 font-sans not-italic">Based on the $29/mo Growth plan.</span> Even at worst case, RedLeads pays for itself in month 1.
                             </p>
                         </div>
 

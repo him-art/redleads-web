@@ -78,7 +78,7 @@ export function getPlanDetails(profile: any) {
         case 'starter':
             return { ...PLANS.STARTER, ...baseDetails, id: 'starter', name: 'Starter Plan', isFullAccess: false };
         default:
-            return { ...PLANS.STARTER, ...baseDetails, id: 'free', name: 'Free Trial', isFullAccess: false };
+            return { ...PLANS.STARTER, ...baseDetails, id: 'trial', name: 'Free Trial', isFullAccess: false };
     }
 }
 

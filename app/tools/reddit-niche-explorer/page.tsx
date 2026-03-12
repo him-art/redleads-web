@@ -14,17 +14,17 @@ export default function NicheExplorerPage() {
         <main className="min-h-screen bg-[#1a1a1a]">
             <Navbar />
             
-            <section className="container mx-auto px-4 pt-25 pb-20 border-b border-white/5">
+            <section className="container mx-auto px-4 pt-20 sm:pt-25 pb-16 sm:pb-20 border-b border-white/5">
                 <div className="max-w-4xl mx-auto text-center mb-16">
                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-orange-500/20 rounded-full mb-8">
                         <MaterialIcon name="ads_click" size={16} className="text-orange-500" />
                         <span className="text-orange-500 text-[10px] font-black uppercase tracking-widest">Free Discovery Tool</span>
                     </div>
-                    <h1 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tighter">
+                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white mb-6 tracking-tighter">
                         Reddit Niche <br />
                         <span className="text-orange-500 font-serif-italic">Explorer</span>
                     </h1>
-                    <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+                    <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
                         Find exactly where your audience is hiding and what problems they are paying to solve. No credit card required.
                     </p>
                 </div>

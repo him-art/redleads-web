@@ -13,7 +13,7 @@ export default function RateLimitBanner({ remaining, isLimited, resetTime, maxUs
     if (isLimited) {
         const mins = resetTime ? Math.max(1, Math.ceil((resetTime - Date.now()) / 60000)) : 60;
         return (
-            <div className="mb-6 p-5 bg-orange-500/10 border border-orange-500/20 rounded-2xl text-center animate-in fade-in duration-500">
+            <div className="mb-4 sm:mb-6 p-4 sm:p-5 bg-orange-500/10 border border-orange-500/20 rounded-2xl text-center animate-in fade-in duration-500">
                 <MaterialIcon name="lock" size={28} className="text-orange-500 mb-2" />
                 <h3 className="text-white font-bold mb-1">Free Limit Reached</h3>
                 <p className="text-xs text-slate-400 mb-4">

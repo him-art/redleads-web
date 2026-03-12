@@ -2,14 +2,13 @@ import { NextResponse } from 'next/server';
 import { Webhook } from 'standardwebhooks';
 import { createAdminClient } from '@/lib/supabase/server';
 
-// Use admin client for elevated privileges
-const supabase = createAdminClient();
-
 /**
  * Dodo Payments Webhook Handler
  * Handles subscription lifecycle events and updates user subscription tier.
  */
 export async function POST(req: Request) {
+    // Instantiate inside handler so env vars are available at request time (not build time)
+    const supabase = createAdminClient();
     try {
         const body = await req.text();
         const webhookId = req.headers.get('webhook-id') || '';
@@ -196,7 +195,7 @@ export async function POST(req: Request) {
                 case 'subscription.deactivated':
                     await supabase
                         .from('profiles')
-                        .update({ subscription_tier: 'free' })
+                        .update({ subscription_tier: 'trial' })
                         .eq('id', userId);
                     
                     await updateLog('downgraded', `Downgraded from ${eventType}`);

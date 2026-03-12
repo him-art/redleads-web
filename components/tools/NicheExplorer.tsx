@@ -86,34 +86,36 @@ export default function NicheExplorer() {
     return (
         <div className="w-full max-w-5xl mx-auto px-4">
             {/* Outer Halo Layer */}
-            <div className="p-2 bg-white/5 border border-orange-500/10 rounded-[2.5rem]">
+            <div className="p-1 sm:p-2 bg-white/5 border border-orange-500/10 rounded-[2rem] sm:rounded-[2.5rem]">
                 {/* Inner Core Card */}
-                <div className="bg-[#0c0c0c] border border-orange-500/20 rounded-[2rem] p-8 md:p-12 relative overflow-hidden min-h-[400px]">
+                <div className="bg-[#0c0c0c] border border-orange-500/20 rounded-[1.8rem] sm:rounded-[2rem] p-6 sm:p-10 md:p-12 relative overflow-hidden min-h-[400px]">
                     <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                 
                 <div className="text-center mb-10">
-                    <h3 className="text-2xl font-black text-white mb-2 uppercase tracking-tighter">Reddit Niche Intelligence</h3>
-                    <p className="text-slate-400 text-sm font-medium uppercase tracking-[0.1em]">Discover where your audience hangs out and what makes them frustrated.</p>
+                    <h3 className="text-xl sm:text-2xl font-black text-white mb-2 uppercase tracking-tighter">Reddit Niche Intelligence</h3>
+                    <p className="text-slate-400 text-[10px] sm:text-sm font-medium uppercase tracking-[0.1em]">Discover where your audience hangs out and what makes them frustrated.</p>
                 </div>
 
                 <RateLimitBanner remaining={remaining} isLimited={isLimited} resetTime={resetTime} maxUses={3} />
 
                 <form onSubmit={handleSearch} className="mb-12 relative z-20">
-                    <div className="relative flex items-center max-w-2xl mx-auto">
-                        <div className="absolute left-5 text-slate-500">
-                           <MaterialIcon name="explore" size={24} />
+                    <div className="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-3 max-w-2xl mx-auto">
+                        <div className="relative flex-1">
+                            <div className="absolute left-5 inset-y-0 flex items-center text-slate-500">
+                               <MaterialIcon name="explore" size={24} />
+                            </div>
+                            <input 
+                                type="text" 
+                                placeholder="e.g. Fitness tracker, Website builder..."
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
+                                className="w-full bg-black/40 border border-white/10 rounded-2xl py-4 sm:py-5 pl-14 pr-4 text-white focus:outline-none focus:border-orange-500/50 transition-all placeholder:text-slate-600 font-medium text-base sm:text-lg"
+                            />
                         </div>
-                        <input 
-                            type="text" 
-                            placeholder="e.g. Fitness tracker, Website builder..."
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)}
-                            className="w-full bg-black/40 border border-white/10 rounded-2xl py-5 pl-14 pr-40 text-white focus:outline-none focus:border-orange-500/50 transition-all placeholder:text-slate-600 font-medium text-lg"
-                        />
                         <button 
                             type="submit"
                             disabled={isLoading || !query}
-                            className={`absolute right-3 px-8 py-3 rounded-xl font-black uppercase text-xs tracking-widest transition-all min-w-[140px] flex items-center justify-center gap-2 ${
+                            className={`px-8 py-4 sm:py-3 rounded-xl font-black uppercase text-xs tracking-widest transition-all sm:min-w-[140px] flex items-center justify-center gap-2 ${
                                 isLoading || !query
                                     ? 'bg-white/5 text-slate-500 cursor-not-allowed'
                                     : 'bg-orange-500 text-white hover:bg-orange-600'

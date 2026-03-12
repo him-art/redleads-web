@@ -84,7 +84,26 @@ export default async function BlogPostPage({ params }: Props) {
                 "publisher": { "@id": "https://www.redleads.app/#organization" },
                 "description": post.description,
                 "keywords": post.keywords.join(", "),
-                "image": "https://www.redleads.app/og-image.png"
+                "image": "https://www.redleads.app/og-image.png",
+                "abstract": post.tldr,
+                "about": [
+                   {
+                      "@type": "Thing",
+                      "name": post.category
+                   }
+                ]
+              },
+              {
+                "@type": "FAQPage",
+                "@id": `https://www.redleads.app/blog/${slug}#faq`,
+                "mainEntity": post.faqs.map(faq => ({
+                   "@type": "Question",
+                   "name": faq.question,
+                   "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": faq.answer
+                   }
+                }))
               },
               {
                 "@type": "BreadcrumbList",
@@ -160,6 +179,57 @@ export default async function BlogPostPage({ params }: Props) {
 
         {/* Content */}
         <div className="max-w-3xl mx-auto">
+          {/* TL;DR Summary Block */}
+          <div className="mb-12 p-8 bg-orange-500/5 border border-orange-500/10 rounded-3xl relative overflow-hidden group hover:border-orange-500/20 transition-all">
+            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+              <MaterialIcon name="bolt" size={80} className="text-orange-500" />
+            </div>
+            <div className="relative z-10">
+              <div className="flex items-center gap-2 text-orange-500 font-black text-[10px] uppercase tracking-widest mb-4">
+                <MaterialIcon name="summarize" size={14} />
+                TL;DR Summary
+              </div>
+              <p className="text-white text-lg font-medium leading-relaxed italic">
+                "{post.tldr}"
+              </p>
+            </div>
+          </div>
+
+          {/* Context Insight (Mirroring pSEO) */}
+          <div className="mb-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2 p-8 bg-black/40 border border-white/5 rounded-3xl backdrop-blur-sm">
+              <div className="flex items-center gap-2 text-slate-400 font-bold text-xs uppercase tracking-wider mb-6">
+                <MaterialIcon name="insights" size={16} className="text-orange-500" />
+                AI Strategy Snapshot
+              </div>
+              <div className="space-y-6">
+                <div>
+                  <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Community Vibe</h4>
+                  <p className="text-white font-medium text-lg">{post.insights.vibe}</p>
+                </div>
+                <div>
+                  <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">The Strategy</h4>
+                  <p className="text-slate-300 leading-relaxed">{post.insights.strategy}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="p-8 bg-gradient-to-br from-orange-500/10 to-transparent border border-orange-500/10 rounded-3xl">
+              <div className="text-[10px] font-black text-orange-500 uppercase tracking-widest mb-6 flex items-center gap-2">
+                <MaterialIcon name="tips_and_updates" size={14} />
+                Expert Hacks
+              </div>
+              <ul className="space-y-4">
+                {post.insights.topHacks.map((hack, idx) => (
+                  <li key={idx} className="flex gap-3 text-sm text-slate-300 leading-snug">
+                    <span className="text-orange-500 font-black shrink-0">0{idx + 1}</span>
+                    {hack}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
           <div 
             className="prose prose-invert prose-lg max-w-none font-[family-name:var(--font-merriweather)]
               prose-headings:font-sans prose-headings:font-black prose-headings:tracking-tight
@@ -181,8 +251,8 @@ export default async function BlogPostPage({ params }: Props) {
         </div>
 
         {/* Keywords */}
-        <div className="max-w-3xl mx-auto mt-12 pt-8 border-t border-white/10">
-          <div className="flex items-center gap-2 flex-wrap">
+        <div className="max-w-3xl mx-auto mt-12 py-8 border-t border-white/10">
+          <div className="flex items-center gap-2 flex-wrap mb-16">
             <MaterialIcon name="sell" size={14} className="text-slate-500" />
             {post.keywords.map((keyword) => (
               <span 
@@ -192,6 +262,27 @@ export default async function BlogPostPage({ params }: Props) {
                 {keyword}
               </span>
             ))}
+          </div>
+
+          {/* FAQ Section (AEO optimized) */}
+          <div className="space-y-8">
+            <h2 className="text-2xl font-black text-white flex items-center gap-3">
+              <MaterialIcon name="help_outline" size={24} className="text-orange-500" />
+              Frequently Asked Questions
+            </h2>
+            <div className="grid grid-cols-1 gap-4">
+              {post.faqs.map((faq, idx) => (
+                <div key={idx} className="p-6 bg-white/5 border border-white/10 rounded-2xl">
+                  <h3 className="text-white font-bold mb-3 flex items-start gap-3">
+                    <span className="text-orange-500 font-black">Q:</span>
+                    {faq.question}
+                  </h3>
+                  <p className="text-slate-400 text-sm leading-relaxed pl-8">
+                    {faq.answer}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 

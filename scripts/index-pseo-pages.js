@@ -23,18 +23,20 @@ const INDEXED_CACHE_FILE = path.join(__dirname, 'indexed-cache.json');
 // Current solutions (matching data.ts slugs)
 const solutionSlugs = [
   'saas',
+  'agencies',
   'ai-wrappers',
-  'marketing-agencies',
+  'web3-dapps',
   'mobile-apps',
-  'content-creators',
-  'crypto-web3',
-  'real-estate',
-  'e-commerce',
+  'b2b-saas',
+  'dev-tools',
+  'indie-hackers',
   'validate-saas-idea',
   'get-first-users',
   'competitor-alternatives',
   'viral-saas-distribution',
-  'agencies' // Added agencies
+  'real-estate',
+  'freelancers',
+  'apollo-alternative'
 ];
 
 async function indexPages() {
@@ -58,7 +60,12 @@ async function indexPages() {
   }
 
   // 4. Generate Target URLs
-  const allUrls = [];
+  const allUrls = [
+    BASE_URL,
+    `${BASE_URL}/blog`,
+    `${BASE_URL}/tools`,
+    `${BASE_URL}/about`
+  ];
   solutionSlugs.forEach(slug => {
     subreddits.forEach(sub => {
       const subSlug = sub.toLowerCase().replace(/r\//, '').replace(/\//g, '');

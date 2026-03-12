@@ -297,14 +297,14 @@ export default function LiveDiscoveryTab({
                                             disabled={isUpgrading}
                                             className="w-full py-5 bg-[#ff914d] hover:bg-[#ff914d]/90 text-black font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
-                                            {isUpgrading ? <LoadingIcon className="w-5 h-5" /> : <>Get Growth Access   $14/mo <span className="line-through opacity-50 ml-1 text-[10px]">$29</span></>}
+                                            {isUpgrading ? <LoadingIcon className="w-5 h-5" /> : <>Get Growth Access   $29/mo <span className="line-through opacity-50 ml-1 text-[10px]">$58</span></>}
                                         </button>
                                         <button 
                                             onClick={() => handleUpgrade('starter')}
                                             disabled={isUpgrading}
                                             className="w-full py-5 bg-white/10 hover:bg-white/20 text-text-primary font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
-                                            {isUpgrading ? <LoadingIcon className="w-5 h-5" /> : <>Get Starter Access   $7/mo <span className="line-through opacity-50 ml-1 text-[10px]">$15</span></>}
+                                            {isUpgrading ? <LoadingIcon className="w-5 h-5" /> : <>Get Starter Access   $14/mo <span className="line-through opacity-50 ml-1 text-[10px]">$28</span></>}
                                         </button>
                                          <p className="text-[10px] text-text-secondary font-bold uppercase tracking-widest">
                                             Trial Ended {isMounted && trialEndsAt ? trialEndsAt?.toLocaleDateString() : '...'}

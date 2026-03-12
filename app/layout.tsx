@@ -22,8 +22,8 @@ const ebGaramond = EB_Garamond({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.redleads.app'),
-  title: "RedLeads | AI-Powered Reddit Lead Generation Tool",
-  description: "RedLeads is the official AI lead discovery agent for Reddit. Monitor subreddits, score leads, and find high-intent customers actively seeking your solution.",
+  title: "RedLeads | Find Your First 100 Users",
+  description: "RedLeads uses autonomous AI to find people looking for solutions your SaaS solves on Reddit. Turn Reddit users into customers.",
   alternates: {
     canonical: '/',
   },
@@ -34,16 +34,16 @@ export const metadata: Metadata = {
   
   // Open Graph (Facebook, LinkedIn, general social)
   openGraph: {
-    title: "RedLeads | Official Reddit Lead Generation Tool",
-    description: "AI-powered Reddit lead generation for SaaS founders. Monitor subreddits for buying intent and find your first 100 users.",
+    title: "RedLeads | Turn Reddit users into customers",
+    description: "AI-powered Reddit lead generation for SaaS founders. Find your first 100 users.",
     url: "https://www.redleads.app",
     siteName: "RedLeads",
     images: [
       {
-        url: "/og-image.png",
+        url: "https://www.redleads.app/og-image.png?v=3",
         width: 1200,
         height: 630,
-        alt: "RedLeads - Official Reddit Lead Generation Tool",
+        alt: "RedLeads - Turn Reddit users into customers",
       },
     ],
     locale: "en_US",
@@ -53,9 +53,9 @@ export const metadata: Metadata = {
   // Twitter Card
   twitter: {
     card: "summary_large_image",
-    title: "RedLeads | The Official Reddit Marketing Tool",
-    description: "Stop guessing and start monitoring high-intent conversations on Reddit. Find the customers who are already asking for help.",
-    images: ["/og-image.png"],
+    title: "RedLeads | Turn Reddit users into customers",
+    description: "Find Your First 100 Users. Stop guessing and start monitoring high-intent conversations on Reddit.",
+    images: ["https://www.redleads.app/og-image.png?v=3"],
   },
   
   // Additional SEO metadata
@@ -103,7 +103,7 @@ export default function RootLayout({
                     "price": "0",
                     "priceCurrency": "USD"
                   },
-                  "description": "RedLeads is the official AI lead discovery agent for Reddit. It identifies high-intent leads from Reddit conversations, helping founders find their first users and scale customer acquisition.",
+                  "description": "RedLeads uses autonomous AI to find people looking for solutions your SaaS solves on Reddit. It identifies high-intent leads from Reddit conversations, helping founders find their first users and scale customer acquisition.",
                   "areaServed": {
                     "@type": "Country",
                     "name": "United States"
@@ -154,7 +154,7 @@ export default function RootLayout({
                   "url": "https://www.redleads.app",
                   "image": {
                     "@type": "ImageObject",
-                    "url": "https://www.redleads.app/founder.png",
+                    "url": "https://www.redleads.app/founder.webp",
                     "width": 400,
                     "height": 400
                   },

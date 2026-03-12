@@ -1,6 +1,7 @@
 'use client';
 
 import { CheckCircle2, Search, Compass, Bot, ShieldCheck, Crown, Zap, ArrowRight, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import LoadingIcon from '@/components/ui/LoadingIcon';
 import { useDashboardData } from '@/app/dashboard/DashboardDataContext';
@@ -15,12 +16,13 @@ export default function BillingTab() {
     const [isManaging, setIsManaging] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
     const [slots, setSlots] = useState<{ sold: number; total: number } | null>(null);
+    const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
 
     // Dynamic Pricing Logic ($20 every 20 users) - Aligned with Pricing.tsx
     const currentUsers = slots?.sold || 0; 
-    const isEarlyBird = currentUsers < 80;
-    const currentPrice = isEarlyBird ? 59 : 79 + Math.floor((currentUsers - 80) / 20) * 20;
-    const spotsLeft = isEarlyBird ? 80 - currentUsers : 80 + (Math.floor((currentUsers - 80) / 20) + 1) * 20 - currentUsers;
+    const currentPrice = currentUsers < 80 ? 59 : 79 + Math.floor((currentUsers - 80) / 20) * 20;
+    const nextCheckpoint = currentUsers < 80 ? 80 : 80 + (Math.floor((currentUsers - 80) / 20) + 1) * 20;
+    const spotsLeft = nextCheckpoint - currentUsers;
 
     useEffect(() => { 
         setIsMounted(true);
@@ -48,7 +50,7 @@ export default function BillingTab() {
         fetchSlots();
     }, []);
 
-    const handleUpgrade = async (plan: 'starter' | 'growth' | 'lifetime') => {
+    const handleUpgrade = async (plan: 'starter' | 'growth' | 'lifetime', interval: 'monthly' | 'annual' = 'monthly') => {
         if (isLifetime && plan !== 'lifetime') {
             alert("You already have Lifetime Access! This includes all features from other plans as well.");
             return;
@@ -58,7 +60,10 @@ export default function BillingTab() {
             const res = await fetch('/api/payments/create-checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ plan })
+                body: JSON.stringify({ 
+                    plan,
+                    interval: plan === 'lifetime' ? 'monthly' : interval 
+                })
             });
             
             const data = await res.json();
@@ -269,11 +274,47 @@ export default function BillingTab() {
                 </div>
 
             {/* Subscription Options - Always Visible */}
-            <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-8 pb-12">
-                {[
-                    { id: 'starter', name: 'Starter Plan', price: '$7', oldPrice: '$15', desc: '10 keywords, 2 power searches & 100 AI reply drafts per month', primary: false, active: planDetails.id === 'starter' },
-                    { id: 'growth', name: 'Growth Plan', price: '$14', oldPrice: '$29', desc: '20 keywords, 5 power searches & 500 AI reply drafts per month', primary: true, active: planDetails.id === 'growth' }
-                ].map((plan) => (
+            <div className="lg:col-span-3 space-y-4 pb-12">
+                <div className="flex flex-col items-center justify-center pt-6">
+                    <div className={`inline-flex items-center p-1 bg-white/5 border rounded-[2.5rem] mx-auto mb-4 transition-all duration-500 ${billingCycle === 'annual' ? 'border-orange-500/40' : 'border-white/10'}`}>
+                        <div className={`bg-[#0c0c0c] border rounded-[2.2rem] py-3 px-8 sm:py-4 sm:px-12 flex items-center justify-center gap-6 sm:gap-10 relative overflow-hidden transition-all duration-500 ${billingCycle === 'annual' ? 'border-orange-500/20' : 'border-white/5'}`}>
+                            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                            
+                            <div className="flex items-center gap-6 sm:gap-10">
+                                <button 
+                                    onClick={() => setBillingCycle('monthly')}
+                                    className={`text-[11px] font-bold uppercase tracking-[0.25em] transition-all duration-300 transform ${billingCycle === 'monthly' ? 'text-white scale-110' : 'text-gray-600 hover:text-gray-400'}`}
+                                >
+                                    Monthly
+                                </button>
+                                
+                                <div 
+                                    onClick={() => setBillingCycle(prev => prev === 'monthly' ? 'annual' : 'monthly')}
+                                    className="relative w-16 h-8 bg-white/5 rounded-full border border-white/10 p-1 cursor-pointer group transition-colors hover:bg-white/10"
+                                >
+                                    <motion.div 
+                                        className="w-5.5 h-5.5 bg-white rounded-full shadow-xl"
+                                        animate={{ x: billingCycle === 'monthly' ? 0 : 32 }}
+                                        transition={{ type: "spring", stiffness: 450, damping: 30 }}
+                                    />
+                                </div>
+
+                                <button 
+                                    onClick={() => setBillingCycle('annual')}
+                                    className={`text-[11px] font-bold uppercase tracking-[0.25em] transition-all duration-300 transform ${billingCycle === 'annual' ? 'text-white scale-110' : 'text-gray-600 hover:text-gray-400'}`}
+                                >
+                                    Annual
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {[
+                        { id: 'starter', name: 'Starter Plan', price: billingCycle === 'annual' ? 140 : 14, oldPrice: '$28', desc: '10 keywords, 2 power searches & 100 AI reply drafts per month', primary: false, active: planDetails.id === 'starter' },
+                        { id: 'growth', name: 'Growth Plan', price: billingCycle === 'annual' ? 290 : 29, oldPrice: '$58', desc: '20 keywords, 5 power searches & 500 AI reply drafts per month', primary: true, active: planDetails.id === 'growth' }
+                    ].map((plan) => (
                     <div key={plan.id} className="p-1.5 bg-white/5 border border-white/5 rounded-[2.5rem]">
                         <div className={`p-8 sm:p-10 rounded-[2.2rem] border flex flex-col h-full transition-all relative overflow-hidden ${plan.active ? 'border-primary ring-2 ring-primary/20 bg-primary/[0.03]' : 'bg-[#0c0c0c] border-white/5'}`}>
                             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
@@ -285,16 +326,46 @@ export default function BillingTab() {
 
                             <h4 className={`text-base font-black uppercase tracking-[0.25em] mb-6 ${plan.primary || plan.active ? 'text-primary' : 'text-text-secondary'}`}>{plan.name}</h4>
                             
-                            <div className="flex items-baseline gap-3 mb-4">
+                            <div className="flex items-baseline gap-3 mb-4 h-14">
                                 {plan.oldPrice && <span className="text-lg font-bold text-text-secondary/30 line-through tracking-tight">{plan.oldPrice}</span>}
-                                <span className="text-5xl font-black text-text-primary tracking-tighter">{plan.price}</span>
-                                <span className="text-xs font-bold text-text-secondary/50 uppercase tracking-widest">/mo</span>
+                                <div className="relative h-14 flex items-baseline overflow-hidden">
+                                    <AnimatePresence mode="wait">
+                                        <motion.span
+                                            key={billingCycle}
+                                            initial={{ y: 20, opacity: 0 }}
+                                            animate={{ y: 0, opacity: 1 }}
+                                            exit={{ y: -20, opacity: 0 }}
+                                            transition={{ duration: 0.3, ease: "easeOut" }}
+                                            className="text-5xl font-black text-text-primary tracking-tighter"
+                                        >
+                                            ${billingCycle === 'annual' ? (plan.price / 12).toFixed(2) : plan.price}
+                                        </motion.span>
+                                    </AnimatePresence>
+                                    <span className="text-xs font-bold text-text-secondary/50 uppercase tracking-widest ml-1">
+                                        /mo
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className="h-4 mb-8">
+                                <AnimatePresence>
+                                    {billingCycle === 'annual' && (
+                                        <motion.p 
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: 'auto' }}
+                                            exit={{ opacity: 0, height: 0 }}
+                                            className="text-[10px] font-black text-primary/80 uppercase tracking-widest"
+                                        >
+                                            Billed annually (${plan.price}/yr)
+                                        </motion.p>
+                                    )}
+                                </AnimatePresence>
                             </div>
 
                             <p className="text-xs font-medium text-text-secondary/80 leading-relaxed mb-10 max-w-[280px]">{plan.desc}</p>
                             
                             <button 
-                                onClick={() => !plan.active && !isLifetime && handleUpgrade(plan.id as any)} 
+                                onClick={() => !plan.active && !isLifetime && handleUpgrade(plan.id as any, billingCycle)} 
                                 disabled={!!isLoading || plan.active || isLifetime}
                                 className={`mt-auto w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 ${
                                     plan.active 
@@ -320,6 +391,8 @@ export default function BillingTab() {
                     </div>
                 ))}
             </div>
+        </div>
+
         </div>
 
             {/* Lifetime Upgrade Invitation for existing users or trial users */}

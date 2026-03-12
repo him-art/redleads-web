@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MaterialIcon from '@/components/ui/MaterialIcon';
 import { getAllSolutions, getSolutionBySlug } from '../data';
+import masterSubreddits from '@/data/master-subreddits.json';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -70,6 +71,17 @@ export default async function SolutionPage({ params }: Props) {
             "areaServed": {
               "@type": "Country",
               "name": "United States"
+            },
+            "mainEntity": {
+              "@type": "FAQPage",
+              "mainEntity": solution.faqs.map(faq => ({
+                "@type": "Question",
+                "name": faq.question,
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": faq.answer
+                }
+              }))
             }
           })
         }}
@@ -110,7 +122,69 @@ export default async function SolutionPage({ params }: Props) {
         </div>
       </section>
 
-      {/* Pain Points Section */}
+      {/* TL;DR Section */}
+      <section className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto p-8 bg-orange-500/5 border border-orange-500/20 rounded-[2rem] flex flex-col md:flex-row gap-6 items-center">
+          <div className="shrink-0 w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center">
+            <MaterialIcon name="bolt" size={32} className="text-white" />
+          </div>
+          <div>
+            <h2 className="text-sm font-black uppercase tracking-widest text-orange-500 mb-2">TL;DR / The Gist</h2>
+            <p className="text-xl text-white font-medium leading-relaxed">
+              {solution.tldr}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* AI Strategy Snapshot Section */}
+      <section className="container mx-auto px-4 py-24 border-t border-white/5">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full mb-6">
+                <MaterialIcon name="auto_awesome" size={14} className="text-blue-500" />
+                <span className="text-blue-500 text-[10px] font-black uppercase tracking-widest">AI Strategy Snapshot</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-black text-white mb-8 tracking-tighter leading-none">
+                How our AI <br /> 
+                <span className="text-blue-400 font-serif-italic">Scales This For You</span>
+              </h2>
+              <div className="space-y-6">
+                 <div className="p-6 bg-white/5 rounded-2xl border border-white/10">
+                    <h4 className="text-blue-400 font-black uppercase text-xs mb-2 tracking-widest flex items-center gap-2">
+                       <MaterialIcon name="waves" size={14} /> The Vibe
+                    </h4>
+                    <p className="text-slate-300">{solution.insights.vibe}</p>
+                 </div>
+                 <div className="p-6 bg-white/5 rounded-2xl border border-white/10">
+                    <h4 className="text-blue-400 font-black uppercase text-xs mb-2 tracking-widest flex items-center gap-2">
+                       <MaterialIcon name="insights" size={14} /> The Core Strategy
+                    </h4>
+                    <p className="text-slate-300">{solution.insights.strategy}</p>
+                 </div>
+              </div>
+            </div>
+            
+            <div className="bg-[#141414] p-10 rounded-[3rem] border border-white/5">
+               <h3 className="text-2xl font-black text-white mb-8 flex items-center gap-3">
+                  <MaterialIcon name="psychology" size={24} className="text-orange-500" />
+                  Top Growth Hacks
+               </h3>
+               <div className="space-y-6">
+                  {solution.insights.topHacks.map((hack, idx) => (
+                    <div key={idx} className="flex gap-4 items-start">
+                       <div className="w-6 h-6 rounded-full bg-orange-500/20 flex items-center justify-center shrink-0 mt-1">
+                          <span className="text-[10px] font-black text-orange-500">{idx + 1}</span>
+                       </div>
+                       <p className="text-slate-400 text-sm leading-relaxed">{hack}</p>
+                    </div>
+                  ))}
+               </div>
+            </div>
+          </div>
+        </div>
+      </section>
       <section className="container mx-auto px-4 py-24 border-t border-white/5">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {solution.painPoints.map((point, idx) => (
@@ -166,6 +240,58 @@ export default async function SolutionPage({ params }: Props) {
               ))}
             </div>
           )}
+        </div>
+      </section>
+
+      {/* FAQs Section */}
+      <section className="container mx-auto px-4 py-32 border-t border-white/5">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl md:text-6xl font-black text-white mb-16 tracking-tighter text-center">
+            Common <span className="text-orange-500 font-serif-italic">Questions</span>
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {solution.faqs.map((faq, idx) => (
+              <div key={idx} className="p-8 bg-white/5 rounded-3xl border border-white/10">
+                <h3 className="text-lg font-black text-white mb-4 flex items-start gap-3">
+                  <MaterialIcon name="help_outline" size={20} className="text-orange-500 shrink-0 mt-1" />
+                  {faq.question}
+                </h3>
+                <p className="text-slate-400 text-sm leading-relaxed">
+                  {faq.answer}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Related Community Strategies */}
+      <section className="container mx-auto px-4 py-32 border-t border-white/5">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-12 tracking-tighter text-center">
+            Explore <span className="text-orange-500 font-serif-italic">Community Strategies</span>
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {masterSubreddits.slice(0, 48).map((subreddit) => {
+              const subSlug = subreddit.toLowerCase().replace(/r\//, '').replace(/\//g, '');
+              const subTitle = subreddit.startsWith('r/') ? subreddit : `r/${subreddit}`;
+              return (
+                <Link 
+                  key={subSlug}
+                  href={`/solutions/${slug}/${subSlug}`}
+                  className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:border-orange-500/50 transition-colors group text-center flex flex-col items-center justify-center"
+                >
+                  <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 group-hover:text-orange-500 text-center">{solution.hero.title}</div>
+                  <div className="text-sm font-black text-white text-center break-all">{subTitle}</div>
+                </Link>
+              );
+            })}
+          </div>
+          <div className="text-center mt-12">
+            <Link href="/solutions/directory" className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 text-white font-black text-xs uppercase tracking-widest rounded-xl hover:bg-white/20 transition-colors">
+              View All 130+ Strategies <MaterialIcon name="arrow_right" size={16} />
+            </Link>
+          </div>
         </div>
       </section>
 

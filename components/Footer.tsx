@@ -60,6 +60,7 @@ const Footer = () => {
           <div className="flex flex-col gap-4">
              <h3 className="font-bold text-gray-400 text-[10px] tracking-widest uppercase">Resources</h3>
              <Link href="/subreddits" className="text-gray-400 hover:text-white transition-colors text-[13px]">Subreddit Guides</Link>
+             <Link href="/solutions/directory" className="text-orange-500 font-bold hover:text-white transition-colors text-[13px]">Growth Directory</Link>
              <Link href="/blog" className="text-gray-400 hover:text-white transition-colors text-[13px]">Strategy Blog</Link>
           </div>
 

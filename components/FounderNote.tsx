@@ -1,8 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { motion } from 'framer-motion';
 import Link from 'next/link';
+import SocialProofTicker from './SocialProofTicker';
 
 interface Testimonial {
   name: string;
@@ -39,14 +39,6 @@ const testimonials: Testimonial[] = [
     highlights: ["useful I guess"],
   },
   {
-    name: "Martin B",
-    handle: "@MartinB293887",
-    image: "/martin.webp",
-    url: "https://x.com/MartinB293887/status/2020161251280654610",
-    content: "Seems very helpful",
-    highlights: ["very helpful"],
-  },
-  {
     name: "sachanh.farcaster.eth",
     handle: "@DefiHimanshu",
     image: "/sachanh.webp",
@@ -77,14 +69,6 @@ const testimonials: Testimonial[] = [
     url: "https://x.com/bubbling_sort/status/2019875214805635222",
     content: "Interesting. Bookmarking this to check out. Connected!",
     highlights: ["Bookmarking this", "Connected!"],
-  },
-  {
-    name: "Bishopi.io",
-    handle: "@Bishopi_io",
-    image: "/bishopi.webp",
-    url: "https://x.com/Bishopi_io/status/2019828568281546848",
-    content: "That looks super useful",
-    highlights: ["super useful"],
   },
   {
     name: "Naivaidya",
@@ -127,20 +111,20 @@ const testimonials: Testimonial[] = [
     highlights: ["massively slept on for SaaS", "typing their problems into Reddit search bars", "Smart move"],
   },
   {
-    name: "Vishal Mistry",
-    handle: "@vishal_mistry9",
-    image: "/Vishal.webp",
-    url: "https://x.com/vishal_mistry9/status/2024053592512946189?s=20",
-    content: "cool i need this.",
-    highlights: ["i need this"],
-  },
-  {
     name: "Jacob",
     handle: "@Jacob660245",
     image: "/jacob.webp",
     url: "https://x.com/Jacob660245/status/2027081829522477062?s=20",
     content: "I got the lifetime plan! I have been using it every day!",
     highlights: ["lifetime plan", "using it every day"],
+  },
+  {
+    name: "Alex Ibragimov",
+    handle: "@alexwtlf",
+    image: "/alex.webp",
+    url: "https://x.com/alexwtlf/status/2030909165854478426?s=20",
+    content: "Oh yeah, one of the most useful Reddit tools I've seen lately!\n\nHighly recommend it for founders using Reddit🙌",
+    highlights: ["most useful Reddit tools", "Highly recommend it"],
   },
 ];
 
@@ -237,7 +221,7 @@ export default function FounderNote() {
             <div className="flex-shrink-0 flex flex-col items-center gap-4">
               <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-2xl overflow-hidden border border-white/10 shadow-none">
                 <Image 
-                  src="/founder.png" 
+                  src="/founder.webp" 
                   alt="Tim Jayas" 
                   fill 
                   sizes="(max-width: 768px) 160px, 192px"
@@ -281,36 +265,65 @@ export default function FounderNote() {
               <div>
                 <p className="text-white font-serif-italic italic text-xl opacity-90">- Tim Jayas</p>
               </div>
+
+              {/* Stat Block */}
+              <div className="mt-8 p-5 rounded-2xl bg-orange-500/5 border border-orange-500/15">
+                <p className="text-sm font-bold text-gray-400 leading-relaxed">
+                  In the first 3 months, RedLeads users found over{' '}
+                  <span className="text-white font-black">14,000+ Reddit posts</span>{' '}
+                  with buyers actively looking for solutions like theirs.
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Early Impressions Part of Story */}
-        <div>
-          <div className="text-center mb-16">
-            
-            <h3 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tighter leading-tight">Feedback from the community</h3>
-            <p className="text-gray-500 text-sm md:text-base font-medium opacity-60">Reactions from the early RedLeads community</p>
+        <div className="pt-24 border-t border-white/5">
+          <div className="text-center mb-20">
+            <h3 className="text-4xl md:text-7xl font-black text-white mb-6 tracking-tighter leading-[1.05] max-w-4xl mx-auto">
+              The smartest founders <br />
+              <span className="text-orange-500 font-serif-italic">know Reddit converts</span>
+            </h3>
+            <p className="text-gray-500 text-sm md:text-base font-medium opacity-60 max-w-2xl mx-auto">
+              Creators with 100K followers are talking about it. <br className="hidden md:block" />
+              Here&apos;s why they believe in the power of Reddit marketing.
+            </p>
+          </div>
+
+          <div className="mb-20 -mx-4 md:-mx-[max(1rem,calc((100vw-1152px)/2+1rem))]">
+            <SocialProofTicker />
+          </div>
+
+          <div className="flex items-center gap-6 mb-20 max-w-xl mx-auto">
+            <div className="flex-1 h-px bg-white/5" />
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-600 whitespace-nowrap">AND REDLEADS USERS</p>
+            <div className="flex-1 h-px bg-white/5" />
+          </div>
+          
+          <div className="text-center mb-12">
+            <h4 className="text-2xl font-black text-white mb-4">Real reactions from the community</h4>
+            <p className="text-gray-500 text-sm font-medium opacity-60">110+ founders who signed up during our opening month</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 items-start">
             {/* Column 1 */}
             <div className="flex flex-col gap-3">
-              {[testimonials[6]!, testimonials[10]!, testimonials[12]!, testimonials[2]!, testimonials[3]!, testimonials[15]!].map((testimonial, idx) => (
+              {[testimonials[5]!, testimonials[8]!, testimonials[10]!, testimonials[2]!, testimonials[12]!].map((testimonial, idx) => (
                 <TestimonialCard key={`col1-${idx}`} testimonial={testimonial} />
               ))}
             </div>
             
             {/* Column 2 */}
             <div className="flex flex-col gap-3">
-              {[testimonials[4]!, testimonials[9]!, testimonials[13]!, testimonials[1]!, testimonials[0]!].map((testimonial, idx) => (
+              {[testimonials[13]!, testimonials[3]!, testimonials[7]!, testimonials[11]!, testimonials[1]!].map((testimonial, idx) => (
                 <TestimonialCard key={`col2-${idx}`} testimonial={testimonial} />
               ))}
             </div>
  
             {/* Column 3 */}
             <div className="flex flex-col gap-3">
-              {[testimonials[7]!, testimonials[8]!, testimonials[5]!, testimonials[11]!, testimonials[14]!].map((testimonial, idx) => (
+              {[testimonials[6]!, testimonials[4]!, testimonials[9]!, testimonials[0]!].map((testimonial, idx) => (
                 <TestimonialCard key={`col3-${idx}`} testimonial={testimonial} />
               ))}
             </div>

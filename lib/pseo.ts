@@ -1,16 +1,24 @@
 import { solutions, SolutionData } from '@/app/solutions/data';
 import masterSubreddits from '@/data/master-subreddits.json';
 
+import { getArchetypeForSubreddit, getUniqueTitles } from './pseo-archetypes';
+
 export interface PseoCombination {
   solution: SolutionData;
   subreddit: string;
   slug: string; // e.g. "saas-r-SaaS"
   title: string;
   description: string;
+  heroCopy: {
+    title: string;
+    highlight: string;
+    desc: string;
+  };
   insights: {
     vibe: string;
     strategy: string;
     topHacks: string[];
+    archetypeName: string;
   };
 }
 
@@ -39,54 +47,26 @@ export function getCombinationData(solutionSlug: string, subredditName: string):
   ) || subredditName;
 
   const formattedSub = subreddit.startsWith('r/') ? subreddit : `r/${subreddit}`;
-  const insights = getSubredditInsights(subreddit);
+  const archetype = getArchetypeForSubreddit(subreddit);
+  const { title, highlight, desc } = getUniqueTitles(solution.hero.titleHighlight, formattedSub, archetype.id);
 
   return {
     solution,
     subreddit: formattedSub,
     slug: `${solutionSlug}-${subredditName}`,
-    title: `${solution.hero.title} on ${formattedSub} (2026 Guide)`,
-    description: `Learn how to scale your ${solution.hero.titleHighlight} using RedLeads AI intent scoring on ${formattedSub}. Find leads and grow your business today.`,
-    insights,
-  };
-}
-
-function getSubredditInsights(subreddit: string) {
-  const sub = subreddit.toLowerCase();
-  
-  if (sub.includes('dev') || sub.includes('code') || sub.includes('programming') || sub.includes('javascript') || sub.includes('python')) {
-    return {
-      vibe: 'Technical & No-BS',
-      strategy: 'Focus on solving bugs, architectural advice, and technical documentation.',
-      topHacks: [
-        'Answer a specific technical hurdle first.',
-        'Link to your API documentation.',
-        'Offer a free developer tier.'
-      ]
-    };
-  }
-
-  if (sub.includes('marketing') || sub.includes('seo') || sub.includes('sales') || sub.includes('advertising')) {
-    return {
-      vibe: 'Growth & Metrics Focused',
-      strategy: 'Focus on ROI, CAC reduction, and case studies with real numbers.',
-      topHacks: [
-        'Share a transparent case study.',
-        'Focus on "Time to First Value".',
-        'Compare your conversion rates vs cold email.'
-      ]
-    };
-  }
-
-  // Default for general Startup/Founder subreddits
-  return {
-    vibe: 'Validation & Feedback Oriented',
-    strategy: 'Focus on 0-to-1 growth, finding early adopters, and product-market fit.',
-    topHacks: [
-      'Offer a "Founder Pass" for early adopters.',
-      'Ask for genuine feedback on your UI.',
-      'Identify people describing a specific manual struggle.'
-    ]
+    title: `${title} ${highlight} (2026 Strategy Guide)`,
+    description: desc,
+    heroCopy: {
+      title,
+      highlight,
+      desc
+    },
+    insights: {
+      vibe: archetype.vibe,
+      strategy: archetype.strategy,
+      topHacks: archetype.topHacks,
+      archetypeName: archetype.name
+    },
   };
 }
 

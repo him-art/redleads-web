@@ -32,6 +32,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
     // const [isScanComplete, setIsScanComplete] = useState(false); // Removed
     const [isCompletingSetup, setIsCompletingSetup] = useState(false);
 
+    const [slots, setSlots] = useState<{ sold: number; total: number } | null>(null);
     const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
 
     // Profile save status ref
@@ -51,6 +52,31 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
     useEffect(() => {
         const timer = setInterval(() => setProofIndex(i => (i + 1) % socialProof.length), 4000);
         return () => clearInterval(timer);
+    }, []);
+
+    useEffect(() => {
+        const fetchSlots = async () => {
+            try {
+                const { createClient } = await import('@/lib/supabase/client');
+                const supabase = createClient();
+                const { data, error } = await supabase
+                    .from('total_users')
+                    .select('user_count, total_slots')
+                    .single();
+                
+                if (error) {
+                    console.error('Supabase error fetching slots (Onboarding):', error);
+                    return;
+                }
+
+                if (data && typeof data.user_count === 'number') {
+                    setSlots({ sold: data.user_count, total: data.total_slots || 150 });
+                }
+            } catch (err) {
+                console.error('Unexpected error in fetchSlots (Onboarding):', err);
+            }
+        };
+        fetchSlots();
     }, []);
 
     // ──────────────────────────────
@@ -115,7 +141,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
     // ──────────────────────────────
     // Step 6: Handle plan selection (checkout)
     // ──────────────────────────────
-    const handleSelectPlan = async (plan: 'starter' | 'growth') => {
+    const handleSelectPlan = async (plan: 'starter' | 'growth' | 'lifetime') => {
         setCheckoutLoading(plan);
         try {
             // Ensure latest profile data is saved before redirected
@@ -414,13 +440,13 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
 
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                                 {/* Starter Plan */}
                                 <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/5 flex flex-col">
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary mb-3">Starter</h3>
                                     <div className="flex items-baseline gap-2 mb-1">
-                                        <span className="text-sm font-bold text-text-secondary/40 line-through">$15</span>
-                                        <span className="text-3xl font-black text-text-primary">$7</span>
+                                        <span className="text-sm font-bold text-text-secondary/40 line-through">$28</span>
+                                        <span className="text-3xl font-black text-text-primary">$14</span>
                                         <span className="text-xs text-text-secondary/50 font-bold uppercase">/mo</span>
                                     </div>
                                     <ul className="space-y-2.5 my-5 flex-grow">
@@ -446,8 +472,8 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                     </div>
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 mb-3">Growth</h3>
                                     <div className="flex items-baseline gap-2 mb-1">
-                                        <span className="text-sm font-bold text-orange-500/30 line-through">$29</span>
-                                        <span className="text-3xl font-black text-text-primary">$14</span>
+                                        <span className="text-sm font-bold text-orange-500/30 line-through">$58</span>
+                                        <span className="text-3xl font-black text-text-primary">$29</span>
                                         <span className="text-xs text-text-secondary/50 font-bold uppercase">/mo</span>
                                     </div>
                                     <ul className="space-y-2.5 my-5 flex-grow">
@@ -463,6 +489,41 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                         className="w-full py-4 rounded-xl bg-orange-500 text-black font-black text-[10px] uppercase tracking-widest hover:bg-orange-400 transition-all disabled:opacity-50 shadow-[0_0_20px_rgba(249,115,22,0.2)] flex items-center justify-center"
                                     >
                                         {checkoutLoading === 'growth' ? <LoadingIcon className="w-4 h-4" /> : 'Select Growth'}
+                                    </button>
+                                </div>
+
+                                {/* Lifetime Plan */}
+                                <div className="p-6 rounded-2xl bg-white text-black flex flex-col relative overflow-hidden border border-white">
+                                    <div className="absolute top-3 right-4 flex items-center gap-1 text-[8px] font-black uppercase text-black/50 tracking-[0.3em]">
+                                        <Sparkles size={10} className="text-orange-600" /> LTD
+                                    </div>
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-black mb-3">Lifetime</h3>
+                                    <div className="flex items-baseline gap-2 mb-1">
+                                        <span className="text-3xl font-black text-black">
+                                            ${slots ? (slots.sold < 80 ? 59 : 79 + Math.floor((slots.sold - 80) / 20) * 20) : "..."}
+                                        </span>
+                                        <span className="text-[8px] text-gray-600 font-bold uppercase tracking-tight">One-time</span>
+                                    </div>
+                                    {slots && (
+                                        <div className="mb-4">
+                                            <p className="text-[8px] font-black uppercase tracking-[0.2em] text-orange-600">
+                                            Only {slots.sold < 80 ? 80 - slots.sold : 20 - ((slots.sold - 80) % 20)} spots left at this price
+                                            </p>
+                                        </div>
+                                    )}
+                                    <ul className="space-y-2.5 my-5 flex-grow">
+                                        {['All Growth features', 'Unlimited discovery', 'Future Pro updates', 'Lifetime access'].map(f => (
+                                            <li key={f} className="text-[10px] font-bold text-black uppercase tracking-widest flex items-center gap-2">
+                                                <Check size={10} className="text-orange-600" /> {f}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <button
+                                        onClick={() => handleSelectPlan('lifetime')}
+                                        disabled={!!checkoutLoading || (slots ? slots.sold >= slots.total : false)}
+                                        className="w-full py-4 rounded-xl bg-black text-white font-black text-[10px] uppercase tracking-widest hover:bg-orange-600 transition-all disabled:opacity-50 flex items-center justify-center"
+                                    >
+                                        {checkoutLoading === 'lifetime' ? <LoadingIcon className="w-4 h-4" /> : 'Select LTD'}
                                     </button>
                                 </div>
                             </div>
@@ -539,7 +600,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                          <div className="w-full text-center">
                             <div className="flex items-center justify-center gap-2 text-[10px] font-bold text-text-secondary/50 uppercase tracking-widest">
                                 <Users size={12} />
-                                80+ founders using RedLeads.app
+                                110+ founders using RedLeads.app
                             </div>
                          </div>
                     )}

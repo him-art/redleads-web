@@ -15,6 +15,7 @@ const HowItWorks = () => {
             <span className="block">Your 3-step ticket</span>
             <span className="block text-orange-500 font-serif-italic">to Red-Hot Leads.</span>
           </h2>
+          <p className="mt-6 text-gray-500 text-base font-medium">Setup takes 2 minutes. Leads arrive the same day.</p>
         </div>
 
 
@@ -37,7 +38,7 @@ const HowItWorks = () => {
                 {/* Illustration: Search Bar PNG */}
                 <div className="w-full aspect-video rounded-2xl mb-8 relative overflow-hidden">
                     <Image 
-                      src="/how-it-works-step1.png" 
+                      src="/how-it-works-step1.webp" 
                       alt="Scan your website" 
                       fill 
                       sizes="(max-width: 768px) 100vw, 33vw"
@@ -65,7 +66,7 @@ const HowItWorks = () => {
                 {/* Illustration: Reddit Threads PNG */}
                 <div className="w-full aspect-video rounded-2xl mb-8 relative overflow-hidden">
                     <Image 
-                      src="/how-it-works-step2.png" 
+                      src="/how-it-works-step2.webp" 
                       alt="Research threads" 
                       fill 
                       sizes="(max-width: 768px) 100vw, 33vw"
@@ -93,7 +94,7 @@ const HowItWorks = () => {
                 {/* Illustration: Engage PNG */}
                 <div className="w-full aspect-video rounded-2xl mb-8 relative overflow-hidden">
                     <Image 
-                      src="/how-it-works-step3.png" 
+                      src="/how-it-works-step3.webp" 
                       alt="Engage via comments and DMs" 
                       fill 
                       sizes="(max-width: 768px) 100vw, 33vw"
@@ -102,9 +103,9 @@ const HowItWorks = () => {
                 </div>
 
                 <div className="mt-auto">
-                  <h3 className="text-2xl font-black text-white mb-4 tracking-tight leading-snug">Join the Conversation</h3>
+                  <h3 className="text-2xl font-black text-white mb-4 tracking-tight leading-snug">Reply &amp; Convert</h3>
                   <p className="text-gray-500 text-[13px] font-medium leading-relaxed tracking-wide">
-                    Engage with potential customers by providing value first. Build authority by solving problems and naturally introducing your product.
+                    Use AI-drafted replies tailored to each thread. Founders using this method report closing customers in their first week.
                   </p>
                 </div>
               </div>

@@ -1,12 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { Globe, ArrowRight, CheckCircle2, Lock, Search, ChevronRight, Activity, Clock, PenLine, Bookmark, ExternalLink, Navigation, Map, Archive, SlidersHorizontal, Shield, Plus } from 'lucide-react';
+import { Globe, ArrowRight, CheckCircle2, Lock, Activity, Clock, Bookmark, ExternalLink, Navigation, Map, Archive, SlidersHorizontal, Shield, Plus } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
-import MaterialIcon from '@/components/ui/MaterialIcon';
 import { createClient } from '@/lib/supabase/client';
 import { type User as SupabaseUser } from '@supabase/supabase-js';
 
@@ -58,55 +56,64 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
       {/* Floating Elements - Hidden on mobile, visible on large screens */}
       <div className="absolute inset-0 max-w-[1800px] mx-auto pointer-events-none overflow-hidden z-0">
          {/* Left Side */}
-         <FloatingBubble className="top-[18%] left-[5%] xl:left-[8%]" delay={0} duration={3.2} floatDelay={0} />
-         <FloatingBubble className="top-[28%] left-[2%] xl:left-[4%]" delay={1.5} scale={1.1} duration={3.8} floatDelay={1.2} />
-         <FloatingBubble className="top-[38%] left-[8%] xl:left-[10%]" delay={0.8} duration={3.5} floatDelay={0.5} />
+         <FloatingBubble className="top-[18%] left-[5%] xl:left-[8%]" delay={0} scale={0.8} duration={3.2} floatDelay={0} />
+         <FloatingBubble className="top-[28%] left-[2%] xl:left-[4%]" delay={1.5} scale={0.9} duration={3.8} floatDelay={1.2} />
+         <FloatingBubble className="top-[38%] left-[8%] xl:left-[10%]" delay={0.8} scale={0.85} duration={3.5} floatDelay={0.5} />
 
          {/* Right Side */}
-         <FloatingBubble className="top-[20%] right-[5%] xl:right-[8%]" delay={0.5} scale={1.05} duration={3.4} floatDelay={0.8} />
-         <FloatingBubble className="top-[30%] right-[2%] xl:right-[4%]" delay={2} duration={3.9} floatDelay={1.5} />
-         <FloatingBubble className="top-[40%] right-[7%] xl:right-[10%]" delay={1.2} scale={0.95} duration={3.3} floatDelay={0.2} />
+         <FloatingBubble className="top-[20%] right-[5%] xl:right-[8%]" delay={0.5} scale={0.85} duration={3.4} floatDelay={0.8} />
+         <FloatingBubble className="top-[30%] right-[2%] xl:right-[4%]" delay={2} scale={0.8} duration={3.9} floatDelay={1.5} />
+         <FloatingBubble className="top-[40%] right-[7%] xl:right-[10%]" delay={1.2} scale={0.75} duration={3.3} floatDelay={0.2} />
          </div>
 
       <div className="relative z-10 container mx-auto px-4 pt-32 pb-0 md:pt-27 md:pb-0 flex flex-col items-center text-center">
       
 
-        {/* Main Headline - Serif & Minimal */}
         <h1 
-          className="max-w-[100vw] xl:max-w-none mx-auto text-[1.75rem] sm:text-[2.75rem] md:text-[5rem] lg:text-[7rem] font-medium text-[#f5f5f5] mb-8 leading-[1.05] px-4 font-serif"
+          className="max-w-[100vw] xl:max-w-none mx-auto text-[1.5rem] sm:text-[2.25rem] md:text-[4.5rem] lg:text-[6rem] font-black text-[#f5f5f5] mb-8 leading-[1.1] px-4 font-sans tracking-tight"
         >
-          {/* Forced three lines for branding presence */}
-        
-          <span className="flex flex-wrap items-center font-medium justify-center gap-x-3 sm:gap-x-6 sm:whitespace-nowrap">
-            <span>Get Your</span>
-            <span className="text-orange-500 font-serif-italic">First 100 Users</span>
-          </span>
-          <span className="block font-medium sm:whitespace-nowrap">
-            <span>From Reddit</span>
-          </span>
+          <div className="flex flex-wrap items-center justify-center gap-x-3 md:gap-x-5">
+            <span>Turn</span>
+            <span className="inline-flex items-center gap-2 px-3 md:px-6 py-0.5 md:py-1.5 bg-orange-500/5 border border-orange-500/20 rounded-[1.25rem] md:rounded-[2rem]">
+              <div className="relative w-7 h-7 md:w-14 md:h-14 flex-shrink-0">
+                <Image 
+                  src="/reddit-new-logo.png" 
+                  alt="Reddit" 
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <span className="text-orange-500">Reddit</span>
+            </span>
+            <span>users</span>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-x-3 md:gap-x-5">
+            <span>into</span>
+            <span className="text-orange-500">customers</span>
+          </div>
         </h1>
 
         {/* Subheadline - Clean Sans */}
         <p 
           className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-8 leading-relaxed font-medium"
         >
-          Save hours of manual searching. RedLeads uses AI intent scoring to monitor millions of discussions 24/7, delivering warm buyers straight to your inbox.
+          Every day, thousands of people ask Reddit for tools like yours. RedLeads finds them automatically and sends the best ones to your inbox.
         </p>
 
         {/* Social Proof Widget */}
         <div className="flex justify-center mb-8">
-          <div className="flex items-center gap-4">
-            {/* Overlapping Avatars - Gravatar from real user emails */}
+          <div className="inline-flex items-center gap-6 px-5 py-2 bg-black/40 border border-white/10 rounded-full">
+            {/* Overlapping Avatars */}
             <div className="flex items-center -space-x-2.5">
-              {['/vivek.png', '/umair.png', '/konny.png', '/marc.png', '/alber_new.png', '/sachanh.png'].map((src, i) => (
-                <div key={i} className="w-8 h-8 rounded-full border-2 border-[#1a1a1a] overflow-hidden relative flex-shrink-0">
+              {['/alex.webp', '/umair.webp', '/konny.webp', '/marc.webp', '/alber_new.webp', '/sachanh.webp'].map((src, i) => (
+                <div key={i} className="w-8 h-8 rounded-full border-2 border-black overflow-hidden relative flex-shrink-0">
                   <Image src={src} alt="User" fill sizes="32px" className="object-cover" />
                 </div>
               ))}
             </div>
             {/* Text */}
-            <span className="text-white text-[11px] font-black tracking-[0.08em] uppercase leading-tight">
-              Join 80+ Founders
+            <span className="text-white text-[10px] font-black tracking-[0.1em] uppercase leading-tight whitespace-nowrap">
+              <span className="text-orange-500">Join 110+</span> founders
             </span>
           </div>
         </div>
@@ -161,10 +168,10 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                 <CheckCircle2 size={12} /> No Card Required
              </div>
              <div className="flex items-center gap-2 text-xs text-slate-400 uppercase tracking-wider font-medium">
-                <CheckCircle2 size={12} /> 3-Day Free Trial
+                <CheckCircle2 size={12} /> 3-Day Full Access Trial
              </div>
              <div className="flex items-center gap-2 text-xs text-slate-400 uppercase tracking-wider font-medium">
-                <CheckCircle2 size={12} /> For SaaS Founders
+                <CheckCircle2 size={12} /> For Indie Hackers & Solo Founders
              </div>
           </div>
         </div>
@@ -180,16 +187,15 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
             whileInView={{ rotateX: 0, scale: 1 }}
             viewport={{ margin: "0px 0px -200px 0px" }}
             transition={{ duration: 0.8 }}
-            className="relative rounded-[2.5rem] border border-white/5 bg-white/5 p-2 text-left flex max-h-[620px] origin-top"
+            className="relative rounded-[2rem] md:rounded-[2.5rem] border border-white/10 p-1.5 md:p-2 text-left flex md:max-h-[620px] origin-top"
           >
-            <div className="flex w-full rounded-[2rem] overflow-hidden bg-[#080808] border border-white/10 relative">
-              <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="flex w-full rounded-[2rem] overflow-hidden bg-[#0a0a0a] border border-white/10 relative">
 
             {/* ── SIDEBAR ── */}
-            <div className="hidden md:flex flex-col w-[200px] flex-shrink-0 bg-[#0e0e0e] border-r border-white/5 p-5">
+            <div className="hidden md:flex flex-col w-[200px] flex-shrink-0 bg-[#121212] border-r border-white/5 p-5">
               {/* Brand */}
               <div className="mb-6">
-                <p className="text-[9px] font-black tracking-[0.2em] text-[#444] uppercase mb-4">Command Center</p>
+                <p className="text-[9px] font-black tracking-[0.2em] text-[#71717a] uppercase mb-4">Command Center</p>
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 flex items-center justify-center relative">
                     <Image
@@ -208,7 +214,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
               </div>
 
               {/* Nav */}
-              <p className="text-[9px] font-black tracking-[0.15em] text-[#444] uppercase mb-3">Menu</p>
+              <p className="text-[9px] font-black tracking-[0.15em] text-[#71717a] uppercase mb-3">Menu</p>
               <nav className="flex flex-col gap-0.5">
                 <SidebarItem icon="navigation" label="Command Center" active />
                 <SidebarItem icon="map" label="Guide" />
@@ -220,61 +226,83 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
             </div>
 
             {/* ── MAIN PANEL ── */}
-            <div className="flex-1 min-w-0 overflow-y-auto custom-scrollbar p-6 flex flex-col gap-6 bg-[#080808]">
+            <div className="flex-1 min-w-0 overflow-hidden p-3 md:p-6 flex flex-col gap-4 md:gap-6 bg-[#0a0a0a]">
 
               {/* Power Search Container */}
-              <div className="bg-[#0c0c0c] border border-white/5 rounded-[1.5rem] p-6 space-y-4 shadow-2xl relative overflow-hidden">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+                className="bg-[#121212] border border-white/5 rounded-[1.25rem] md:rounded-[1.5rem] p-4 md:p-6 space-y-4 shadow-xl shadow-black/40 relative overflow-hidden"
+              >
                 <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                 
                 {/* Power Search */}
                 <section>
                   <div className="flex items-center gap-2 mb-4">
                     <span className="inline-flex h-1.5 w-1.5 rounded-full bg-[#ff3d00] shadow-[0_0_10px_rgba(255,61,0,0.8)] animate-pulse" />
-                    <span className="text-[9px] font-black tracking-[0.25em] text-[#555] uppercase">Power Search</span>
+                    <span className="text-[9px] font-black tracking-[0.25em] text-[#a1a1aa] uppercase">Power Search</span>
                   </div>
 
                   {/* Search bar */}
-                  <div className="flex items-center gap-4 bg-black/40 border border-white/5 rounded-xl px-5 h-12 group focus-within:border-primary/20 transition-all shadow-inner">
-                    <Lock size={14} className="text-[#333] group-focus-within:text-primary transition-colors" />
-                    <span className="flex-1 text-xs font-medium text-[#777] tracking-tight">RedLeads.app</span>
-                    <button suppressHydrationWarning className="bg-[#ff5836] hover:bg-[#ff6900] text-[9px] font-black uppercase tracking-[0.15em] px-6 py-2 rounded-lg shadow-[0_6px_16px_rgba(255,88,54,0.3)] transition-all transform hover:scale-[1.02] active:scale-95 leading-none text-white whitespace-nowrap">
+                  <motion.div 
+                    initial={{ borderColor: "rgba(255, 255, 255, 0.1)", backgroundColor: "rgba(0,0,0,0.4)" }}
+                    whileInView={{ 
+                      borderColor: ["rgba(255, 255, 255, 0.1)", "rgba(255, 88, 54, 0.3)", "rgba(255, 255, 255, 0.1)"],
+                      backgroundColor: ["rgba(0,0,0,0.4)", "rgba(0,0,0,0.7)", "rgba(0,0,0,0.4)"]
+                    }}
+                    transition={{ duration: 2.5, delay: 1.5, repeat: Infinity, repeatDelay: 1 }}
+                    className="flex items-center gap-4 border rounded-xl px-5 h-12 shadow-inner group transition-all"
+                  >
+                    <Lock size={14} className="text-[#52525b] group-focus-within:text-primary transition-colors" />
+                    <span className="flex-1 text-xs font-medium text-[#a1a1aa] tracking-tight">RedLeads.app</span>
+                    <button suppressHydrationWarning className="bg-[#ff5836] hover:bg-[#ff6900] text-[9px] font-black uppercase tracking-[0.15em] px-6 py-2 rounded-lg transition-all transform hover:scale-[1.02] active:scale-95 leading-none text-white whitespace-nowrap">
                       Power Search
                     </button>
-                  </div>
+                  </motion.div>
                 </section>
-              </div>
+              </motion.div>
 
               {/* Live Intelligence */}
-              <section className="px-2 mt-2">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-7 h-7 flex items-center justify-center rounded-lg bg-[#ff3d00]/10 border border-[#ff3d00]/20">
-                      <Activity size={16} className="text-[#ff3d00]" />
+              <section className="px-1 md:px-2 mt-2">
+                <motion.div 
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.8, ease: "easeOut" }}
+                  className="flex items-start sm:items-center justify-between mb-4 md:mb-6 gap-2"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-6 h-6 md:w-7 md:h-7 flex-shrink-0 flex items-center justify-center rounded-lg bg-[#ff3d00]/10 border border-[#ff3d00]/20">
+                      <Activity size={14} className="text-[#ff3d00]" />
                     </div>
                     <div>
-                      <p className="text-[9px] font-black uppercase tracking-[0.25em] text-[#444]">Automated</p>
-                      <p className="text-lg font-black text-white tracking-tighter">Live Intelligence</p>
+                      <p className="text-[9px] font-black uppercase tracking-[0.25em] text-[#71717a]">Automated</p>
+                      <p className="text-base md:text-lg font-black text-[#f5f5f5] tracking-tighter">Live Intelligence</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-[#22c55e]/5 border border-[#22c55e]/10 rounded-full">
+                  <div className="flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 bg-[#22c55e]/5 border border-[#22c55e]/10 rounded-full">
                     <span className="inline-flex h-1.5 w-1.5 rounded-full bg-[#22c55e] shadow-[0_0_8px_rgba(34,197,94,0.5)] animate-pulse" />
-                    <span className="text-[9px] font-black text-[#22c55e]/80 uppercase tracking-[0.2em]">System Online</span>
+                    <span className="text-[8px] md:text-[9px] font-black text-[#22c55e]/80 uppercase tracking-[0.15em] md:tracking-[0.2em] whitespace-nowrap">System Online</span>
                   </div>
-                </div>
+                </motion.div>
 
-                {/* Cards */}
-                <div className="flex flex-col gap-4">
+                  {/* Cards */}
+                <div className="flex flex-col gap-4 relative">
                   <LiveCard
                     subreddit="R/SAAS"
                     time="21:20"
                     matchLevel="HIGH MATCH"
                     title="Does anyone has a solution for x problem?"
+                    delay={1.2}
                   />
                   <LiveCard
                     subreddit="R/buildinpublic"
                     time="21:20"
                     matchLevel="MEDIUM MATCH"
                     title="Does someone know a better alternative to Y?"
+                    delay={1.6}
                   />
                 </div>
               </section>
@@ -301,25 +329,32 @@ function SidebarItem({ icon, label, active }: { icon: string; label: string; act
     <div className={`relative flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[11px] font-medium transition-all group ${
       active 
         ? 'bg-white/[0.08] text-white shadow-[0_4px_12px_rgba(0,0,0,0.5)] border border-white/5' 
-        : 'text-[#666] hover:text-[#aaa] hover:bg-white/[0.02]'
+        : 'text-[#71717a] hover:text-[#e4e4e7] hover:bg-white/[0.04]'
     }`}>
       {active && (
         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 bg-primary rounded-r-full shadow-[0_0_8px_rgba(255,88,54,0.5)]" />
       )}
-      {IconComponent && <IconComponent size={14} className={active ? 'text-primary' : 'text-[#444] group-hover:text-[#666]'} />}
+      {IconComponent && <IconComponent size={14} className={active ? 'text-primary' : 'text-[#52525b] group-hover:text-[#a1a1aa]'} />}
       <span className={active ? 'tracking-wide' : ''}>{label}</span>
     </div>
   );
 }
 
-function LiveCard({ subreddit, time, matchLevel, title }: { subreddit: string; time: string; matchLevel: string; title: string }) {
+function LiveCard({ subreddit, time, matchLevel, title, delay = 0 }: { subreddit: string; time: string; matchLevel: string; title: string; delay?: number }) {
   const isHigh = matchLevel === "HIGH MATCH";
   return (
-    <div className="bg-[#0b0b0b] border border-white/5 rounded-[1rem] flex overflow-hidden hover:bg-white/[0.03] transition-all group shadow-xl relative">
+    <motion.div 
+      initial={{ opacity: 0, x: 20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay, type: "spring", stiffness: 150, damping: 20 }}
+      whileHover={{ y: -2, transition: { duration: 0.2, delay: 0 } }}
+      className="bg-[#121212] border border-white/5 rounded-[1rem] flex overflow-hidden hover:bg-white/[0.06] hover:border-white/10 transition-colors group shadow-lg relative"
+    >
       {/* Left Column - Match Label */}
       <div className="w-20 flex-shrink-0 flex items-center justify-center bg-black/40 border-r border-white/5">
         <span className={`text-[7px] font-black uppercase tracking-[0.15em] px-1 text-center leading-tight ${
-          isHigh ? 'text-primary' : 'text-[#444]'
+          isHigh ? 'text-primary' : 'text-[#71717a]'
         }`}>
           {matchLevel.split(' ')[0]}<br/>{matchLevel.split(' ')[1]}
         </span>
@@ -342,19 +377,19 @@ function LiveCard({ subreddit, time, matchLevel, title }: { subreddit: string; t
         </p>
         
         <div className="flex items-center gap-3 pt-0.5">
-          <button suppressHydrationWarning className="flex items-center gap-2 bg-[#ff5836] hover:bg-[#ff6900] text-white text-[8px] font-black uppercase tracking-[0.15em] px-3.5 py-1.5 rounded-lg shadow-[0_4px_12px_rgba(255,88,54,0.3)] transition-all transform hover:translate-y-[-1px] active:translate-y-[1px]">
+          <button suppressHydrationWarning className="flex items-center gap-2 bg-[#ff5836] hover:bg-[#ff6900] text-white text-[8px] font-black uppercase tracking-[0.15em] px-3.5 py-1.5 rounded-lg transition-all transform hover:translate-y-[-1px] active:translate-y-[1px]">
             <Plus size={10} className="text-white" />
             Draft Reply
           </button>
-          <button suppressHydrationWarning className="w-7 h-7 rounded-lg flex items-center justify-center border border-white/5 bg-white/[0.03] text-[#444] hover:text-text-primary hover:border-white/10 transition-all">
+          <button suppressHydrationWarning className="w-7 h-7 rounded-lg flex items-center justify-center border border-white/5 bg-white/[0.03] text-[#71717a] hover:text-white hover:border-white/20 transition-all hover:bg-white/[0.08]">
             <Bookmark size={12} />
           </button>
-          <button suppressHydrationWarning className="w-7 h-7 rounded-lg flex items-center justify-center border border-white/5 bg-white/[0.03] text-[#444] hover:text-text-primary hover:border-white/10 transition-all">
+          <button suppressHydrationWarning className="w-7 h-7 rounded-lg flex items-center justify-center border border-white/5 bg-white/[0.03] text-[#71717a] hover:text-white hover:border-white/20 transition-all hover:bg-white/[0.08]">
             <ExternalLink size={12} />
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -369,15 +404,15 @@ function FloatingBubble({ className, delay = 0, scale = 1, duration = 3, floatDe
         opacity: { duration: 1, delay },
         y: { duration, repeat: Infinity, ease: "easeInOut", delay: floatDelay } 
       }}
-      className={`absolute hidden xl:flex items-center gap-2 p-2 bg-white/7 border border-white/5 rounded-full w-[140px] shadow-xl shadow-black/5 ${className}`}
+      className={`absolute hidden xl:flex items-center gap-1.5 p-1.5 bg-white/7 border border-white/5 rounded-full w-[110px] shadow-xl shadow-black/5 ${className}`}
       style={{ scale }}
     >
-      <div className="w-6 h-6 rounded-full bg-transparent flex items-center justify-center flex-shrink-0 overflow-hidden">
+      <div className="w-5 h-5 rounded-full bg-transparent flex items-center justify-center flex-shrink-0 overflow-hidden">
            <Image 
              src="/reddit-new-logo.png" 
              alt="Reddit" 
-             width={24} 
-             height={24} 
+             width={18} 
+             height={18} 
              priority
              className="w-full h-full object-contain"
            />

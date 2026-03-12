@@ -12,11 +12,24 @@ interface DailyDigestEmailProps {
   leads: Lead[];
 }
 
+const EXPERT_TIPS = [
+  "The best comments don't sell; they consult. Answer the user's question first, then mention your product as a resource.",
+  "Check the account age and karma before replying. Engaging with established users yields better conversion rates.",
+  "Use bullet points and bold text to break up your reply. Redditors skip walls of text.",
+  "Don't just drop a link. Provide a summary of your product's value proposition in the comment.",
+  "If the thread is older than 24 hours, your reply might get buried. Focus on fresh opportunities.",
+  "Ask a follow-up question in your reply to encourage a conversation and build trust."
+];
+
 export default function DailyDigestEmail({ fullName, leads }: DailyDigestEmailProps) {
   const topLeads = leads.slice(0, 10); // Show up to 10
   const firstName = fullName ? fullName.split(' ')[0] : 'there';
   const siteUrl = 'https://redleads.app'; // Fixed to production
   const logoUrl = `${siteUrl}/redleads-logo-white.png`;
+  
+  // Use a tip based on the current day of the year so it rotates daily but is consistent for all users that day
+  const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 1000 / 60 / 60 / 24);
+  const selectedTip = EXPERT_TIPS[dayOfYear % EXPERT_TIPS.length];
 
   return (
     <div style={{
@@ -26,6 +39,10 @@ export default function DailyDigestEmail({ fullName, leads }: DailyDigestEmailPr
       padding: '40px 10px',
       lineHeight: '1.6'
     }}>
+      {/* Preheader element (hidden in email body, visible in inbox preview) */}
+      <div style={{ display: 'none', maxWidth: 0, maxHeight: 0, overflow: 'hidden', opacity: 0 }}>
+        We found {leads.length} high-intent Reddit threads to check out today.
+      </div>
       <div style={{
         maxWidth: '600px',
         margin: '0 auto',
@@ -116,7 +133,7 @@ export default function DailyDigestEmail({ fullName, leads }: DailyDigestEmailPr
                     </span>
                 </div>
                 <a 
-                  href={`${siteUrl}/dashboard?id=${lead.id}`}
+                  href={`${siteUrl}/dashboard?id=${lead.id}&utm_source=daily_digest&utm_medium=email&utm_campaign=digest_lead_click`}
                   style={{ 
                     display: 'inline-block',
                     color: '#f25e36', 
@@ -151,12 +168,12 @@ export default function DailyDigestEmail({ fullName, leads }: DailyDigestEmailPr
               Reddit Expert Tip
             </h3>
             <p style={{ fontSize: '14px', color: '#ffffff', fontWeight: '500', margin: 0, fontStyle: 'italic' }}>
-              "The best comments don't sell; they consult. Answer the user's question first, then mention your product as a resource."
+              &quot;{selectedTip}&quot;
             </p>
           </div>
 
           <div style={{ textAlign: 'center' }}>
-            <a href={`${siteUrl}/dashboard`} style={{
+            <a href={`${siteUrl}/dashboard?utm_source=daily_digest&utm_medium=email&utm_campaign=digest_dashboard_click`} style={{
               display: 'inline-block',
               backgroundColor: '#f25e36',
               color: '#ffffff',
@@ -180,7 +197,7 @@ export default function DailyDigestEmail({ fullName, leads }: DailyDigestEmailPr
             textAlign: 'center'
         }}>
           <p style={{ fontSize: '12px', color: '#555555', margin: '0 0 12px 0' }}>
-            Questions? <a href="mailto:Redleads.app@gmail.com" style={{ color: '#888888', textDecoration: 'underline' }}>Redleads.app@gmail.com</a>
+            Questions? <a href="mailto:redleads.app@gmail.com" style={{ color: '#888888', textDecoration: 'underline' }}>redleads.app@gmail.com</a>
           </p>
           <p style={{ fontSize: '10px', color: '#333333', margin: '0' }}>
             Built for growth focus by <a href="https://x.com/timjayas" style={{ color: '#555555', textDecoration: 'none' }}>Tim Jayas</a>

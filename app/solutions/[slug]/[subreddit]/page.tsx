@@ -10,11 +10,12 @@ interface Props {
   params: Promise<{ slug: string; subreddit: string }>;
 }
 
-// We generate a subset of pages at build time to keep build fast, others will be ISR
+export const revalidate = 604800; // 1 week
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
   const allCombinations = getAllCombinations();
-  // Only generate the first 50 combinations statically for now to avoid build timeouts
-  return allCombinations.slice(0, 50).map((comb) => ({
+  return allCombinations.map((comb) => ({
     slug: comb.solution,
     subreddit: comb.subreddit,
   }));
@@ -79,6 +80,7 @@ export default async function PseoCombinationPage({ params }: Props) {
                   "url": "https://www.redleads.app/icon.png"
                 }
               },
+              "articleSection": data.insights.archetypeName,
               "mainEntityOfPage": {
                 "@type": "WebPage",
                 "@id": `https://www.redleads.app/solutions/${slug}/${subreddit}`
@@ -120,11 +122,11 @@ export default async function PseoCombinationPage({ params }: Props) {
             <span className="text-orange-500 text-[10px] font-black uppercase tracking-widest">{subredditName} Growth Strategy</span>
           </div>
           <h1 className="text-5xl md:text-8xl font-black text-white mb-8 tracking-tighter leading-[0.95]">
-            Scale {solution.hero.title} <br />
-            <span className="text-orange-500 font-serif-italic">On {subredditName}</span>
+            {data.heroCopy.title} <br />
+            <span className="text-orange-500 font-serif-italic">{data.heroCopy.highlight}</span>
           </h1>
           <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed mb-12">
-            The best {solution.hero.titleHighlight} leads are in {subredditName}. Use RedLeads AI to identify them the moment they express a need for your solution.
+            {data.heroCopy.desc}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link 

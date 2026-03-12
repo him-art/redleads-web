@@ -15,7 +15,7 @@ const WaitlistCTA = () => {
           Stop Wasting Hours on Reddit.<br /><span className="text-orange-500 italic font-serif font-light">Start Finding Customers Today.</span>
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-400">
-          Join 100+ founders using RedLeads to turn social conversations into growth. Start your 3-day full access trial now.
+          Join 110+ founders who stopped manually searching Reddit. Start your 3-day full access trial — no card required.
         </p>
 
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -23,7 +23,7 @@ const WaitlistCTA = () => {
             href="/login"
             className="group flex w-full items-center justify-center gap-2 rounded-full bg-orange-600 px-8 py-4 font-semibold text-white shadow-xl shadow-amber-900/20 transition-all hover:bg-amber-700 hover:scale-105 sm:w-auto"
           >
-            Get started for free
+            Find My First Reddit Leads
             <MaterialIcon name="arrow_right" size={16} className="transition-transform group-hover:translate-x-1" />
           </Link>
         </div>

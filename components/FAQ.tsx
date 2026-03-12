@@ -50,6 +50,14 @@ const faqs = [
   {
     question: "What is Power Search?",
     answer: "Power Search is designed to find up to 50 top ranking, SEO optimized Reddit posts for your project. While our live feed tracks new conversations, Power Search scans historical high-traffic threads where your brand can gain the most visibility."
+  },
+  {
+    question: "Is $29/mo worth it if I'm a solo founder just starting out?",
+    answer: "Yes — one customer found on Reddit typically covers 3–12 months of the subscription. The Growth plan costs less than a lunch out per day. If you're manually searching Reddit already, RedLeads replaces 2–3 hours of daily work immediately. Most founders close their first Reddit customer within 2 weeks of using it."
+  },
+  {
+    question: "How is RedLeads different from just using Reddit search?",
+    answer: "Reddit search shows you old, random posts. RedLeads monitors in real-time, scores every post for buying intent using AI, and sends the best ones to your inbox every day automatically. It's the difference between fishing with a net vs. a rod — you stop searching and start receiving."
   }
 ];
 
@@ -112,7 +120,7 @@ const FAQ = () => {
                 
                 <div
                   className={`transition-all duration-300 ease-in-out relative z-10 ${
-                    openIndex === index ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
+                    openIndex === index ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'
                   }`}
                 >
                   <div className="px-6 pb-6 text-[13px] font-medium leading-relaxed tracking-wide text-gray-500">

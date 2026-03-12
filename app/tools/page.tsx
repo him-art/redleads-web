@@ -49,12 +49,12 @@ export default function ToolsHubPage() {
         <main className="min-h-screen bg-[#1a1a1a]">
             <Navbar />
             
-            <section className="container mx-auto px-4 pt-40 pb-32">
+            <section className="container mx-auto px-4 pt-24 sm:pt-40 pb-16 sm:pb-32">
                 <div className="max-w-4xl mx-auto text-center mb-20">
-                    <h1 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tighter">
+                    <h1 className="text-4xl sm:text-6xl md:text-7xl font-black text-white mb-6 tracking-tighter">
                         Reddit <span className="text-orange-500 font-serif-italic">Toolkit</span>
                     </h1>
-                    <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+                    <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
                         Essential free tools to help you master Reddit marketing and find your first 100 users.
                     </p>
                 </div>
@@ -64,7 +64,7 @@ export default function ToolsHubPage() {
                         <div key={i} className="p-2 bg-white/5 border border-orange-500/10 rounded-[2.5rem]">
                             <Link 
                                 href={tool.href}
-                                className="group relative block bg-[#0c0c0c] border border-orange-500/20 rounded-[2rem] p-8 md:p-10 hover:border-orange-500/40 transition-all overflow-hidden"
+                                className="group relative block bg-[#0c0c0c] border border-orange-500/20 rounded-[2rem] p-6 sm:p-8 md:p-10 hover:border-orange-500/40 transition-all overflow-hidden"
                             >
                                 <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                             <div className="relative z-10">

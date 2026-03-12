@@ -1,19 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import MaterialIcon from '@/components/ui/MaterialIcon';
 import { createClient } from '@/lib/supabase/client';
 
 const Pricing = () => {
     const [isLoading, setIsLoading] = useState<string | null>(null);
     const [slots, setSlots] = useState<{ sold: number; total: number } | null>(null);
+    const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
 
     // New Dynamic Pricing Logic ($20 every 20 users)
     const currentUsers = slots?.sold || 0; 
-    const isEarlyBird = currentUsers < 80;
-    const currentPrice = isEarlyBird ? 59 : 79 + Math.floor((currentUsers - 80) / 20) * 20;
+    const currentPrice = currentUsers < 80 ? 59 : 79 + Math.floor((currentUsers - 80) / 20) * 20;
     const nextPrice = currentPrice + 20;
-    const nextCheckpoint = isEarlyBird ? 80 : 80 + (Math.floor((currentUsers - 80) / 20) + 1) * 20;
+    const nextCheckpoint = currentUsers < 80 ? 80 : 80 + (Math.floor((currentUsers - 80) / 20) + 1) * 20;
     const spotsLeft = nextCheckpoint - currentUsers;
 
     useEffect(() => {
@@ -53,7 +54,10 @@ const Pricing = () => {
             const res = await fetch('/api/payments/create-checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ plan: planKey })
+                body: JSON.stringify({ 
+                    plan: planKey,
+                    interval: planKey === 'lifetime' ? 'monthly' : billingCycle 
+                })
             });
             
             const data = await res.json().catch(() => ({}));
@@ -76,9 +80,9 @@ const Pricing = () => {
     const plans = [
         {
             name: 'Starter',
-            price: 7,
-            originalPrice: 15,
-            description: 'Perfect for getting started with Reddit marketing',
+            price: 14,
+            originalPrice: 28,
+            description: 'For solo founders finding their first Reddit customers',
             features: {
                 inbound: [
                     { name: '2 Power Search for top ranking post /day', icon: <MaterialIcon name="public" size={14} /> },
@@ -96,9 +100,9 @@ const Pricing = () => {
         },
         {
             name: 'Growth',
-            price: 14,
-            originalPrice: 29,
-            description: 'For growing startups to get maximum benefits',
+            price: 29,
+            originalPrice: 58,
+            description: 'For founders serious about making Reddit a main customer channel',
             highlight: true,
             badge: 'BEST VALUE',
             features: {
@@ -122,17 +126,55 @@ const Pricing = () => {
         <section id="pricing" className="pt-32 pb-10 px-4 bg-[#1a1a1a] relative overflow-hidden border-t border-white/5">
             <div className="max-w-6xl mx-auto relative z-10">
                 {/* Header */}
-                <div className="text-center mb-24">
+                <div className="text-center mb-6">
                     <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ff914d] mb-6 font-mono">PRICING</p>
-                    <h2 className="text-4xl md:text-[5rem] font-black text-white mb-6 tracking-tighter leading-[1.05] max-w-[90vw] mx-auto">
-                        <span className="block whitespace-nowrap">Start getting</span>
-                        <span className="block text-orange-500 font-serif-italic whitespace-nowrap">customers from Reddit</span>
+                    <h2 className="text-4xl md:text-[5rem] font-black text-white mb-16 tracking-tighter leading-[1.05] max-w-[90vw] mx-auto">
+                        <span className="block sm:whitespace-nowrap">Start getting</span>
+                        <span className="block text-orange-500 font-serif-italic sm:whitespace-nowrap">customers from Reddit</span>
                     </h2>
-                    <p className="text-sm md:text-base text-gray-500 max-w-xl mx-auto font-medium uppercase tracking-widest leading-relaxed mb-10">
-                        Find the perfect conversations from Reddit to promote your product.
-                    </p>
                     
-                   
+                    {/* Billing Toggle with Card Border */}
+                    <div className={`inline-flex items-center p-1 bg-white/5 border rounded-[2.5rem] mx-auto transition-all duration-500 ${billingCycle === 'annual' ? 'border-orange-500/40' : 'border-white/10'}`}>
+                        <div className={`bg-[#0c0c0c] border rounded-[2.2rem] py-3 px-8 sm:py-4 sm:px-12 flex items-center justify-center gap-6 sm:gap-10 relative overflow-hidden transition-all duration-500 ${billingCycle === 'annual' ? 'border-orange-500/20' : 'border-white/5'}`}>
+                            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                            
+                            <div className="flex items-center gap-6 sm:gap-10">
+                                <button 
+                                    onClick={() => setBillingCycle('monthly')}
+                                    className={`text-[11px] font-bold uppercase tracking-[0.25em] transition-all duration-300 transform ${billingCycle === 'monthly' ? 'text-white scale-110' : 'text-gray-600 hover:text-gray-400'}`}
+                                >
+                                    Monthly
+                                </button>
+                                
+                                <div 
+                                    onClick={() => setBillingCycle(prev => prev === 'monthly' ? 'annual' : 'monthly')}
+                                    className="relative w-16 h-8 bg-white/5 rounded-full border border-white/10 p-1 cursor-pointer group transition-colors hover:bg-white/10"
+                                >
+                                    <motion.div 
+                                        className="w-5.5 h-5.5 bg-white rounded-full shadow-xl"
+                                        animate={{ x: billingCycle === 'monthly' ? 0 : 32 }}
+                                        transition={{ type: "spring", stiffness: 450, damping: 30 }}
+                                    />
+                                </div>
+
+                                <button 
+                                    onClick={() => setBillingCycle('annual')}
+                                    className={`text-[11px] font-bold uppercase tracking-[0.25em] transition-all duration-300 transform ${billingCycle === 'annual' ? 'text-white scale-110' : 'text-gray-600 hover:text-gray-400'}`}
+                                >
+                                    Annual
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/* Urgency Banner */}
+                <div className="mb-8 flex justify-center">
+                    <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-orange-500/10 border border-orange-500/20 rounded-full">
+                        <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse flex-shrink-0" />
+                        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-orange-400">
+                            ⚡ Early Adopter Pricing — Price increases as we grow
+                        </span>
+                    </div>
                 </div>
 
                 {/* Pricing Cards */}
@@ -161,13 +203,42 @@ const Pricing = () => {
 
                             <div className="mb-10">
                                 <h3 className="text-2xl font-black mb-6 text-white">{plan.name}</h3>
-                                <div className="flex items-baseline gap-2 mb-4">
-                                    {plan.originalPrice && (
-                                        <span className="text-2xl font-bold text-gray-700 line-through decoration-1 decoration-orange-500/30 tracking-tight">${plan.originalPrice}</span>
-                                    )}
-                                    <span className="text-6xl font-black text-white tracking-tighter">${plan.price}</span>
-                                    <span className="text-sm font-bold text-gray-600 uppercase tracking-widest ml-1">/mo</span>
-                                </div>
+                                    <div className="flex items-baseline gap-2 mb-4 h-16">
+                                        {plan.originalPrice && (
+                                            <span className="text-2xl font-bold text-gray-700 line-through decoration-1 decoration-orange-500/30 tracking-tight">${plan.originalPrice}</span>
+                                        )}
+                                        <div className="relative h-16 flex items-baseline overflow-hidden">
+                                            <AnimatePresence mode="wait">
+                                                <motion.span
+                                                    key={billingCycle}
+                                                    initial={{ y: 20, opacity: 0 }}
+                                                    animate={{ y: 0, opacity: 1 }}
+                                                    exit={{ y: -20, opacity: 0 }}
+                                                    transition={{ duration: 0.3, ease: "easeOut" }}
+                                                    className="text-6xl font-black text-white tracking-tighter"
+                                                >
+                                                    ${billingCycle === 'annual' ? (plan.price * 10 / 12).toFixed(2) : plan.price}
+                                                </motion.span>
+                                            </AnimatePresence>
+                                            <span className="text-sm font-bold text-gray-600 uppercase tracking-widest ml-1">
+                                                /mo
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="h-6">
+                                        <AnimatePresence>
+                                            {billingCycle === 'annual' && (
+                                                <motion.p 
+                                                    initial={{ opacity: 0, height: 0 }}
+                                                    animate={{ opacity: 1, height: 'auto' }}
+                                                    exit={{ opacity: 0, height: 0 }}
+                                                    className="text-[10px] font-black text-orange-500/80 uppercase tracking-widest mb-4"
+                                                >
+                                                    Billed annually (${plan.price * 10}/yr)
+                                                </motion.p>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
                                 <p className="text-xs font-bold text-gray-500 leading-relaxed max-w-[240px] uppercase tracking-wider">{plan.description}. Start finding users.</p>
                             </div>
 
@@ -337,13 +408,13 @@ const Pricing = () => {
 
                 {/* Bottom Info Banner */}
                 <div className="mt-20 max-w-3xl mx-auto p-2 bg-white/5 border border-white/5 rounded-[3.5rem]">
-                    <div className="rounded-[3rem] bg-[#0c0c0c] border border-white/5 p-12 md:p-16 text-center relative overflow-hidden group hover:border-orange-500/20 transition-all shadow-none">
+                    <div className="rounded-[3rem] bg-[#0c0c0c] border border-white/5 p-6 sm:p-12 md:p-16 text-center relative overflow-hidden group hover:border-orange-500/20 transition-all shadow-none">
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                         
                         <div className="mb-12">
                             <div className="flex justify-between items-center mb-6">
                                 <p className="text-[10px] font-black text-[#ff914d] uppercase tracking-[0.4em]">Lifetime Plan</p>
-                                <p className="text-[14px] font-black text-white uppercase tracking-[0.4em] bg-white/5 px-4 py-2 rounded-full border border-white/5">
+                                <p className="text-[11px] sm:text-[14px] font-black text-white uppercase tracking-[0.2em] sm:tracking-[0.4em] bg-white/5 px-3 sm:px-4 py-2 rounded-full border border-white/5">
                                     {slots ? `${slots.sold} FOUNDERS JOINED` : 'LOADING...'}
                                 </p>
                             </div>
@@ -360,7 +431,7 @@ const Pricing = () => {
                                                 {/* Vertical Notch */}
                                                 <div className={`w-[2px] h-8 mb-2 ${currentUsers >= tick ? 'bg-green-500' : 'bg-white/10'}`} />
                                                 {/* Price Label (Below) */}
-                                                <span className={`text-[16px] font-black tracking-tighter ${currentUsers >= tick ? 'text-green-500' : 'text-gray-700'}`}>
+                                                <span className={`text-[12px] sm:text-[16px] font-black tracking-tighter ${currentUsers >= tick ? 'text-green-500' : 'text-gray-700'}`}>
                                                     ${tickPrice}
                                                 </span>
                                             </div>

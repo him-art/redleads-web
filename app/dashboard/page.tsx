@@ -4,8 +4,7 @@ import { redirect } from 'next/navigation';
 import DashboardClient from './DashboardClient';
 import { Suspense } from 'react';
 import LoadingIcon from '@/components/ui/LoadingIcon';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import TawkToScript from '@/components/TawkToScript';
 
 export default async function DashboardPage(props: { searchParams: Promise<{ search?: string }> }) {
     const searchParams = await props.searchParams;
@@ -53,6 +52,7 @@ export default async function DashboardPage(props: { searchParams: Promise<{ sea
     };
     
     // Fetch Reports (Drafts + Sent) - Removed as Daily Reports feature is decommissioned
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const reports: any[] = [];
 
     return (
@@ -63,12 +63,14 @@ export default async function DashboardPage(props: { searchParams: Promise<{ sea
                 </div>
             }>
                 <DashboardClient 
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     profile={mergedProfile as any} 
                     reports={reports || []} 
                     user={user}
                     initialSearch={initialSearch}
                 />
             </Suspense>
+            <TawkToScript />
         </main>
     );
 }

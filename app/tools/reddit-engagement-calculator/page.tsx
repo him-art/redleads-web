@@ -26,17 +26,17 @@ export default function RedditEngagementCalculatorPage() {
             <Navbar />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-            <section className="container mx-auto px-4 pt-25 pb-20 border-b border-white/5">
+            <section className="container mx-auto px-4 pt-20 sm:pt-25 pb-16 sm:pb-20 border-b border-white/5">
                 <div className="max-w-4xl mx-auto text-center mb-16">
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-orange-500/20 rounded-full mb-8">
                         <MaterialIcon name="leaderboard" size={16} className="text-orange-500" />
                         <span className="text-orange-500 text-[10px] font-black uppercase tracking-widest">Free Analytics Tool</span>
                     </div>
-                    <h1 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tighter">
+                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white mb-6 tracking-tighter">
                         Engagement Rate <br />
                         <span className="text-orange-500 font-serif-italic">Calculator</span>
                     </h1>
-                    <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+                    <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
                         Measure how well your Reddit posts actually perform relative to the community size. Get a grade and a plan to improve.
                     </p>
                 </div>
@@ -46,7 +46,7 @@ export default function RedditEngagementCalculatorPage() {
             <section className="container mx-auto px-4 py-24 border-b border-white/5">
                 <div className="max-w-3xl mx-auto">
                     <h2 className="text-2xl font-black text-white mb-8 text-center">Understanding Engagement Grades</h2>
-                    <div className="grid md:grid-cols-5 gap-4 text-center">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 text-center">
                         {[
                             { grade: 'S', range: '10%+', color: 'text-orange-500 border-orange-500/20 bg-orange-500/5', label: 'Legendary' },
                             { grade: 'A', range: '5-10%', color: 'text-green-500 border-green-500/20 bg-green-500/5', label: 'Exceptional' },

@@ -9,7 +9,7 @@ const features = [
     id: 'scoring',
     icon: 'target',
     title: "AI-Powered Scoring",
-    description: "Every post is scored based on relevance to your product.",
+    description: "Know instantly which posts have buyers ready to act — skip the noise, focus on the money.",
     color: "text-orange-500",
     bg: "bg-orange-500/10"
   },
@@ -17,7 +17,7 @@ const features = [
     id: 'inbox',
     icon: 'inbox',
     title: "Daily Inbox",
-    description: "Wake up to fresh opportunities delivered every morning.",
+    description: "Wake up to a curated list of warm leads, scored and ready to engage — before your competitors see them.",
     color: "text-blue-500",
     bg: "bg-blue-500/10"
   },
@@ -25,7 +25,7 @@ const features = [
     id: 'monitoring',
     icon: 'zap',
     title: "Real-time Monitoring",
-    description: "Catch new Reddit posts within minutes of being published.",
+    description: "Be the first to reply to high-intent posts. Speed wins on Reddit — early replies get the most visibility.",
     color: "text-yellow-500",
     bg: "bg-yellow-500/10"
   },
@@ -33,7 +33,7 @@ const features = [
     id: 'seo',
     icon: 'search',
     title: "SEO Opportunities",
-    description: "Find posts already ranking on Google for long-term visibility.",
+    description: "Find Reddit posts ranked on Google's first page — reply once, get traffic and customers for months.",
     color: "text-purple-500",
     bg: "bg-purple-500/10"
   },
@@ -41,7 +41,7 @@ const features = [
     id: 'replies',
     icon: 'sparkles',
     title: "AI Reply Suggestions",
-    description: "Get helpful reply drafts tailored to each conversation.",
+    description: "Never stare at a blank reply box. Get 3 tailored, non-spammy reply drafts in one click.",
     color: "text-orange-400",
     bg: "bg-orange-400/10"
   },
@@ -49,7 +49,7 @@ const features = [
     id: 'save',
     icon: 'bookmark',
     title: "Save & Organize",
-    description: "Bookmark posts and track your best opportunities.",
+    description: "Save hot leads and track your outreach pipeline. Never lose a warm conversation again.",
     color: "text-pink-500",
     bg: "bg-pink-500/10"
   },
@@ -113,15 +113,15 @@ const InboxPreview = () => (
         key={i} 
         className="flex items-center justify-between p-4 rounded-xl bg-[#0c0c0c] border border-white/5 hover:border-white/10 transition-colors group/item"
       >
-        <div className="flex items-center gap-4">
-          <div className="px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-500 text-[10px] font-black uppercase tracking-wider">
+        <div className="flex items-center gap-4 min-w-0">
+          <div className="px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-500 text-[10px] font-black uppercase tracking-wider flex-shrink-0">
             Delivered
           </div>
-          <span className="text-sm font-bold text-white/90">
+          <span className="text-sm font-bold text-white/90 truncate">
             Daily Intelligence: {count} Top Opportunities
           </span>
         </div>
-        <MaterialIcon name="target" size={16} className="text-orange-500 opacity-60 group-hover/item:opacity-100 transition-opacity" />
+        <MaterialIcon name="target" size={16} className="text-orange-500 opacity-60 group-hover/item:opacity-100 transition-opacity flex-shrink-0" />
       </div>
     ))}
   </div>
@@ -157,7 +157,7 @@ const MonitoringPreview = () => (
       ].map((item, i) => (
         <div key={i} className="p-5 rounded-2xl bg-[#0c0c0c] border border-white/5 space-y-4">
           <div className="flex items-center justify-between">
-             <div className="flex items-center gap-3">
+             <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                <span className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-gray-400">MEDIUM MATCH</span>
                <span className="text-[10px] font-black uppercase tracking-widest text-orange-500/80">R/{item.sub}</span>
                <div className="flex items-center gap-1 text-[10px] font-bold text-gray-600">
@@ -397,7 +397,7 @@ const Features = () => {
         <div className="text-center mb-20">
           
           <h2 className="text-4xl md:text-7xl font-black text-white leading-tight tracking-tighter mb-6">
-            Your complete <span className="text-orange-500 font-serif-italic">Reddit marketing</span> <br className="hidden md:block"/> toolkit
+            Everything you need to turn <span className="text-orange-500 font-serif-italic">Reddit</span> <br className="hidden md:block"/>into a customer channel
           </h2>
           <p className="max-w-2xl mx-auto text-gray-400 text-sm md:text-base font-medium leading-relaxed opacity-80">
             RedLeads gives you all the tools to discover and engage with potential customers on Reddit effortlessly.
@@ -435,7 +435,7 @@ const Features = () => {
 
           <div className="lg:col-span-6">
             <div className="p-2 bg-white/5 border border-white/5 rounded-[2.5rem]">
-              <div className="relative w-full h-[580px] rounded-[2rem] bg-[#0c0c0c] border border-white/5 p-6 md:p-10 flex flex-col justify-center overflow-hidden">
+              <div className="relative w-full min-h-[400px] sm:h-[580px] rounded-[2rem] bg-[#0c0c0c] border border-white/5 p-6 md:p-10 flex flex-col justify-center overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                 
                   {activeTab === 'inbox' ? (

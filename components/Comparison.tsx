@@ -12,11 +12,11 @@ const Comparison = () => {
         {/* Header */}
         <div className="text-center max-w-4xl mx-auto mb-20">
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 mb-4 block">
-                Why Choose RedLeads?
+                The Old Way vs. The Smart Way
             </span>
             <h2 className="text-4xl md:text-[4.5rem] font-black text-white leading-[1.05] tracking-tighter mb-6">
-                Finding new customers feels too hard? <br className="hidden md:block" />
-                <span className="text-orange-500 font-serif-italic">RedLeads is the better way.</span>
+                Stop spending 3+ hours/day <br className="hidden md:block" />
+                <span className="text-orange-500 font-serif-italic">on Reddit the hard way.</span>
             </h2>
             <p className="text-gray-500 text-lg font-medium leading-relaxed max-w-2xl mx-auto">
                 Stop wasting hours searching customers on Reddit manually and start finding high-intent 
@@ -78,15 +78,15 @@ const Comparison = () => {
 
                     <ul className="relative z-10 space-y-8 mb-12 flex-1">
                         <BenefitItem 
-                            title="Create your project (2 minutes)"
-                            description="Simply add your website & description. RedLeads AI automatically finds the most relevant keywords for your business and niche."
+                            title="Setup in 2 minutes — leads arrive same day"
+                            description="Simply add your website &amp; description. RedLeads AI automatically finds the most relevant keywords for your business and niche."
                         />
                         <BenefitItem 
                             title="Get high-ranking Reddit opportunities"
                             description="AI tracks search engine indexed Reddit posts and brand mentions inside Reddit comments to surface highly-ranking Reddit posts to engage with."
                         />
                         <BenefitItem 
-                            title="Invest just 20 minutes daily"
+                            title="20 min/day → close your first Reddit customer"
                             description="Review curated opportunities and engage authentically. Highly effective marketing with minimal time investment."
                         />
                     </ul>
@@ -94,7 +94,7 @@ const Comparison = () => {
                     <div className="relative z-10 mt-auto bg-white/10 border border-white/30 rounded-2xl p-6 flex items-center justify-center gap-3 text-black shadow-lg shadow-black/5 backdrop-blur-sm">
                         <MaterialIcon name="check_circle" size={20} />
                         <span className="text-xs md:text-sm font-black uppercase tracking-widest">
-                            Effective growth marketing in 20 min/day
+                            20 min/day → warm leads delivered to your inbox
                         </span>
                     </div>
                 </div>

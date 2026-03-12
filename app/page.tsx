@@ -12,7 +12,7 @@ import ROI from "@/components/ROI";
 import FAQ from "@/components/FAQ";
 
 import Footer from "@/components/Footer";
-import SectionCTA from "@/components/SectionCTA";
+import TawkToScript from "@/components/TawkToScript";
 
 export default function Home() {
   return (
@@ -28,13 +28,14 @@ export default function Home() {
         <Comparison />
         <Features />
 
-        <ROI />
         <FounderNote />
 
         <Pricing />
+        <ROI />
         
         <FAQ />
         <Footer />
+        <TawkToScript />
       </div>
     </main>
   );

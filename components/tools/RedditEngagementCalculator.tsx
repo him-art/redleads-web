@@ -29,8 +29,8 @@ export default function RedditEngagementCalculator() {
     };
 
     return (
-        <div className="max-w-xl mx-auto">
-            <div className="bg-[#222] border border-white/10 rounded-3xl p-8 shadow-2xl">
+        <div className="max-w-xl mx-auto px-4 sm:px-0">
+            <div className="bg-[#222] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl">
                 <RateLimitBanner remaining={remaining} isLimited={isLimited} resetTime={resetTime} maxUses={5} />
                 <form onSubmit={handleCalculate} className="space-y-4">
                     {[
@@ -70,14 +70,14 @@ export default function RedditEngagementCalculator() {
 
                 {result && (
                     <div className="mt-8 pt-8 border-t border-white/5 animate-in fade-in slide-in-from-top-4 duration-500">
-                        <div className="flex items-center gap-6 mb-6">
+                        <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-6">
                             <div className="text-center">
-                                <div className={`text-6xl font-black ${result.color}`}>{result.grade}</div>
+                                <div className={`text-5xl sm:text-6xl font-black ${result.color}`}>{result.grade}</div>
                                 <div className="text-[10px] font-black text-gray-500 uppercase tracking-widest mt-1">Grade</div>
                             </div>
-                            <div className="flex-1 bg-[#1a1a1a] p-4 rounded-xl border border-white/5">
-                                <div className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Engagement Rate</div>
-                                <div className="text-3xl font-black text-white">{result.rate}%</div>
+                            <div className="w-full flex-1 bg-[#1a1a1a] p-4 rounded-xl border border-white/5 text-center sm:text-left">
+                                <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Engagement Rate</div>
+                                <div className="text-2xl sm:text-3xl font-black text-white">{result.rate}%</div>
                             </div>
                         </div>
                         <div className="p-4 bg-white/5 rounded-xl border border-white/5">

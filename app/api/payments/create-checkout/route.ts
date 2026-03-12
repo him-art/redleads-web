@@ -5,11 +5,12 @@ import { z } from 'zod';
 
 const checkoutSchema = z.object({
     plan: z.enum(['starter', 'growth', 'lifetime']).optional(),
+    interval: z.enum(['monthly', 'annual']).optional(),
 });
 
 /**
  * Creates a Dodo Payments checkout session for subscription upgrade.
- * Supports both Starter ($7/mo) and Growth ($14/mo) plans.
+ * Supports both Starter ($14/mo) and Growth ($29/mo) plans.
  */
 export async function POST(req: Request) {
     try {
@@ -29,7 +30,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Invalid request data' }, { status: 400 });
         }
         
-        const { plan = 'growth' } = result.data;
+        const { plan = 'growth', interval = 'monthly' } = result.data;
 
         // 3. Get user profile
         const { data: profile } = await supabase
@@ -38,7 +39,9 @@ export async function POST(req: Request) {
             .eq('id', user.id)
             .single();
 
-        if (profile?.subscription_tier === plan) {
+        // If they are on the same plan and it's monthly, we allow them to go annual.
+        // If we had a subscription_interval column, we could be more precise.
+        if (profile?.subscription_tier === plan && interval === 'monthly') {
             return NextResponse.json({ error: 'Already on this plan' }, { status: 400 });
         }
 
@@ -61,10 +64,14 @@ export async function POST(req: Request) {
         
         switch (plan) {
             case 'starter': 
-                productId = process.env.DODO_PRODUCT_ID_STARTER;
+                productId = interval === 'annual' 
+                    ? process.env.DODO_PRODUCT_ID_STARTER_ANNUAL 
+                    : process.env.DODO_PRODUCT_ID_STARTER;
                 break;
             case 'growth':
-                productId = process.env.DODO_PRODUCT_ID_GROWTH;
+                productId = interval === 'annual'
+                    ? process.env.DODO_PRODUCT_ID_GROWTH_ANNUAL
+                    : process.env.DODO_PRODUCT_ID_GROWTH;
                 break;
             case 'lifetime':
                 productId = process.env.DODO_PRODUCT_ID_LTD;

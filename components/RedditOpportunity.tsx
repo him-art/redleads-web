@@ -62,8 +62,8 @@ export default function RedditOpportunity() {
         {/* Section Heading */}
         <div className="text-center max-w-[90vw] mx-auto mb-16 px-4">
             <h2 className="text-4xl md:text-[5rem] font-black text-white leading-[1.05] tracking-tighter mb-4">
-                <span className="block whitespace-nowrap">How <span className="text-orange-500 font-serif-italic">Reddit Marketing</span></span>
-                <span className="block whitespace-nowrap">Helps You Get Customers</span>
+                <span className="block sm:whitespace-nowrap">How <span className="text-orange-500 font-serif-italic">Reddit Marketing</span></span>
+                <span className="block sm:whitespace-nowrap">Helps You Get Customers</span>
             </h2>
         </div>
 
@@ -75,7 +75,7 @@ export default function RedditOpportunity() {
                 <div className="flex items-center justify-center gap-4 md:border-r border-white/10">
                     <div className="w-14 h-14 relative">
                          <Image 
-                            src="/reddit-logo.png" 
+                            src="/reddit-logo.webp" 
                             alt="Reddit Logo" 
                             fill
                             sizes="56px"
@@ -105,7 +105,7 @@ export default function RedditOpportunity() {
                 delay={0}
             >
                 <Image 
-                    src="/reddit-opportunity-step1.png" 
+                    src="/reddit-opportunity-step1.webp" 
                     alt="Reddit discussions example" 
                     fill 
                     sizes="(max-width: 768px) 100vw, 33vw"
@@ -113,15 +113,15 @@ export default function RedditOpportunity() {
                 />
             </Card>
 
-            {/* Card 2: AI Training Funnel */}
+            {/* Card 2: Competitor Urgency */}
             <Card 
-                title="It's training the next generation of AI"
-                description="Reddit content is used to train LLMs like ChatGPT. Being present on Reddit means being part of the conversation that shapes AI recommendations."
+                title="Your competitors are already on Reddit"
+                description="Reddit content trains ChatGPT and Google AI. Every answer your competitors leave today shapes AI recommendations for years. RedLeads keeps you in the conversation before it's too late."
                 delay={0.1}
             >
                 <Image 
-                    src="/reddit-opportunity-step2.png" 
-                    alt="AI Training Funnel" 
+                    src="/reddit-opportunity-step2.webp" 
+                    alt="Competitor Reddit presence" 
                     fill 
                     sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover"
@@ -134,7 +134,7 @@ export default function RedditOpportunity() {
                 delay={0.2}
             >
                  <Image 
-                    src="/reddit-opportunity-step3.png" 
+                    src="/reddit-opportunity-step3.webp" 
                     alt="Authentic Reddit Conversations" 
                     fill 
                     sizes="(max-width: 768px) 100vw, 33vw"
@@ -150,7 +150,7 @@ export default function RedditOpportunity() {
                 href="/login?next=/#pricing" 
                 className="bg-[#ff6900] hover:bg-[#ff814d] text-white text-lg md:text-xl font-bold py-4 px-10 rounded-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2 border-t border-white/20"
             >
-                Get Customers From Reddit <MaterialIcon name="arrow_right" size={20} />
+                Start Finding Leads Free <MaterialIcon name="arrow_right" size={20} />
             </a>
             
             <div className="mt-6 flex flex-row justify-center items-center gap-6 md:gap-12 text-gray-500 text-[10px] md:text-xs font-bold uppercase tracking-[0.15em]">

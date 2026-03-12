@@ -30,8 +30,8 @@ export default function RedditAdCostCalculator() {
     };
 
     return (
-        <div className="max-w-xl mx-auto">
-            <div className="bg-[#222] border border-white/10 rounded-3xl p-8 shadow-2xl">
+        <div className="max-w-xl mx-auto px-4 sm:px-0">
+            <div className="bg-[#222] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl">
                 <RateLimitBanner remaining={remaining} isLimited={isLimited} resetTime={resetTime} maxUses={5} />
                 <form onSubmit={handleCalculate} className="space-y-4">
                     {[
@@ -72,20 +72,20 @@ export default function RedditAdCostCalculator() {
 
                 {result && (
                     <div className="mt-8 pt-8 border-t border-white/5 animate-in fade-in slide-in-from-top-4 duration-500">
-                        <div className="grid grid-cols-2 gap-4 mb-6">
-                            <div className="bg-[#1a1a1a] p-4 rounded-xl border border-white/5">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                            <div className="bg-[#1a1a1a] p-4 rounded-xl border border-white/5 flex flex-col justify-center text-center sm:text-left">
                                 <div className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Paid Clicks</div>
                                 <div className="text-2xl font-black text-white">{result.clicks.toLocaleString()}</div>
                             </div>
-                            <div className="bg-[#1a1a1a] p-4 rounded-xl border border-white/5">
+                            <div className="bg-[#1a1a1a] p-4 rounded-xl border border-white/5 flex flex-col justify-center text-center sm:text-left">
                                 <div className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Conversions</div>
                                 <div className="text-2xl font-black text-white">{result.conversions.toLocaleString()}</div>
                             </div>
-                            <div className="bg-red-500/5 p-4 rounded-xl border border-red-500/10">
+                            <div className="bg-red-500/5 p-4 rounded-xl border border-red-500/10 flex flex-col justify-center text-center sm:text-left">
                                 <div className="text-[10px] font-black text-red-500/60 uppercase tracking-widest mb-1">Cost Per Acquisition</div>
                                 <div className="text-2xl font-black text-red-500">${result.cpa}</div>
                             </div>
-                            <div className="bg-green-500/5 p-4 rounded-xl border border-green-500/10">
+                            <div className="bg-green-500/5 p-4 rounded-xl border border-green-500/10 flex flex-col justify-center text-center sm:text-left">
                                 <div className="text-[10px] font-black text-green-500/60 uppercase tracking-widest mb-1">Reddit Organic Equiv.</div>
                                 <div className="text-2xl font-black text-green-500">{result.organicEquiv.toLocaleString()}</div>
                             </div>

@@ -27,6 +27,18 @@ export default function PseoDirectoryPage() {
           <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
             Browse our comprehensive guides on how to find leads and grow your business across the most influential subreddits.
           </p>
+
+          <div className="mt-12 flex flex-wrap justify-center gap-3">
+             {solutions.map((solution) => (
+                <a 
+                  key={solution.slug}
+                  href={`#${solution.slug}`}
+                  className="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-orange-500 hover:border-orange-500/50 transition-all"
+                >
+                  {solution.hero.badgeText}
+                </a>
+             ))}
+          </div>
         </div>
 
         <div className="max-w-6xl mx-auto space-y-32">

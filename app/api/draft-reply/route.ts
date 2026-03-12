@@ -25,7 +25,7 @@ export async function POST(req: Request) {
             .eq('id', user.id)
             .single();
 
-        const tier = profile?.subscription_tier; // 'growth', 'starter', 'lifetime', or null/free
+        const tier = profile?.subscription_tier; // 'growth', 'starter', 'lifetime', or null/trial
         let genCount = profile?.reply_generation_count || 0;
         const lastReplyAt = profile?.last_reply_at;
 
@@ -61,19 +61,19 @@ export async function POST(req: Request) {
         // Growth: 500 generations (Monthly)
         // Lifetime: Unlimited (effectively 9999)
         const limits: Record<string, number> = {
-            'free': 5,
+            'trial': 5,
             'starter': 100,
             'growth': 500,
             'lifetime': 500
         };
 
-        const currentTierKey = tier || 'free';
-        const limit = limits[currentTierKey] || limits.free;
+        const currentTierKey = tier || 'trial';
+        const limit = limits[currentTierKey] || limits.trial;
 
         if (genCount >= limit) {
             return NextResponse.json({ 
                 error: 'Limit reached', 
-                message: `You have reached your monthly limit of ${limit} generated replies for the ${currentTierKey === 'free' ? 'Trial' : currentTierKey.charAt(0).toUpperCase() + currentTierKey.slice(1)} plan.` 
+                message: `You have reached your monthly limit of ${limit} generated replies for the ${currentTierKey === 'trial' ? 'Trial' : currentTierKey.charAt(0).toUpperCase() + currentTierKey.slice(1)} plan.` 
             }, { status: 403 });
         }
 

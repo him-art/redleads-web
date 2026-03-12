@@ -1,0 +1,12 @@
+
+C:\Users\hjaya\.gemini\antigravity\scratch\redleads-website\app\dashboard\page.tsx
+   7:8   warning  'Navbar' is defined but never used        @typescript-eslint/no-unused-vars
+   8:8   warning  'Footer' is defined but never used        @typescript-eslint/no-unused-vars
+  57:20  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  67:47  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\hjaya\.gemini\antigravity\scratch\redleads-website\app\page.tsx
+  15:8  warning  'SectionCTA' is defined but never used  @typescript-eslint/no-unused-vars
+
+??? 5 problems (2 errors, 3 warnings)
+

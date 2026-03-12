@@ -117,7 +117,7 @@ export async function POST(req: Request) {
         await supabase
             .from('profiles')
             .update({ 
-                subscription_tier: 'free',
+                subscription_tier: 'trial',
                 dodo_subscription_id: null 
             })
             .eq('id', user.id);

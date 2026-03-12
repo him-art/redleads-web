@@ -47,7 +47,6 @@ export default async function AdminDashboard() {
     ]);
 
     const stats = {
-        free: allProfiles?.filter(u => u.subscription_tier === 'free').length || 0,
         trial: allProfiles?.filter(u => !['growth', 'starter', 'professional', 'lifetime'].includes(u.subscription_tier || '')).length || 0,
         pro: allProfiles?.filter(u => ['growth', 'starter', 'professional', 'lifetime'].includes(u.subscription_tier || '')).length || 0,
         total: allProfiles?.length || 0

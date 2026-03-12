@@ -98,32 +98,34 @@ export default function OpportunityFinder() {
     return (
         <div className="w-full max-w-3xl mx-auto">
             {/* Outer Halo Layer */}
-            <div className="p-2 bg-white/5 border border-orange-500/10 rounded-[2.5rem]">
+            <div className="p-1 sm:p-2 bg-white/5 border border-orange-500/10 rounded-[2rem] sm:rounded-[2.5rem]">
                 {/* Inner Core Card */}
-                <div className="bg-[#0c0c0c] border border-orange-500/20 rounded-[2rem] p-8 md:p-12 relative overflow-hidden group min-h-[400px]">
+                <div className="bg-[#0c0c0c] border border-orange-500/20 rounded-[1.8rem] sm:rounded-[2rem] p-6 sm:p-10 md:p-12 relative overflow-hidden group min-h-[400px]">
                     <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                 
-                <h3 className="text-2xl font-black text-white mb-2 relative z-10 uppercase tracking-tighter">Market Opportunity Scanner</h3>
-                <p className="text-slate-400 mb-8 relative z-10 text-sm font-medium uppercase tracking-[0.1em]">Enter your product URL to find high-intent Reddit threads instantly.</p>
+                <h3 className="text-xl sm:text-2xl font-black text-white mb-2 relative z-10 uppercase tracking-tighter">Market Opportunity Scanner</h3>
+                <p className="text-slate-400 mb-8 relative z-10 text-[10px] sm:text-sm font-medium uppercase tracking-[0.1em]">Enter your product URL to find high-intent Reddit threads instantly.</p>
 
                 <RateLimitBanner remaining={remaining} isLimited={isLimited} resetTime={resetTime} maxUses={3} />
 
                 <form onSubmit={handleScan} className="relative z-20 mb-8">
-                    <div className="relative flex items-center">
-                        <div className="absolute left-4 text-slate-500">
-                           <MaterialIcon name="link" size={20} />
+                    <div className="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                        <div className="relative flex-1">
+                            <div className="absolute left-4 inset-y-0 flex items-center text-slate-500">
+                               <MaterialIcon name="link" size={20} />
+                            </div>
+                            <input 
+                                type="text" 
+                                placeholder="e.g. yourwebsite.com"
+                                value={url}
+                                onChange={(e) => setUrl(e.target.value)}
+                                className="w-full bg-black/40 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-orange-500/50 transition-all placeholder:text-slate-600 font-medium text-base"
+                            />
                         </div>
-                        <input 
-                            type="text" 
-                            placeholder="e.g. yourwebsite.com"
-                            value={url}
-                            onChange={(e) => setUrl(e.target.value)}
-                            className="w-full bg-black/40 border border-white/10 rounded-xl py-4 pl-12 pr-40 text-white focus:outline-none focus:border-orange-500/50 transition-all placeholder:text-slate-600 font-medium"
-                        />
                         <button 
                             type="submit"
                             disabled={isScanning || !url}
-                            className={`absolute right-2 px-8 py-2.5 rounded-lg font-black uppercase text-[10px] tracking-widest transition-all min-w-[120px] flex items-center justify-center gap-2 ${
+                            className={`px-8 py-4 sm:py-2.5 rounded-lg font-black uppercase text-[10px] tracking-widest transition-all sm:min-w-[120px] flex items-center justify-center gap-2 ${
                                 isScanning || !url
                                     ? 'bg-white/5 text-slate-500 cursor-not-allowed'
                                     : 'bg-orange-500 text-white hover:bg-orange-600 shadow-lg shadow-orange-500/20 shadow-orange-500/20'
