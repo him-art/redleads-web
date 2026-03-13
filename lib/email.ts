@@ -1,7 +1,17 @@
 import { Resend } from 'resend';
 import * as React from 'react';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resendInstance: Resend;
+
+function getResend() {
+    if (!resendInstance) {
+        if (!process.env.RESEND_API_KEY) {
+            console.error('[Resend] ❌ ERROR: RESEND_API_KEY is not defined in environment.');
+        }
+        resendInstance = new Resend(process.env.RESEND_API_KEY);
+    }
+    return resendInstance;
+}
 
 interface SendEmailOptions {
     to: string | string[];
@@ -19,12 +29,11 @@ export async function sendEmail({
     subject, 
     react, 
     from = process.env.EMAIL_FROM || 'RedLeads <onboarding@redleads.app>' 
-}: SendEmailOptions) {
+}: SendEmailOptions, supabaseOverride?: any) {
     try {
         // Render to static HTML for maximal compatibility with Resend
         let html: string;
         try {
-            // Use dynamic import to bypass Turbopack's static analysis of react-dom/server
             const { renderToStaticMarkup } = await import('react-dom/server');
             html = renderToStaticMarkup(react);
         } catch (renderErr: any) {
@@ -32,7 +41,7 @@ export async function sendEmail({
             throw new Error(`Failed to render email: ${renderErr.message}`);
         }
 
-        const { data, error } = await resend.emails.send({
+        const { data, error } = await getResend().emails.send({
             from,
             to,
             subject,
@@ -46,25 +55,30 @@ export async function sendEmail({
 
         // Log the email to the database (Best effort)
         try {
-            const { createClient } = await import('@/lib/supabase/server');
-            const supabase = await createClient();
+            let supabase = supabaseOverride;
             
-            // Extract recipient email as string
-            const toEmail = Array.isArray(to) ? to[0] : to;
+            // Note: We no longer auto-import the server client here because it depends on next/headers,
+            // which breaks in worker/background environments. 
+            // Callers in Next.js should pass a client if they want logging.
+            
+            if (supabase) {
+                // Extract recipient email as string
+                const toEmail = Array.isArray(to) ? to[0] : to;
 
-            // Attempt to find user_id by email if possible
-            const { data: profile } = await supabase
-                .from('profiles')
-                .select('id')
-                .eq('email', toEmail)
-                .single();
+                // Attempt to find user_id by email if possible
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('id')
+                    .eq('email', toEmail)
+                    .single();
 
-            await supabase.from('email_logs').insert({
-                user_id: profile?.id || null,
-                to_email: toEmail,
-                subject,
-                context: (react.props as any)?.leads ? { leads: (react.props as any).leads.map((l: any) => l.title) } : null
-            });
+                await supabase.from('email_logs').insert({
+                    user_id: profile?.id || null,
+                    to_email: toEmail,
+                    subject,
+                    context: (react.props as any)?.stage ? { stage: (react.props as any).stage } : null
+                });
+            }
         } catch (logErr) {
             console.error('[Email Log Error]:', logErr);
         }
