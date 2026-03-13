@@ -77,7 +77,7 @@ export default async function PseoCombinationPage({ params }: Props) {
                 "name": "RedLeads",
                 "logo": {
                   "@type": "ImageObject",
-                  "url": "https://www.redleads.app/icon.png"
+                  "url": "https://www.redleads.app/favicon.png"
                 }
               },
               "articleSection": data.insights.archetypeName,

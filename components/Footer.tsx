@@ -12,7 +12,7 @@ const Footer = () => {
           <div className="flex flex-col gap-6">
             <Link href="/" className="w-12 h-12 relative group/logo">
                <Image 
-                 src="/footer-logo.png" 
+                 src="/footer-logo.webp" 
                  alt="RedLeads Logo" 
                  fill 
                  sizes="48px"

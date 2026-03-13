@@ -71,7 +71,7 @@ export default async function ComparisonPage({ params }: Props) {
             "@type": "TechArticle",
             "headline": comparison.title,
             "description": comparison.description,
-            "image": "https://www.redleads.app/og-image.png",
+            "image": "https://www.redleads.app/og-image.webp",
             "author": {
               "@type": "Organization",
               "name": "RedLeads"
@@ -81,7 +81,7 @@ export default async function ComparisonPage({ params }: Props) {
               "name": "RedLeads",
               "logo": {
                 "@type": "ImageObject",
-                "url": "https://www.redleads.app/icon.png"
+                "url": "https://www.redleads.app/favicon.png"
               }
             },
             "datePublished": new Date().toISOString(),

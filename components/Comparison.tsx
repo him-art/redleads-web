@@ -66,7 +66,7 @@ const Comparison = () => {
                             With <span className="text-white drop-shadow-md">RedLeads</span>
                             <div className="relative w-8 h-8 ml-2 drop-shadow-md">
                                 <Image 
-                                    src="/redleads-logo-white.png" 
+                                    src="/redleads-logo-white.webp" 
                                     alt="RedLeads Logo" 
                                     fill 
                                     sizes="32px"

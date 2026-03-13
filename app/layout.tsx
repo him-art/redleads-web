@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     siteName: "RedLeads",
     images: [
       {
-        url: "https://www.redleads.app/og-image.png?v=3",
+        url: "https://www.redleads.app/og-image.webp?v=3",
         width: 1200,
         height: 630,
         alt: "RedLeads - Turn Reddit users into customers",
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "RedLeads | Turn Reddit users into customers",
     description: "Find Your First 100 Users. Stop guessing and start monitoring high-intent conversations on Reddit.",
-    images: ["https://www.redleads.app/og-image.png?v=3"],
+    images: ["https://www.redleads.app/og-image.webp?v=3"],
   },
   
   // Additional SEO metadata
@@ -121,7 +121,7 @@ export default function RootLayout({
                   "url": "https://www.redleads.app",
                   "logo": {
                     "@type": "ImageObject",
-                    "url": "https://www.redleads.app/icon.png",
+                    "url": "https://www.redleads.app/favicon.png",
                     "width": 192,
                     "height": 192
                   },

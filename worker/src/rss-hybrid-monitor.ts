@@ -263,7 +263,12 @@ function findMatchingUsers(post: RSSPost, keywordIndex: Map<string, string[]>): 
     const matchedUsers = new Set<string>();
 
     for (const [keyword, userIds] of keywordIndex.entries()) {
-        if (text.includes(keyword)) {
+        // Use Regex with word boundaries to prevent partial matches (e.g., "app" matching "apple")
+        // Escape special characters in keyword just in case
+        const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`\\b${escapedKeyword}\\b`, 'i');
+        
+        if (regex.test(text)) {
             userIds.forEach(uid => matchedUsers.add(uid));
         }
     }
@@ -279,27 +284,37 @@ async function getLeadCategory(post: RSSPost, businessDescription: string): Prom
     
     try {
         const prompt = `
-            Analyze this Reddit post for business relevance:
-            Business Description: "${businessDescription}"
-            Post Title: "${post.title}"
-            Post Snippet: "${post.snippet.slice(0, 500)}"
+            You are an expert Lead Qualification Assistant. Your goal is to categorize a Reddit post based on its relevance and intent for a specific business.
             
-            Categorize as "High", "Medium", or "Low" based on lead intent.
-            Return ONLY the word: High, Medium, or Low.
+            BUSINESS CONTEXT:
+            The business is described as: "${businessDescription}"
+            
+            REDDIT POST TO ANALYZE:
+            Title: "${post.title}"
+            Snippet: "${post.snippet.slice(0, 1000)}"
+            Subreddit: r/${post.subreddit}
+            
+            CATEGORIZATION CRITERIA:
+            - "High": The user is explicitly asking for a solution, expressing a strong pain point that the business solves, or looking for recommendations in the business's niche. This indicates clear "buying intent" or a direct need that the business can fulfill.
+            - "Medium": The post is highly relevant to the niche or industry of the business, but the intent is more informational, conversational, or exploratory (e.g., sharing a story, asking a general question, discussing trends). It's a good lead, but not immediately actionable.
+            - "Low": The post mentions a keyword relevant to the business but is unrelated to its core offering (e.g., a casual mention, a different context, or a tangential discussion). This also includes spam, noise, or posts where the business cannot provide value.
+            
+            Return ONLY one word: "High", "Medium", or "Low".
         `;
 
         const res = await AI.call({
             model: "llama-3.3-70b-versatile",
             messages: [{ role: "user", content: prompt }],
-            temperature: 0.1,
+            temperature: 0,
             max_tokens: 10
         });
 
         const content = res.choices?.[0]?.message?.content?.trim();
-        if (content?.includes('High')) return 'High';
-        if (content?.includes('Low')) return 'Low';
+        if (content?.toLowerCase().includes('high')) return 'High';
+        if (content?.toLowerCase().includes('low')) return 'Low';
         return 'Medium';
     } catch (e) {
+        console.error(`[AI] Error categorizing lead:`, e);
         return 'Medium';
     }
 }
@@ -311,6 +326,7 @@ async function getLeadCategory(post: RSSPost, businessDescription: string): Prom
 async function runPollCycle() {
     if (!isRunning) return;
     
+    const startTime = Date.now();
     console.log('\n[RSS] ═══════════════════════════════════════════════════════');
     console.log('[RSS] 🚀 Starting Global Keyword Scan...');
     
@@ -330,77 +346,79 @@ async function runPollCycle() {
     for (const subreddit of subreddits) {
         if (!isRunning) break;
         
-        // Fetch
-        const posts = await fetchFeed(subreddit);
-        
-        // Filter new/unseen
-        const newPosts = posts.filter(p => !processedPosts.has(p.id));
-        if (newPosts.length === 0) {
-            await delay(DELAY_BETWEEN_REQ_MS);
-            continue;
-        }
-
-        successCount++;
-        totalPosts += newPosts.length;
-        
-        // Match & Store
-        for (const post of newPosts) {
-            processedPosts.add(post.id);
-            const matchedUserIds = findMatchingUsers(post, index);
+        try {
+            // Fetch
+            const posts = await fetchFeed(subreddit);
             
-            if (matchedUserIds.length > 0) {
-                totalMatches += matchedUserIds.length;
-                console.log(`[RSS] 🎯 Match in r/${subreddit}: "${post.title.slice(0, 30)}..." -> ${matchedUserIds.length} users`);
-                
-                // DEDUPLICATION: Check which users already have this title
-                // This prevents spam/crossposts/restarts from creating duplicates
-                const { data: existing } = await supabase
-                    .from('monitored_leads')
-                    .select('user_id')
-                    .eq('title', post.title)
-                    .in('user_id', matchedUserIds);
-                
-                const existingUserIds = new Set(existing?.map(x => x.user_id) || []);
-                const newUserIds = matchedUserIds.filter(uid => !existingUserIds.has(uid));
-
-                if (newUserIds.length === 0) {
-                    console.log(`[RSS] ⏭️  Skipping duplicates for all matched users.`);
-                    continue;
-                }
-
-                if (newUserIds.length < matchedUserIds.length) {
-                    console.log(`[RSS] 📉 Filtered ${matchedUserIds.length - newUserIds.length} duplicates.`);
-                }
-
-                // Bulk insert leads
-                const leadsToInsert = await Promise.all(newUserIds.map(async (uid) => {
-                    const prof = profiles?.find(p => p.id === uid);
-                    const category = await getLeadCategory(post, prof?.description || '');
-                    
-                    return {
-                        user_id: uid,
-                        title: post.title,
-                        body_text: post.snippet.slice(0, 1000), 
-                        subreddit: post.subreddit,
-                        url: post.link,
-                        author: post.author,
-                        status: 'new',
-                        match_score: category === 'High' ? 0.95 : category === 'Medium' ? 0.75 : 0.45,
-                        match_category: category,
-                        reddit_score: 0,
-                        comment_count: 0
-                    };
-                }));
-                
-                const { error } = await supabase.from('monitored_leads').insert(leadsToInsert);
-                if (error) console.error('[RSS] DB Insert Error:', error.message);
+            // Filter new/unseen
+            const newPosts = posts.filter(p => !processedPosts.has(p.id));
+            if (newPosts.length === 0) {
+                await delay(DELAY_BETWEEN_REQ_MS);
+                continue;
             }
+
+            successCount++;
+            totalPosts += newPosts.length;
+            
+            // Match & Store
+            for (const post of newPosts) {
+                processedPosts.add(post.id);
+                const matchedUserIds = findMatchingUsers(post, index);
+                
+                if (matchedUserIds.length > 0) {
+                    totalMatches += matchedUserIds.length;
+                    console.log(`[RSS] 🎯 Match in r/${subreddit}: "${post.title.slice(0, 30)}..." -> ${matchedUserIds.length} users`);
+                    
+                    // DEDUPLICATION: Check which users already have this title
+                    const { data: existing } = await supabase
+                        .from('monitored_leads')
+                        .select('user_id')
+                        .eq('title', post.title)
+                        .in('user_id', matchedUserIds);
+                    
+                    const existingUserIds = new Set(existing?.map(x => x.user_id) || []);
+                    const newUserIds = matchedUserIds.filter(uid => !existingUserIds.has(uid));
+
+                    if (newUserIds.length === 0) {
+                        console.log(`[RSS] ⏭️  Skipping duplicates for all matched users.`);
+                        continue;
+                    }
+
+                    // Bulk insert leads
+                    // Limit concurrent AI categorization calls to avoid rate limits
+                    const limit = pLimit(5);
+                    const leadsToInsert = await Promise.all(newUserIds.map((uid) => limit(async () => {
+                        const prof = profiles?.find(p => p.id === uid);
+                        const category = await getLeadCategory(post, prof?.description || '');
+                        
+                        return {
+                            user_id: uid,
+                            title: post.title,
+                            body_text: post.snippet.slice(0, 1000), 
+                            subreddit: post.subreddit,
+                            url: post.link,
+                            author: post.author,
+                            status: 'new',
+                            match_score: category === 'High' ? 0.95 : category === 'Medium' ? 0.75 : 0.45,
+                            match_category: category,
+                            reddit_score: 0,
+                            comment_count: 0
+                        };
+                    })));
+                    
+                    const { error } = await supabase.from('monitored_leads').insert(leadsToInsert);
+                    if (error) console.error('[RSS] DB Insert Error:', error.message);
+                }
+            }
+        } catch (err) {
+            console.error(`[RSS] Error processing r/${subreddit}:`, err);
         }
         
         await delay(DELAY_BETWEEN_REQ_MS);
     }
     
-    console.log(`[RSS] ✅ Cycle Complete: Scanned ${totalPosts} posts, Found ${totalMatches} leads.`);
+    const duration = Date.now() - startTime;
+    console.log(`[RSS] ✅ Cycle Complete: Scanned ${totalPosts} posts, Found ${totalMatches} leads. Duration: ${Math.round(duration/1000)}s`);
     
     // Update Heartbeat
     try {
@@ -409,11 +427,13 @@ async function runPollCycle() {
             last_heartbeat: new Date().toISOString(),
             status: 'online',
             meta: {
+                last_run_duration_ms: duration,
                 last_scan_counts: {
                     posts: totalPosts,
                     leads: totalMatches,
                     success_rate: subreddits.length > 0 ? (successCount / subreddits.length) : 0
-                }
+                },
+                delay_ms: DELAY_BETWEEN_REQ_MS
             }
         });
     } catch (err) {

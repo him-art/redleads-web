@@ -116,7 +116,7 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                     <div className="flex items-center gap-3">
                             <div className="w-8 h-8 relative">
                             <Image 
-                                src="/redleads-logo-white.png" 
+                                src="/redleads-logo-white.webp" 
                                 alt="RedLeads Logo" 
                                 fill
                                 sizes="32px"
@@ -165,7 +165,7 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                         <div className="flex items-center gap-3 px-2">
                             <div className="w-10 h-10 flex items-center justify-center relative">
                                 <Image
-                                    src="/redleads-logo-white.png" 
+                                    src="/redleads-logo-white.webp" 
                                     alt="RedLeads Logo" 
                                     fill
                                     sizes="40px"

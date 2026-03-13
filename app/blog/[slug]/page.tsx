@@ -84,7 +84,7 @@ export default async function BlogPostPage({ params }: Props) {
                 "publisher": { "@id": "https://www.redleads.app/#organization" },
                 "description": post.description,
                 "keywords": post.keywords.join(", "),
-                "image": "https://www.redleads.app/og-image.png",
+                "image": "https://www.redleads.app/og-image.webp",
                 "abstract": post.tldr,
                 "about": [
                    {

@@ -25,7 +25,7 @@ export default function DailyDigestEmail({ fullName, leads }: DailyDigestEmailPr
   const topLeads = leads.slice(0, 10); // Show up to 10
   const firstName = fullName ? fullName.split(' ')[0] : 'there';
   const siteUrl = 'https://redleads.app'; // Fixed to production
-  const logoUrl = `${siteUrl}/redleads-logo-white.png`;
+  const logoUrl = `${siteUrl}/redleads-logo-white.webp`;
   
   // Use a tip based on the current day of the year so it rotates daily but is consistent for all users that day
   const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 1000 / 60 / 60 / 24);

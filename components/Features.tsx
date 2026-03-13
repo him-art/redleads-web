@@ -66,7 +66,7 @@ const LeadPreview = () => (
       <div className="flex-1 space-y-1">
         <div className="flex items-center gap-2">
         <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0">
-          <Image src="/reddit-logo.png" alt="Reddit" width={24} height={24} />
+          <Image src="/reddit-logo.webp" alt="Reddit" width={24} height={24} />
         </div>
           <span className="text-xs font-bold text-gray-400">r/SaaS</span>
           <span className="text-xs text-gray-600">|</span>
@@ -316,7 +316,7 @@ const SEOPreview = () => (
           <div className="absolute -left-2 top-6 w-1 h-12 bg-purple-500 rounded-full " />
           <div className="flex items-center gap-2">
             <div className="w-5 h-5 rounded-full overflow-hidden flex-shrink-0">
-              <Image src="/reddit-logo.png" alt="Reddit" width={20} height={20} />
+              <Image src="/reddit-logo.webp" alt="Reddit" width={20} height={20} />
             </div>
             <span className="text-[10px] font-black text-purple-400 uppercase tracking-widest">Ranking #1 on Google</span>
           </div>

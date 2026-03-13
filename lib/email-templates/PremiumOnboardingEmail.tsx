@@ -18,7 +18,7 @@ export default function PremiumOnboardingEmail({
   
   const firstName = fullName ? fullName.split(' ')[0] : 'there';
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://redleads.app';
-  const logoUrl = `${siteUrl}/redleads-logo-white.png`;
+  const logoUrl = `${siteUrl}/redleads-logo-white.webp`;
   
   const content = {
     welcome: {

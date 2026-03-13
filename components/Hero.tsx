@@ -77,7 +77,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
             <span className="inline-flex items-center gap-2 px-3 md:px-6 py-0.5 md:py-1.5 bg-orange-500/5 border border-orange-500/20 rounded-[1.25rem] md:rounded-[2rem]">
               <div className="relative w-7 h-7 md:w-14 md:h-14 flex-shrink-0">
                 <Image 
-                  src="/reddit-new-logo.png" 
+                  src="/reddit-new-logo.webp" 
                   alt="Reddit" 
                   fill
                   className="object-contain"
@@ -199,7 +199,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 flex items-center justify-center relative">
                     <Image
-                      src="/redleads-logo-white.png" 
+                      src="/redleads-logo-white.webp" 
                       alt="RedLeads Logo" 
                       fill
                       sizes="32px"
@@ -409,7 +409,7 @@ function FloatingBubble({ className, delay = 0, scale = 1, duration = 3, floatDe
     >
       <div className="w-5 h-5 rounded-full bg-transparent flex items-center justify-center flex-shrink-0 overflow-hidden">
            <Image 
-             src="/reddit-new-logo.png" 
+             src="/reddit-new-logo.webp" 
              alt="Reddit" 
              width={18} 
              height={18} 
