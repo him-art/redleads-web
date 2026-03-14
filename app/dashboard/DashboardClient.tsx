@@ -69,6 +69,14 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
         }
     }, [isActuallyExpired, activeTab]);
 
+    // [FIX] Support query parameter for tab deep-linking (e.g. /dashboard?tab=billing)
+    useEffect(() => {
+        const tabParam = searchParams.get('tab');
+        if (tabParam && ['reports', 'live', 'settings', 'billing', 'Guide'].includes(tabParam)) {
+            setActiveTab(tabParam as any);
+        }
+    }, [searchParams]);
+
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const showPaywall = isActuallyExpired; 
 
