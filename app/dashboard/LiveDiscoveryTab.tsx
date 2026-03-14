@@ -209,6 +209,7 @@ export default function LiveDiscoveryTab({
                                     autoScan={false}
                                     isLocked={true}
                                     onResultsFound={(count) => setHasResults(count > 0)}
+                                    onNavigate={onNavigate}
                                 />
                             ) : (
                                 <div className="flex flex-col items-center justify-center py-10 space-y-6 text-center">
