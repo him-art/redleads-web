@@ -3,40 +3,49 @@ import * as React from 'react';
 interface TrialLifecycleEmailProps {
   fullName: string;
   stage: 'day1' | 'day2' | 'day3';
+  productName?: string;
+  leadCount?: number;
+  topSubreddit?: string;
 }
 
-export default function TrialLifecycleEmail({ fullName, stage }: TrialLifecycleEmailProps) {
+export default function TrialLifecycleEmail({ 
+  fullName, 
+  stage, 
+  productName = 'your product', 
+  leadCount = 12, 
+  topSubreddit = 'SaaS' 
+}: TrialLifecycleEmailProps) {
   const firstName = fullName ? fullName.split(' ')[0] : 'there';
   const siteUrl = 'https://redleads.app';
   const logoUrl = `${siteUrl}/redleads-logo-white.png`;
 
   const content = {
     day1: {
-      preheader: `Have you tried the AI Reply feature yet, ${firstName}?`,
-      tag: 'Pro Tip',
-      tagColor: '#3b82f6', // Blue
-      title: 'How to save 3 hours a day on Reddit',
-      body: `Hi ${firstName},\n\nYou're 24 hours into your trial with RedLeads. Are you getting the most out of it?\n\nMost founders spend hours reading threads and typing out replies. With our **AI Reply Drafter**, you can generate highly-contextual, non-salesy responses in one click directly from your dashboard.\n\nLog in today and try generating your first reply. Remember: the best comments consult, they don't sell.`,
-      cta: 'Try AI Reply Now',
-      ctaUrl: `${siteUrl}/dashboard?utm_source=lifecycle&utm_medium=email&utm_campaign=day1_value`
+      preheader: `Your first leads for ${productName} are ready.`,
+      tag: 'Leads Ready',
+      tagColor: '#10b981', // Green
+      title: 'Your first Reddit leads are ready 👀',
+      body: `Hi ${firstName},\n\nWe just finished scanning Reddit for ${productName}. We found **${leadCount} posts** matching your keywords today alone.\n\nYour top match is currently in **r/${topSubreddit}** - log in and use AI Reply to engage them before someone else does. Opportunities like these cool off quickly.\n\nDon't want to wait? Use **Power Search** to find high-intent leads instantly and start engaging from day one.`,
+      cta: 'View My Leads',
+      ctaUrl: `${siteUrl}/dashboard?utm_source=lifecycle&utm_medium=email&utm_campaign=hour1_leads`
     },
     day2: {
-      preheader: 'Your trial ends tomorrow. Here is what other founders are saying.',
-      tag: 'Founders',
-      tagColor: '#10b981', // Green
-      title: 'See why founders love RedLeads',
-      body: `Hi ${firstName},\n\nYour 3-day trial is coming to an end tomorrow. Before it expires, we wanted to share what other founders are achieving with RedLeads:\n\n💬 *"I found 12 high-intent leads in my first day that I would have completely missed."* - Sarah, Indie Hacker\n\n💬 *"The AI filtering is magic. I don't get alerted for spam anymore."* - Mark, SaaS Founder\n\nDon't lose your competitive edge on Reddit. Upgrade today to keep your daily intelligence flowing indefinitely.`,
-      cta: 'View Upgrade Plans',
-      ctaUrl: `${siteUrl}/dashboard?tab=billing&utm_source=lifecycle&utm_medium=email&utm_campaign=day2_social_proof`
+      preheader: `Don't miss out on ${leadCount} new conversations.`,
+      tag: 'Alert',
+      tagColor: '#f59e0b', // Yellow/Orange
+      title: 'You\'re missing leads right now',
+      body: `Hi ${firstName},\n\nSince you signed up, **${leadCount} more posts** were created that mention your keywords and match your ideal customer profile.\n\nEvery hour you wait is another customer potentially going to a competitor. Log in to engage these leads, and secure your lifetime access before the next price increase hits.`,
+      cta: 'Claim Lifetime Access',
+      ctaUrl: `${siteUrl}/pricing?utm_source=lifecycle&utm_medium=email&utm_campaign=day2_missing`
     },
     day3: {
-      preheader: 'Your lead scanner has been paused.',
-      tag: 'Alert',
-      tagColor: '#f43f5e', // Red
-      title: 'Your trial has expired',
-      body: `Hi ${firstName},\n\nYour 3-day free trial on RedLeads has officially ended. We loved having you on board!\n\n**Your lead scanner is currently paused.** \n\nTo restart your daily intelligence drops and unlock full access to the AI Reply Drafter, please select a plan on your dashboard. Opportunities are happening right now on Reddit—don't miss out.`,
-      cta: 'Upgrade to Reactivate',
-      ctaUrl: `${siteUrl}/dashboard?tab=billing&utm_source=lifecycle&utm_medium=email&utm_campaign=day3_expiry`
+      preheader: 'Your trial ends tomorrow. Keep your leads flowing.',
+      tag: 'Trial Ending',
+      tagColor: '#ef4444', // Red
+      title: 'Your RedLeads trial ends today',
+      body: `Hi ${firstName},\n\nYour full access to RedLeads expires in less than 24 hours.\n\nAfter that, your dashboard will be locked and your Power Searches will be blurred. You'll lose access to the daily flow of high-intent Reddit customers.\n\nTo keep your constant stream of leads flowing, secure your lifetime access right now before your current spot is taken.`,
+      cta: 'Secure My Access',
+      ctaUrl: `${siteUrl}/pricing?utm_source=lifecycle&utm_medium=email&utm_campaign=day3_expiry`
     }
   };
 

@@ -62,7 +62,7 @@ async function runTrialLifecycle() {
     try {
         const { data: allProfiles, error: profileError } = await supabase
             .from('profiles')
-            .select('id, email, subscription_tier, created_at, trial_ends_at, user_metadata')
+            .select('id, email, subscription_tier, created_at, trial_ends_at, user_metadata, description')
             .in('subscription_tier', ['free', 'trial']);
 
         if (profileError) {
@@ -81,43 +81,66 @@ async function runTrialLifecycle() {
         const now = new Date();
 
         for (const profile of allProfiles) {
-            const { id, email, created_at, user_metadata } = profile;
-            if (!email || !created_at) continue;
+            const { id, email, created_at, trial_ends_at, user_metadata, description } = profile;
+            
+            // If they haven't finished onboarding, their trial hasn't started, so we skip them.
+            if (!email || !created_at || !trial_ends_at) continue;
 
             // Parse existing sent metadata or initialize empty map
             const metadata = (user_metadata as any) || {};
             const sentFlags: Record<string, boolean> = metadata.lifecycle_sent || {};
 
-            const createdAtDate = new Date(created_at);
-            const hoursSinceSignup = (now.getTime() - createdAtDate.getTime()) / (1000 * 60 * 60);
+            // Calculate hours since trial actually started (trial_ends_at - 3 days)
+            const trialEndsAtDate = new Date(trial_ends_at);
+            const trialStartedAtDate = new Date(trialEndsAtDate.getTime() - 3 * 24 * 60 * 60 * 1000);
+            const hoursSinceTrialStart = (now.getTime() - trialStartedAtDate.getTime()) / (1000 * 60 * 60);
             
             let targetStage: 'day1' | 'day2' | 'day3' | null = null;
             let subject = '';
 
             // Determine if they qualify for a stage they haven't received yet.
-            // Each stage has a 24h window to prevent sending to long-expired users.
-            // day1: 24-48h, day2: 48-72h, day3: 72-96h (first 24h after trial expires)
-            if (hoursSinceSignup >= 72 && hoursSinceSignup < 96 && !sentFlags['day3']) {
+            if (hoursSinceTrialStart >= 72 && hoursSinceTrialStart < 96 && !sentFlags['day3']) {
                 targetStage = 'day3';
-                subject = 'Your RedLeads trial has expired ⏸️';
-            } else if (hoursSinceSignup >= 48 && hoursSinceSignup < 72 && !sentFlags['day2']) {
+                subject = 'Your RedLeads trial ends today';
+            } else if (hoursSinceTrialStart >= 48 && hoursSinceTrialStart < 72 && !sentFlags['day2']) {
                 targetStage = 'day2';
-                subject = 'See why founders love RedLeads 🚀';
-            } else if (hoursSinceSignup >= 24 && hoursSinceSignup < 48 && !sentFlags['day1']) {
+                subject = 'You\'re missing leads right now';
+            } else if (hoursSinceTrialStart >= 1 && hoursSinceTrialStart < 48 && !sentFlags['day1']) {
                 targetStage = 'day1';
-                subject = 'How to save 3 hours a day on Reddit ⏱️';
+                subject = 'Your first Reddit leads are ready 👀';
             }
 
             if (targetStage) {
-                console.log(`[Lifecycle] 📧 Sending ${targetStage} email to ${email} (${Math.round(hoursSinceSignup)}h since signup)...`);
+                console.log(`[Lifecycle] 📧 Sending ${targetStage} email to ${email} (${Math.round(hoursSinceTrialStart)}h since trial start)...`);
+                
+                let leadCount = 12;
+                let topSubreddit = 'SaaS';
                 
                 try {
+                    const { data: leads } = await supabase
+                        .from('monitored_leads')
+                        .select('subreddit')
+                        .eq('user_id', id);
+                        
+                    if (leads && leads.length > 0) {
+                        leadCount = leads.length;
+                        const subCounts: Record<string, number> = {};
+                        leads.forEach(l => {
+                            if (l.subreddit) subCounts[l.subreddit] = (subCounts[l.subreddit] || 0) + 1;
+                        });
+                        const sortedSubs = Object.entries(subCounts).sort((a, b) => b[1] - a[1]);
+                        if (sortedSubs.length > 0) topSubreddit = sortedSubs[0][0];
+                    }
+
                     const emailResult = await sendEmail({
                         to: email,
                         subject: subject,
                         react: TrialLifecycleEmail({
                             fullName: email.split('@')[0],
-                            stage: targetStage
+                            stage: targetStage,
+                            productName: description || 'your product',
+                            leadCount: leadCount,
+                            topSubreddit: topSubreddit
                         })
                     }, supabase);
 

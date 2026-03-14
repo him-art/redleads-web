@@ -24,6 +24,7 @@ export async function POST(req: Request) {
         }
 
         // 1. Save or Create Profile
+        const trialEndsAt = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
         const { error: updateError } = await supabase
             .from('profiles')
             .upsert({
@@ -32,7 +33,8 @@ export async function POST(req: Request) {
                 description,
                 keywords,
                 onboarding_completed: true,
-                website_url: url
+                website_url: url,
+                trial_ends_at: trialEndsAt
             });
 
         if (updateError) {

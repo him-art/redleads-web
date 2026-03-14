@@ -35,7 +35,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
     const [results, setResults] = useState<RedditLead[]>([]);
     const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
     const [teaserInfo, setTeaserInfo] = useState<{ isTeaser: boolean, totalFound: number } | null>(null);
-    const { draftingLead, setDraftingLead } = useDashboardData();
+    const { draftingLead, setDraftingLead, profile } = useDashboardData();
     const [productContext, setProductContext] = useState('');
     const [timeRange, setTimeRange] = useState<'all' | '7d' | '30d' | '1y'>('30d');
     const supabase = useMemo(() => createClient(), []);
@@ -301,41 +301,86 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
 
                                         <AnimatePresence>
                                             {isOpen && (
-                                                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                    {leads.map((lead, i) => (
-                                                        <Link key={i} href={lead.url} target="_blank" className="group p-5 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.04] transition-all relative overflow-hidden">
-                                                            <div className="flex flex-col h-full justify-between gap-4">
-                                                                <div className="space-y-3">
-                                                                    <div className="flex items-center justify-between">
-                                                                        <div className="flex items-center gap-2">
-                                                                            <span className="text-[9px] font-black text-orange-500 bg-orange-500/10 px-2.5 py-1 rounded-full uppercase tracking-widest border border-orange-500/10">r/{lead.subreddit}</span>
-                                                                            <span className={`text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-widest ${
-                                                                                lead.relevance === 'High' ? 'bg-green-500/10 text-green-500 border border-green-500/20' :
-                                                                                lead.relevance === 'Medium' ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' :
-                                                                                'bg-gray-500/10 text-gray-500 border border-gray-500/20'
-                                                                            }`}>
-                                                                                {lead.relevance} Match
-                                                                            </span>
-                                                                            <button 
-                                                                                onClick={(e) => {
-                                                                                    e.preventDefault();
-                                                                                    e.stopPropagation();
-                                                                                    setDraftingLead(lead as any);
-                                                                                }}
-                                                                                className="ml-2 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground border border-primary text-[10px] font-black uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center gap-1.5 group/btn whitespace-nowrap"
-                                                                                title="Open Reply Generator"
-                                                                            >
-                                                                                <MaterialIcon name="add_comment" size={12} className="text-primary-foreground" />
-                                                                                Draft Reply
-                                                                            </button>
-                                                                        </div>
-                                                                        <MaterialIcon name="open_in_new" size={12} className="text-gray-600 group-hover:text-white transition-colors" />
-                                                                    </div>
-                                                                    <h4 className="text-xs sm:text-sm font-bold text-text-secondary group-hover:text-text-primary leading-relaxed tracking-tight line-clamp-3 transition-all">{lead.title}</h4>
+                                                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="space-y-4">
+                                                    {(() => {
+                                                        const isTrialUser = profile?.subscription_tier === 'trial' || profile?.subscription_tier === 'free';
+                                                        const visibleCount = isTrialUser ? Math.ceil(leads.length / 2) : leads.length;
+                                                        const visibleLeads = leads.slice(0, visibleCount);
+                                                        const blurredLeads = leads.slice(visibleCount);
+
+                                                        return (
+                                                            <>
+                                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                                    {visibleLeads.map((lead, i) => (
+                                                                        <Link key={i} href={lead.url} target="_blank" className="group p-5 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.04] transition-all relative overflow-hidden">
+                                                                            <div className="flex flex-col h-full justify-between gap-4">
+                                                                                <div className="space-y-3">
+                                                                                    <div className="flex items-center justify-between">
+                                                                                        <div className="flex items-center gap-2">
+                                                                                            <span className="text-[9px] font-black text-orange-500 bg-orange-500/10 px-2.5 py-1 rounded-full uppercase tracking-widest border border-orange-500/10">r/{lead.subreddit}</span>
+                                                                                            <span className={`text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-widest ${
+                                                                                                lead.relevance === 'High' ? 'bg-green-500/10 text-green-500 border border-green-500/20' :
+                                                                                                lead.relevance === 'Medium' ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' :
+                                                                                                'bg-gray-500/10 text-gray-500 border border-gray-500/20'
+                                                                                            }`}>
+                                                                                                {lead.relevance} Match
+                                                                                            </span>
+                                                                                            <button 
+                                                                                                onClick={(e) => {
+                                                                                                    e.preventDefault();
+                                                                                                    e.stopPropagation();
+                                                                                                    setDraftingLead(lead as any);
+                                                                                                }}
+                                                                                                className="ml-2 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground border border-primary text-[10px] font-black uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center gap-1.5 group/btn whitespace-nowrap"
+                                                                                                title="Open Reply Generator"
+                                                                                            >
+                                                                                                <MaterialIcon name="add_comment" size={12} className="text-primary-foreground" />
+                                                                                                Draft Reply
+                                                                                            </button>
+                                                                                        </div>
+                                                                                        <MaterialIcon name="open_in_new" size={12} className="text-gray-600 group-hover:text-white transition-colors" />
+                                                                                    </div>
+                                                                                    <h4 className="text-xs sm:text-sm font-bold text-text-secondary group-hover:text-text-primary leading-relaxed tracking-tight line-clamp-3 transition-all">{lead.title}</h4>
+                                                                                </div>
+                                                                            </div>
+                                                                        </Link>
+                                                                    ))}
                                                                 </div>
-                                                            </div>
-                                                        </Link>
-                                                    ))}
+
+                                                                {blurredLeads.length > 0 && (
+                                                                    <div className="relative mt-4">
+                                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 filter blur-md opacity-50 select-none pointer-events-none">
+                                                                            {blurredLeads.map((lead, i) => (
+                                                                                <div key={`blurred-${i}`} className="group p-5 bg-white/[0.02] border border-white/5 rounded-2xl relative overflow-hidden">
+                                                                                    <div className="flex flex-col h-full justify-between gap-4">
+                                                                                        <div className="space-y-3">
+                                                                                            <div className="flex items-center justify-between">
+                                                                                                <div className="flex items-center gap-2">
+                                                                                                    <span className="text-[9px] font-black text-orange-500 bg-orange-500/10 px-2.5 py-1 rounded-full uppercase tracking-widest border border-orange-500/10">r/{lead.subreddit}</span>
+                                                                                                    <span className="text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-widest bg-gray-500/10 text-gray-500 border border-gray-500/20">{lead.relevance} Match</span>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <h4 className="text-xs sm:text-sm font-bold text-text-secondary leading-relaxed tracking-tight line-clamp-3">{lead.title.replace(/./g, '█')}</h4>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            ))}
+                                                                        </div>
+                                                                        <div className="absolute inset-0 flex flex-col items-center justify-center z-10 px-4 text-center">
+                                                                           <div className="bg-black/60 p-6 rounded-3xl border border-white/10 backdrop-blur-md shadow-2xl flex flex-col items-center">
+                                                                               <MaterialIcon name="lock" size={28} className="text-orange-500 mb-3" />
+                                                                               <h4 className="text-white font-bold text-lg mb-2">🔒 {blurredLeads.length} more {groupKey} relevancy leads</h4>
+                                                                               <p className="text-sm text-gray-400 mb-4 max-w-sm">Upgrade to unlock the second half of these high-intent leads and directly engage with them.</p>
+                                                                               <button onClick={onShowModal} className="px-6 py-3 bg-white text-black font-black uppercase tracking-widest text-xs rounded-xl hover:bg-gray-200 transition-colors shadow-lg active:scale-95">
+                                                                                   Unlock Full Results
+                                                                               </button>
+                                                                           </div>
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+                                                            </>
+                                                        );
+                                                    })()}
                                                 </motion.div>
                                             )}
                                         </AnimatePresence>

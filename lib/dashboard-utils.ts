@@ -21,12 +21,7 @@ export function calculateTrialStatus(profile: any): TrialStatus {
         return { isActuallyExpired: false, isInTrial: false, daysRemaining: 0, trialEndsAt: null };
     }
 
-    const trialEndsAtString = profile?.trial_ends_at || (profile?.created_at ? (() => {
-        const d = new Date(profile.created_at);
-        if (isNaN(d.getTime())) return null;
-        const ends = new Date(d.getTime() + TRIAL_DAYS * 24 * 60 * 60 * 1000);
-        return ends.toISOString();
-    })() : null);
+    const trialEndsAtString = profile?.trial_ends_at || null;
 
     const trialEndsAt = trialEndsAtString ? new Date(trialEndsAtString) : null;
     const now = new Date();

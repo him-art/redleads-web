@@ -143,9 +143,7 @@ async function buildKeywordIndex(): Promise<{
         if (isPaid) return true;
 
         // Calculate trial end date
-        const trialEndsAt = p.trial_ends_at
-            ? new Date(p.trial_ends_at)
-            : (p.created_at ? new Date(new Date(p.created_at).getTime() + TRIAL_DAYS * 24 * 60 * 60 * 1000) : null);
+        const trialEndsAt = p.trial_ends_at ? new Date(p.trial_ends_at) : null;
 
         const isInTrial = trialEndsAt ? trialEndsAt > now : false;
         if (!isInTrial) {

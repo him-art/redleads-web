@@ -54,10 +54,8 @@ export async function POST(req: Request) {
             
             const isPaid = profile?.subscription_tier === 'growth' || profile?.subscription_tier === 'starter' || profile?.subscription_tier === 'lifetime';
             
-            // Get trial status - auto-calculate if trial_ends_at is not set
-            const trialEndsAt = profile?.trial_ends_at 
-                ? new Date(profile.trial_ends_at) 
-                : (profile?.created_at ? new Date(new Date(profile.created_at).getTime() + 3 * 24 * 60 * 60 * 1000) : null);
+            // Get trial status - strictly requires trial_ends_at to be set
+            const trialEndsAt = profile?.trial_ends_at ? new Date(profile.trial_ends_at) : null;
             isInTrial = trialEndsAt ? trialEndsAt > new Date() : false;
 
             if (!(isPaid || isInTrial)) {

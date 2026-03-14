@@ -32,14 +32,12 @@ export async function POST(req: Request) {
         // --- Trial Expiration Check (Free Only) ---
         const isPaid = tier === 'starter' || tier === 'growth' || tier === 'lifetime';
         if (!isPaid) {
-            const trialEndsAt = profile?.trial_ends_at 
-                ? new Date(profile.trial_ends_at) 
-                : (profile?.created_at ? new Date(new Date(profile.created_at).getTime() + 3 * 24 * 60 * 60 * 1000) : null);
+            const trialEndsAt = profile?.trial_ends_at ? new Date(profile.trial_ends_at) : null;
             
-            if (trialEndsAt && trialEndsAt < new Date()) {
+            if (!trialEndsAt || trialEndsAt < new Date()) {
                 return NextResponse.json({ 
-                    error: 'Trial expired', 
-                    message: 'Your 3-day free trial has ended. Please upgrade to a paid plan to continue using the Reply Generator.',
+                    error: 'Trial expired or not started', 
+                    message: 'Your 3-day free trial has ended or not yet started. Please complete setup or upgrade to a paid plan.',
                     code: 'PAYWALL_REQUIRED'
                 }, { status: 403 });
             }
