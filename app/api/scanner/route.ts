@@ -73,7 +73,7 @@ export async function POST(req: Request) {
                 profile?.subscription_tier === 'lifetime' ? 5 : 
                 profile?.subscription_tier === 'growth' ? 5 : 
                 profile?.subscription_tier === 'starter' ? 2 : 
-                5 // Trial default
+                2 // Trial default
             );
 
             // Effective count resets if it's a new day
