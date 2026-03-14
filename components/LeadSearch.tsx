@@ -371,7 +371,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                                                                <MaterialIcon name="lock" size={28} className="text-orange-500 mb-3" />
                                                                                <h4 className="text-white font-bold text-lg mb-2">🔒 {blurredLeads.length} more {groupKey} relevancy leads</h4>
                                                                                <p className="text-sm text-gray-400 mb-4 max-w-sm">Upgrade to unlock the second half of these high-intent leads and directly engage with them.</p>
-                                                                               <button onClick={onShowModal} className="px-6 py-3 bg-white text-black font-black uppercase tracking-widest text-xs rounded-xl hover:bg-gray-200 transition-colors shadow-lg active:scale-95">
+                                                                               <button onClick={() => router.push('/dashboard/billing')} className="px-6 py-3 bg-white text-black font-black uppercase tracking-widest text-xs rounded-xl hover:bg-gray-200 transition-colors shadow-lg active:scale-95">
                                                                                    Unlock Full Results
                                                                                </button>
                                                                            </div>
