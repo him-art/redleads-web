@@ -29,14 +29,17 @@ export default function TermsOfService() {
           <section className="space-y-4">
             <h2 className="text-white font-medium">2. Subscription and Services</h2>
             <p>
-              When you subscribe to RedLeads, you gain access to our Reddit monitoring and AI-powered lead discovery features. Your subscription will automatically renew according to your selected billing cycle unless cancelled. You can cancel your subscription at any time through your account settings or the billing portal.
+              When you subscribe to RedLeads, you gain access to our Reddit monitoring and AI-powered lead discovery features. Your subscription will automatically renew according to your selected billing cycle unless cancelled. 
+            </p>
+            <p>
+              Absolutely — you can cancel at any time directly through your account settings or via our <Link href="/dashboard?tab=billing" className="text-primary hover:underline underline-offset-4">Billing Portal</Link>. Cancellation will take effect at the end of your current billing cycle, ensuring you stop all future charges while maintaining full access for the remainder of your prepaid period.
             </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-white font-medium">3. Refund Policy</h2>
             <p>
-              We offer refunds on a case-by-case basis. If you are not satisfied with our service, please contact us at RedLeads.app@gmail.com. 
+              We don&apos;t usually provide prorated refunds for partial months as the service remains active until the end of your cycle. However, if this is your very first month, you have barely used the service, or something went wrong on our end, please reach out to us at <a href="mailto:RedLeads.app@gmail.com" className="text-primary hover:underline">RedLeads.app@gmail.com</a> with the details of your situation. We&apos;ll review each case individually and do our best to make it right.
             </p>
             <p>
               Please note that in the event of a refund, the amount returned will be the original payment amount minus any non-refundable transaction fees and service charges incurred by our payment processor (Dodo Payments). This ensures we can maintain our service while covering the hard costs of processing your initial transaction.
