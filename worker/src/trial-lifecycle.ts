@@ -47,6 +47,16 @@ if (!process.env.RESEND_API_KEY) {
     console.warn('[Lifecycle] ⚠️ RESEND_API_KEY not defined — emails will fail.');
 }
 
+// User indicated 'onboarding@redleads.app' might have deliverability issues.
+// We'll prioritize process.env.EMAIL_FROM_LIFECYCLE or fall back to the project default.
+const EMAIL_FROM = process.env.EMAIL_FROM_LIFECYCLE || process.env.EMAIL_FROM || 'RedLeads <onboarding@redleads.app>';
+console.log(`[Lifecycle] 📧 Using sender: ${EMAIL_FROM}`);
+
+const DISABLE_EMAILS = false; // Safety toggle requested by the user
+if (DISABLE_EMAILS) {
+    console.warn('[Lifecycle] ⚠️ EMAILS ARE CURRENTLY DISABLED VIA SCRIPT VARIABLE.');
+}
+
 console.log('[Lifecycle] ✅ Environment loaded successfully.');
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
@@ -62,7 +72,7 @@ async function runTrialLifecycle() {
     try {
         const { data: allProfiles, error: profileError } = await supabase
             .from('profiles')
-            .select('id, email, subscription_tier, created_at, trial_ends_at, user_metadata, description')
+            .select('id, email, subscription_tier, created_at, trial_ends_at, user_metadata, description, website_url')
             .in('subscription_tier', ['free', 'trial']);
 
         if (profileError) {
@@ -98,16 +108,32 @@ async function runTrialLifecycle() {
             let targetStage: 'day1' | 'day2' | 'day3' | null = null;
             let subject = '';
 
-            // Determine if they qualify for a stage they haven't received yet.
-            if (hoursSinceTrialStart >= 72 && hoursSinceTrialStart < 96 && !sentFlags['day3']) {
-                targetStage = 'day3';
-                subject = 'Your RedLeads trial ends today';
-            } else if (hoursSinceTrialStart >= 48 && hoursSinceTrialStart < 72 && !sentFlags['day2']) {
-                targetStage = 'day2';
-                subject = 'You\'re missing leads right now';
-            } else if (hoursSinceTrialStart >= 1 && hoursSinceTrialStart < 48 && !sentFlags['day1']) {
+            // Sequential Stage Logic: Ensure they get Day 1 first, then Day 2, then Day 3.
+            // Check boundaries so we don't email very old trials!
+            if (!sentFlags['day1'] && hoursSinceTrialStart >= 1 && hoursSinceTrialStart < 48) {
                 targetStage = 'day1';
                 subject = 'Your first Reddit leads are ready 👀';
+            } else if (!sentFlags['day2'] && hoursSinceTrialStart >= 48 && hoursSinceTrialStart < 72) {
+                targetStage = 'day2';
+                subject = 'You\'re missing leads right now';
+            } else if (!sentFlags['day3'] && hoursSinceTrialStart >= 72 && hoursSinceTrialStart < 96) {
+                targetStage = 'day3';
+                subject = 'Your RedLeads trial ends today';
+            } else if (hoursSinceTrialStart >= 96) {
+                // If the trial is older than 96 hours, we don't want to retroactively send these emails
+                // We'll optionally update sentFlags to true so we never process them again.
+                let updated = false;
+                if (!sentFlags['day1']) { sentFlags['day1'] = true; updated = true; }
+                if (!sentFlags['day2']) { sentFlags['day2'] = true; updated = true; }
+                if (!sentFlags['day3']) { sentFlags['day3'] = true; updated = true; }
+                
+                if (updated) {
+                    await supabase.from('profiles').update({ 
+                        user_metadata: { ...metadata, lifecycle_sent: sentFlags } 
+                    }).eq('id', id);
+                    console.log(`[Lifecycle] ⏩ Skipped and marked old trial for ${email} (${Math.round(hoursSinceTrialStart)}h)`);
+                }
+                continue;
             }
 
             if (targetStage) {
@@ -132,13 +158,19 @@ async function runTrialLifecycle() {
                         if (sortedSubs.length > 0) topSubreddit = sortedSubs[0][0];
                     }
 
+                    if (DISABLE_EMAILS) {
+                        console.log(`[Lifecycle] 🛑 [DRY RUN] Would have sent ${targetStage} to ${email}`);
+                        continue;
+                    }
+
                     const emailResult = await sendEmail({
                         to: email,
+                        from: EMAIL_FROM,
                         subject: subject,
                         react: TrialLifecycleEmail({
-                            fullName: email.split('@')[0],
+                            fullName: (profile.user_metadata as any)?.full_name || email.split('@')[0],
                             stage: targetStage,
-                            productName: description || 'your product',
+                            productName: profile.website_url?.replace(/^https?:\/\//, '') || 'your website',
                             leadCount: leadCount,
                             topSubreddit: topSubreddit
                         })

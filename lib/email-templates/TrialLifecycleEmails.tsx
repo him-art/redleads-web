@@ -22,29 +22,29 @@ export default function TrialLifecycleEmail({
   const content = {
     day1: {
       preheader: `Your first leads for ${productName} are ready.`,
-      tag: 'Leads Ready',
+      tag: 'New Leads',
       tagColor: '#10b981', // Green
-      title: 'Your first Reddit leads are ready 👀',
-      body: `Hi ${firstName},\n\nWe just finished scanning Reddit for ${productName}. We found **${leadCount} posts** matching your keywords today alone.\n\nYour top match is currently in **r/${topSubreddit}** - log in and use AI Reply to engage them before someone else does. Opportunities like these cool off quickly.\n\nDon't want to wait? Use **Power Search** to find high-intent leads instantly and start engaging from day one.`,
+      title: 'Your first leads are ready 👀',
+      body: `Hi ${firstName},\n\nWe just finished scanning Reddit for mentions of ${productName}. We found ${leadCount} potential customers today alone.\n\nYour top match is currently in r/${topSubreddit}. On Reddit, the first responder usually wins the deal. Log in now and use AI Reply to engage them before your competitors do.\n\nOpportunities like these cool off in minutes, not hours. Don't leave them waiting.`,
       cta: 'View My Leads',
       ctaUrl: `${siteUrl}/dashboard?utm_source=lifecycle&utm_medium=email&utm_campaign=hour1_leads`
     },
     day2: {
-      preheader: `Don't miss out on ${leadCount} new conversations.`,
-      tag: 'Alert',
+      preheader: `${leadCount} new leads were just found. Don't miss out.`,
+      tag: 'Urgent Alert',
       tagColor: '#f59e0b', // Yellow/Orange
       title: 'You\'re missing leads right now',
-      body: `Hi ${firstName},\n\nSince you signed up, **${leadCount} more posts** were created that mention your keywords and match your ideal customer profile.\n\nEvery hour you wait is another customer potentially going to a competitor. Log in to engage these leads, and secure your lifetime access before the next price increase hits.`,
-      cta: 'Claim Lifetime Access',
+      body: `Hi ${firstName},\n\nSince you signed up, ${leadCount} more people on Reddit have asked for recommendations that match ${productName}.\n\nEvery hour you wait is a missed opportunity to grow your revenue. Log in now to claim these leads and secure your lifetime access before the current early-bird pricing expires.`,
+      cta: 'Secure My Leads',
       ctaUrl: `${siteUrl}/pricing?utm_source=lifecycle&utm_medium=email&utm_campaign=day2_missing`
     },
     day3: {
-      preheader: 'Your trial ends tomorrow. Keep your leads flowing.',
-      tag: 'Trial Ending',
+      preheader: 'Your trial ends tomorrow. Keep the leads flowing.',
+      tag: 'Final Call',
       tagColor: '#ef4444', // Red
-      title: 'Your RedLeads trial ends today',
-      body: `Hi ${firstName},\n\nYour full access to RedLeads expires in less than 24 hours.\n\nAfter that, your dashboard will be locked and your Power Searches will be blurred. You'll lose access to the daily flow of high-intent Reddit customers.\n\nTo keep your constant stream of leads flowing, secure your lifetime access right now before your current spot is taken.`,
-      cta: 'Secure My Access',
+      title: 'Action Required: Your trial ends today',
+      body: `Hi ${firstName},\n\nYour full access to RedLeads expires in less than 24 hours.\n\nAfter today, your dashboard will be locked and your lead stream will stop. You'll lose the unfair advantage of having an AI find your customers for you 24/7.\n\nLock in your lifetime access now to keep your pipeline full and never worry about lead gen again.`,
+      cta: 'Get Lifetime Access',
       ctaUrl: `${siteUrl}/pricing?utm_source=lifecycle&utm_medium=email&utm_campaign=day3_expiry`
     }
   };
