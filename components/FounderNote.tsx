@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import SocialProofTicker from './SocialProofTicker';
+import { FOUNDER_COUNT } from '@/data/stats';
 
 interface Testimonial {
   name: string;
@@ -266,44 +267,17 @@ export default function FounderNote() {
                 <p className="text-white font-serif-italic italic text-xl opacity-90">- Tim Jayas</p>
               </div>
 
-              {/* Stat Block */}
-              <div className="mt-8 p-5 rounded-2xl bg-orange-500/5 border border-orange-500/15">
-                <p className="text-sm font-bold text-gray-400 leading-relaxed">
-                  In the first 3 months, RedLeads users found over{' '}
-                  <span className="text-white font-black">14,000+ Reddit posts</span>{' '}
-                  with buyers actively looking for solutions like theirs.
-                </p>
-              </div>
+
             </div>
           </div>
         </div>
 
-        {/* Early Impressions Part of Story */}
+        {/* User Testimonials */}
         <div className="pt-24 border-t border-white/5">
-          <div className="text-center mb-20">
-            <h3 className="text-4xl md:text-7xl font-black text-white mb-6 tracking-tighter leading-[1.05] max-w-4xl mx-auto">
-              The smartest founders <br />
-              <span className="text-orange-500 font-serif-italic">know Reddit converts</span>
-            </h3>
-            <p className="text-gray-500 text-sm md:text-base font-medium opacity-60 max-w-2xl mx-auto">
-              Creators with 100K followers are talking about it. <br className="hidden md:block" />
-              Here&apos;s why they believe in the power of Reddit marketing.
-            </p>
-          </div>
-
-          <div className="mb-20 -mx-4 md:-mx-[max(1rem,calc((100vw-1152px)/2+1rem))]">
-            <SocialProofTicker />
-          </div>
-
-          <div className="flex items-center gap-6 mb-20 max-w-xl mx-auto">
-            <div className="flex-1 h-px bg-white/5" />
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-600 whitespace-nowrap">AND REDLEADS USERS</p>
-            <div className="flex-1 h-px bg-white/5" />
-          </div>
           
           <div className="text-center mb-12">
             <h4 className="text-2xl font-black text-white mb-4">Real reactions from the community</h4>
-            <p className="text-gray-500 text-sm font-medium opacity-60">110+ founders who signed up during our opening month</p>
+            <p className="text-gray-500 text-sm font-medium opacity-60">{FOUNDER_COUNT} founders who signed up during our opening month</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 items-start">

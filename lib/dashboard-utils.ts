@@ -33,7 +33,13 @@ export function calculateTrialStatus(profile: any): TrialStatus {
     }
 
     const trialExpired = trialEndsAt ? (trialEndsAt.getTime() <= now.getTime()) : false;
-    const isActuallyExpired = trialExpired || (!!trialEndsAt && daysRemaining <= 0);
+    
+    // If trial_ends_at is missing, we assume it's a new user who hasn't finished onboarding.
+    // They are NOT expired yet.
+    const isActuallyExpired = subscribed ? false : (trialExpired || (!!trialEndsAt && daysRemaining <= 0));
+    
+    // They are in trial if it's not expired and they have a trial date set.
+    // If no trial date is set but tier is 'trial', we don't say they are 'in trial' yet (onboarding will set it)
     const isInTrial = !isActuallyExpired && daysRemaining > 0;
 
     return {

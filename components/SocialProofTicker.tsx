@@ -112,13 +112,12 @@ const TweetCard = ({ tweet }: { tweet: CreatorTweet }) => {
           {/* Header - User Info */}
           <div className="flex items-center gap-4 mb-6 relative z-10">
             <div className="relative w-12 h-12 md:w-14 md:h-14 rounded-full overflow-hidden shrink-0 border border-gray-50 shadow-sm transition-transform group-hover:scale-105">
-              <img
+              <Image
                 src={tweet.avatar}
                 alt={tweet.name}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(tweet.name)}&background=ffedd5&color=ea580c`;
-                }}
+                fill
+                sizes="56px"
+                className="object-cover"
               />
             </div>
             <div className="flex flex-col min-w-0">
@@ -152,9 +151,11 @@ const TweetCard = ({ tweet }: { tweet: CreatorTweet }) => {
           {/* Inline Context Image */}
           {tweet.inlineImage && (
             <div className="relative w-fit max-w-[140px] rounded-xl overflow-hidden border border-gray-100 shadow-sm mb-4 z-10 bg-gray-50 flex items-center justify-center">
-              <img 
+              <Image 
                 src={tweet.inlineImage} 
-                alt="Context" 
+                alt="Context"
+                width={140}
+                height={100}
                 className="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-105"
               />
             </div>

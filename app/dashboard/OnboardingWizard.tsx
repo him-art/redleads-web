@@ -6,6 +6,7 @@ import axios from 'axios';
 import { ArrowRight, Globe, Check, X, Crown, Shield, Sparkles, Users } from 'lucide-react';
 import Image from 'next/image';
 import LoadingIcon from '@/components/ui/LoadingIcon';
+import { FOUNDER_COUNT } from '@/data/stats';
 
 
 
@@ -70,7 +71,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                 }
 
                 if (data && typeof data.user_count === 'number') {
-                    setSlots({ sold: data.user_count, total: data.total_slots || 150 });
+                    setSlots({ sold: data.user_count, total: data.total_slots || 250 });
                 }
             } catch (err) {
                 console.error('Unexpected error in fetchSlots (Onboarding):', err);
@@ -532,16 +533,19 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                 <button
                                     onClick={handleSkipToTrial}
                                     disabled={isCompletingSetup}
-                                    className="group px-10 py-4 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-xs tracking-[0.2em] rounded-2xl shadow-lg transition-all active:scale-[0.98] w-full sm:w-auto flex items-center justify-center mx-auto disabled:opacity-50"
+                                    className="group px-12 py-5 bg-white hover:bg-slate-100 text-black font-black uppercase text-sm tracking-[0.2em] rounded-2xl shadow-xl transition-all active:scale-[0.98] w-full sm:w-auto flex flex-col items-center justify-center mx-auto disabled:opacity-50"
                                 >
                                     {isCompletingSetup ? (
                                         <div className="flex items-center gap-2">
                                             <LoadingIcon className="w-4 h-4" /> Setting Up...
                                         </div>
                                     ) : (
-                                        <>
-                                            Start free 3 day trial <ArrowRight size={14} className="inline ml-2 group-hover:translate-x-1 transition-transform" />
-                                        </>
+                                        <div className="flex flex-col items-center">
+                                            <div className="flex items-center gap-2">
+                                                Claim My Free 3-Day Trial <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                            </div>
+                                            <span className="text-[10px] opacity-60 font-medium tracking-normal mt-1 capitalize">No Credit Card Required • Instant Access</span>
+                                        </div>
                                     )}
                                 </button>
                                 <p className="text-[9px] font-bold text-text-secondary/40 uppercase tracking-[0.2em] flex items-center justify-center gap-1">
@@ -600,7 +604,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                          <div className="w-full text-center">
                             <div className="flex items-center justify-center gap-2 text-[10px] font-bold text-text-secondary/50 uppercase tracking-widest">
                                 <Users size={12} />
-                                110+ founders using RedLeads.app
+                                {FOUNDER_COUNT} founders using RedLeads.app
                             </div>
                          </div>
                     )}

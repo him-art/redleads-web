@@ -147,7 +147,7 @@ export default function RedditOpportunity() {
         {/* CTA Section */}
         <div className="mt-20 flex flex-col items-center">
             <a 
-                href="/login?next=/#pricing" 
+                href="/login?next=/dashboard" 
                 className="bg-[#ff6900] hover:bg-[#ff814d] text-white text-lg md:text-xl font-bold py-4 px-10 rounded-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2 border-t border-white/20"
             >
                 Start Finding Leads Free <MaterialIcon name="arrow_right" size={20} />

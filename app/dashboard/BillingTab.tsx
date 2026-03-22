@@ -312,8 +312,8 @@ export default function BillingTab() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {[
-                        { id: 'starter', name: 'Starter Plan', price: billingCycle === 'annual' ? 140 : 14, oldPrice: '$28', desc: '10 keywords, 2 power searches & 100 AI reply drafts per month', primary: false, active: planDetails.id === 'starter' },
-                        { id: 'growth', name: 'Growth Plan', price: billingCycle === 'annual' ? 290 : 29, oldPrice: '$58', desc: '20 keywords, 5 power searches & 500 AI reply drafts per month', primary: true, active: planDetails.id === 'growth' }
+                        { id: 'starter', name: PLANS.STARTER.name, price: billingCycle === 'annual' ? PLANS.STARTER.annualPrice : PLANS.STARTER.price, desc: '10 keywords, 2 power searches & 100 AI reply drafts per month', primary: false, active: planDetails.id === 'starter' },
+                        { id: 'growth', name: PLANS.GROWTH.name, price: billingCycle === 'annual' ? PLANS.GROWTH.annualPrice : PLANS.GROWTH.price, desc: '20 keywords, 5 power searches & 500 AI reply drafts per month', primary: true, active: planDetails.id === 'growth' }
                     ].map((plan) => (
                     <div key={plan.id} className="p-1.5 bg-white/5 border border-white/5 rounded-[2.5rem]">
                         <div className={`p-8 sm:p-10 rounded-[2.2rem] border flex flex-col h-full transition-all relative overflow-hidden ${plan.active ? 'border-primary ring-2 ring-primary/20 bg-primary/[0.03]' : 'bg-[#0c0c0c] border-white/5'}`}>
@@ -327,7 +327,6 @@ export default function BillingTab() {
                             <h4 className={`text-base font-black uppercase tracking-[0.25em] mb-6 ${plan.primary || plan.active ? 'text-primary' : 'text-text-secondary'}`}>{plan.name}</h4>
                             
                             <div className="flex items-baseline gap-3 mb-4 h-14">
-                                {plan.oldPrice && <span className="text-lg font-bold text-text-secondary/30 line-through tracking-tight">{plan.oldPrice}</span>}
                                 <div className="relative h-14 flex items-baseline overflow-hidden">
                                     <AnimatePresence mode="wait">
                                         <motion.span
@@ -356,7 +355,7 @@ export default function BillingTab() {
                                             exit={{ opacity: 0, height: 0 }}
                                             className="text-[10px] font-black text-primary/80 uppercase tracking-widest"
                                         >
-                                            Billed annually (${plan.price}/yr)
+                                            Save 2 month
                                         </motion.p>
                                     )}
                                 </AnimatePresence>

@@ -24,7 +24,8 @@ export async function POST(req: Request) {
         }
 
         // 1. Save or Create Profile
-        const trialEndsAt = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
+        const { TRIAL_DAYS } = await import('@/lib/constants');
+        const trialEndsAt = new Date(Date.now() + TRIAL_DAYS * 24 * 60 * 60 * 1000).toISOString();
         const { error: updateError } = await supabase
             .from('profiles')
             .upsert({

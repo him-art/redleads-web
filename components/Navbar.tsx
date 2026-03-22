@@ -61,7 +61,6 @@ const Navbar = () => {
             {user && (
               <Link href="/dashboard" className="text-[#f25e36] hover:text-[#d94a24] transition-colors">Dashboard</Link>
             )}
-            <Link href="/compare" className="hover:text-slate-900 transition-colors">Compare</Link>
             <Link href="/tools" className="hover:text-slate-900 transition-colors">Tools</Link>
             <Link href="/#pricing" className="hover:text-slate-900 transition-colors">Pricing</Link>
           </div>
@@ -81,7 +80,7 @@ const Navbar = () => {
             </div>
           ) : (
             <Link
-              href="/login"
+              href="/login?next=/dashboard"
               className="bg-orange-500 text-white text-[10px] font-black uppercase tracking-widest px-6 py-2.5 rounded-full hover:bg-[#ff4d29] hover:scale-105 active:scale-95 transition-all"
             >
               Get Started
@@ -151,14 +150,6 @@ const Navbar = () => {
                   )}
                   
                   <Link 
-                    href="/compare" 
-                    className="block text-lg font-bold text-slate-800 hover:text-[#f25e36] transition-colors py-2"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Compare
-                  </Link>
-
-                  <Link 
                     href="/tools" 
                     className="block text-lg font-bold text-slate-800 hover:text-[#f25e36] transition-colors py-2"
                     onClick={() => setIsMenuOpen(false)}
@@ -194,7 +185,7 @@ const Navbar = () => {
                     </div>
                   ) : (
                     <Link 
-                      href="/login"
+                      href="/login?next=/dashboard"
                       className="block w-full text-center bg-orange-500 text-white text-xs font-black uppercase tracking-widest px-6 py-4 rounded-full hover:bg-[#ff4d29] active:scale-95 transition-all"
                       onClick={() => setIsMenuOpen(false)}
                     >

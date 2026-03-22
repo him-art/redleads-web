@@ -57,10 +57,6 @@ export async function sendEmail({
         try {
             let supabase = supabaseOverride;
             
-            // Note: We no longer auto-import the server client here because it depends on next/headers,
-            // which breaks in worker/background environments. 
-            // Callers in Next.js should pass a client if they want logging.
-            
             if (supabase) {
                 // Extract recipient email as string
                 const toEmail = Array.isArray(to) ? to[0] : to;
@@ -76,7 +72,11 @@ export async function sendEmail({
                     user_id: profile?.id || null,
                     to_email: toEmail,
                     subject,
-                    context: (react.props as any)?.stage ? { stage: (react.props as any).stage } : null
+                    context: {
+                        ...(react.props as any)?.stage ? { stage: (react.props as any).stage } : {},
+                        resend_id: data?.id,
+                        provider: 'resend'
+                    }
                 });
             }
         } catch (logErr) {

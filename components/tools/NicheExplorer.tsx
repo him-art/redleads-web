@@ -265,7 +265,7 @@ export default function NicheExplorer() {
                                 <h4 className="text-white font-bold mb-3">Want more depth?</h4>
                                 <p className="text-sm text-slate-500 mb-6">Create an account to unlock unlimited research and 24/7 automated monitoring.</p>
                                 <Link 
-                                    href="/login"
+                                    href="/login?next=/dashboard"
                                     className="inline-flex items-center gap-2 bg-white px-8 py-4 rounded-full text-black font-black uppercase text-xs tracking-widest hover:scale-105 transition-transform"
                                 >
                                     Unlock Full Monitoring

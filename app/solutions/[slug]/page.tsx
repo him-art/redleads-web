@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import MaterialIcon from '@/components/ui/MaterialIcon';
 import { getAllSolutions, getSolutionBySlug } from '../data';
 import masterSubreddits from '@/data/master-subreddits.json';
+import { FOUNDER_COUNT } from '@/data/stats';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -289,7 +290,7 @@ export default async function SolutionPage({ params }: Props) {
           </div>
           <div className="text-center mt-12">
             <Link href="/solutions/directory" className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 text-white font-black text-xs uppercase tracking-widest rounded-xl hover:bg-white/20 transition-colors">
-              View All 130+ Strategies <MaterialIcon name="arrow_right" size={16} />
+              View All {FOUNDER_COUNT} Strategies <MaterialIcon name="arrow_right" size={16} />
             </Link>
           </div>
         </div>

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 interface TrialLifecycleEmailProps {
   fullName: string;
-  stage: 'day1' | 'day2' | 'day3';
+  stage: 'day1' | 'day2' | 'day3' | 'day4' | 'day5' | 'day6' | 'day7';
   productName?: string;
   leadCount?: number;
   topSubreddit?: string;
@@ -18,35 +18,136 @@ export default function TrialLifecycleEmail({
   const firstName = fullName ? fullName.split(' ')[0] : 'there';
   const siteUrl = 'https://redleads.app';
   const logoUrl = `${siteUrl}/redleads-logo-white.png`;
+  const dashboardUrl = `${siteUrl}/dashboard?utm_source=lifecycle&utm_medium=email&utm_campaign=${stage}`;
+  const pricingUrl = `${siteUrl}/pricing?utm_source=lifecycle&utm_medium=email&utm_campaign=${stage}`;
 
-  const content = {
+  const content: Record<string, {
+    preheader: string;
+    tag: string;
+    tagColor: string;
+    title: string;
+    body: React.ReactNode;
+    cta: string;
+    ctaUrl: string;
+  }> = {
     day1: {
-      preheader: `Your first leads for ${productName} are ready.`,
-      tag: 'New Leads',
-      tagColor: '#10b981', // Green
-      title: 'Your first leads are ready 👀',
-      body: `Hi ${firstName},\n\nWe just finished scanning Reddit for mentions of ${productName}. We found ${leadCount} potential customers today alone.\n\nYour top match is currently in r/${topSubreddit}. On Reddit, the first responder usually wins the deal. Log in now and use AI Reply to engage them before your competitors do.\n\nOpportunities like these cool off in minutes, not hours. Don't leave them waiting.`,
-      cta: 'View My Leads',
-      ctaUrl: `${siteUrl}/dashboard?utm_source=lifecycle&utm_medium=email&utm_campaign=hour1_leads`
+      preheader: `Your first leads for ${productName} are live right now.`,
+      tag: 'New Leads Ready',
+      tagColor: '#10b981',
+      title: `Your first ${leadCount} Reddit leads are ready 👀`,
+      body: (
+        <>
+          <p>Hi {firstName},</p>
+          <p>We just scanned Reddit for {productName} and found <strong>{leadCount} people</strong> who could become your customers.</p>
+          <p>Your top match is live in <strong>r/{topSubreddit}</strong> right now. The first person to reply wins, and on Reddit, that window is minutes, not hours.</p>
+          <p>Click below to see your leads and use AI Reply to engage them before a competitor does.</p>
+        </>
+      ),
+      cta: 'View My Leads Now →',
+      ctaUrl: dashboardUrl,
     },
     day2: {
-      preheader: `${leadCount} new leads were just found. Don't miss out.`,
+      preheader: `${leadCount} more leads just came in. Don't leave them cold.`,
       tag: 'Urgent Alert',
-      tagColor: '#f59e0b', // Yellow/Orange
-      title: 'You\'re missing leads right now',
-      body: `Hi ${firstName},\n\nSince you signed up, ${leadCount} more people on Reddit have asked for recommendations that match ${productName}.\n\nEvery hour you wait is a missed opportunity to grow your revenue. Log in now to claim these leads and secure your lifetime access before the current early-bird pricing expires.`,
-      cta: 'Secure My Leads',
-      ctaUrl: `${siteUrl}/pricing?utm_source=lifecycle&utm_medium=email&utm_campaign=day2_missing`
+      tagColor: '#f59e0b',
+      title: "You're missing leads right now",
+      body: (
+        <>
+          <p>Hi {firstName},</p>
+          <p>Since you signed up, <strong>{leadCount} more posts</strong> have appeared on Reddit where people are asking about exactly what {productName} does.</p>
+          <p>These conversations are happening whether you show up or not. The founders who reply early build trust — the ones who wait lose deals.</p>
+          <p>Log in and reply to the hottest leads before your trial ends.</p>
+        </>
+      ),
+      cta: 'Claim My Leads →',
+      ctaUrl: dashboardUrl,
     },
     day3: {
       preheader: 'Your trial ends tomorrow. Keep the leads flowing.',
       tag: 'Final Call',
-      tagColor: '#ef4444', // Red
-      title: 'Action Required: Your trial ends today',
-      body: `Hi ${firstName},\n\nYour full access to RedLeads expires in less than 24 hours.\n\nAfter today, your dashboard will be locked and your lead stream will stop. You'll lose the unfair advantage of having an AI find your customers for you 24/7.\n\nLock in your lifetime access now to keep your pipeline full and never worry about lead gen again.`,
-      cta: 'Get Lifetime Access',
-      ctaUrl: `${siteUrl}/pricing?utm_source=lifecycle&utm_medium=email&utm_campaign=day3_expiry`
-    }
+      tagColor: '#ef4444',
+      title: 'Your trial ends today ⏰',
+      body: (
+        <>
+          <p>Hi {firstName},</p>
+          <p>Your full access to RedLeads expires in <strong>less than 24 hours</strong>.</p>
+          <p>After tomorrow, your dashboard locks and your lead stream stops. You will lose live monitoring of r/{topSubreddit} and the other subreddits where your customers are asking questions right now.</p>
+          <p><strong>{leadCount} leads</strong> are sitting in your dashboard. Don't let them go cold.</p>
+        </>
+      ),
+      cta: 'Upgrade Before It Expires →',
+      ctaUrl: pricingUrl,
+    },
+    day4: {
+      preheader: 'How one founder closed their first Reddit customer in 3 days.',
+      tag: 'Success Story',
+      tagColor: '#8b5cf6',
+      title: 'From signup to customer in 3 days',
+      body: (
+        <>
+          <p>Hi {firstName},</p>
+          <p>Here is something we have seen repeatedly: founders who reply to Reddit leads within 24 hours of getting them <strong>close customers 3x faster</strong> than those who batch it weekly.</p>
+          <p>Why? Because Reddit is a real-time platform. When someone asks "what tool should I use for X?" you have a 2-hour window before the thread goes quiet.</p>
+          <p>RedLeads surfaces that moment. <strong>AI Reply</strong> helps you say the right thing. And you stay safe from Reddit's anti-spam filters.</p>
+          <p>Your trial is still active. Go reply to one lead today.</p>
+        </>
+      ),
+      cta: 'Reply to a Lead Now →',
+      ctaUrl: dashboardUrl,
+    },
+    day5: {
+      preheader: 'What happens after you reply.',
+      tag: 'Social Proof',
+      tagColor: '#0ea5e9',
+      title: 'What founders are saying',
+      body: (
+        <>
+          <p>Hi {firstName},</p>
+          <p>A few things we hear from RedLeads users:</p>
+          <div style={{ padding: '16px', borderLeft: '3px solid #0ea5e9', backgroundColor: 'rgba(14, 165, 233, 0.05)', marginBottom: '16px' }}>
+            <p style={{ margin: '0 0 12px 0', fontStyle: 'italic' }}>"I replied to 3 posts in r/SaaS my first week. One of them became a paying customer."</p>
+            <p style={{ margin: '0 0 12px 0', fontStyle: 'italic' }}>"I was spending 2 hours a day manually searching Reddit. RedLeads does it in seconds."</p>
+            <p style={{ margin: 0, fontStyle: 'italic' }}>"The AI Reply feature is what got me. I was terrified of sounding spammy. It doesn't."</p>
+          </div>
+          <p>You are still in your trial. Today is a good day to go turn one of your <strong>{leadCount} leads</strong> into a real conversation.</p>
+        </>
+      ),
+      cta: 'View My Dashboard →',
+      ctaUrl: dashboardUrl,
+    },
+    day6: {
+      preheader: `High-intent leads just landed in r/${topSubreddit}. Don't miss them.`,
+      tag: '🔥 Hot Leads Alert',
+      tagColor: '#f25e36',
+      title: `High-intent posts just hit r/${topSubreddit}`,
+      body: (
+        <>
+          <p>Hi {firstName},</p>
+          <p>We scanned Reddit today and flagged <strong>{leadCount} posts</strong> where people are actively looking for solutions like {productName}.</p>
+          <p>These are NOT brand mentions or casual discussions. These are people saying "I need X, what do you recommend?" — the <strong>highest-intent buying signal</strong> on the internet.</p>
+          <p>Your trial ends very soon. Use AI Reply to engage at least one of these today.</p>
+        </>
+      ),
+      cta: 'See Hot Leads →',
+      ctaUrl: dashboardUrl,
+    },
+    day7: {
+      preheader: 'Last 24 hours. Then your leads stop.',
+      tag: 'Final Warning',
+      tagColor: '#ef4444',
+      title: 'Access locks in 24 hours',
+      body: (
+        <>
+          <p>Hi {firstName},</p>
+          <p>This is the last email before your RedLeads trial ends.</p>
+          <p>Tomorrow, your dashboard goes dark. Your lead stream stops. The <strong>{leadCount} leads</strong> we found for {productName} on <strong>r/{topSubreddit}</strong> will sit unclaimed, and a competitor will reply to them instead.</p>
+          <p>Upgrading takes 60 seconds. A Growth plan is $29/mo — less than a single customer acquisition from paid ads.</p>
+          <p>Don't let 7 days of setup go to waste.</p>
+        </>
+      ),
+      cta: 'Keep My Access Live →',
+      ctaUrl: pricingUrl,
+    },
   };
 
   const currentContent = content[stage];
@@ -97,7 +198,7 @@ export default function TrialLifecycleEmail({
           </h1>
         </div>
 
-        <div style={{ height: '1px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent)', margin: '0 40px' }}></div>
+        <div style={{ height: '1px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent)', margin: '0 40px' }} />
 
         {/* Body */}
         <div style={{ padding: '40px 30px' }}>
@@ -105,8 +206,8 @@ export default function TrialLifecycleEmail({
             fontSize: '15px', 
             color: '#dddddd', 
             fontWeight: '500', 
-            whiteSpace: 'pre-wrap',
-            marginBottom: '40px'
+            marginBottom: '40px',
+            lineHeight: '1.7'
           }}>
             {currentContent.body}
           </div>
@@ -139,7 +240,7 @@ export default function TrialLifecycleEmail({
             Questions? <a href="mailto:redleads.app@gmail.com" style={{ color: '#888888', textDecoration: 'underline' }}>redleads.app@gmail.com</a>
           </p>
           <p style={{ fontSize: '10px', color: '#333333', margin: '0' }}>
-            Built for growth focus by <a href="https://x.com/timjayas" style={{ color: '#555555', textDecoration: 'none' }}>Tim Jayas</a>
+            Built for growth by <a href="https://x.com/timjayas" style={{ color: '#555555', textDecoration: 'none' }}>Tim Jayas</a>
           </p>
         </div>
       </div>

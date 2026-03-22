@@ -10,7 +10,7 @@ const checkoutSchema = z.object({
 
 /**
  * Creates a Dodo Payments checkout session for subscription upgrade.
- * Supports both Starter ($14/mo) and Growth ($29/mo) plans.
+ * Supports Starter ($19/mo), Growth ($29/mo), and Lifetime (one-time) plans.
  */
 export async function POST(req: Request) {
     try {

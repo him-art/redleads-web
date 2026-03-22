@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import MaterialIcon from '@/components/ui/MaterialIcon';
 import { createClient } from '@/lib/supabase/client';
+import { PLANS } from '@/lib/constants';
 
 const Pricing = () => {
     const [isLoading, setIsLoading] = useState<string | null>(null);
@@ -34,7 +35,7 @@ const Pricing = () => {
 
                 if (data && typeof data.user_count === 'number') {
                     console.log('Successfully fetched slots:', data);
-                    setSlots({ sold: data.user_count, total: data.total_slots || 150 });
+                    setSlots({ sold: data.user_count, total: data.total_slots || 250 });
                 } else {
                     console.warn('Fetched data is invalid:', data);
                 }
@@ -65,7 +66,7 @@ const Pricing = () => {
             if (res.ok && data.checkout_url) {
                 window.location.href = data.checkout_url;
             } else if (res.status === 401) {
-                window.location.href = `/login?next=/#pricing`;
+                window.location.href = `/login?next=/dashboard`;
             } else {
                 alert(data.error || `Error ${res.status}: Failed to initiate checkout`);
             }
@@ -80,8 +81,8 @@ const Pricing = () => {
     const plans = [
         {
             name: 'Starter',
-            price: 14,
-            originalPrice: 28,
+            price: PLANS.STARTER.price,
+            annualPrice: PLANS.STARTER.annualPrice,
             description: 'For solo founders finding their first Reddit customers',
             features: {
                 inbound: [
@@ -100,9 +101,9 @@ const Pricing = () => {
         },
         {
             name: 'Growth',
-            price: 29,
-            originalPrice: 58,
-            description: 'For founders serious about making Reddit a main customer channel',
+            price: PLANS.GROWTH.price,
+            annualPrice: PLANS.GROWTH.annualPrice,
+            description: 'For founders serious about marketing on Reddit',
             highlight: true,
             badge: 'BEST VALUE',
             features: {
@@ -201,12 +202,9 @@ const Pricing = () => {
                             }`}>
                                 <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-                            <div className="mb-10">
+                            <div className="mb-10 min-h-[300px] flex flex-col">
                                 <h3 className="text-2xl font-black mb-6 text-white">{plan.name}</h3>
                                     <div className="flex items-baseline gap-2 mb-4 h-16">
-                                        {plan.originalPrice && (
-                                            <span className="text-2xl font-bold text-gray-700 line-through decoration-1 decoration-orange-500/30 tracking-tight">${plan.originalPrice}</span>
-                                        )}
                                         <div className="relative h-16 flex items-baseline overflow-hidden">
                                             <AnimatePresence mode="wait">
                                                 <motion.span
@@ -217,7 +215,7 @@ const Pricing = () => {
                                                     transition={{ duration: 0.3, ease: "easeOut" }}
                                                     className="text-6xl font-black text-white tracking-tighter"
                                                 >
-                                                    ${billingCycle === 'annual' ? (plan.price * 10 / 12).toFixed(2) : plan.price}
+                                                    ${billingCycle === 'annual' && plan.annualPrice ? (plan.annualPrice / 12).toFixed(2) : plan.price}
                                                 </motion.span>
                                             </AnimatePresence>
                                             <span className="text-sm font-bold text-gray-600 uppercase tracking-widest ml-1">
@@ -234,12 +232,24 @@ const Pricing = () => {
                                                     exit={{ opacity: 0, height: 0 }}
                                                     className="text-[10px] font-black text-orange-500/80 uppercase tracking-widest mb-4"
                                                 >
-                                                    Billed annually (${plan.price * 10}/yr)
+                                                    Save 2 month
                                                 </motion.p>
                                             )}
                                         </AnimatePresence>
                                     </div>
-                                <p className="text-xs font-bold text-gray-500 leading-relaxed max-w-[240px] uppercase tracking-wider">{plan.description}. Start finding users.</p>
+                                <p className="text-xs font-bold text-gray-500 leading-relaxed max-w-[240px] uppercase tracking-wider mb-4">{plan.description}</p>
+                                <p className="text-[10px] font-bold text-orange-500/60 uppercase tracking-wider mb-8">Competitors charge $49-99/mo for monitoring alone</p>
+                                
+                                <div className="mt-auto">
+                                    <button
+                                        onClick={() => handleCheckout(plan.name)}
+                                        disabled={!!isLoading}
+                                        suppressHydrationWarning
+                                        className="w-full py-6 rounded-2xl bg-white text-black font-black text-xs uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95 shadow-none"
+                                    >
+                                        {isLoading === plan.name ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <>Start finding users <MaterialIcon name="arrow_right" size={16} /></>}
+                                    </button>
+                                </div>
                             </div>
 
                             <div className="space-y-10 flex-grow mb-14">
@@ -289,19 +299,7 @@ const Pricing = () => {
                             </div>
 
                             <div className="mt-auto">
-                                <button
-                                    onClick={() => handleCheckout(plan.name)}
-                                    disabled={!!isLoading}
-                                    suppressHydrationWarning
-                                    className={`w-full py-6 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95 border border-[#ff914d]/20 ${
-                                        plan.highlight 
-                                            ? 'bg-[#ff914d] text-white hover:bg-white hover:text-black' 
-                                            : 'bg-white/5 border-white/5 text-white hover:bg-white hover:text-black'
-                                    }`}
-                                >
-                                    {isLoading === plan.name ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <>Get Started <MaterialIcon name="arrow_right" size={16} /></>}
-                                </button>
-                                <p className="mt-6 text-center text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 transition-colors">
+                                <p className="text-center text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 transition-colors">
                                     CANCEL ANYTIME
                                 </p>
                             </div>
@@ -331,28 +329,34 @@ const Pricing = () => {
                             
                             
 
-                            <div className="mb-10 relative">
+                            <div className="mb-10 relative min-h-[300px] flex flex-col">
                                 <h3 className="text-2xl font-black text-white flex items-center gap-2 mb-6">
                                     Lifetime Plan
                                 </h3>
                                 
-                                <div className="flex items-baseline gap-2 mb-2">
+                                <div className="flex items-baseline gap-2 mb-4 h-16">
                                     <span className="text-6xl font-black text-white tracking-tighter">${currentPrice}</span>
                                     <span className="text-sm font-bold text-gray-600 uppercase tracking-widest ml-1">One-time</span>
                                 </div>
-                                <div className="flex items-center gap-2 mb-8">
-                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest leading-none">Next Price:</span>
-                                    <span className="text-xs font-black text-orange-500/50 tracking-tighter">${nextPrice}</span>
-                                </div>
+                                <div className="h-6" />                                <p className="text-xs font-bold text-gray-500 leading-relaxed max-w-[240px] uppercase tracking-wider mb-8">Full lifetime access and all future features included.</p>
 
-                                <p className="text-xs font-bold text-gray-500 leading-relaxed max-w-[240px] uppercase tracking-wider">Full lifetime access and all future features included.</p>
+                                <div className="mt-auto">
+                                    <button
+                                        onClick={() => handleCheckout('Lifetime')}
+                                        disabled={!!isLoading || (slots ? slots.sold >= slots.total : false)}
+                                        suppressHydrationWarning
+                                        className="w-full py-6 rounded-2xl bg-white text-black font-black text-xs uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95 shadow-none"
+                                    >
+                                        {isLoading === 'Lifetime' ? <div className="w-4 h-4 border-2 border-white/30 border-t-black rounded-full animate-spin" /> : <>Get Lifetime Access <MaterialIcon name="arrow_right" size={16} /></>}
+                                    </button>
+                                </div>
                             </div>
 
 
                             <div className="flex-grow mb-14">
                                 {/* Everything in Growth callout */}
-                                <div className="p-5 rounded-2xl bg-orange-500/5 border border-orange-500/10 mb-8 shadow-none">
-                                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 flex items-center gap-2">
+                                <div className="p-5 rounded-2xl bg-white/5 border border-white/20 mb-8 shadow-none">
+                                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white flex items-center gap-2">
                                         <MaterialIcon name="check" size={14} /> Everything in Growth
                                     </p>
                                 </div>
@@ -390,18 +394,11 @@ const Pricing = () => {
                             </div>
 
                             <div className="mt-auto">
-                                <button
-                                    onClick={() => handleCheckout('Lifetime')}
-                                    disabled={!!isLoading || (slots ? slots.sold >= slots.total : false)}
-                                    suppressHydrationWarning
-                                    className="w-full py-6 rounded-2xl bg-white text-black font-black text-xs uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95 shadow-none"
-                                >
-                                    {isLoading === 'Lifetime' ? <div className="w-4 h-4 border-2 border-white/30 border-t-black rounded-full animate-spin" /> : <>Get Lifetime Access <MaterialIcon name="arrow_right" size={16} /></>}
-                                </button>
-                                <p className="mt-6 text-center text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
+                                <p className="text-center text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
                                     LIMITED TIME OFFER
                                 </p>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -414,24 +411,24 @@ const Pricing = () => {
                         <div className="mb-12">
                             <div className="flex justify-between items-center mb-6">
                                 <p className="text-[10px] font-black text-[#ff914d] uppercase tracking-[0.4em]">Lifetime Plan</p>
-                                <p className="text-[11px] sm:text-[14px] font-black text-white uppercase tracking-[0.2em] sm:tracking-[0.4em] bg-white/5 px-3 sm:px-4 py-2 rounded-full border border-white/5">
-                                    {slots ? `${slots.sold} FOUNDERS JOINED` : 'LOADING...'}
-                                </p>
+                                    <p className="text-[11px] sm:text-[14px] font-black text-white uppercase tracking-[0.2em] sm:tracking-[0.4em] bg-white/5 px-3 sm:px-4 py-2 rounded-full border border-white/5">
+                                        {slots ? `${slots.sold} FOUNDERS JOINED` : 'LOADING...'}
+                                    </p>
                             </div>
                             
                             {/* Global Roadmap Visual */}
                             <div className="relative mb-8 pt-4">
                                 {/* Checkpoints and Price Labels (Above/Below bar for legibility) */}
                                 <div className="absolute inset-0 flex justify-between items-start z-20 pointer-events-none">
-                                    {[60, 80, 100, 120, 140].map((tick) => {
-                                        const pos = ((tick - 50) / 100) * 100;
+                                    {[120, 140, 160, 180, 200, 220, 240].map((tick) => {
+                                        const pos = ((tick - 100) / 160) * 100;
                                         const tickPrice = tick < 80 ? 59 : 79 + Math.floor((tick - 80) / 20) * 20;
                                         return (
                                             <div key={tick} className="absolute flex flex-col items-center -translate-x-1/2" style={{ left: `${pos}%` }}>
                                                 {/* Vertical Notch */}
-                                                <div className={`w-[2px] h-8 mb-2 ${currentUsers >= tick ? 'bg-green-500' : 'bg-white/10'}`} />
+                                                <div className={`w-[2px] h-8 mb-2 ${currentPrice >= tickPrice ? 'bg-green-500' : 'bg-white/10'}`} />
                                                 {/* Price Label (Below) */}
-                                                <span className={`text-[12px] sm:text-[16px] font-black tracking-tighter ${currentUsers >= tick ? 'text-green-500' : 'text-gray-700'}`}>
+                                                <span className={`text-[12px] sm:text-[16px] font-black tracking-tighter ${currentPrice >= tickPrice ? 'text-green-500' : 'text-gray-700'}`}>
                                                     ${tickPrice}
                                                 </span>
                                             </div>
@@ -443,7 +440,7 @@ const Pricing = () => {
                                 <div className="relative h-4 bg-white/5 rounded-full border border-white/10 overflow-hidden shadow-inner">
                                     <div 
                                         className="h-full bg-gradient-to-r from-orange-600 via-orange-500 to-red-500 rounded-r-full shadow-[0_0_40px_rgba(249,115,22,0.4)] transition-all duration-1000 ease-out"
-                                        style={{ width: `${Math.min(100, Math.max(0, ((currentUsers - 50) / 100) * 100))}%` }}
+                                        style={{ width: `${Math.min(100, Math.max(0, ((currentUsers - 100) / 160) * 100))}%` }}
                                     />
                                 </div>
                             </div>
@@ -452,11 +449,11 @@ const Pricing = () => {
                             <div className="flex justify-between items-center text-[13px] font-black text-white/70 uppercase tracking-[0.2em] px-2">
                                 <div className="flex flex-col items-start gap-1">
                                     <span className="text-white/20">|</span>
-                                    <span>50 USERS</span>
+                                    <span>100 USERS</span>
                                 </div>
                                 <div className="flex flex-col items-end gap-1">
                                     <span className="text-white/20">|</span>
-                                    <span>150 USERS</span>
+                                    <span>260 USERS</span>
                                 </div>
                             </div>
                         </div>

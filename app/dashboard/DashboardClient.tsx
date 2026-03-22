@@ -62,12 +62,12 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
     const hasCompletedOnboarding = profile?.onboarding_completed || (profile?.description && profile?.keywords?.length > 0);
     const [showOnboarding, setShowOnboarding] = useState(!hasCompletedOnboarding);
 
-    // Force Billing tab if expired
+    // Force Billing tab if expired - only if not in onboarding
     useEffect(() => {
-        if (isActuallyExpired && activeTab !== 'billing') {
+        if (isActuallyExpired && !showOnboarding && activeTab !== 'billing') {
             setActiveTab('billing');
         }
-    }, [isActuallyExpired, activeTab]);
+    }, [isActuallyExpired, showOnboarding, activeTab]);
 
     // [FIX] Support query parameter for tab deep-linking (e.g. /dashboard?tab=billing)
     useEffect(() => {
@@ -261,7 +261,7 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                                     <div className="max-w-7xl mx-auto mb-6 mt-16 lg:mt-0 bg-orange-500/10 border border-orange-500/20 rounded-xl px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 z-40 relative text-orange-500 text-sm font-medium shadow-lg shadow-orange-500/5 backdrop-blur-md">
                                         <div className="flex items-center gap-2 font-bold tracking-tight">
                                             <Sparkles size={16} className="text-orange-500 shrink-0" /> 
-                                            <span>Your 3-day free trial ends in {trialStatus.daysRemaining} day{trialStatus.daysRemaining !== 1 ? 's' : ''}.</span>
+                                            <span>Your 7-day free trial ends in {trialStatus.daysRemaining} day{trialStatus.daysRemaining !== 1 ? 's' : ''}.</span>
                                         </div>
                                         <button 
                                             onClick={() => setActiveTab('billing')}
@@ -272,8 +272,28 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                                     </div>
                                 )}
 
+                                {/* Win-back banner for expired trial users */}
+                                {isActuallyExpired && activeTab !== 'billing' && (
+                                    <div className="max-w-7xl mx-auto mb-6 mt-16 lg:mt-0 bg-red-500/10 border border-red-500/30 rounded-xl px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 z-40 relative shadow-lg shadow-red-500/5 backdrop-blur-md">
+                                        <div className="flex flex-col gap-0.5">
+                                            <div className="flex items-center gap-2 font-black text-red-400 text-sm tracking-tight">
+                                                <span>⏰</span>
+                                                <span>Your trial ended — your leads are still being collected</span>
+                                            </div>
+                                            <p className="text-[11px] text-red-400/60 font-medium pl-6">Upgrade in 60 seconds to unlock all your leads and keep monitoring.</p>
+                                        </div>
+                                        <button 
+                                            onClick={() => setActiveTab('billing')}
+                                            className="w-full sm:w-auto px-6 py-2.5 bg-red-500 hover:bg-red-400 text-white rounded-lg uppercase tracking-[0.1em] text-[10px] font-black shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap"
+                                        >
+                                            Unlock My Leads →
+                                        </button>
+                                    </div>
+                                )}
+
                                 {/* Content Wrapper limit width */}
-                                <div className={`max-w-7xl mx-auto space-y-10 ${trialStatus.isInTrial && activeTab !== 'billing' ? '' : 'mt-16 lg:mt-0'}`}>
+                                <div className={`max-w-7xl mx-auto space-y-10 ${(trialStatus.isInTrial || isActuallyExpired) && activeTab !== 'billing' ? '' : 'mt-16 lg:mt-0'}`}>
+
                                     
                                     {/* Dynamic Tab Content - Hidden but mounted for caching */}
                                     <DashboardErrorBoundary>

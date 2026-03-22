@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { Outfit, EB_Garamond } from "next/font/google";
 import "./globals.css";
-import AnalyticsListener from "@/components/AnalyticsListener";
+import dynamic from "next/dynamic";
 import ClarityProvider from "@/components/providers/ClarityProvider";
-import StickyLeadMagnet from "@/components/StickyLeadMagnet";
+
+// Lazy-load heavy client components to reduce initial JS bundle
+const AnalyticsListener = dynamic(() => import("@/components/AnalyticsListener"));
+const StickyLeadMagnet = dynamic(() => import("@/components/StickyLeadMagnet"));
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -82,7 +85,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${outfit.variable} ${ebGaramond.variable}`}>
       <head>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        {/* Non-render-blocking Material Icons font: preload hint + deferred stylesheet injection */}
+        <link
+          rel="preload"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+          as="style"
+          crossOrigin="anonymous"
+        />
+        <noscript>
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        </noscript>
       </head>
       <body className="antialiased font-sans">
         <script
@@ -175,6 +187,24 @@ export default function RootLayout({
           <AnalyticsListener />
           <StickyLeadMagnet />
         </ClarityProvider>
+        {/* Deferred Material Icons font loader — avoids render-blocking */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof window !== 'undefined') {
+                var link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200';
+                link.crossOrigin = 'anonymous';
+                if (document.readyState === 'complete') {
+                  document.head.appendChild(link);
+                } else {
+                  window.addEventListener('load', function() { document.head.appendChild(link); });
+                }
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   );

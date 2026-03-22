@@ -20,7 +20,7 @@ export default function RateLimitBanner({ remaining, isLimited, resetTime, maxUs
                     You&apos;ve used all {maxUses} free uses. Resets in ~{mins} min, or sign up for unlimited access.
                 </p>
                 <Link
-                    href="/login"
+                    href="/login?next=/dashboard"
                     className="inline-block px-6 py-3 bg-orange-500 text-white font-black text-xs uppercase tracking-widest rounded-full hover:bg-orange-600 transition-all"
                 >
                     Unlock Unlimited Access

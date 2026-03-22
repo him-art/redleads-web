@@ -28,6 +28,17 @@ const { sendEmail } = require('../../lib/email');
 const TrialLifecycleEmailModule = require('../../lib/email-templates/TrialLifecycleEmails');
 const TrialLifecycleEmail = TrialLifecycleEmailModule.default || TrialLifecycleEmailModule;
 
+// 7-day trial sequence timing (hours since trial start)
+const STAGE_WINDOWS: Record<string, { from: number; to: number; subject: string }> = {
+    day1: { from: 1,   to: 24,  subject: 'Your first Reddit leads are ready 👀' },
+    day2: { from: 24,  to: 48,  subject: "You're missing leads right now" },
+    day3: { from: 48,  to: 72,  subject: 'Your RedLeads trial ends today ⏰' },
+    day4: { from: 72,  to: 96,  subject: 'From signup to customer in 3 days 🚀' },
+    day5: { from: 96,  to: 120, subject: 'What other founders are saying about RedLeads' },
+    day6: { from: 120, to: 144, subject: '🔥 High-intent leads just landed — act now' },
+    day7: { from: 144, to: 200, subject: 'Last chance: your access locks tomorrow' },
+};
+
 // ═══════════════════════════════════════════════════════════════════════════
 // CONFIGURATION
 // ═══════════════════════════════════════════════════════════════════════════
@@ -100,33 +111,30 @@ async function runTrialLifecycle() {
             const metadata = (user_metadata as any) || {};
             const sentFlags: Record<string, boolean> = metadata.lifecycle_sent || {};
 
-            // Calculate hours since trial actually started (trial_ends_at - 3 days)
+            // Calculate hours since trial started (back-calculates from trial_ends_at using TRIAL_DAYS)
+            const TRIAL_DAYS_VALUE = 7; // matches constants.ts TRIAL_DAYS
             const trialEndsAtDate = new Date(trial_ends_at);
-            const trialStartedAtDate = new Date(trialEndsAtDate.getTime() - 3 * 24 * 60 * 60 * 1000);
+            const trialStartedAtDate = new Date(trialEndsAtDate.getTime() - TRIAL_DAYS_VALUE * 24 * 60 * 60 * 1000);
             const hoursSinceTrialStart = (now.getTime() - trialStartedAtDate.getTime()) / (1000 * 60 * 60);
             
-            let targetStage: 'day1' | 'day2' | 'day3' | null = null;
+            let targetStage: 'day1' | 'day2' | 'day3' | 'day4' | 'day5' | 'day6' | 'day7' | null = null;
             let subject = '';
 
-            // Sequential Stage Logic: Ensure they get Day 1 first, then Day 2, then Day 3.
-            // Check boundaries so we don't email very old trials!
-            if (!sentFlags['day1'] && hoursSinceTrialStart >= 1 && hoursSinceTrialStart < 48) {
-                targetStage = 'day1';
-                subject = 'Your first Reddit leads are ready 👀';
-            } else if (!sentFlags['day2'] && hoursSinceTrialStart >= 48 && hoursSinceTrialStart < 72) {
-                targetStage = 'day2';
-                subject = 'You\'re missing leads right now';
-            } else if (!sentFlags['day3'] && hoursSinceTrialStart >= 72 && hoursSinceTrialStart < 96) {
-                targetStage = 'day3';
-                subject = 'Your RedLeads trial ends today';
-            } else if (hoursSinceTrialStart >= 96) {
-                // If the trial is older than 96 hours, we don't want to retroactively send these emails
-                // We'll optionally update sentFlags to true so we never process them again.
+            // Sequential stage selection: find the earliest unsent stage whose window we're in
+            for (const [stageName, window] of Object.entries(STAGE_WINDOWS)) {
+                if (!sentFlags[stageName] && hoursSinceTrialStart >= window.from && hoursSinceTrialStart < window.to) {
+                    targetStage = stageName as unknown as typeof targetStage;
+                    subject = window.subject;
+                    break;
+                }
+            }
+
+            // If past all windows, mark all as sent to prevent re-processing
+            if (!targetStage && hoursSinceTrialStart >= 200) {
                 let updated = false;
-                if (!sentFlags['day1']) { sentFlags['day1'] = true; updated = true; }
-                if (!sentFlags['day2']) { sentFlags['day2'] = true; updated = true; }
-                if (!sentFlags['day3']) { sentFlags['day3'] = true; updated = true; }
-                
+                for (const stageName of Object.keys(STAGE_WINDOWS)) {
+                    if (!sentFlags[stageName]) { sentFlags[stageName] = true; updated = true; }
+                }
                 if (updated) {
                     await supabase.from('profiles').update({ 
                         user_metadata: { ...metadata, lifecycle_sent: sentFlags } 

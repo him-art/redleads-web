@@ -1,18 +1,19 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import dynamic from "next/dynamic";
 
-
-import RedditOpportunity from "@/components/RedditOpportunity";
-import Comparison from "@/components/Comparison";
-import HowItWorks from "@/components/HowItWorks";
-import Features from "@/components/Features";
-import FounderNote from "@/components/FounderNote";
-import Pricing from "@/components/Pricing";
-import ROI from "@/components/ROI";
-import FAQ from "@/components/FAQ";
-
-import Footer from "@/components/Footer";
-import TawkToScript from "@/components/TawkToScript";
+// Lazy-load all below-the-fold sections to reduce initial JS bundle and improve LCP/INP
+const CreatorProof = dynamic(() => import("@/components/CreatorProof"));
+const RedditOpportunity = dynamic(() => import("@/components/RedditOpportunity"));
+const Comparison = dynamic(() => import("@/components/Comparison"));
+const HowItWorks = dynamic(() => import("@/components/HowItWorks"));
+const Features = dynamic(() => import("@/components/Features"));
+const FounderNote = dynamic(() => import("@/components/FounderNote"));
+const Pricing = dynamic(() => import("@/components/Pricing"));
+const ROI = dynamic(() => import("@/components/ROI"));
+const FAQ = dynamic(() => import("@/components/FAQ"));
+const Footer = dynamic(() => import("@/components/Footer"));
+const TawkToScript = dynamic(() => import("@/components/TawkToScript"));
 
 export default function Home() {
   return (
@@ -21,6 +22,7 @@ export default function Home() {
         <Navbar />
         <Hero />
         {/* <SocialProof /> */}
+        <CreatorProof />
         <HowItWorks />
 
 

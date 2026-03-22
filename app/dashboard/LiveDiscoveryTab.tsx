@@ -298,14 +298,14 @@ export default function LiveDiscoveryTab({
                                             disabled={isUpgrading}
                                             className="w-full py-5 bg-[#ff914d] hover:bg-[#ff914d]/90 text-black font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
-                                            {isUpgrading ? <LoadingIcon className="w-5 h-5" /> : <>Get Growth Access   $29/mo <span className="line-through opacity-50 ml-1 text-[10px]">$58</span></>}
+                                            {isUpgrading ? <LoadingIcon className="w-5 h-5" /> : <>Get Growth Access — $29/mo</>}
                                         </button>
                                         <button 
                                             onClick={() => handleUpgrade('starter')}
                                             disabled={isUpgrading}
                                             className="w-full py-5 bg-white/10 hover:bg-white/20 text-text-primary font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
-                                            {isUpgrading ? <LoadingIcon className="w-5 h-5" /> : <>Get Starter Access   $14/mo <span className="line-through opacity-50 ml-1 text-[10px]">$28</span></>}
+                                            {isUpgrading ? <LoadingIcon className="w-5 h-5" /> : <>Get Starter Access — $19/mo</>}
                                         </button>
                                          <p className="text-[10px] text-text-secondary font-bold uppercase tracking-widest">
                                             Trial Ended {isMounted && trialEndsAt ? trialEndsAt?.toLocaleDateString() : '...'}
@@ -332,14 +332,14 @@ export default function LiveDiscoveryTab({
                                         disabled={isUpgrading}
                                         className="w-full py-3 bg-white/10 text-text-primary border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-white/20 transition-all flex items-center justify-center gap-2"
                                     >
-                                        {isUpgrading ? <LoadingIcon className="w-4 h-4" /> : <>Starter (${planDetails.id === 'starter' ? 'Current' : PLANS.STARTER.price}) <span className="line-through text-text-secondary">${PLANS.STARTER.originalPrice}</span></>}
+                                        {isUpgrading ? <LoadingIcon className="w-4 h-4" /> : <>Starter (${planDetails.id === 'starter' ? 'Current' : PLANS.STARTER.price})</>}
                                     </button>
                                     <button 
                                         onClick={() => handleUpgrade('growth')}
                                         disabled={isUpgrading}
                                         className="w-full py-3 bg-primary text-primary-foreground rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
                                     >
-                                        {isUpgrading ? <LoadingIcon className="w-4 h-4" /> : <>Growth (${PLANS.GROWTH.price}) <span className="line-through text-white/50">${PLANS.GROWTH.originalPrice}</span></>}
+                                        {isUpgrading ? <LoadingIcon className="w-4 h-4" /> : <>Growth (${PLANS.GROWTH.price})</>}
                                     </button>
                                 </div>
                            </div>

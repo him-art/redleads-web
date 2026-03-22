@@ -7,6 +7,7 @@ import { Globe, ArrowRight, CheckCircle2, Lock, Activity, Clock, Bookmark, Exter
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 import { type User as SupabaseUser } from '@supabase/supabase-js';
+import { FOUNDER_COUNT } from '@/data/stats';
 
 export default function Hero({ children }: { children?: React.ReactNode }) {
   const [user, setUser] = useState<SupabaseUser | null>(null);
@@ -80,6 +81,8 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                   src="/reddit-new-logo.webp" 
                   alt="Reddit" 
                   fill
+                  priority
+                  sizes="56px"
                   className="object-contain"
                 />
               </div>
@@ -113,7 +116,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
             </div>
             {/* Text */}
             <span className="text-white text-[10px] font-black tracking-[0.1em] uppercase leading-tight whitespace-nowrap">
-              <span className="text-orange-500">Join 110+</span> founders
+              <span className="text-orange-500">Join {FOUNDER_COUNT}</span> founders
             </span>
           </div>
         </div>
@@ -168,7 +171,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                 <CheckCircle2 size={12} /> No Card Required
              </div>
              <div className="flex items-center gap-2 text-xs text-slate-400 uppercase tracking-wider font-medium">
-                <CheckCircle2 size={12} /> 3-Day Full Access Trial
+                <CheckCircle2 size={12} /> 7-Day Full Access Trial
              </div>
              <div className="flex items-center gap-2 text-xs text-slate-400 uppercase tracking-wider font-medium">
                 <CheckCircle2 size={12} /> For Indie Hackers & Solo Founders
@@ -230,8 +233,8 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
 
               {/* Power Search Container */}
               <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ y: 20 }}
+                whileInView={{ y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
                 className="bg-[#121212] border border-white/5 rounded-[1.25rem] md:rounded-[1.5rem] p-4 md:p-6 space-y-4 shadow-xl shadow-black/40 relative overflow-hidden"
@@ -267,8 +270,8 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
               {/* Live Intelligence */}
               <section className="px-1 md:px-2 mt-2">
                 <motion.div 
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ y: 15 }}
+                  whileInView={{ y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.8, ease: "easeOut" }}
                   className="flex items-start sm:items-center justify-between mb-4 md:mb-6 gap-2"
@@ -344,8 +347,8 @@ function LiveCard({ subreddit, time, matchLevel, title, delay = 0 }: { subreddit
   const isHigh = matchLevel === "HIGH MATCH";
   return (
     <motion.div 
-      initial={{ opacity: 0, x: 20 }}
-      whileInView={{ opacity: 1, x: 0 }}
+      initial={{ x: 20 }}
+      whileInView={{ x: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay, type: "spring", stiffness: 150, damping: 20 }}
       whileHover={{ y: -2, transition: { duration: 0.2, delay: 0 } }}
@@ -413,7 +416,7 @@ function FloatingBubble({ className, delay = 0, scale = 1, duration = 3, floatDe
              alt="Reddit" 
              width={18} 
              height={18} 
-             priority
+             loading="lazy"
              className="w-full h-full object-contain"
            />
       </div>

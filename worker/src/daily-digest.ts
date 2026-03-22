@@ -58,16 +58,15 @@ async function runDailyDigest() {
         const isPaid = tier === 'starter' || tier === 'growth' || tier === 'lifetime' || tier === 'scout';
         if (isPaid) return true;
 
-        // For non-paid users (free/trial), check if they are currently in an active 3-day trial.
-        // If they ARE in an active trial, we EXCLUDE them so they only get the high-converting FOMO lifecycle sequence.
-        // Once the trial expires, they will start receiving the normal daily digest (if we choose to keep sending to free users).
+        // For non-paid users (free/trial), check if they are currently in an active trial.
         const trialEndsAt = p.trial_ends_at
             ? new Date(p.trial_ends_at)
             : (p.created_at ? new Date(new Date(p.created_at).getTime() + TRIAL_DAYS * 24 * 60 * 60 * 1000) : null);
         
-        const isTrialActive = trialEndsAt && trialEndsAt > now;
+        const isTrialActive = !!(trialEndsAt && trialEndsAt > now);
         
-        return !isTrialActive; // Return true only if trial is NOT active
+        // Include only if trial is active (for non-paid users)
+        return isTrialActive;
     }) || [];
 
     console.log(`[Digest] Found ${eligibleProfiles.length} eligible candidates (Paid or Trial).`);
