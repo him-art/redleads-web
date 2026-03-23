@@ -3,7 +3,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
-import { revalidatePath } from 'next/cache';
 
 export async function signInWithEmail(formData: FormData): Promise<{ error: string } | never> {
   const email = formData.get('email') as string;
@@ -19,7 +18,6 @@ export async function signInWithEmail(formData: FormData): Promise<{ error: stri
     return { error: error.message };
   }
 
-  revalidatePath('/', 'layout');
   const redirectTo = formData.get('redirectTo') as string || '/dashboard';
   redirect(redirectTo);
 }
@@ -56,7 +54,6 @@ export async function signUpWithEmail(formData: FormData): Promise<{ error?: str
 
   // With "Confirm Email" disabled, data.user or data.session will be present immediately.
   console.log('Signup successful, redirecting to scanner');
-  revalidatePath('/', 'layout');
   const redirectTo = formData.get('redirectTo') as string || '/dashboard';
   redirect(redirectTo);
 }
