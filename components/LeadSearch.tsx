@@ -38,17 +38,16 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
     const [teaserInfo, setTeaserInfo] = useState<{ isTeaser: boolean, totalFound: number } | null>(null);
     const { draftingLead, setDraftingLead, profile } = useDashboardData();
     const [productContext, setProductContext] = useState('');
-    const [timeRange, setTimeRange] = useState<'all' | '7d' | '30d' | '1y'>('30d');
+    const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d'>('24h');
     const supabase = useMemo(() => createClient(), []);
     const router = useRouter();
     const searchParams = useSearchParams();
     const hasAutoScanned = useRef(false);
 
     const timeRanges = [
+        { label: '24 Hours', value: '24h' },
         { label: '7 Days', value: '7d' },
-        { label: '30 Days', value: '30d' },
-        { label: '1 Year', value: '1y' },
-        { label: 'All Time', value: 'all' }
+        { label: '30 Days', value: '30d' }
     ];
 
     useEffect(() => {

@@ -12,7 +12,7 @@ export interface ScannerOptions {
     keywords?: string[];
     subreddits?: string[];
     description?: string;
-    timeRange?: 'all' | '7d' | '30d' | '1y';
+    timeRange?: '24h' | '7d' | '30d';
 }
 
 
@@ -71,9 +71,9 @@ export async function performScan(url: string, options: ScannerOptions): Promise
             // Map our timeRange to Tavily time_range
             // Tavily options: "day", "week", "month", "year" or shorthands "d", "w", "m", "y"
             const tavilyTimeRange = 
+                timeRange === '24h' ? 'day' :
                 timeRange === '7d' ? 'week' :
-                timeRange === '30d' ? 'month' :
-                timeRange === '1y' ? 'year' : undefined;
+                timeRange === '30d' ? 'month' : undefined;
 
             console.log(`[ScannerLib] Attempting Tavily Search for: ${searchQuery} (Tavily Range: ${tavilyTimeRange})`);
             
@@ -179,10 +179,31 @@ export async function performScan(url: string, options: ScannerOptions): Promise
         leads = leads.map(l => ({ ...l, match_category: 'Medium' }));
     }
 
+    // E. FINAL FILTERING: Remove Low relevance and Old leads
+    const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+    const now = Date.now();
+
+    leads = leads.filter(lead => {
+        // 1. Relevance Check
+        if (lead.match_category === 'Low') {
+            console.log(`[ScannerLib] Dropping LOW relevance lead: ${lead.title}`);
+            return false;
+        }
+
+        // 2. Freshness Check (Optional based on data availability)
+        if (lead.post_created_at) {
+            const postDate = new Date(lead.post_created_at).getTime();
+            if (now - postDate > THIRTY_DAYS_MS) {
+                console.log(`[ScannerLib] Dropping OLD lead (>30d): ${lead.title} (${lead.post_created_at})`);
+                return false;
+            }
+        }
+
+        return true;
+    });
+
     const result = { leads };
     
-    return result;
-
     return result;
 }
 
