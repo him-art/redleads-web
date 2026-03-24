@@ -3,7 +3,7 @@ import { getAllPosts } from './blog/posts';
 import { getAllComparisons } from './compare/data';
 import { getAllSubredditHubs } from './subreddits/data';
 import { getAllSolutions } from './solutions/data';
-import masterSubreddits from '@/data/master-subreddits.json';
+import masterSubreddits from '@/data/pseo-subreddits.json';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.redleads.app';

@@ -1,5 +1,5 @@
 import { solutions, SolutionData } from '@/app/solutions/data';
-import masterSubreddits from '@/data/master-subreddits.json';
+import masterSubreddits from '@/data/pseo-subreddits.json';
 
 import { getArchetypeForSubreddit, getUniqueTitles } from './pseo-archetypes';
 

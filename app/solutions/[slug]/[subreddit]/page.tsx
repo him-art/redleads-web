@@ -10,8 +10,7 @@ interface Props {
   params: Promise<{ slug: string; subreddit: string }>;
 }
 
-export const revalidate = 604800; // 1 week
-export const dynamicParams = true;
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const allCombinations = getAllCombinations();

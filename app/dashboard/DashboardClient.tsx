@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Menu, Sparkles, Lock, Navigation, Archive, BookOpen, SlidersHorizontal, ShieldCheck } from 'lucide-react';
+import { X, Menu, Sparkles, Lock, Navigation, Archive, BookOpen, SlidersHorizontal, ShieldCheck, LogOut } from 'lucide-react';
 import Image from 'next/image';
 import LoadingIcon from '@/components/ui/LoadingIcon';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -11,6 +11,7 @@ import SettingsTab from './SettingsTab';
 import BillingTab from './BillingTab';
 import LiveDiscoveryTab from './LiveDiscoveryTab';
 import PaywallModal from '@/components/PaywallModal';
+import { createClient } from '@/lib/supabase/client';
 import OnboardingWizard from './OnboardingWizard';
 import GuideTab from './GuideTab'; // [NEW]
 import { DashboardDataProvider } from '@/app/dashboard/DashboardDataContext';
@@ -229,7 +230,7 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                     </div>
 
                     {/* User Profile / Footer - Double Framed */}
-                    <div className="mt-auto pt-6 border-t border-white/5">
+                    <div className="mt-auto pt-6 border-t border-white/5 space-y-3">
                         <div className="p-0.5 bg-white/5 border border-white/5 rounded-2xl group transition-all duration-500">
                             <div className="bg-[#0c0c0c] p-4 rounded-[0.9rem] border border-white/5 relative overflow-hidden flex items-center gap-3">
                                 <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
@@ -246,6 +247,17 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                                 </div>
                             </div>
                         </div>
+                        <button
+                            onClick={async () => {
+                                const supabase = createClient();
+                                await supabase.auth.signOut();
+                                window.location.href = '/';
+                            }}
+                            className="w-full flex items-center justify-center gap-2.5 px-4 py-3 rounded-xl text-text-secondary hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all duration-300 group"
+                        >
+                            <LogOut size={14} className="group-hover:text-red-400 transition-colors" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.15em]">Log Out</span>
+                        </button>
                     </div>
                 </motion.aside>
 

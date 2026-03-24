@@ -5,12 +5,14 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MaterialIcon from '@/components/ui/MaterialIcon';
 import { getAllSolutions, getSolutionBySlug } from '../data';
-import masterSubreddits from '@/data/master-subreddits.json';
+import masterSubreddits from '@/data/pseo-subreddits.json';
 import { FOUNDER_COUNT } from '@/data/stats';
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
+
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const solutions = getAllSolutions();

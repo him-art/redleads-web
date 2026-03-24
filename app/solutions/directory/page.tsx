@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MaterialIcon from '@/components/ui/MaterialIcon';
 import { solutions } from '../data';
-import masterSubreddits from '@/data/master-subreddits.json';
+import masterSubreddits from '@/data/pseo-subreddits.json';
 
 export const metadata: Metadata = {
   title: 'Reddit Growth Strategy Directory | RedLeads Index',
