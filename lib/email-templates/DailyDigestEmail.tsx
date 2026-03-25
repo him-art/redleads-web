@@ -5,6 +5,7 @@ interface Lead {
   title: string;
   subreddit: string;
   match_score: number;
+  url: string;
 }
 
 interface DailyDigestEmailProps {
@@ -133,7 +134,7 @@ export default function DailyDigestEmail({ fullName, leads }: DailyDigestEmailPr
                     </span>
                 </div>
                 <a 
-                  href={`${siteUrl}/dashboard?id=${lead.id}&utm_source=daily_digest&utm_medium=email&utm_campaign=digest_lead_click`}
+                  href={lead.url.startsWith('http') ? lead.url : `https://${lead.url}`}
                   style={{ 
                     display: 'inline-block',
                     color: '#f25e36', 

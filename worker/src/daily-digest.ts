@@ -89,7 +89,7 @@ async function runDailyDigest() {
         // Fetch top leads for THIS user only
         const { data: userLeads, error: userLeadsError } = await supabase
             .from('monitored_leads')
-            .select('id, title, subreddit, match_score, body_text')
+            .select('id, title, subreddit, match_score, body_text, url')
             .eq('user_id', userId)
             .eq('status', 'new')
             .order('match_score', { ascending: false })
