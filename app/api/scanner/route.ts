@@ -116,33 +116,75 @@ export async function POST(req: Request) {
             // PERSISTENCE LOGIC: If the user is Paid (Starter/Growth) or in Trial, save these leads!
             if (user && (isPaid || isInTrial)) {
                 try {
-                    const leadsToSave = scanResult.leads.map((lead: any) => ({
-                        user_id: user.id,
-                        title: lead.title,
-                        subreddit: lead.subreddit,
-                        url: lead.url,
-                        body_text: lead.body_text || '',
-                        status: 'scanner',
-                        match_score: lead.match_category === 'High' ? 0.95 : lead.match_category === 'Medium' ? 0.75 : 0.45,
-                        match_category: lead.match_category || 'Medium',
-                        is_saved: false,
-                        post_created_at: lead.post_created_at || null
-                    }));
+                    // 1. Get existing leads for these URLs to avoid duplicates and show "Responded" status
+                    const urls = scanResult.leads.map((l: any) => l.url);
+                    const { data: existingLeads } = await adminSupabase
+                        .from('monitored_leads')
+                        .select('id, url, has_responded, is_saved')
+                        .eq('user_id', user.id)
+                        .in('url', urls);
 
-                    console.log(`[Scanner API] Saving ${leadsToSave.length} leads for user ${user.id} (Paid: ${isPaid}, Trial: ${isInTrial})`);
+                    const existingMap = new Map(existingLeads?.map(l => [l.url, l]) || []);
 
-                    if (leadsToSave.length > 0) {
-                        // Using Admin Supabase to bypass RLS for lead persistence
-                        const { error: insertError } = await adminSupabase
-                            .from('monitored_leads')
-                            .insert(leadsToSave);
-                        
-                        if (insertError) {
-                            console.error('[Scanner API] Persistence failed (Admin Mode):', insertError.message);
+                    const leadsToInsert = [];
+                    const finalLeads: any[] = [];
+
+                    for (const lead of scanResult.leads) {
+                        const existing = existingMap.get(lead.url);
+                        if (existing) {
+                            // Lead already exists, attach its DB state
+                            finalLeads.push({
+                                ...lead,
+                                id: existing.id,
+                                has_responded: existing.has_responded,
+                                is_saved: existing.is_saved
+                            });
                         } else {
-                            console.log(`[Scanner API] Persisted ${leadsToSave.length} leads to monitored_leads.`);
+                            // New lead
+                            leadsToInsert.push({
+                                user_id: user.id,
+                                title: lead.title,
+                                subreddit: lead.subreddit,
+                                url: lead.url,
+                                body_text: lead.body_text || '',
+                                status: 'scanner',
+                                match_score: lead.match_category === 'High' ? 0.95 : lead.match_category === 'Medium' ? 0.75 : 0.45,
+                                match_category: lead.match_category || 'Medium',
+                                is_saved: false,
+                                post_created_at: lead.post_created_at || null
+                            });
                         }
                     }
+
+                    if (leadsToInsert.length > 0) {
+                        const { data: insertedLeads, error: insertError } = await adminSupabase
+                            .from('monitored_leads')
+                            .insert(leadsToInsert)
+                            .select('id, url, has_responded, is_saved');
+                        
+                        if (insertError) {
+                            console.error('[Scanner API] Persistence failed:', insertError.message);
+                            // Still return the leads from performScan
+                            finalLeads.push(...leadsToInsert.map(l => ({ ...l, has_responded: false, is_saved: false })));
+                        } else {
+                            finalLeads.push(...scanResult.leads.filter((l: any) => !existingMap.has(l.url)).map(l => {
+                                const dbLead = insertedLeads?.find(il => il.url === l.url);
+                                return {
+                                    ...l,
+                                    id: dbLead?.id,
+                                    has_responded: dbLead?.has_responded || false,
+                                    is_saved: dbLead?.is_saved || false
+                                };
+                            }));
+                        }
+                    }
+
+                    // Re-sort to maintain original order (optional but better)
+                    const sortedFinal = scanResult.leads.map((original: any) => 
+                        finalLeads.find(f => f.url === original.url) || original
+                    );
+
+                    return NextResponse.json({ ...scanResult, leads: sortedFinal });
                 } catch (persistErr: any) {
                     console.error('[Scanner API] Lead persistence catch:', persistErr.message);
                 }

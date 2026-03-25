@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import MaterialIcon from '@/components/ui/MaterialIcon';
+import { CheckCircle2, Bookmark, ExternalLink, MessageSquarePlus } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
@@ -11,10 +12,13 @@ import { useDashboardData } from '@/app/dashboard/DashboardDataContext';
 import LoadingIcon from '@/components/ui/LoadingIcon';
 
 interface RedditLead {
+    id?: string;
     subreddit: string;
     title: string;
     url: string;
     relevance: 'High' | 'Medium' | 'Low';
+    has_responded?: boolean;
+    is_saved?: boolean;
 }
 
 interface LeadSearchProps {
@@ -150,14 +154,42 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                 if (enrichedLeads.length > 0) {
                     setOpenGroups({ 'High': true, 'Medium': true, 'Low': true });
                 }
-
-
             }
         } catch (error: any) {
             console.error(error);
         } finally {
             setIsScanning(false);
             setScanStep(0);
+        }
+    };
+
+    const toggleResponded = async (lead: RedditLead) => {
+        if (!lead.id) return;
+        const newStatus = !lead.has_responded;
+        
+        // Optimistic UI update
+        setResults(prev => prev.map(l => l.url === lead.url ? { ...l, has_responded: newStatus } : l));
+        
+        const { error } = await supabase.from('monitored_leads').update({ has_responded: newStatus }).eq('id', lead.id);
+        if (error) {
+            console.error('Error updating responded status:', error);
+            // Rollback
+            setResults(prev => prev.map(l => l.url === lead.url ? { ...l, has_responded: !newStatus } : l));
+        }
+    };
+
+    const toggleSaved = async (lead: RedditLead) => {
+        if (!lead.id) return;
+        const newStatus = !lead.is_saved;
+        
+        // Optimistic UI update
+        setResults(prev => prev.map(l => l.url === lead.url ? { ...l, is_saved: newStatus } : l));
+        
+        const { error } = await supabase.from('monitored_leads').update({ is_saved: newStatus }).eq('id', lead.id);
+        if (error) {
+            console.error('Error updating saved status:', error);
+            // Rollback
+            setResults(prev => prev.map(l => l.url === lead.url ? { ...l, is_saved: !newStatus } : l));
         }
     };
 
@@ -312,38 +344,75 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                                             <>
                                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                                     {visibleLeads.map((lead, i) => (
-                                                                        <Link key={i} href={lead.url} target="_blank" className="group p-5 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.04] transition-all relative overflow-hidden">
-                                                                            <div className="flex flex-col h-full justify-between gap-4">
-                                                                                <div className="space-y-3">
-                                                                                    <div className="flex items-center justify-between">
-                                                                                        <div className="flex items-center gap-2">
-                                                                                            <span className="text-[9px] font-black text-orange-500 bg-orange-500/10 px-2.5 py-1 rounded-full uppercase tracking-widest border border-orange-500/10">r/{lead.subreddit}</span>
-                                                                                            <span className={`text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-widest ${
-                                                                                                lead.relevance === 'High' ? 'bg-green-500/10 text-green-500 border border-green-500/20' :
-                                                                                                lead.relevance === 'Medium' ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' :
-                                                                                                'bg-gray-500/10 text-gray-500 border border-gray-500/20'
-                                                                                            }`}>
-                                                                                                {lead.relevance} Match
-                                                                                            </span>
-                                                                                            <button 
-                                                                                                onClick={(e) => {
-                                                                                                    e.preventDefault();
-                                                                                                    e.stopPropagation();
-                                                                                                    setDraftingLead(lead as any);
-                                                                                                }}
-                                                                                                className="ml-2 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground border border-primary text-[10px] font-black uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center gap-1.5 group/btn whitespace-nowrap"
-                                                                                                title="Open Reply Generator"
-                                                                                            >
-                                                                                                <MaterialIcon name="add_comment" size={12} className="text-primary-foreground" />
-                                                                                                Draft Reply
-                                                                                            </button>
-                                                                                        </div>
-                                                                                        <MaterialIcon name="open_in_new" size={12} className="text-gray-600 group-hover:text-white transition-colors" />
+                                                                        <div key={i} className="group p-5 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.04] transition-all relative overflow-hidden flex flex-col justify-between gap-4">
+                                                                            <div className="space-y-3">
+                                                                                <div className="flex flex-wrap items-center justify-between gap-3">
+                                                                                    <div className="flex flex-wrap items-center gap-2">
+                                                                                        <span className="text-[9px] font-black text-orange-500 bg-orange-500/10 px-2.5 py-1 rounded-full uppercase tracking-widest border border-orange-500/10">r/{lead.subreddit}</span>
+                                                                                        <span className={`text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-widest ${
+                                                                                            lead.relevance === 'High' ? 'bg-green-500/10 text-green-500 border border-green-500/20' :
+                                                                                            lead.relevance === 'Medium' ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' :
+                                                                                            'bg-gray-500/10 text-gray-500 border border-gray-500/20'
+                                                                                        }`}>
+                                                                                            {lead.relevance} Match
+                                                                                        </span>
+                                                                                        {lead.has_responded && (
+                                                                                            <div className="flex items-center gap-1 px-2 py-0.5 bg-green-500/10 text-green-500 rounded-md border border-green-500/20 text-[9px] font-black uppercase tracking-widest">
+                                                                                                <CheckCircle2 size={10} /> Responded
+                                                                                            </div>
+                                                                                        )}
                                                                                     </div>
-                                                                                    <h4 className="text-xs sm:text-sm font-bold text-text-secondary group-hover:text-text-primary leading-relaxed tracking-tight line-clamp-3 transition-all">{lead.title}</h4>
+                                                                                    <div className="flex items-center gap-2 ml-auto">
+                                                                                        <a href={lead.url} target="_blank" rel="noopener noreferrer" className="p-1 text-gray-600 hover:text-white transition-colors">
+                                                                                            <ExternalLink size={14} />
+                                                                                        </a>
+                                                                                    </div>
                                                                                 </div>
+                                                                                <h4 className="text-xs sm:text-sm font-bold text-text-secondary group-hover:text-text-primary leading-relaxed tracking-tight line-clamp-3 transition-all">{lead.title}</h4>
                                                                             </div>
-                                                                        </Link>
+
+                                                                            <div className="flex flex-wrap items-center gap-2 pt-1">
+                                                                                <button 
+                                                                                    onClick={(e) => {
+                                                                                        e.preventDefault();
+                                                                                        setDraftingLead(lead as any);
+                                                                                    }}
+                                                                                    className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground border border-primary text-[10px] font-black uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center gap-1.5 group/btn whitespace-nowrap"
+                                                                                    title="Open Reply Generator"
+                                                                                >
+                                                                                    <MessageSquarePlus size={12} className="text-primary-foreground" />
+                                                                                    Draft Reply
+                                                                                </button>
+
+                                                                                {lead.id && (
+                                                                                    <>
+                                                                                        <button 
+                                                                                            onClick={() => toggleResponded(lead)}
+                                                                                            className={`p-1.5 rounded-lg transition-all duration-200 ${
+                                                                                                lead.has_responded 
+                                                                                                    ? 'bg-green-500 text-white shadow-lg shadow-green-500/20' 
+                                                                                                    : 'bg-white/5 text-text-secondary hover:text-green-500 hover:bg-green-500/10'
+                                                                                            }`}
+                                                                                            title={lead.has_responded ? "Mark as Unresponded" : "Mark as Responded"}
+                                                                                        >
+                                                                                            <CheckCircle2 size={14} />
+                                                                                        </button>
+
+                                                                                        <button 
+                                                                                            onClick={() => toggleSaved(lead)}
+                                                                                            className={`p-1.5 rounded-lg transition-all duration-200 ${
+                                                                                                lead.is_saved 
+                                                                                                    ? 'bg-primary text-white shadow-lg shadow-primary/20' 
+                                                                                                    : 'bg-white/5 text-text-secondary hover:text-primary hover:bg-primary/10'
+                                                                                            }`}
+                                                                                            title={lead.is_saved ? "Unsave Lead" : "Save Lead"}
+                                                                                        >
+                                                                                            <Bookmark size={14} fill={lead.is_saved ? 'currentColor' : 'none'} />
+                                                                                        </button>
+                                                                                    </>
+                                                                                )}
+                                                                            </div>
+                                                                        </div>
                                                                     ))}
                                                                 </div>
 
