@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bookmark, Sparkles, Brain, Calendar, ChevronDown, Clock, MessageSquarePlus, ExternalLink, Trash2, Activity } from 'lucide-react';
+import { Bookmark, Sparkles, Brain, Calendar, ChevronDown, Clock, MessageSquarePlus, ExternalLink, Trash2, Activity, CheckCircle2 } from 'lucide-react';
 import LoadingIcon from '@/components/ui/LoadingIcon';
 import { createClient } from '@/lib/supabase/client';
 import { useDashboardData, MonitoredLead, LeadAnalysis } from '@/app/dashboard/DashboardDataContext';
@@ -238,6 +238,11 @@ export default function ReportsTab({ reports, user }: { reports: any[], user: an
                                                             {lead.match_category || 'Medium'} Match
                                                         </span>
                                                     </div>
+                                                    {lead.has_responded && (
+                                                        <div className="flex items-center gap-1 px-2 py-0.5 bg-green-500/10 text-green-500 rounded-md border border-green-500/20 text-[9px] font-black uppercase tracking-widest">
+                                                            <CheckCircle2 size={10} /> Responded
+                                                        </div>
+                                                    )}
                                                 </div>
                                                 <a href={lead.url} target="_blank" rel="noreferrer" className="block text-xs sm:text-sm font-bold text-text-secondary group-hover:text-text-primary leading-relaxed tracking-tight transition-all">
                                                     {lead.title}
@@ -251,6 +256,24 @@ export default function ReportsTab({ reports, user }: { reports: any[], user: an
                                                     >
                                                         <MessageSquarePlus size={12} className="text-primary-foreground" />
                                                         Draft Reply
+                                                    </button>
+                                                    <button 
+                                                        onClick={async () => {
+                                                            const newStatus = !lead.has_responded;
+                                                            try {
+                                                                await updateLead(lead.id, { has_responded: newStatus });
+                                                            } catch (error) {
+                                                                console.error('Error saving lead:', error);
+                                                            }
+                                                        }}
+                                                        className={`p-2 rounded-lg transition-all ${
+                                                            lead.has_responded 
+                                                                ? 'opacity-100 bg-green-500 text-white shadow-lg shadow-green-500/20'
+                                                                : 'bg-white/5 text-text-secondary hover:text-green-500 hover:bg-green-500/10'
+                                                        }`}
+                                                        title={lead.has_responded ? "Mark as Unresponded" : "Mark as Responded"}
+                                                    >
+                                                        <CheckCircle2 size={14} />
                                                     </button>
                                                 <button 
                                                     onClick={async () => {

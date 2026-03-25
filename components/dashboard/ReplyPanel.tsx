@@ -14,6 +14,7 @@ interface MonitoredLead {
     match_score?: number;
     created_at?: string;
     is_saved?: boolean;
+    has_responded?: boolean;
     match_category?: string;
 }
 
@@ -27,6 +28,7 @@ interface ReplyPanelProps {
     productContext: string;
     onClose: () => void;
     isSidebar?: boolean;
+    onResponded?: () => void;
 }
 
 const LaborIllusion = () => {
@@ -74,7 +76,7 @@ const LaborIllusion = () => {
     );
 };
 
-export default function ReplyPanel({ lead, productContext, onClose, isSidebar = false }: ReplyPanelProps) {
+export default function ReplyPanel({ lead, productContext, onClose, isSidebar = false, onResponded }: ReplyPanelProps) {
     const [isGenerating, setIsGenerating] = useState(false);
     const [drafts, setDrafts] = useState<Draft[]>([]);
     const [error, setError] = useState<string | null>(null);
@@ -127,6 +129,7 @@ export default function ReplyPanel({ lead, productContext, onClose, isSidebar = 
         navigator.clipboard.writeText(text);
         setCopiedIndex(index);
         setTimeout(() => setCopiedIndex(null), 2000);
+        if (onResponded) onResponded();
     };
 
     if (!lead) return null;

@@ -54,7 +54,7 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
     const effectiveSearch = searchParams.get('search') || initialSearch;
     
     // Consume reactive data from context
-    const { profile, planDetails, trialStatus, draftingLead, setDraftingLead } = useDashboardData();
+    const { profile, planDetails, trialStatus, draftingLead, setDraftingLead, updateLead } = useDashboardData();
     const { isActuallyExpired } = trialStatus;
 
     const [activeTab, setActiveTab] = useState<'reports' | 'live' | 'settings' | 'billing' | 'Guide'>(effectiveSearch ? 'live' : 'live'); 
@@ -417,6 +417,11 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                                     productContext={profile?.description || ''}
                                     onClose={() => setDraftingLead(null)}
                                     isSidebar={true}
+                                    onResponded={() => {
+                                        if (draftingLead && !draftingLead.has_responded) {
+                                            updateLead(draftingLead.id, { has_responded: true });
+                                        }
+                                    }}
                                 />
                             </div>
                         </motion.aside>

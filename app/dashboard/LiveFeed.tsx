@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, Clock, MessageSquarePlus, Bookmark, ExternalLink, Navigation, ChevronRight } from 'lucide-react';
+import { Activity, Clock, MessageSquarePlus, Bookmark, ExternalLink, Navigation, ChevronRight, CheckCircle2 } from 'lucide-react';
 import LoadingIcon from '@/components/ui/LoadingIcon';
 import { createClient } from '@/lib/supabase/client';
 import { useDashboardData, MonitoredLead } from '@/app/dashboard/DashboardDataContext';
@@ -83,6 +83,11 @@ export default function LiveFeed({ onViewArchive }: { onViewArchive: () => void 
                                                     }
                                                 })()}
                                             </div>
+                                            {lead.has_responded && (
+                                                <div className="flex items-center gap-1 px-2 py-0.5 bg-green-500/10 text-green-500 rounded-md border border-green-500/20 text-[9px] font-black uppercase tracking-widest">
+                                                    <CheckCircle2 size={10} /> Responded
+                                                </div>
+                                            )}
                                         </div>
                                         
                                         <a 
@@ -103,6 +108,26 @@ export default function LiveFeed({ onViewArchive }: { onViewArchive: () => void 
                                             >
                                                 <MessageSquarePlus size={12} className="text-primary-foreground" />
                                                 Draft Reply
+                                            </button>
+
+                                            <button 
+                                                onClick={async (e) => {
+                                                    e.preventDefault();
+                                                    const newStatus = !lead.has_responded;
+                                                    setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, has_responded: newStatus } : l));
+                                                    const { error } = await supabase.from('monitored_leads').update({ has_responded: newStatus }).eq('id', lead.id);
+                                                    if (error) {
+                                                        setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, has_responded: !newStatus } : l));
+                                                    }
+                                                }}
+                                                className={`p-1.5 rounded-lg transition-all duration-200 ${
+                                                    lead.has_responded 
+                                                        ? 'bg-green-500 text-white shadow-lg shadow-green-500/20' 
+                                                        : 'bg-white/5 text-text-secondary hover:text-green-500 hover:bg-green-500/10'
+                                                }`}
+                                                title={lead.has_responded ? "Mark as Unresponded" : "Mark as Responded"}
+                                            >
+                                                <CheckCircle2 size={14} />
                                             </button>
 
                                             <button 

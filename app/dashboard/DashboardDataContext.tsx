@@ -14,6 +14,7 @@ export interface MonitoredLead {
     match_score: number;
     created_at: string;
     is_saved?: boolean;
+    has_responded?: boolean;
     match_category?: string;
 }
 
