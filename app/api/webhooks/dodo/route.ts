@@ -157,8 +157,17 @@ export async function POST(req: Request) {
                     const newPlan = data?.metadata?.plan;
                     const newStatus = data?.status;
 
-                    // If the plan changed (e.g. Starter → Growth upgrade)
-                    if (newPlan) {
+                    // 1. If the status is any "inactive" state, prioritize downgrading to trial
+                    if (['cancelled', 'failed', 'expired', 'deactivated'].includes(newStatus)) {
+                        await supabase
+                            .from('profiles')
+                            .update({ subscription_tier: 'trial' })
+                            .eq('id', userId);
+                        
+                        await updateLog('downgraded', `Downgraded via updated event (status: ${newStatus})`);
+                    }
+                    // 2. Otherwise, if the plan changed (e.g. Starter → Growth upgrade)
+                    else if (newPlan) {
                         let keywordLimit = 10;
                         if (newPlan === 'growth') keywordLimit = 20;
                         if (newPlan === 'lifetime') keywordLimit = 20;
