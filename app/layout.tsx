@@ -25,8 +25,8 @@ const ebGaramond = EB_Garamond({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.redleads.app'),
-  title: "RedLeads | Find Your First 100 Users",
-  description: "RedLeads uses autonomous AI to find people looking for solutions your SaaS solves on Reddit. Turn Reddit users into customers.",
+  title: "RedLeads | #1 AI Reddit Marketing Tool for SaaS & Founders",
+  description: "The ultimate AI Reddit marketing tool. RedLeads uses autonomous AI to find high-intent conversations on Reddit and turn them into customers.",
   alternates: {
     canonical: '/',
   },
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
   },
   
   // Additional SEO metadata
-  keywords: ["RedLeads", "RedLeads.app", "Reddit marketing", "Reddit lead generation", "find customers on Reddit", "Reddit marketing tool", "SaaS lead generation", "Reddit automation"],
+  keywords: ["Reddit Marketing", "Reddit Marketing Tool", "Reddit Lead Generation", "RedLeads", "find customers on Reddit", "SaaS marketing", "startup growth"],
   authors: [{ name: "RedLeads" }],
   robots: {
     index: true,

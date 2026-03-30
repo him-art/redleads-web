@@ -4,6 +4,10 @@ import MaterialIcon from '@/components/ui/MaterialIcon';
 
 const faqs = [
   {
+    question: "Do I need a Reddit marketing strategy?",
+    answer: "Yes. While RedLeads finds the opportunities, a successful Reddit marketing strategy involves being helpful first and promotional second. Our AI helpfully drafts non-spammy responses that follow Reddit's '90/10' value-to-self-promotion rule."
+  },
+  {
     question: "How do I find customers on Reddit?",
     answer: "RedLeads monitors relevant subreddits and uses AI to identify high-intent conversations where users are actively seeking solutions like yours. When someone asks for recommendations or expresses a need you can solve, you get notified instantly."
   },

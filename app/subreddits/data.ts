@@ -13,7 +13,7 @@ export const subredditHubs: SubredditHubData[] = [
   {
     slug: 'saas-marketing-reddit',
     subreddit: 'r/SaaS',
-    title: 'The Ultimate Guide to SaaS Marketing on r/SaaS (2026)',
+    title: 'r/SaaS Marketing & Growth Guide: Find Your First 100 Users',
     description: 'Learn how to find your first 100 users for your SaaS on Reddit. Discover the best subreddits and strategies for SaaS growth.',
     keywords: ['SaaS marketing reddit', 'r/saas growth guide', 'find saas customers reddit'],
     tips: [
@@ -28,7 +28,7 @@ export const subredditHubs: SubredditHubData[] = [
   {
     slug: 'entrepreneurship-growth-reddit',
     subreddit: 'r/Entrepreneur',
-    title: 'How to Growth Hack r/Entrepreneur & Scale Your Startup (2026)',
+    title: 'r/Entrepreneur Marketing Strategy: AI-Powered Startup Growth',
     description: 'A masterclass in using r/Entrepreneur to find early adopters and validate your startup idea using AI intent data.',
     keywords: ['entrepreneur reddit marketing', 'startup growth reddit', 'find founders reddit'],
     tips: [
@@ -43,7 +43,7 @@ export const subredditHubs: SubredditHubData[] = [
   {
     slug: 'agency-lead-generation-reddit',
     subreddit: 'r/Agencies',
-    title: 'Lead Gen for Agencies: Finding High-Ticket Clients on Reddit (2026)',
+    title: 'Reddit Marketing for Agencies: Finding High-Ticket Clients',
     description: 'How agencies can use Reddit to find B2B clients and high-ticket leads without spending thousands on LinkedIn ads.',
     keywords: ['agency lead gen reddit', 'find agency clients reddit', 'b2b marketing reddit'],
     tips: [
@@ -60,7 +60,7 @@ export const subredditHubs: SubredditHubData[] = [
   {
     slug: 'indie-hackers-marketing-reddit',
     subreddit: 'r/indiehackers',
-    title: 'Indie Hackers Guide: Promoting Your Product on Reddit (2026)',
+    title: 'Indie Hackers Reddit Marketing: Building a Global Brand',
     description: 'The definitive guide for Indie Hackers to find their first users and build a "build in public" brand on Reddit.',
     keywords: ['indie hacker reddit', 'build in public reddit', 'side project promotion reddit'],
     tips: [
@@ -75,7 +75,7 @@ export const subredditHubs: SubredditHubData[] = [
   {
     slug: 'side-project-promotion-reddit',
     subreddit: 'r/SideProject',
-    title: 'Get Your First 100 Users: Promoting Your Side Project on Reddit',
+    title: 'r/SideProject Marketing Guide: From Launch to 100 Users',
     description: 'Stop shouting into the void. Use AI-driven subreddit monitoring to find users who actually need your side project.',
     keywords: ['promote side project reddit', 'get first users reddit', 'side project success reddit'],
     tips: [

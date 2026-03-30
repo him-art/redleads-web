@@ -45,7 +45,7 @@ export default function RedditOpportunity() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
-            "name": "RedLeads Reddit Opportunity Finder",
+            "name": "RedLeads Reddit Marketing Tool",
             "applicationCategory": "BusinessApplication",
             "operatingSystem": "Web",
             "description": "Identify high-intent opportunities on Reddit for your business or SaaS.",

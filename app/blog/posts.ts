@@ -80,7 +80,7 @@ This is where automation wins. Tools like **RedLeads** monitor specific keywords
 Finding customers on Reddit isn't about luck. It's about being the first helpful person in the comments. Be useful, be fast, and the customers will follow.
 
 **Ready to find your first leads?**
-[Start scanning for simplified leads with RedLeads →](/)
+[Start scanning for simplified leads with Reddit Marketing Tool →](/)
     `,
     tldr: "Reddit is the best place to find your first 100 customers if you stop acting like a marketer and start acting like a human. Focus on finding 10 high-intent people daily rather than trying to scale spam.",
     insights: {
@@ -164,7 +164,7 @@ You can do this manually, but you will miss leads while you sleep.
 People buy from experts who help them, not salespeople who pitch them. If your product is actually good, helping is selling.
 
 **Stop missing conversations.**
-[Automate your Reddit lead gen with RedLeads today →](/)
+[Automate your Reddit lead gen with Reddit Marketing Tool today →](/)
     `,
     tldr: "Reddit lead generation focuses on identifying transactional conversations where users are actively seeking solutions. Success requires shifting from broad monitoring to intent-based qualifier engagement.",
     insights: {
@@ -334,7 +334,7 @@ When a user posts in r/SaaS asking for "an alternative to Salesforce that doesn'
 Reaching 100 users is a milestone. Reaching them through AI-scored signals is a strategy. Stop searching and start identifying.
 
 **Ready to see your first 100 users?**
-[Launch your Intent Engine with RedLeads →](/)
+[Launch your Intent Engine with Reddit Marketing Tool →](/)
     `,
     tldr: "Skip the manual hustle of refreshing subreddits. Use AI intent data to identify high-purchase signals and desperation in user confessions to scale your first 100 users efficiently.",
     insights: {

@@ -114,25 +114,27 @@ function loadMasterSubreddits(): string[] {
  */
 async function buildKeywordIndex(): Promise<{ 
     index: Map<string, string[]>, 
+    userSubredditsMap: Map<string, Set<string>>,
     userCount: number,
     keywordCount: number,
     profiles: any[]
 }> {
     const TRIAL_DAYS = 3;
 
-    // 1. Fetch profiles with keywords + subscription/trial info
+    // 1. Fetch profiles with keywords + subreddits + subscription/trial info
     const { data: profiles, error } = await supabase
         .from('profiles')
-        .select('id, keywords, description, subscription_tier, trial_ends_at, created_at')
+        .select('id, keywords, user_metadata, description, subscription_tier, trial_ends_at, created_at')
         .not('keywords', 'is', null);
 
     if (error) {
         console.error('[RSS] Failed to fetch profiles:', error);
-        return { index: new Map(), userCount: 0, keywordCount: 0, profiles: [] };
+        return { index: new Map(), userSubredditsMap: new Map(), userCount: 0, keywordCount: 0, profiles: [] };
     }
 
     const now = new Date();
     const index = new Map<string, string[]>();
+    const userSubredditsMap = new Map<string, Set<string>>();
     let keywordCount = 0;
     let skippedExpired = 0;
 
@@ -172,9 +174,22 @@ async function buildKeywordIndex(): Promise<{
              index.set(key, users);
              keywordCount++;
         });
+
+        // Index human-specified subreddits from user_metadata
+        const metadata = p.user_metadata || {};
+        const userSubs = metadata.subreddits || [];
+        if (Array.isArray(userSubs)) {
+            userSubs.forEach((s: string) => {
+                const sub = s.toLowerCase().trim();
+                if (!sub) return;
+                const users = userSubredditsMap.get(sub) || new Set<string>();
+                users.add(p.id);
+                userSubredditsMap.set(sub, users);
+            });
+        }
     });
 
-    return { index, userCount: activeProfiles.length, keywordCount, profiles: activeProfiles };
+    return { index, userSubredditsMap, userCount: activeProfiles.length, keywordCount, profiles: activeProfiles };
 }
 
 /**
@@ -329,19 +344,24 @@ async function runPollCycle() {
     console.log('[RSS] 🚀 Starting Global Keyword Scan...');
     
     // 1. Build Index
-    const { index, userCount, keywordCount, profiles } = await buildKeywordIndex();
+    const { index, userSubredditsMap, userCount, keywordCount, profiles } = await buildKeywordIndex();
     console.log(`[RSS] 🧠 Loaded ${keywordCount} keywords for ${userCount} users.`);
     
-    // 2. Load Subreddits
-    const subreddits = loadMasterSubreddits();
-    console.log(`[RSS] 📋 Monitoring ${subreddits.length} subreddits.`);
+    // 2. Load and Merge Subreddits
+    const masterSubreddits = loadMasterSubreddits();
+    const allUniqueSubreddits = Array.from(new Set([
+        ...masterSubreddits.map(s => s.toLowerCase()), 
+        ...Array.from(userSubredditsMap.keys())
+    ]));
+    
+    console.log(`[RSS] 📋 Monitoring ${allUniqueSubreddits.length} subreddits (${masterSubreddits.length} master + unique custom).`);
     
     let totalPosts = 0;
     let totalMatches = 0;
     let successCount = 0;
 
     // 3. Sequential Polling
-    for (const subreddit of subreddits) {
+    for (const subreddit of allUniqueSubreddits) {
         if (!isRunning) break;
         
         try {
@@ -361,11 +381,19 @@ async function runPollCycle() {
             // Match & Store
             for (const post of newPosts) {
                 processedPosts.add(post.id);
-                const matchedUserIds = findMatchingUsers(post, index);
+                let matchedUserIds = findMatchingUsers(post, index);
                 
+                // RESTRICTED DELIVERY:
+                // If the subreddit is NOT in the master list, only deliver to users who specifically requested it.
+                const isMasterSub = masterSubreddits.some(s => s.toLowerCase() === subreddit.toLowerCase());
+                if (!isMasterSub) {
+                    const specificUsers = userSubredditsMap.get(subreddit.toLowerCase()) || new Set<string>();
+                    matchedUserIds = matchedUserIds.filter(uid => specificUsers.has(uid));
+                }
+
                 if (matchedUserIds.length > 0) {
                     totalMatches += matchedUserIds.length;
-                    console.log(`[RSS] 🎯 Match in r/${subreddit}: "${post.title.slice(0, 30)}..." -> ${matchedUserIds.length} users`);
+                    console.log(`[RSS] 🎯 Match in r/${subreddit}: "${post.title.slice(0, 30)}..." -> ${matchedUserIds.length} users ${isMasterSub ? '(Global)' : '(Custom)'}`);
                     
                     // DEDUPLICATION: Check which users already have this title
                     const { data: existing } = await supabase
@@ -429,7 +457,7 @@ async function runPollCycle() {
                 last_scan_counts: {
                     posts: totalPosts,
                     leads: totalMatches,
-                    success_rate: subreddits.length > 0 ? (successCount / subreddits.length) : 0
+                    success_rate: allUniqueSubreddits.length > 0 ? (successCount / allUniqueSubreddits.length) : 0
                 },
                 delay_ms: DELAY_BETWEEN_REQ_MS
             }

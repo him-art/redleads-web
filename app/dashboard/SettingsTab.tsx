@@ -15,6 +15,7 @@ export default function SettingsTab({ user }: { user: any }) {
     
     const [description, setDescription] = useState(profile?.description || '');
     const [keywords, setKeywords] = useState<string[]>(profile?.keywords || []);
+    const [subreddits, setSubreddits] = useState<string[]>(profile?.user_metadata?.subreddits || []);
     const [websiteUrl, setWebsiteUrl] = useState(profile?.website_url || '');
 
 
@@ -23,12 +24,14 @@ export default function SettingsTab({ user }: { user: any }) {
         if (profile) {
             setDescription(profile.description || '');
             setKeywords(profile.keywords || []);
+            setSubreddits(profile.user_metadata?.subreddits || []);
             setWebsiteUrl(profile.website_url || '');
         }
     }, [profile]);
     
     // Inputs for adding new items
     const [newKeyword, setNewKeyword] = useState('');
+    const [newSubreddit, setNewSubreddit] = useState('');
 
 
     const [saving, setSaving] = useState(false);
@@ -53,7 +56,10 @@ export default function SettingsTab({ user }: { user: any }) {
                     description: description,
                     keywords: keywords,
                     website_url: websiteUrl,
-                    // subreddits: subreddits -- Deprecated in favor of global monitoring
+                    user_metadata: {
+                        ...(profile?.user_metadata || {}),
+                        subreddits: subreddits
+                    }
                 });
 
             if (error) throw error;
@@ -113,7 +119,9 @@ export default function SettingsTab({ user }: { user: any }) {
     };
 
     // Determine keyword limit from reactive planDetails
-    const keywordLimit = planDetails?.keywordLimit || 20;
+    const keywordLimit = planDetails?.keywordLimit || 10;
+    const subredditLimit = planDetails?.subredditLimit || 0;
+    const isPaid = planDetails?.id !== 'trial';
 
     const addKeyword = () => {
         const input = newKeyword.trim();
@@ -147,17 +155,22 @@ export default function SettingsTab({ user }: { user: any }) {
         setKeywords(keywords.filter((_, i) => i !== index));
     };
 
-    /*
     const addSubreddit = () => {
-        if (subreddits.length >= 10) {
-            setStatusMsg({ type: 'error', text: 'Maximum of 10 subreddits allowed. Remove some to add more.' });
+        if (!isPaid) {
+            setStatusMsg({ type: 'error', text: 'Custom subreddit monitoring is only available for paid plans.' });
             return;
         }
 
-        // Remove r/ prefix if present
-        const cleanSub = newSubreddit.replace(/^r\//i, '').trim();
-        if (cleanSub && !subreddits.includes(cleanSub)) {
-            setSubreddits([...subreddits, cleanSub]);
+        if (subreddits.length >= subredditLimit) {
+            setStatusMsg({ type: 'error', text: `Maximum of ${subredditLimit} subreddits allowed for your plan. Upgrade for more.` });
+            return;
+        }
+
+        const input = newSubreddit.trim().replace(/^r\//i, '');
+        if (!input) return;
+
+        if (!subreddits.includes(input)) {
+            setSubreddits([...subreddits, input]);
             setNewSubreddit('');
         }
     };
@@ -165,7 +178,6 @@ export default function SettingsTab({ user }: { user: any }) {
     const removeSubreddit = (index: number) => {
         setSubreddits(subreddits.filter((_, i) => i !== index));
     };
-    */
 
     return (
         <div className="space-y-8 max-w-2xl">
@@ -309,16 +321,81 @@ export default function SettingsTab({ user }: { user: any }) {
                     </div>
                 </div>
 
-                {/* Subreddits Section Removed - Global Monitoring Active */}
-                <div className="p-1 bg-white/5 border border-white/5 rounded-2xl opacity-30 pointer-events-none grayscale">
-                    <div className="bg-black/20 p-4 rounded-[0.9rem] space-y-2">
-                        <div className="flex items-center gap-2 mb-1">
-                            <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Global Monitoring Active</label>
-                            <span className="text-[9px] font-black bg-green-500/10 text-green-500/60 px-2 py-0.5 rounded-full border border-green-500/10 uppercase tracking-widest">100+ Communities</span>
+                {/* Custom Subreddits Section */}
+                <div className="p-1 bg-white/5 border border-white/5 rounded-2xl">
+                    <div className="bg-[#0c0c0c] p-6 rounded-[1.8rem] border border-white/5 relative overflow-hidden space-y-4">
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                        
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Custom Subreddits</label>
+                                {!isPaid && (
+                                    <span className="text-[9px] font-black bg-primary/10 text-primary/80 px-2 py-0.5 rounded-full border border-primary/10 uppercase tracking-widest flex items-center gap-1">
+                                        <Sparkles size={8} />
+                                        PRO
+                                    </span>
+                                )}
+                            </div>
+                            <span className={`text-[10px] font-black uppercase tracking-widest ${subreddits.length >= subredditLimit ? 'text-primary' : 'text-text-secondary/60'}`}>
+                                {subreddits.length}/{subredditLimit}
+                            </span>
                         </div>
-                        <p className="text-[10px] text-text-secondary/60 leading-relaxed uppercase tracking-widest font-black">
-                            Automatically scanning all relevant communities for founders and SaaS signals.
+
+                        <p className="text-[10px] text-text-secondary/60 leading-relaxed uppercase tracking-widest font-black opacity-60">
+                            Monitor specific communities in addition to our master list.
                         </p>
+
+                        {!isPaid ? (
+                            <div 
+                                className="bg-black/40 border border-dashed border-white/10 rounded-xl p-8 flex flex-col items-center justify-center text-center gap-3 cursor-pointer group hover:border-primary/30 transition-all"
+                                onClick={() => router.push('/#pricing')}
+                            >
+                                <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                                    <Sparkles size={20} />
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="text-xs font-bold text-text-primary uppercase tracking-wider">Unlock Custom Monitoring</p>
+                                    <p className="text-[9px] text-text-secondary font-black uppercase tracking-widest">Upgrade to Starter or Growth</p>
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="flex gap-2">
+                                    <div className="relative flex-grow">
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary/50 text-xs font-bold font-mono">r/</span>
+                                        <input
+                                            id="new-subreddit-input"
+                                            name="new-subreddit"
+                                            type="text"
+                                            value={newSubreddit}
+                                            onChange={(e) => setNewSubreddit(e.target.value)}
+                                            onKeyDown={(e) => e.key === 'Enter' && addSubreddit()}
+                                            disabled={subreddits.length >= subredditLimit}
+                                            placeholder="SaaS"
+                                            className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-8 pr-3 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none placeholder:text-text-secondary/50"
+                                        />
+                                    </div>
+                                    <button 
+                                        onClick={addSubreddit}
+                                        disabled={subreddits.length >= subredditLimit}
+                                        className="bg-white/10 hover:bg-white/20 text-text-primary p-3 rounded-xl transition-colors flex items-center justify-center disabled:opacity-30"
+                                    >
+                                        <Plus size={20} />
+                                    </button>
+                                </div>
+
+                                <div className="flex flex-wrap gap-2">
+                                    {subreddits.map((sub, i) => (
+                                        <div key={i} className="flex items-center gap-2 bg-white/5 border border-white/10 text-text-primary px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest">
+                                            <span>r/{sub}</span>
+                                            <button onClick={() => removeSubreddit(i)} className="text-text-secondary hover:text-white transition-colors flex items-center justify-center">
+                                                <X size={12} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
 
