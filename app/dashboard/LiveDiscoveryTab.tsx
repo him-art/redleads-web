@@ -87,25 +87,25 @@ export default function LiveDiscoveryTab({
                 className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8"
             >
                 {/* Card 1: Plan Status */}
-                <div className="p-1 bg-white/5 border border-white/5 rounded-[2rem]">
+                <div className="p-0.5 surface-1 rounded-[1.5rem] transition-all duration-300">
                     <motion.div 
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.3 }}
-                        className="relative overflow-hidden rounded-[1.8rem] bg-[#0c0c0c] p-6 border border-white/5 group transition-all hover:bg-white/[0.04]"
+                        className="relative overflow-hidden rounded-[1.3rem] bg-void p-6 border border-white/5 group transition-all hover:bg-white/[0.04]"
                     >
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                         <div className="flex items-center justify-between mb-4">
                             <div className="p-1.5 bg-primary/10 rounded-lg text-primary flex items-center justify-center">
                                 {isActuallySubscribed ? <ShieldCheck size={16} /> : <Clock size={16} />}
                             </div>
-                            <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Plan Status</span>
+                            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-text-secondary/60">Plan Status</span>
                         </div>
                         <div>
                             <h3 className="text-xl font-bold text-text-primary mb-0.5 tracking-tight">
                                 {planDetails.name}
                             </h3>
-                            <p className="text-[10px] text-text-secondary font-bold uppercase tracking-widest opacity-60">
+                            <p className="text-[10px] text-text-secondary font-black uppercase tracking-widest opacity-60">
                                 {isInTrial 
                                     ? `${daysRemaining} Days Left` 
                                     : isActuallySubscribed 
@@ -117,25 +117,25 @@ export default function LiveDiscoveryTab({
                 </div>
 
                 {/* Card 2: Usage Stats */}
-                <div className="p-1 bg-white/5 border border-white/5 rounded-[2rem]">
+                <div className="p-0.5 surface-1 rounded-[1.5rem] transition-all duration-300">
                     <motion.div 
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.3, delay: 0.1 }}
-                        className="relative overflow-hidden rounded-[1.8rem] bg-[#0c0c0c] p-6 border border-white/5 group transition-all hover:bg-white/[0.04]"
+                        className="relative overflow-hidden rounded-[1.3rem] bg-void p-6 border border-white/5 group transition-all hover:bg-white/[0.04]"
                     >
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                         <div className="flex items-center justify-between mb-4">
                             <div className="p-1.5 bg-blue-500/10 rounded-lg text-blue-500 flex items-center justify-center">
                                 <Activity size={16} />
                             </div>
-                            <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Usage</span>
+                            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-text-secondary/60">Usage</span>
                         </div>
                         <div>
                             <h3 className="text-xl font-bold text-text-primary mb-0.5 tracking-tight">
                                 {isMounted ? `${currentUsage}/${searchLimit}` : '...'}
                             </h3>
-                            <p className="text-[10px] text-text-secondary font-bold uppercase tracking-widest opacity-60">
+                            <p className="text-[10px] text-text-secondary font-black uppercase tracking-widest opacity-60">
                                 Scans Today
                             </p>
                         </div>
@@ -150,12 +150,12 @@ export default function LiveDiscoveryTab({
                 </div>
 
                 {/* Card 3: Keywords / Setup */}
-                <div className="p-1 bg-white/5 border border-white/5 rounded-[2rem]">
+                <div className="p-0.5 surface-1 rounded-[1.5rem] transition-all duration-300">
                     <motion.div 
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.3, delay: 0.2 }}
-                        className="relative overflow-hidden rounded-[1.8rem] bg-[#0c0c0c] p-6 border border-white/5 group transition-all hover:bg-white/[0.04] cursor-pointer" 
+                        className="relative overflow-hidden rounded-[1.3rem] bg-void p-6 border border-white/5 group transition-all hover:bg-white/[0.04] cursor-pointer" 
                         onClick={() => onNavigate('settings')}
                     >
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
@@ -163,14 +163,14 @@ export default function LiveDiscoveryTab({
                             <div className="p-1.5 bg-purple-500/10 rounded-lg text-purple-500 flex items-center justify-center">
                                 <Compass size={16} />
                             </div>
-                            <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Tracking</span>
+                            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-text-secondary/60">Tracking</span>
                         </div>
                         <div>
                             <h3 className="text-xl font-bold text-text-primary mb-0.5 tracking-tight">
                                 {profile?.keywords?.length || 0}
                             </h3>
                             <div className="flex items-center gap-2">
-                                <p className="text-[10px] text-text-secondary font-bold uppercase tracking-widest opacity-60">Active Keywords</p>
+                                <p className="text-[10px] text-text-secondary font-black uppercase tracking-widest opacity-60">Active Keywords</p>
                                 {!isSetupComplete && (
                                     <span className="flex h-1.5 w-1.5 relative">
                                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
@@ -189,15 +189,15 @@ export default function LiveDiscoveryTab({
 
             {/* 2. Main Search Area */}
             <div className="relative group mb-8">
-                <div className="p-1.5 bg-white/5 border border-white/5 rounded-[2.5rem]">
-                    <div className={`relative bg-[#0c0c0c] border border-white/5 rounded-[2.2rem] p-1 transition-all overflow-hidden ${
+                <div className="p-0.5 surface-1 rounded-[2rem]">
+                    <div className={`relative bg-void border border-white/5 rounded-[1.8rem] p-1 transition-all overflow-hidden ${
                         hasResults ? 'border-primary/50 shadow-[0_0_30px_rgba(255,88,54,0.1)]' : ''
                     }`}>
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                         <div className="px-4 sm:px-6 py-4 border-b border-white/5 flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                                <span className="text-xs font-bold uppercase tracking-widest text-text-secondary">Power Search</span>
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary">Power Search</span>
                             </div>
                         </div>
                         <div className="p-4 sm:p-6">
@@ -246,26 +246,26 @@ export default function LiveDiscoveryTab({
                                 <div className="absolute inset-0 bg-primary/5 rounded-full" />
                             </div>
                             <div className="space-y-0.5">
-                                <h2 className="text-[10px] font-black tracking-[0.2em] text-text-secondary uppercase">automated</h2>
+                                <h2 className="text-[10px] font-black tracking-[0.2em] text-text-secondary/60 uppercase leading-none">automated</h2>
                                 <p className="text-sm font-bold text-text-primary tracking-tight">Live Intelligence</p>
                             </div>
                         </div>
-                        <div className="p-1 bg-white/5 border border-white/5 rounded-full">
-                            <div className={`flex items-center gap-3 px-4 py-1.5 rounded-full border bg-[#0c0c0c] relative overflow-hidden ${
+                        <div className="p-0.5 surface-1 rounded-full">
+                            <div className={`flex items-center gap-3 px-4 py-1.5 rounded-full border bg-void relative overflow-hidden transition-all duration-500 ${
                                 isSetupComplete 
                                     ? 'border-green-500/20' 
                                     : 'border-red-500/20'
                             }`}>
                                 <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                                 <div className={`w-1.5 h-1.5 rounded-full animate-[pulse_2s_infinite] ${
-                                    isSetupComplete ? 'bg-green-500' : 'bg-red-500'
+                                    isSetupComplete ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]' : 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]'
                                 }`} />
                                 <span className={`text-[9px] font-black uppercase tracking-widest ${
                                     isSetupComplete ? 'text-green-500/60' : 'text-red-500/60'
                                 }`}>
                                     {isSetupComplete 
                                         ? 'System Online' 
-                                        : 'System Offline - Complete Tracking Set-up'
+                                        : 'System Offline'
                                     }
                                 </span>
                             </div>

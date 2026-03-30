@@ -96,12 +96,16 @@ export default function SettingsTab({ user }: { user: any }) {
             
             if (data.error) throw new Error(data.error);
 
-            if (data.description || data.keywords) {
+            if (data.description || data.keywords || data.subreddits) {
                 // 1. REPLACE INSTEAD OF APPEND
                 if (data.description) setDescription(data.description);
                 setKeywords(data.keywords || []);
-
                 
+                if (isPaid && data.subreddits) {
+                    // Respect the limit for AI suggestions too
+                    setSubreddits(data.subreddits.slice(0, subredditLimit));
+                }
+
                 // 2. SUCCESS FEEDBACK
                 setWasAiGenerated(true);
                 setPulseSections(true);
@@ -194,12 +198,12 @@ export default function SettingsTab({ user }: { user: any }) {
 
             <div className="space-y-6">
                 {/* Website URL */}
-                <div className="p-1 bg-white/5 border border-white/5 rounded-2xl">
-                    <div className="bg-[#0c0c0c] p-6 rounded-[1.8rem] border border-white/5 relative overflow-hidden space-y-4">
+                <div className="p-0.5 surface-1 rounded-2xl transition-all duration-300">
+                    <div className="bg-void p-6 rounded-[1.1rem] border border-white/5 relative overflow-hidden space-y-4">
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
-                                <label htmlFor="website-url" className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Website URL</label>
+                                <label htmlFor="website-url" className="text-[9px] font-black uppercase tracking-[0.2em] text-text-secondary">Website URL</label>
                             </div>
                             <div className="relative group">
                                 <input
@@ -209,10 +213,10 @@ export default function SettingsTab({ user }: { user: any }) {
                                     value={websiteUrl}
                                     onChange={(e) => setWebsiteUrl(e.target.value)}
                                     placeholder="yourproduct.com"
-                                    className="w-full bg-black/40 border border-white/10 rounded-xl py-4 pl-4 pr-4 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none transition-all placeholder:text-text-secondary/50"
+                                    className="w-full bg-surface border border-white/10 rounded-xl py-4 pl-4 pr-4 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none transition-all placeholder:text-text-secondary/50"
                                 />
                             </div>
-                            <p className="text-[10px] text-text-secondary/60 leading-relaxed uppercase tracking-widest font-black opacity-60">
+                            <p className="text-[9px] text-text-secondary/40 leading-relaxed uppercase tracking-widest font-black">
                                 Used to pre-fill Power Searches and generate AI configuration
                             </p>
                         </div>
@@ -220,17 +224,17 @@ export default function SettingsTab({ user }: { user: any }) {
                         <button
                             onClick={handleAutofill}
                             disabled={autofilling || !websiteUrl || websiteUrl.length < 3}
-                            className="w-full py-4 bg-primary text-white rounded-xl text-[10px] sm:text-sm font-black uppercase tracking-[0.2em] hover:bg-primary/90 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(255,88,54,0.2)]"
+                            className="w-full py-4 bg-primary text-white rounded-xl text-[10px] sm:text-sm font-black uppercase tracking-[0.2em] hover:bg-primary/90 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-[0_8px_30px_rgba(255,88,54,0.15)] group"
                         >
                             {autofilling ? (
                                 <>
                                     <LoadingIcon className="w-5 h-5" />
-                                    <span>Generating Configuration...</span>
+                                    <span>Generating Intelligence...</span>
                                 </>
                             ) : (
                                 <>
-                                    <MessageSquarePlus size={20} />
-                                    <span>Generate description & keywords using AI</span>
+                                    <Sparkles size={18} className="group-hover:rotate-12 transition-transform" />
+                                    <span>Generate AI setup</span>
                                 </>
                             )}
                         </button>
@@ -238,13 +242,13 @@ export default function SettingsTab({ user }: { user: any }) {
                 </div>
 
                 {/* Product Description */}
-                <div className="p-1 bg-white/5 border border-white/5 rounded-2xl">
-                    <div className="bg-[#0c0c0c] p-6 rounded-[1.8rem] border border-white/5 relative overflow-hidden space-y-4">
+                <div className="p-0.5 surface-1 rounded-2xl">
+                    <div className="bg-void p-6 rounded-[1.1rem] border border-white/5 relative overflow-hidden space-y-4">
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
-                                <label htmlFor="product-description" className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Product Description</label>
-                                <span className={`text-[10px] font-black uppercase tracking-widest ${description.split(/\s+/).filter(Boolean).length > 150 ? 'text-red-500' : 'text-text-secondary/60'}`}>
+                                <label htmlFor="product-description" className="text-[9px] font-black uppercase tracking-[0.2em] text-text-secondary">Product Description</label>
+                                <span className={`text-[9px] font-black uppercase tracking-widest ${description.split(/\s+/).filter(Boolean).length > 150 ? 'text-red-500' : 'text-text-secondary/40'}`}>
                                     {description.split(/\s+/).filter(Boolean).length}/150 words
                                 </span>
                             </div>
@@ -260,34 +264,34 @@ export default function SettingsTab({ user }: { user: any }) {
                                 }}
                                 placeholder="[Brand Name] is a [Product Type] that helps [Target Audience] solve [Problem] by [Value Proposition]."
                                 rows={5}
-                                className="w-full bg-black/40 border border-white/10 rounded-xl p-4 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none transition-colors resize-none placeholder:text-text-secondary/50 min-h-[140px]"
+                                className="w-full bg-surface border border-white/10 rounded-xl p-4 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none transition-colors resize-none placeholder:text-text-secondary/50 min-h-[140px]"
                             />
-                            <p className="text-[10px] text-text-secondary/60 leading-relaxed uppercase tracking-widest font-black opacity-60">
-                                <span className="text-primary/80">Pro Tip:</span> Being highly specific helps the AI find much higher quality leads.
+                            <p className="text-[9px] text-text-secondary/40 leading-relaxed uppercase tracking-widest font-black">
+                                <span className="text-primary">Pro Tip:</span> Being specific helps the AI find higher quality leads.
                             </p>
                         </div>
                     </div>
                 </div>
 
                 {/* Keywords */}
-                <div className="p-1 bg-white/5 border border-white/5 rounded-[2rem]">
-                    <div className="bg-[#0c0c0c] p-6 rounded-[1.8rem] border border-white/5 relative overflow-hidden transition-colors duration-500">
+                <div className="p-0.5 surface-1 rounded-[1.5rem]">
+                    <div className="bg-void p-6 rounded-[1.3rem] border border-white/5 relative overflow-hidden transition-colors duration-500">
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                         <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
-                                <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Priority Keywords</label>
+                                <label className="text-[9px] font-black uppercase tracking-[0.2em] text-text-secondary">Priority Keywords</label>
                                 {isMounted && wasAiGenerated && (
-                                    <span className="text-[9px] font-black uppercase tracking-widest text-primary/60 flex items-center gap-1 animate-in fade-in zoom-in duration-500">
-                                        <Sparkles size={10} className="text-primary" />
-                                        AI selected
+                                    <span className="ai-badge animate-in fade-in zoom-in duration-500">
+                                        <Sparkles size={10} />
+                                        AI Intelligence
                                     </span>
                                 )}
                             </div>
-                            <span className={`text-[10px] font-black uppercase tracking-widest ${keywords.length >= keywordLimit ? 'text-primary' : 'text-text-secondary/60'}`}>
+                            <span className={`text-[9px] font-black uppercase tracking-widest ${keywords.length >= keywordLimit ? 'text-primary' : 'text-text-secondary/40'}`}>
                                 {keywords.length}/{keywordLimit}
                             </span>
                         </div>
-                        <p className="text-[10px] text-text-secondary/60 leading-relaxed uppercase tracking-widest font-black opacity-60 mb-4">
+                        <p className="text-[9px] text-text-secondary/40 leading-relaxed uppercase tracking-widest font-black mb-4">
                             We scan 100+ active SaaS & Tech subreddits for these keywords.
                         </p>
                         <div className="flex gap-2 mb-3">
@@ -299,11 +303,11 @@ export default function SettingsTab({ user }: { user: any }) {
                                 onChange={(e) => setNewKeyword(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && addKeyword()}
                                 placeholder="e.g. 'lead generation', 'cold outreach'"
-                                className="flex-grow bg-black/40 border border-white/10 rounded-xl p-3 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none placeholder:text-text-secondary/50"
+                                className="flex-grow bg-surface border border-white/10 rounded-xl p-3 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none placeholder:text-text-secondary/50"
                             />
                             <button 
                                 onClick={addKeyword}
-                                className="bg-white/10 hover:bg-white/20 text-text-primary p-3 rounded-xl transition-colors flex items-center justify-center"
+                                className="bg-surface hover:bg-white/10 text-text-primary p-3 rounded-xl transition-colors flex items-center justify-center border border-white/10"
                             >
                                 <Plus size={20} />
                             </button>
@@ -322,32 +326,39 @@ export default function SettingsTab({ user }: { user: any }) {
                 </div>
 
                 {/* Custom Subreddits Section */}
-                <div className="p-1 bg-white/5 border border-white/5 rounded-2xl">
-                    <div className="bg-[#0c0c0c] p-6 rounded-[1.8rem] border border-white/5 relative overflow-hidden space-y-4">
+                <div className="p-0.5 surface-1 rounded-2xl">
+                    <div className="bg-void p-6 rounded-[1.1rem] border border-white/5 relative overflow-hidden space-y-4">
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                         
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                                <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-secondary">Custom Subreddits</label>
-                                {!isPaid && (
+                                <label className="text-[9px] font-black uppercase tracking-[0.2em] text-text-secondary">Custom Subreddits</label>
+                                {!isPaid ? (
                                     <span className="text-[9px] font-black bg-primary/10 text-primary/80 px-2 py-0.5 rounded-full border border-primary/10 uppercase tracking-widest flex items-center gap-1">
                                         <Sparkles size={8} />
                                         PRO
                                     </span>
+                                ) : (
+                                    isMounted && wasAiGenerated && (
+                                        <span className="ai-badge animate-in fade-in zoom-in duration-500">
+                                            <Sparkles size={10} />
+                                            AI Intelligence
+                                        </span>
+                                    )
                                 )}
                             </div>
-                            <span className={`text-[10px] font-black uppercase tracking-widest ${subreddits.length >= subredditLimit ? 'text-primary' : 'text-text-secondary/60'}`}>
+                            <span className={`text-[9px] font-black uppercase tracking-widest ${subreddits.length >= subredditLimit ? 'text-primary' : 'text-text-secondary/40'}`}>
                                 {subreddits.length}/{subredditLimit}
                             </span>
                         </div>
 
-                        <p className="text-[10px] text-text-secondary/60 leading-relaxed uppercase tracking-widest font-black opacity-60">
+                        <p className="text-[9px] text-text-secondary/40 leading-relaxed uppercase tracking-widest font-black">
                             Monitor specific communities in addition to our master list.
                         </p>
 
                         {!isPaid ? (
                             <div 
-                                className="bg-black/40 border border-dashed border-white/10 rounded-xl p-8 flex flex-col items-center justify-center text-center gap-3 cursor-pointer group hover:border-primary/30 transition-all"
+                                className="bg-surface border border-dashed border-white/10 rounded-xl p-8 flex flex-col items-center justify-center text-center gap-3 cursor-pointer group hover:border-primary/30 transition-all"
                                 onClick={() => router.push('/#pricing')}
                             >
                                 <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
@@ -372,13 +383,13 @@ export default function SettingsTab({ user }: { user: any }) {
                                             onKeyDown={(e) => e.key === 'Enter' && addSubreddit()}
                                             disabled={subreddits.length >= subredditLimit}
                                             placeholder="SaaS"
-                                            className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-8 pr-3 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none placeholder:text-text-secondary/50"
+                                            className="w-full bg-surface border border-white/10 rounded-xl py-3 pl-8 pr-3 text-sm font-bold text-text-primary tracking-tight focus:border-primary/50 outline-none placeholder:text-text-secondary/50"
                                         />
                                     </div>
                                     <button 
                                         onClick={addSubreddit}
                                         disabled={subreddits.length >= subredditLimit}
-                                        className="bg-white/10 hover:bg-white/20 text-text-primary p-3 rounded-xl transition-colors flex items-center justify-center disabled:opacity-30"
+                                        className="bg-surface hover:bg-white/10 text-text-primary p-3 rounded-xl transition-colors flex items-center justify-center disabled:opacity-30 border border-white/10"
                                     >
                                         <Plus size={20} />
                                     </button>

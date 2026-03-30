@@ -79,26 +79,26 @@ export default function ReportsTab({ reports, user }: { reports: any[], user: an
 
             {/* Header */}
             <div className="flex items-center justify-between pb-4">
-                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-primary">
+                <h2 className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">
                     Lead History
                 </h2>
 
-                <div className="flex bg-black/20 rounded-xl p-1.5 border border-subtle">
+                <div className="flex surface-1 rounded-xl p-1 border border-white/5 bg-void">
                      <button
                         onClick={() => setFilter('all')}
-                        className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${
-                            filter === 'all' ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' : 'text-text-secondary hover:text-text-primary'
+                        className={`px-4 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all ${
+                            filter === 'all' ? 'bg-primary text-white shadow-void' : 'text-text-secondary/60 hover:text-text-primary'
                         }`}
                     >
                         All
                     </button>
                     <button
                         onClick={() => setFilter('saved')}
-                        className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all flex items-center gap-2 ${
-                            filter === 'saved' ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' : 'text-text-secondary hover:text-text-primary'
+                        className={`px-4 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all flex items-center gap-2 ${
+                            filter === 'saved' ? 'bg-primary text-white shadow-void' : 'text-text-secondary/60 hover:text-text-primary'
                         }`}
                     >
-                        <Bookmark size={12} fill={filter === 'saved' ? 'currentColor' : 'none'} />
+                        <Bookmark size={10} fill={filter === 'saved' ? 'currentColor' : 'none'} />
                         Saved
                     </button>
                 </div>
@@ -107,18 +107,18 @@ export default function ReportsTab({ reports, user }: { reports: any[], user: an
             <div className="space-y-6">
                 {/* Active Config Summary */}
                 {hasConfig && (
-                    <div className="p-0.5 bg-white/5 border border-white/5 rounded-2xl">
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 text-[10px] font-bold text-text-secondary bg-[#0c0c0c] p-4 sm:p-5 rounded-[0.9rem] relative overflow-hidden">
+                    <div className="p-0.5 surface-1 rounded-2xl transition-all duration-300">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 text-[10px] font-black text-text-secondary/60 bg-void p-4 sm:p-5 rounded-[0.9rem] relative overflow-hidden">
                             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                             <div className="flex items-center gap-3">
-                                <span className="relative flex h-2 w-2">
+                                <span className="relative flex h-1.5 w-1.5">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500/50 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
                                 </span>
-                                <span className="tracking-wide text-text-primary">Monitoring Active</span>
+                                <span className="tracking-widest uppercase text-text-primary/80">Monitoring Active</span>
                             </div>
                             <div className="hidden sm:block w-px h-6 bg-white/5" />
-                            <div className="tracking-wide">Focusing on <span className="text-text-primary font-black">{profile?.keywords?.length || 0}</span> keywords</div>
+                            <div className="tracking-widest uppercase">Focusing on <span className="text-text-primary font-black">{profile?.keywords?.length || 0}</span> targeting vectors</div>
                         </div>
                     </div>
                 )}
@@ -129,40 +129,40 @@ export default function ReportsTab({ reports, user }: { reports: any[], user: an
                     <div className="space-y-4">
                         <div className="flex items-center gap-3">
                             <div className="relative">
-                                <Sparkles className="text-primary" size={14} />
-                                <div className="absolute inset-0 bg-primary/5 rounded-full" />
+                                <Sparkles className="text-ai" size={14} />
+                                <div className="absolute inset-0 bg-ai/5 rounded-full" />
                             </div>
                             <div className="space-y-0.5">
-                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary">automated</h3>
-                                <p className="text-sm font-bold text-text-primary tracking-tight leading-none">High-Intent Intelligence</p>
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary/60">neural sync</h3>
+                                <p className="text-sm font-bold text-text-primary tracking-tight leading-none">Intelligence Synthesis</p>
                             </div>
                         </div>
-                        <div className="grid grid-cols-1 gap-4">
+                        <div className="grid grid-cols-1 gap-6">
                             {leadAnalyses.map((analysis: LeadAnalysis) => (
-                                <div key={analysis.id} className="p-1 bg-white/5 border border-white/5 rounded-[2rem]">
-                                    <div className="relative overflow-hidden bg-[#0c0c0c] rounded-[1.8rem] p-6 border border-white/5 group transition-all hover:border-primary/30">
+                                <div key={analysis.id} className="p-0.5 surface-1 rounded-[2rem] transition-all duration-300">
+                                    <div className="relative overflow-hidden bg-void rounded-[1.8rem] p-8 border border-white/5 group transition-all hover:bg-white/[0.02]">
                                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                                        <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-10 transition-opacity">
-                                            <Brain size={80} className="text-text-primary" />
+                                        <div className="absolute top-0 right-0 p-8 opacity-[0.02] group-hover:opacity-10 transition-opacity">
+                                            <Brain size={120} className="text-ai" />
                                         </div>
-                                        <div className="relative z-10 space-y-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
-                                                    <Brain size={16} className="text-primary" />
+                                        <div className="relative z-10 space-y-6">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-10 h-10 rounded-2xl bg-ai/10 flex items-center justify-center border border-ai/20 shadow-[0_0_15px_rgba(0,209,255,0.1)]">
+                                                    <Brain size={18} className="text-ai" />
                                                 </div>
                                                 <div>
-                                                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/60 leading-none mb-1">Neural Synthesis</p>
-                                                    <h4 className="text-sm font-bold text-text-primary tracking-tight">Pattern Analysis</h4>
+                                                    <p className="text-[9px] font-black uppercase tracking-[0.25em] text-ai/60 leading-none mb-1.5">Pattern Detection</p>
+                                                    <h4 className="text-base font-black text-text-primary tracking-tight">Lead Vector Analysis</h4>
                                                 </div>
                                             </div>
-                                            <div className="text-xs sm:text-sm text-text-secondary leading-relaxed font-medium whitespace-pre-wrap">
+                                            <div className="text-xs sm:text-sm text-text-primary leading-relaxed font-bold tracking-tight whitespace-pre-wrap pl-1 sm:pl-14">
                                                 {analysis.content}
                                             </div>
-                                            <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-2">
-                                                <div className="px-2 py-1 sm:px-3 sm:py-1.5 rounded-full bg-white/5 border border-white/5 text-[8px] sm:text-[9px] font-black text-text-secondary uppercase tracking-widest">
-                                                    {analysis.lead_ids.length} Leads Analyzed
+                                            <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-4 sm:pl-14">
+                                                <div className="px-3 py-1.5 rounded-full bg-ai-muted text-[9px] font-black text-ai uppercase tracking-widest border border-ai/10">
+                                                    {analysis.lead_ids.length} Signals Correlated
                                                 </div>
-                                                <div className="px-2 py-1 sm:px-3 sm:py-1.5 rounded-full bg-white/5 border border-white/5 text-[8px] sm:text-[9px] font-black text-text-secondary uppercase tracking-widest">
+                                                <div className="px-3 py-1.5 rounded-full bg-white/5 border border-white/5 text-[9px] font-black text-text-secondary/60 uppercase tracking-widest">
                                                     {(() => {
                                                         try {
                                                             if (!isMounted) return '...';
@@ -198,19 +198,21 @@ export default function ReportsTab({ reports, user }: { reports: any[], user: an
                 ) : (
                 <div className="space-y-4">
                     {Object.entries(groupedLeads).map(([date, leads]) => (
-                        <div key={date} className="p-0.5 bg-white/5 border border-white/5 rounded-[1.4rem] sm:rounded-[1.7rem] overflow-hidden mb-4">
-                            <div className="bg-[#0c0c0c] rounded-[1.2rem] sm:rounded-[1.5rem] border border-white/5 relative overflow-hidden">
+                        <div key={date} className="p-0.5 surface-1 rounded-[1.4rem] sm:rounded-[1.7rem] overflow-hidden mb-4 transition-all duration-300">
+                            <div className="bg-void rounded-[1.2rem] sm:rounded-[1.5rem] border border-white/5 relative overflow-hidden">
                                 <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                                 <button 
                                     onClick={() => setExpandedDay(expandedDay === date ? null : date)}
-                                    className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-white/[0.02] transition-colors"
+                                    className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-white/[0.03] transition-colors"
                                 >
                                 <div className="flex items-center gap-4">
-                                    <Calendar size={18} className="text-primary" />
-                                    <span className="font-black text-xs uppercase tracking-wider text-text-primary">{date}</span>
-                                    <span className="bg-white/5 text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full text-text-secondary border border-white/5">{leads.length} leads</span>
+                                    <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                                        <Calendar size={16} />
+                                    </div>
+                                    <span className="font-black text-xs uppercase tracking-widest text-text-primary/90">{date}</span>
+                                    <span className="bg-white/5 text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full text-text-secondary/60 border border-white/5">{leads.length} Archive Signals</span>
                                 </div>
-                                <ChevronDown size={14} className={`text-text-secondary transition-transform ${expandedDay === date ? 'rotate-180' : ''}`} />
+                                <ChevronDown size={14} className={`text-text-secondary/30 transition-transform ${expandedDay === date ? 'rotate-180 text-primary' : ''}`} />
                             </button>
 
                              {expandedDay === date && (
@@ -219,8 +221,8 @@ export default function ReportsTab({ reports, user }: { reports: any[], user: an
                                         <div key={lead.id} className="p-2 sm:p-3 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors flex flex-col sm:flex-row gap-3 sm:gap-4 group">
                                             <div className="flex-grow space-y-1">
                                                 <div className="flex items-center gap-2.5">
-                                                    <span className="text-[9px] font-black text-primary/80 bg-primary/5 px-2.5 py-1 rounded-full uppercase tracking-widest border border-primary/10">r/{lead.subreddit}</span>
-                                                     <div className="flex items-center gap-1.5 text-[9px] font-bold text-text-secondary/50 uppercase tracking-widest">
+                                                    <span className="text-[9px] font-black text-ai bg-ai-muted px-2.5 py-1 rounded-full uppercase tracking-widest border border-ai/10">r/{lead.subreddit}</span>
+                                                     <div className="flex items-center gap-1.5 text-[9px] font-black text-text-secondary/30 uppercase tracking-widest">
                                                         <Clock size={10} />
                                                         {(() => {
                                                             try {
@@ -233,13 +235,17 @@ export default function ReportsTab({ reports, user }: { reports: any[], user: an
                                                             }
                                                             })()}
                                                      </div>
-                                                     <div className="px-2 py-0.5 rounded bg-white/5 border border-white/5">
-                                                        <span className="text-[9px] font-black uppercase tracking-widest text-text-secondary whitespace-nowrap">
+                                                     <div className={`px-2 py-0.5 rounded border transition-all duration-300 ${
+                                                        lead.match_category === 'High' 
+                                                            ? 'bg-green-500/10 border-green-500/30 text-green-400 shadow-[0_0_10px_rgba(34,197,94,0.1)]' 
+                                                            : 'bg-white/5 border-white/10 text-text-secondary/60'
+                                                     }`}>
+                                                        <span className="text-[9px] font-black uppercase tracking-widest whitespace-nowrap">
                                                             {lead.match_category || 'Medium'} Match
                                                         </span>
                                                     </div>
                                                     {lead.has_responded && (
-                                                        <div className="flex items-center gap-1 px-2 py-0.5 bg-green-500/10 text-green-500 rounded-md border border-green-500/20 text-[9px] font-black uppercase tracking-widest">
+                                                        <div className="flex items-center gap-1.5 px-2.5 py-1 bg-green-500/10 text-green-500 rounded-full border border-green-500/20 text-[9px] font-black uppercase tracking-widest shadow-[0_0_10px_rgba(34,197,94,0.1)]">
                                                             <CheckCircle2 size={10} /> Responded
                                                         </div>
                                                     )}
@@ -251,11 +257,11 @@ export default function ReportsTab({ reports, user }: { reports: any[], user: an
                                              <div className="flex items-center gap-1.5 sm:gap-2">
                                                     <button 
                                                         onClick={() => setDraftingLead(lead)}
-                                                        className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground border border-primary text-[10px] font-black uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center gap-1.5 group/btn"
+                                                        className="px-4 py-2 rounded-xl bg-primary text-white border border-primary/20 text-[10px] font-black uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center gap-2 group/btn shadow-void"
                                                         title="Open Reply Generator"
                                                     >
-                                                        <MessageSquarePlus size={12} className="text-primary-foreground" />
-                                                        Draft Reply
+                                                        <Sparkles size={12} className="text-white" />
+                                                        Draft Intelligence
                                                     </button>
                                                     <button 
                                                         onClick={async () => {

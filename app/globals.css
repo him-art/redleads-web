@@ -5,25 +5,30 @@
   --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-garamond), serif;
   
-  /* Soft Antigravity Palette */
-  --color-void: #0A0A0A; /* Softened deep black */
-  --color-card: rgba(255, 255, 255, 0.03); /* Subtle dark accent */
-  --color-subtle: rgba(255, 255, 255, 0.05);
-  --color-border-subtle: var(--color-subtle); /* Backward compatibility alias */
+  /* Obsidian Foundation - Deep, focus-driven shadows */
+  --color-void: #020203; /* Ultimate depth for maximum content pop */
+  --color-card: rgba(255, 255, 255, 0.03); /* Elevation 1 */
+  --color-surface: rgba(255, 255, 255, 0.05); /* Elevation 2 */
+  --color-subtle: rgba(255, 255, 255, 0.02);
   
-  /* Text Colors */
-  --color-text-primary: #EDEDED;
-  --color-text-secondary: #A1A1AA;
+  /* Text Strategy - High legibility, reduced glare */
+  --color-text-primary: hsl(0, 0%, 93%);
+  --color-text-secondary: hsl(240, 5%, 65%);
   
-  /* Brand Accents */
-  --color-primary: #ff5836; /* Signature Orange */
+  /* Brand: Copper Sunset - High Value & Action */
+  --color-primary: hsl(15, 90%, 55%); 
   --color-primary-foreground: #ffffff;
-  --color-accent: #27272a; /* Zinc 800 - for secondary elements */
+  
+  /* AI Intelligence Accent - Cyan/Blue for trust & machine work */
+  --color-ai: hsl(190, 100%, 50%);
+  --color-ai-muted: hsla(190, 100%, 50%, 0.1);
+  
+  --color-accent: hsl(240, 5%, 15%); /* Zinc 850 */
   --color-accent-foreground: #ffffff;
 }
 
 :root {
-  --background: #1a1a1a;
+  --background: var(--color-void);
   --foreground: #ffffff;
 }
 
@@ -36,9 +41,23 @@
 
 html,
 body {
-  background: var(--background);
+  background-color: var(--color-void);
+  background-image: 
+    /* Level 3: The Cyber Noise Texture (Micro-Tactile) */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"),
+    /* Level 2: The Structural Blueprint Grid */
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    /* Level 1: The Ambient Aura - Intelligence/Trust (Blue) */
+    radial-gradient(circle at 15% 15%, hsla(190, 100%, 50%, 0.04) 0%, transparent 35%),
+    /* Level 1: The Ambient Aura - Human/Action (Copper) */
+    radial-gradient(circle at 85% 85%, hsla(15, 90%, 55%, 0.04) 0%, transparent 35%);
+  background-size: 150px 150px, 40px 40px, 40px 40px, 100% 100%, 100% 100%;
+  background-attachment: fixed;
+  background-blend-mode: overlay, normal, normal, normal, normal;
   color: var(--foreground);
   font-family: var(--font-sans);
+  min-height: 100vh;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -108,14 +127,35 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @layer utilities {
-  .glass-panel {
-    @apply bg-card border border-subtle;
+  .surface-1 {
+    @apply bg-card border border-white/5;
   }
   
+  .surface-2 {
+    @apply bg-surface border border-white/[0.08] shadow-void;
+  }
+
+  .surface-3 {
+    @apply bg-white/[0.08] border border-white/[0.12] shadow-xl;
+  }
+
+  .glass-panel {
+    @apply bg-card backdrop-blur-xl border border-white/10;
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.01), 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+  }
+  
+  .ai-gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-ai to-blue-400;
+  }
+
+  .ai-badge {
+    @apply bg-ai-muted border border-ai/20 text-ai px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1;
+  }
+
   .shadow-void {
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), 
-                0 4px 6px -1px rgba(0, 0, 0, 0.5), 
-                0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03), 
+                0 8px 16px -4px rgba(0, 0, 0, 0.7), 
+                0 4px 8px -2px rgba(0, 0, 0, 0.5);
   }
 
   .border-subtle {

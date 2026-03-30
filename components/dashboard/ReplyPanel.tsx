@@ -37,7 +37,7 @@ const LaborIllusion = () => {
         { text: "Scanning subreddit rules...", icon: Search, color: "text-blue-400" },
         { text: "Analyzing audience tone...", icon: MessageCircle, color: "text-purple-400" },
         { text: "Checking ban-risk factors...", icon: ShieldCheck, color: "text-green-400" },
-        { text: "Drafting high-value replies...", icon: Brain, color: "text-orange-500" },
+        { text: "Drafting high-value replies...", icon: Brain, color: "text-ai" },
     ];
 
     useEffect(() => {
@@ -50,13 +50,13 @@ const LaborIllusion = () => {
     return (
         <div className="flex flex-col items-center justify-center py-16 space-y-6 h-full">
             <div className="relative">
-                <div className="p-1 bg-white/5 border border-white/5 rounded-2xl">
-                    <div className="w-14 h-14 bg-[#0c0c0c] rounded-xl flex items-center justify-center relative z-10 border border-white/5 shadow-inner">
+                <div className="p-1 surface-1 rounded-2xl">
+                    <div className="w-14 h-14 bg-void rounded-xl flex items-center justify-center relative z-10 border border-white/5 shadow-inner">
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                         {(() => { const StepIcon = steps[step].icon; return <StepIcon size={24} className={steps[step].color} />; })()}
                     </div>
                 </div>
-                <div className="absolute inset-0 bg-primary/10 rounded-2xl animate-pulse opacity-20 blur-xl" />
+                <div className="absolute inset-0 bg-ai/10 rounded-2xl animate-pulse opacity-20 blur-xl" />
             </div>
             
             <div className="text-center space-y-3 px-8">
@@ -65,7 +65,7 @@ const LaborIllusion = () => {
                 </h3>
                 <div className="w-32 h-1 bg-white/[0.05] rounded-full overflow-hidden mx-auto border border-white/5">
                     <motion.div 
-                        className="h-full bg-primary"
+                        className="h-full bg-ai shadow-[0_0_8px_rgba(0,209,255,0.5)]"
                         initial={{ width: "0%" }}
                         animate={{ width: `${((step + 1) / steps.length) * 100}%` }}
                         transition={{ duration: 0.5 }}
@@ -143,7 +143,7 @@ export default function ReplyPanel({ lead, productContext, onClose, isSidebar = 
                 flex flex-col overflow-hidden h-full w-full
                 ${isSidebar 
                     ? 'bg-transparent border-0 shadow-none' 
-                    : 'sticky top-6 bg-[#0A0A0A] border border-white/5 shadow-2xl rounded-[2rem] max-h-[85vh]'
+                    : 'sticky top-6 bg-void border border-white/5 shadow-void rounded-[2rem] max-h-[85vh]'
                 }
             `}
         >
@@ -151,10 +151,10 @@ export default function ReplyPanel({ lead, productContext, onClose, isSidebar = 
             <div className="p-5 border-b border-white/5 flex items-center justify-between bg-void/50">
                 <div className="space-y-1 overflow-hidden">
                     <h3 className="text-sm font-black uppercase tracking-widest text-text-primary flex items-center gap-2">
-                        <Sparkles size={14} className="text-primary" />
+                        <Sparkles size={14} className="text-ai" />
                         Intelligence
                     </h3>
-                    <div className="flex items-center gap-2 text-[9px] font-bold text-primary/60">
+                    <div className="flex items-center gap-2 text-[9px] font-black text-ai/60 uppercase tracking-widest">
                         r/{lead.subreddit}
                     </div>
                 </div>
@@ -198,20 +198,20 @@ export default function ReplyPanel({ lead, productContext, onClose, isSidebar = 
                         </p>
                     </div>
                 ) : (
-                    <div className="p-5 space-y-5">
+                    <div className="p-5 space-y-6">
                         {drafts.map((draft, i) => (
-                            <div key={i} className="p-0.5 bg-white/5 border border-white/5 rounded-2xl group transition-all">
-                                <div className="bg-[#0c0c0c] rounded-[0.9rem] p-5 border border-white/5 relative overflow-hidden space-y-4">
+                            <div key={i} className="p-0.5 surface-1 rounded-2xl group transition-all duration-300 hover:scale-[1.01]">
+                                <div className="bg-void rounded-[0.9rem] p-6 border border-white/5 relative overflow-hidden space-y-4">
                                     <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                                     <div className="flex items-center justify-between">
-                                        <span className="text-[8px] font-black uppercase tracking-widest text-primary/80 bg-primary/5 px-2.5 py-1 rounded-full border border-primary/10">
+                                        <span className="text-[8px] font-black uppercase tracking-widest text-ai bg-ai-muted px-2.5 py-1.5 rounded-full border border-ai/10">
                                             {draft.type}
                                         </span>
                                         <button 
                                             onClick={() => handleCopy(draft.text, i)}
-                                            className={`text-[8px] flex items-center gap-2 px-3 py-1.5 rounded-lg font-black uppercase tracking-widest transition-all ${
+                                            className={`text-[8px] flex items-center gap-2 px-3.5 py-2 rounded-xl font-black uppercase tracking-widest transition-all ${
                                                 copiedIndex === i 
-                                                    ? 'bg-green-500 text-white' 
+                                                    ? 'bg-green-500 text-white shadow-[0_0_15px_rgba(34,197,94,0.4)]' 
                                                     : 'bg-white/5 text-text-secondary hover:text-text-primary hover:bg-white/10 border border-white/5'
                                             }`}
                                         >
@@ -219,7 +219,7 @@ export default function ReplyPanel({ lead, productContext, onClose, isSidebar = 
                                             {copiedIndex === i ? 'Copied' : i === 0 ? 'Copy Best Match' : 'Copy'}
                                         </button>
                                     </div>
-                                    <div className="text-xs text-text-primary/90 leading-relaxed whitespace-pre-wrap font-medium">
+                                    <div className="text-xs text-text-primary/90 leading-relaxed whitespace-pre-wrap font-bold tracking-tight">
                                         {draft.text}
                                     </div>
                                 </div>

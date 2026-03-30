@@ -118,10 +118,10 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
             )}
             {showPaywall && !showOnboarding && activeTab !== 'billing' && <PaywallModal onCheckout={handleCheckout} />}
             
-            <div className="flex h-screen bg-void text-text-primary overflow-hidden font-sans selection:bg-primary/30 relative">
+            <div className="flex h-screen text-text-primary overflow-hidden font-sans selection:bg-primary/30 relative">
                 
                 {/* Mobile Header Toggle */}
-                <div className="lg:hidden absolute top-0 left-0 right-0 z-50 p-4 bg-void border-b border-white/5 flex items-center justify-between">
+                <div className="lg:hidden absolute top-0 left-0 right-0 z-50 p-4 backdrop-blur-xl bg-void/80 border-b border-white/5 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                             <div className="w-8 h-8 relative">
                             <Image 
@@ -161,8 +161,8 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                     animate={isMobileMenuOpen ? { x: 0 } : { x: 0 }}
                     className={`
                         fixed inset-y-0 left-0 z-[70] lg:z-40 w-72 
-                        lg:glass-panel lg:bg-card/40 lg:border-r lg:border-white/5
-                        bg-[#0A0A0A] lg:bg-transparent
+                        lg:backdrop-blur-2xl lg:bg-void/40 lg:border-r lg:border-white/5
+                        bg-void lg:bg-transparent
                         transform lg:transform-none transition-transform duration-300 ease-in-out
                         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
                         flex flex-col p-6
@@ -215,7 +215,7 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                                     }`}
                                 >
                                     {isActive && !isLocked && (
-                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-primary rounded-r-full shadow-[0_0_15px_rgba(255,88,54,1)]" />
+                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-primary rounded-r-full shadow-[0_0_12px_rgba(255,88,54,0.6)]" />
                                     )}
                                     <TabIcon size={18} className={`relative z-10 transition-colors duration-300 ${isLocked ? 'text-text-secondary' : isActive ? 'text-primary' : 'group-hover:text-text-primary'}`} />
                                     <span className={`relative z-10 text-xs font-bold uppercase tracking-widest ${isActive && !isLocked ? 'text-text-primary' : ''}`}>
@@ -231,11 +231,11 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
 
                     {/* User Profile / Footer - Double Framed */}
                     <div className="mt-auto pt-6 border-t border-white/5 space-y-3">
-                        <div className="p-0.5 bg-white/5 border border-white/5 rounded-2xl group transition-all duration-500">
-                            <div className="bg-[#0c0c0c] p-4 rounded-[0.9rem] border border-white/5 relative overflow-hidden flex items-center gap-3">
+                        <div className="p-0.5 surface-1 rounded-2xl group transition-all duration-500">
+                            <div className="bg-void p-4 rounded-[0.9rem] border border-white/5 relative overflow-hidden flex items-center gap-3">
                                 <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-zinc-800 to-black flex items-center justify-center border border-white/10 text-text-primary shrink-0">
-                                    <span className="text-xs font-black uppercase">
+                                <div className="w-10 h-10 rounded-full bg-surface flex items-center justify-center border border-white/10 text-text-primary shrink-0 transition-transform group-hover:scale-105">
+                                    <span className="text-xs font-black uppercase text-ai">
                                         {user.email?.[0].toUpperCase()}
                                     </span>
                                 </div>
@@ -262,7 +262,7 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                 </motion.aside>
 
                 {/* Main Content Area */}
-                <main className="flex-1 lg:pl-[20rem] relative flex flex-col min-w-0 bg-void">
+                <main className="flex-1 lg:pl-[20rem] relative flex flex-col min-w-0">
                     {/* Content Container */}
                     <div className="flex-1 p-0 overflow-hidden">
                         <div className="w-full h-full relative flex flex-col">

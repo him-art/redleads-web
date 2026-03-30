@@ -446,12 +446,12 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                 <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/5 flex flex-col">
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary mb-3">Starter</h3>
                                     <div className="flex items-baseline gap-2 mb-1">
-                                        <span className="text-sm font-bold text-text-secondary/40 line-through">$28</span>
-                                        <span className="text-3xl font-black text-text-primary">$14</span>
+                                        <span className="text-sm font-bold text-text-secondary/40 line-through">$38</span>
+                                        <span className="text-3xl font-black text-text-primary">$19</span>
                                         <span className="text-xs text-text-secondary/50 font-bold uppercase">/mo</span>
                                     </div>
                                     <ul className="space-y-2.5 my-5 flex-grow">
-                                        {['5 tracked keywords', '2 daily power searches', '100 AI reply drafts /mo', 'Daily email alerts'].map(f => (
+                                        {['10 tracked keywords', '2 daily power searches', 'Monitor + 5 custom subreddits', '100 AI reply drafts /mo', 'Daily email alerts'].map(f => (
                                             <li key={f} className="text-[10px] font-bold text-text-secondary uppercase tracking-widest flex items-center gap-2">
                                                 <Check size={10} className="text-text-secondary/50" /> {f}
                                             </li>
@@ -478,7 +478,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                         <span className="text-xs text-text-secondary/50 font-bold uppercase">/mo</span>
                                     </div>
                                     <ul className="space-y-2.5 my-5 flex-grow">
-                                        {['15 tracked keywords', '5 daily power searches', '500 AI reply drafts /mo', 'Priority email alerts'].map(f => (
+                                        {['20 tracked keywords', '5 daily power searches', 'Monitor + 15 custom subreddits', '500 AI reply drafts /mo', 'Priority email alerts'].map(f => (
                                             <li key={f} className="text-[10px] font-bold text-text-primary uppercase tracking-widest flex items-center gap-2">
                                                 <Check size={10} className="text-orange-500" /> {f}
                                             </li>
@@ -542,7 +542,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                     ) : (
                                         <div className="flex flex-col items-center">
                                             <div className="flex items-center gap-2">
-                                                Claim My Free 3-Day Trial <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                                Claim My Free 7-Day Trial <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                                             </div>
                                             <span className="text-[10px] opacity-60 font-medium tracking-normal mt-1 capitalize">No Credit Card Required • Instant Access</span>
                                         </div>

@@ -224,12 +224,12 @@ export default function BillingTab() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Current Status Card */}
-                <div className="lg:col-span-3 p-1.5 bg-white/5 border border-white/5 rounded-[2.5rem]">
-                    <div className="bg-[#0c0c0c] rounded-[2.2rem] p-8 md:p-12 border border-white/5 relative overflow-hidden">
+                <div className="lg:col-span-3 p-0.5 surface-1 rounded-[2rem] transition-all duration-300">
+                    <div className="bg-void rounded-[1.8rem] p-8 md:p-12 border border-white/5 relative overflow-hidden">
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                         <div className="absolute top-0 right-0 p-8">
-                            <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${isSubscribed || isAdmin ? (isLifetime ? 'bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'bg-primary/10 text-primary border-primary/20 shadow-[0_0_20px_rgba(255,88,54,0.1)]') : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
-                                {isMounted ? (isSubscribed || isAdmin ? (isLifetime ? 'Lifetime Plan' : 'Active') : (isInTrial ? `${daysRemaining} Days Left` : 'Expired')) : '...'}
+                            <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all duration-500 ${isSubscribed || isAdmin ? (isLifetime ? 'bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'bg-primary/10 text-primary border-primary/20 shadow-void') : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
+                                {isMounted ? (isSubscribed || isAdmin ? (isLifetime ? 'Lifetime Access' : 'Active Subscription') : (isInTrial ? `${daysRemaining} Days Left` : 'Trial Expired')) : '...'}
                             </div>
                         </div>
 
@@ -240,21 +240,21 @@ export default function BillingTab() {
                             </h3>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {[
-                                { label: 'Keywords', value: isLifetime ? '20 Keywords' : isGrowth ? '20 Keywords' : isStarter ? '10 Keywords' : 'Trial Plan', icon: <Search size={16} /> },
-                                { label: 'Power Searches', value: isLifetime ? '5/Day' : isGrowth ? '5/Day' : isStarter ? '2/Day' : 'Trial Plan', icon: <Compass size={16} /> },
-                                { label: 'AI Outreach', value: isLifetime ? '500 Drafts / Month' : isGrowth ? '500 Drafts / Month' : isStarter ? '100 Drafts / Month' : '5 Drafts', icon: <Bot size={16} /> },
-                                { label: 'Support', value: isLifetime ? 'Priority Support' : 'Standard Support', icon: <CheckCircle2 size={16} /> }
+                                { label: 'Keywords', value: isLifetime ? '20 Keywords' : isGrowth ? '20 Keywords' : isStarter ? '10 Keywords' : 'Trial Plan', icon: <Search size={14} /> },
+                                { label: 'Power Searches', value: isLifetime ? '5/Day' : isGrowth ? '5/Day' : isStarter ? '2/Day' : 'Trial Plan', icon: <Compass size={14} /> },
+                                { label: 'AI Outreach', value: isLifetime ? '500 Drafts / Month' : isGrowth ? '500 Drafts / Month' : isStarter ? '100 Drafts / Month' : '5 Drafts', icon: <Bot size={14} /> },
+                                { label: 'Support', value: isLifetime ? 'Priority Support' : 'Standard Support', icon: <CheckCircle2 size={14} /> }
                             ].map((stat) => (
-                                <div key={stat.label} className="p-0.5 bg-white/5 border border-white/5 rounded-2xl">
-                                    <div className="p-4 rounded-xl bg-[#0c0c0c]/50 border border-white/5 relative overflow-hidden">
+                                <div key={stat.label} className="p-0.5 surface-1 rounded-2xl transition-all duration-300 hover:scale-[1.02]">
+                                    <div className="p-4 rounded-[1.1rem] bg-void border border-white/5 relative overflow-hidden">
                                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-                                        <div className="flex items-center gap-3 mb-2 text-text-secondary">
+                                        <div className="flex items-center gap-3 mb-2 text-text-secondary/60">
                                             {stat.icon}
                                             <span className="text-[10px] font-black uppercase tracking-widest">{stat.label}</span>
                                         </div>
-                                        <p className="text-xs font-black text-text-primary uppercase tracking-wider">{stat.value}</p>
+                                        <p className="text-xs font-black text-text-primary uppercase tracking-tight">{stat.value}</p>
                                     </div>
                                 </div>
                             ))}
@@ -315,11 +315,11 @@ export default function BillingTab() {
                         { id: 'starter', name: PLANS.STARTER.name, price: billingCycle === 'annual' ? PLANS.STARTER.annualPrice : PLANS.STARTER.price, desc: '10 keywords, 2 power searches & 100 AI reply drafts per month', primary: false, active: planDetails.id === 'starter' },
                         { id: 'growth', name: PLANS.GROWTH.name, price: billingCycle === 'annual' ? PLANS.GROWTH.annualPrice : PLANS.GROWTH.price, desc: '20 keywords, 5 power searches & 500 AI reply drafts per month', primary: true, active: planDetails.id === 'growth' }
                     ].map((plan) => (
-                    <div key={plan.id} className="p-1.5 bg-white/5 border border-white/5 rounded-[2.5rem]">
-                        <div className={`p-8 sm:p-10 rounded-[2.2rem] border flex flex-col h-full transition-all relative overflow-hidden ${plan.active ? 'border-primary ring-2 ring-primary/20 bg-primary/[0.03]' : 'bg-[#0c0c0c] border-white/5'}`}>
+                    <div key={plan.id} className="p-0.5 surface-1 rounded-[2rem] transition-all duration-300">
+                        <div className={`p-8 sm:p-10 rounded-[1.8rem] border flex flex-col h-full transition-all relative overflow-hidden ${plan.active ? 'border-primary ring-2 ring-primary/10 bg-void' : 'bg-void border-white/5'}`}>
                             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                             {plan.active && (
-                                <div className="absolute top-0 right-0 px-5 py-2 bg-primary text-primary-foreground text-[9px] font-black uppercase tracking-widest rounded-bl-2xl flex items-center gap-1.5 shadow-lg">
+                                <div className="absolute top-0 right-0 px-5 py-2 bg-primary text-primary-foreground text-[9px] font-black uppercase tracking-widest rounded-bl-2xl flex items-center gap-1.5 shadow-void">
                                     <Sparkles size={10} /> Current Plan
                                 </div>
                             )}
@@ -396,8 +396,8 @@ export default function BillingTab() {
 
             {/* Lifetime Upgrade Invitation for existing users or trial users */}
             {!isLifetime && (
-                <div className="mt-12 p-1.5 bg-white/5 border border-white/5 rounded-[2.5rem]">
-                    <div className="relative rounded-[2.2rem] bg-[#0c0c0c] border-2 border-red-500/50 p-8 md:p-12 overflow-hidden group">
+                <div className="mt-12 p-0.5 surface-1 rounded-[2.5rem] transition-all duration-300">
+                    <div className="relative rounded-[2.3rem] bg-void border-2 border-red-500/30 p-8 md:p-12 overflow-hidden group shadow-void">
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                         <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
                             <Crown size={180} className="text-white -rotate-12 translate-x-20 -translate-y-20" />

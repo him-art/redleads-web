@@ -102,14 +102,18 @@ export async function POST(req: Request) {
             - **NO VERBS** at the start (e.g., do NOT use "find", "get", "increase", "boost").
             - Focus on the **platform name**, **specific niche**, **competitor name**, or **user pain point**.
             
-            Examples for a LinkedIn tool:
-            GOOD: "linkedin reach", "linkedin engagement", "taplio alternative", "linkedin growth", "social selling", "b2b outreach"
-            BAD: "how to get views", "best linkedin tool", "social media marketing"
+            3. Generate 8-10 "Target Subreddits" where the target audience for this product hangs out.
+               
+            Requirements for Subreddits:
+            - **Return ONLY the name of the subreddit (no "r/" prefix).**
+            - Focus on subreddits related to the **platform**, **niche**, **job function**, or **problem category**.
+            - Examples for a LinkedIn tool: "sales", "marketing", "entrepreneur", "smallbusiness", "leadgeneration", "copywriting"
             
             Return JSON:
             {
                 "description": "...",
-                "keywords": ["...", "..."]
+                "keywords": ["...", "..."],
+                "subreddits": ["...", "..."]
             }
         `;
 
@@ -118,7 +122,7 @@ export async function POST(req: Request) {
             messages: [
                 { 
                     role: "system", 
-                    content: "You are a professional Lead Generation Expert. You specialize in identifying niche keywords that capture high-intent users looking for specific solutions." 
+                    content: "You are a professional Lead Generation Expert. You specialize in identifying niche keywords and communities that capture high-intent users looking for specific solutions." 
                 },
                 { role: "user", content: prompt }
             ],
@@ -135,7 +139,8 @@ export async function POST(req: Request) {
 
         return NextResponse.json({
             description: result.description || metaDescription || 'A helpful tool for your workflow.',
-            keywords: result.keywords || []
+            keywords: result.keywords || [],
+            subreddits: result.subreddits || []
         });
 
     } catch (error: any) {
