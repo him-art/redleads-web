@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import { sendEmail } from '@/lib/email';
-import PremiumOnboardingEmail from '@/lib/email-templates/PremiumOnboardingEmail';
+import TrialLifecycleEmail from '@/lib/email-templates/TrialLifecycleEmails';
 import * as React from 'react';
-import { createClient } from '@supabase/supabase-js';
 
 // This is the bouncer for the webhook.
 // The user should set SUPABASE_WEBHOOK_SECRET in their .env.local
@@ -28,32 +27,20 @@ export async function POST(req: Request) {
         console.log(`[Supabase Webhook] Received ${type} on ${table}`);
 
         if (table === 'profiles') {
-            const { email, full_name, trial_ends_at } = record;
+            const { email, full_name, website_url } = record;
 
-            // 1. Welcome Email (on INSERT)
-            if (type === 'INSERT' && email) {
-                console.log(`[Supabase Webhook] Sending Welcome Email to ${email}`);
+            // 1. Welcome & Activation Email (on INSERT or UPDATE)
+            // We consolidate this to using Day 1 of the Lifecycle
+            if ((type === 'INSERT' || (type === 'UPDATE' && record.trial_ends_at && !old_record.trial_ends_at)) && email) {
+                console.log(`[Supabase Webhook] Sending Welcome/Activation Email to ${email}`);
                 await sendEmail({
                     to: email,
-                    subject: 'Welcome to RedLeads! 🚀',
-                    react: React.createElement(PremiumOnboardingEmail, { 
+                    subject: 'Your first Reddit leads are ready 👀',
+                    react: React.createElement(TrialLifecycleEmail, { 
                         fullName: full_name || email.split('@')[0],
-                        step: 'welcome',
-                        daysLeft: 3
-                    })
-                });
-            }
-
-            // 2. Trial Activated Email (on UPDATE: null -> date transition)
-            if (type === 'UPDATE' && email && trial_ends_at && !old_record.trial_ends_at) {
-                console.log(`[Supabase Webhook] Sending Trial Activated Email to ${email}`);
-                await sendEmail({
-                    to: email,
-                    subject: 'Your 3-Day Trial is Active! 🚀',
-                    react: React.createElement(PremiumOnboardingEmail, { 
-                        fullName: full_name || email.split('@')[0],
-                        step: 'welcome', // We'll show the welcome/trial info together
-                        trialExpiryDate: trial_ends_at ? new Date(trial_ends_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) : undefined
+                        stage: 'day1',
+                        productName: website_url?.replace(/^https?:\/\//, '') || 'your website',
+                        leadCount: 12 // Default starting placeholder
                     })
                 });
             }

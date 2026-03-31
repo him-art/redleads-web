@@ -436,7 +436,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                             <div className="text-center space-y-2">
 
                                 <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-text-primary">
-                                    Your 3-day free trial is active
+                                    Your 7-day free trial is active
                                 </h2>
 
                             </div>

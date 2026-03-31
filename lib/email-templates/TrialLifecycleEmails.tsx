@@ -31,22 +31,22 @@ export default function TrialLifecycleEmail({
     ctaUrl: string;
   }> = {
     day1: {
-      preheader: `Your first leads for ${productName} are live right now.`,
-      tag: 'New Leads Ready',
+      preheader: `Your Reddit scanner is now live and searching for ${productName} leads.`,
+      tag: 'Scanner Activated 🛰️',
       tagColor: '#10b981',
-      title: `Your first ${leadCount} Reddit leads are ready 👀`,
+      title: `Your first ${leadCount} leads are already waiting 👀`,
       body: (
         <>
           <p>Hi {firstName},</p>
-          <p>We just scanned Reddit for {productName} and found <strong>{leadCount} people</strong> who could become your customers.</p>
-          <p>Your top match is live in <strong>r/{topSubreddit}</strong> right now. The first person to reply wins, and on Reddit, that window is minutes, not hours.</p>
-          <p>Click below to see your leads and use AI Reply to engage them before a competitor does.</p>
+          <p>I'm Tim, the founder of RedLeads. I built this tool to automate the exact process I used to get my first 100 customers—without spending all day on Reddit.</p>
+          <p>While you were setting up, our scanner was already working. We've already flagged <strong>{leadCount} people</strong> who are actively looking for what you offer with <strong>{productName}</strong>.</p>
+          <p>On Reddit, the first person to provide value usually wins the customer. Click below to see your initial leads and use <strong>AI Reply</strong> to engage them before a competitor does.</p>
         </>
       ),
-      cta: 'View My Leads Now →',
+      cta: 'See My First Leads →',
       ctaUrl: dashboardUrl,
     },
-    day2: {
+    day2: { // Legacy - skipping in worker
       preheader: `${leadCount} more leads just came in. Don't leave them cold.`,
       tag: 'Urgent Alert',
       tagColor: '#f59e0b',
@@ -55,30 +55,28 @@ export default function TrialLifecycleEmail({
         <>
           <p>Hi {firstName},</p>
           <p>Since you signed up, <strong>{leadCount} more posts</strong> have appeared on Reddit where people are asking about exactly what {productName} does.</p>
-          <p>These conversations are happening whether you show up or not. The founders who reply early build trust — the ones who wait lose deals.</p>
-          <p>Log in and reply to the hottest leads before your trial ends.</p>
         </>
       ),
       cta: 'Claim My Leads →',
       ctaUrl: dashboardUrl,
     },
     day3: {
-      preheader: 'Your trial ends tomorrow. Keep the leads flowing.',
-      tag: 'Final Call',
-      tagColor: '#ef4444',
-      title: 'Your trial ends today ⏰',
+      preheader: 'The secret to winning Reddit leads: The "Helping Hook".',
+      tag: 'Growth Lab 🧪',
+      tagColor: '#8b5cf6',
+      title: 'The "Helping Hook" (Don\'t sell, help)',
       body: (
         <>
           <p>Hi {firstName},</p>
-          <p>Your full access to RedLeads expires in <strong>less than 24 hours</strong>.</p>
-          <p>After tomorrow, your dashboard locks and your lead stream stops. You will lose live monitoring of r/{topSubreddit} and the other subreddits where your customers are asking questions right now.</p>
-          <p><strong>{leadCount} leads</strong> are sitting in your dashboard. Don't let them go cold.</p>
+          <p>Most founders fail on Reddit because they sound like a salesperson. Here is the secret: <strong>Provide 90% value, 10% link.</strong></p>
+          <p>I call this the <strong>Helping Hook</strong>. Instead of saying "buy my tool," try: <i>"I actually dealt with this exact issue last month. What worked for me was X. I actually built a small tool to automate this if you want to check it out."</i></p>
+          <p>Our **AI Reply** is trained on this exact framework. You have <strong>4 days left</strong> in your trial—go use it to turn one of your leads into a conversation today.</p>
         </>
       ),
-      cta: 'Upgrade Before It Expires →',
-      ctaUrl: pricingUrl,
+      cta: 'Try the Helping Hook →',
+      ctaUrl: dashboardUrl,
     },
-    day4: {
+    day4: { // Legacy - skipping in worker
       preheader: 'How one founder closed their first Reddit customer in 3 days.',
       tag: 'Success Story',
       tagColor: '#8b5cf6',
@@ -86,63 +84,56 @@ export default function TrialLifecycleEmail({
       body: (
         <>
           <p>Hi {firstName},</p>
-          <p>Here is something we have seen repeatedly: founders who reply to Reddit leads within 24 hours of getting them <strong>close customers 3x faster</strong> than those who batch it weekly.</p>
-          <p>Why? Because Reddit is a real-time platform. When someone asks "what tool should I use for X?" you have a 2-hour window before the thread goes quiet.</p>
-          <p>RedLeads surfaces that moment. <strong>AI Reply</strong> helps you say the right thing. And you stay safe from Reddit's anti-spam filters.</p>
-          <p>Your trial is still active. Go reply to one lead today.</p>
+          <p>Founders who reply to Reddit leads within 24 hours of getting them **close customers 3x faster** than those who batch it weekly.</p>
         </>
       ),
       cta: 'Reply to a Lead Now →',
       ctaUrl: dashboardUrl,
     },
     day5: {
-      preheader: 'What happens after you reply.',
-      tag: 'Social Proof',
+      preheader: 'One reply. One customer. $1,200 in revenue.',
+      tag: 'ROI Case Study 📈',
       tagColor: '#0ea5e9',
-      title: 'What founders are saying',
+      title: 'The ROI of a single reply',
       body: (
         <>
           <p>Hi {firstName},</p>
-          <p>A few things we hear from RedLeads users:</p>
-          <div style={{ padding: '16px', borderLeft: '3px solid #0ea5e9', backgroundColor: 'rgba(14, 165, 233, 0.05)', marginBottom: '16px' }}>
-            <p style={{ margin: '0 0 12px 0', fontStyle: 'italic' }}>"I replied to 3 posts in r/SaaS my first week. One of them became a paying customer."</p>
-            <p style={{ margin: '0 0 12px 0', fontStyle: 'italic' }}>"I was spending 2 hours a day manually searching Reddit. RedLeads does it in seconds."</p>
-            <p style={{ margin: 0, fontStyle: 'italic' }}>"The AI Reply feature is what got me. I was terrified of sounding spammy. It doesn't."</p>
-          </div>
-          <p>You are still in your trial. Today is a good day to go turn one of your <strong>{leadCount} leads</strong> into a real conversation.</p>
+          <p>We just passed the 5-day mark. I wanted to share why RedLeads users usually stick around for years after their trial.</p>
+          <p>One of our users recently shared that they spent 30 seconds using <strong>AI Reply</strong> on a lead we found in r/SaaS. That one reply led to a demo, which led to a <strong>$1,200/year contract</strong>.</p>
+          <p>RedLeads costs $19/mo. If it finds you just <strong>one customer per year</strong>, it has already paid for itself 5x over.</p>
+          <p>You have <strong>{leadCount} leads</strong> waiting in your dashboard. Which one is your next customer?</p>
         </>
       ),
-      cta: 'View My Dashboard →',
+      cta: 'Find My Next Customer →',
       ctaUrl: dashboardUrl,
     },
     day6: {
-      preheader: `High-intent leads just landed in r/${topSubreddit}. Don't miss them.`,
-      tag: '🔥 Hot Leads Alert',
+      preheader: `High-intent buy signals detected in r/${topSubreddit}.`,
+      tag: 'Intense Interest 🔥',
       tagColor: '#f25e36',
-      title: `High-intent posts just hit r/${topSubreddit}`,
+      title: `Buying signals hit r/${topSubreddit}`,
       body: (
         <>
           <p>Hi {firstName},</p>
-          <p>We scanned Reddit today and flagged <strong>{leadCount} posts</strong> where people are actively looking for solutions like {productName}.</p>
-          <p>These are NOT brand mentions or casual discussions. These are people saying "I need X, what do you recommend?" — the <strong>highest-intent buying signal</strong> on the internet.</p>
-          <p>Your trial ends very soon. Use AI Reply to engage at least one of these today.</p>
+          <p>Our scanner just flagged <strong>{leadCount} posts</strong> that are "High Intent." These aren't casual chats—these are people explicitly asking for a recommendation for a solution like <strong>{productName}</strong>.</p>
+          <p>Your trial ends tomorrow. Once it expires, your dashboard access will lock and these leads will go to your competitors instead.</p>
+          <p>Don't leave easy revenue on the table. Reply to these final leads today.</p>
         </>
       ),
-      cta: 'See Hot Leads →',
+      cta: 'Claim Final Leads →',
       ctaUrl: dashboardUrl,
     },
     day7: {
-      preheader: 'Last 24 hours. Then your leads stop.',
-      tag: 'Final Warning',
+      preheader: 'Final 24 hours. Your lead stream is about to stop.',
+      tag: 'Personal Note ✉️',
       tagColor: '#ef4444',
-      title: 'Access locks in 24 hours',
+      title: 'Should I keep your scanner running?',
       body: (
         <>
           <p>Hi {firstName},</p>
-          <p>This is the last email before your RedLeads trial ends.</p>
-          <p>Tomorrow, your dashboard goes dark. Your lead stream stops. The <strong>{leadCount} leads</strong> we found for {productName} on <strong>r/{topSubreddit}</strong> will sit unclaimed, and a competitor will reply to them instead.</p>
-          <p>Upgrading takes 60 seconds. A Growth plan is $29/mo — less than a single customer acquisition from paid ads.</p>
-          <p>Don't let 7 days of setup go to waste.</p>
+          <p>Your 7-day trial ends in exactly 24 hours. Tomorrow morning, your dashboard goes dark and we'll stop monitoring Reddit for <strong>{productName}</strong>.</p>
+          <p>I'd love to keep it running for you. Upgrading to a Starter plan is just $19/mo—less than the cost of a single lunch—to keep your lead machine running 24/7.</p>
+          <p><strong>Quick question:</strong> If you haven't upgraded yet, what's been the biggest hurdle? Hit reply and let me know—I read every email.</p>
         </>
       ),
       cta: 'Keep My Access Live →',

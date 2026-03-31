@@ -29,14 +29,15 @@ const TrialLifecycleEmailModule = require('../../lib/email-templates/TrialLifecy
 const TrialLifecycleEmail = TrialLifecycleEmailModule.default || TrialLifecycleEmailModule;
 
 // 7-day trial sequence timing (hours since trial start)
+// Optimized to 5 high-impact emails to prevent inbox fatigue
 const STAGE_WINDOWS: Record<string, { from: number; to: number; subject: string }> = {
-    day1: { from: 1,   to: 24,  subject: 'Your first Reddit leads are ready 👀' },
-    day2: { from: 24,  to: 48,  subject: "You're missing leads right now" },
-    day3: { from: 48,  to: 72,  subject: 'Your RedLeads trial ends today ⏰' },
-    day4: { from: 72,  to: 96,  subject: 'From signup to customer in 3 days 🚀' },
-    day5: { from: 96,  to: 120, subject: 'What other founders are saying about RedLeads' },
-    day6: { from: 120, to: 144, subject: '🔥 High-intent leads just landed — act now' },
-    day7: { from: 144, to: 200, subject: 'Last chance: your access locks tomorrow' },
+    day1: { from: 1,   to: 24,  subject: 'RedLeads: Your Reddit scanner is now live 🛰️' },
+    // Day 2 skipped to give users space
+    day3: { from: 48,  to: 72,  subject: 'The "2-Hour Rule" (How to win Reddit deals) ⏱️' },
+    // Day 4 skipped
+    day5: { from: 96,  to: 120, subject: 'How one founder turned 1 reply into a $500 customer 📈' },
+    day6: { from: 120, to: 144, subject: '🔥 Hot Leads Alert: High-intent signals detected' },
+    day7: { from: 144, to: 200, subject: 'Final 24h: Should I keep your scanner running? 🛑' },
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
