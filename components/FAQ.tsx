@@ -41,7 +41,7 @@ const faqs = [
   },
   {
     question: "What happens after the 3-day free trial?",
-    answer: "You'll have full access to all features for 3 days. Use it to find your first few customers. If it doesn't pay for itself by day three, you can cancel with one click in your settings and you won't be charged a cent."
+    answer: "You'll have full access to all features for 7 days. Use it to find your first few customers. If it doesn't pay for itself by day three, you can cancel with one click in your settings and you won't be charged a cent."
   },
   {
     question: "Can I really cancel with one click?",

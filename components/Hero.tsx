@@ -192,10 +192,10 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
             transition={{ duration: 0.8 }}
             className="relative rounded-[2rem] md:rounded-[2.5rem] border border-white/10 p-1.5 md:p-2 text-left flex md:max-h-[620px] origin-top"
           >
-            <div className="flex w-full rounded-[2rem] overflow-hidden bg-[#0a0a0a] border border-white/10 relative">
+            <div className="flex w-full rounded-[2rem] overflow-hidden bg-[#0f0f13] border border-white/10 relative">
 
             {/* ── SIDEBAR ── */}
-            <div className="hidden md:flex flex-col w-[200px] flex-shrink-0 bg-[#121212] border-r border-white/5 p-5">
+            <div className="hidden md:flex flex-col w-[200px] flex-shrink-0 bg-transparent border-r border-white/5 p-5">
               {/* Brand */}
               <div className="mb-6">
                 <p className="text-[9px] font-black tracking-[0.2em] text-[#71717a] uppercase mb-4">Command Center</p>
@@ -229,7 +229,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
             </div>
 
             {/* ── MAIN PANEL ── */}
-            <div className="flex-1 min-w-0 overflow-hidden p-3 md:p-6 flex flex-col gap-4 md:gap-6 bg-[#0a0a0a]">
+            <div className="flex-1 min-w-0 overflow-hidden p-3 md:p-6 flex flex-col gap-4 md:gap-6 bg-transparent">
 
               {/* Power Search Container */}
               <motion.div 
@@ -237,7 +237,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                 whileInView={{ y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
-                className="bg-[#121212] border border-white/5 rounded-[1.25rem] md:rounded-[1.5rem] p-4 md:p-6 space-y-4 shadow-xl shadow-black/40 relative overflow-hidden"
+                className="bg-void border border-white/5 rounded-[1.25rem] md:rounded-[1.5rem] p-4 md:p-6 space-y-4 shadow-xl shadow-black/40 relative overflow-hidden"
               >
                 <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                 
@@ -352,7 +352,7 @@ function LiveCard({ subreddit, time, matchLevel, title, delay = 0 }: { subreddit
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay, type: "spring", stiffness: 150, damping: 20 }}
       whileHover={{ y: -2, transition: { duration: 0.2, delay: 0 } }}
-      className="bg-[#121212] border border-white/5 rounded-[1rem] flex overflow-hidden hover:bg-white/[0.06] hover:border-white/10 transition-colors group shadow-lg relative"
+      className="bg-void border border-white/5 rounded-[1rem] flex overflow-hidden hover:bg-white/[0.06] hover:border-white/10 transition-colors group shadow-lg relative"
     >
       {/* Left Column - Match Label */}
       <div className="w-20 flex-shrink-0 flex items-center justify-center bg-black/40 border-r border-white/5">
