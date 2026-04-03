@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import MaterialIcon from '@/components/ui/MaterialIcon';
+import { Target, Inbox, Zap, Search, Sparkles, Bookmark as BookmarkIcon, MessageSquarePlus, ExternalLink, Clock, Copy, RefreshCw, X, Globe, Calendar, ChevronRight, Check, ArrowRight } from 'lucide-react';
 
 const features = [
   {
     id: 'scoring',
-    icon: 'target',
+    icon: Target,
     title: "AI-Powered Scoring",
     description: "Know instantly which posts have buyers ready to act — skip the noise, focus on the money.",
     color: "text-orange-500",
@@ -15,7 +15,7 @@ const features = [
   },
   {
     id: 'inbox',
-    icon: 'inbox',
+    icon: Inbox,
     title: "Daily Inbox",
     description: "Wake up to a curated list of warm leads, scored and ready to engage — before your competitors see them.",
     color: "text-blue-500",
@@ -23,7 +23,7 @@ const features = [
   },
   {
     id: 'monitoring',
-    icon: 'zap',
+    icon: Zap,
     title: "Real-time Monitoring",
     description: "Be the first to reply to high-intent posts. Speed wins on Reddit — early replies get the most visibility.",
     color: "text-yellow-500",
@@ -31,7 +31,7 @@ const features = [
   },
   {
     id: 'seo',
-    icon: 'search',
+    icon: Search,
     title: "SEO Opportunities",
     description: "Find Reddit posts ranked on Google's first page — reply once, get traffic and customers for months.",
     color: "text-purple-500",
@@ -39,7 +39,7 @@ const features = [
   },
   {
     id: 'replies',
-    icon: 'sparkles',
+    icon: Sparkles,
     title: "AI Reply Suggestions",
     description: "Never stare at a blank reply box. Get 3 tailored, non-spammy reply drafts in one click.",
     color: "text-orange-400",
@@ -47,7 +47,7 @@ const features = [
   },
   {
     id: 'save',
-    icon: 'bookmark',
+    icon: BookmarkIcon,
     title: "Save & Organize",
     description: "Save hot leads and track your outreach pipeline. Never lose a warm conversation again.",
     color: "text-pink-500",
@@ -56,10 +56,9 @@ const features = [
 ];
 
 const LeadPreview = () => (
-  <div className="relative z-10 bg-[#0c0c0c] border border-white/5 rounded-2xl p-8  transition-transform duration-500 group-hover:scale-[1.02] w-full h-full flex flex-col justify-center">
+  <div className="relative z-10 bg-void border border-white/5 rounded-2xl p-8 transition-transform duration-500 group-hover:scale-[1.02] w-full h-full flex flex-col justify-center">
     <div className="flex items-start gap-4 mb-6">
       <div className="flex flex-col items-center justify-center w-14 h-14 rounded-xl bg-orange-500/10 border border-orange-500/20 text-orange-500 shrink-0">
-        
         <span className="text-[8px] font-black uppercase tracking-wider">Medium</span>
       </div>
       
@@ -85,22 +84,22 @@ const LeadPreview = () => (
     <div className="flex items-center gap-3">
       <button 
         suppressHydrationWarning
-        className="flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-orange-500 text-white text-[11px] font-black uppercase tracking-widest hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/10 active:scale-95"
+        className="flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-primary hover:bg-[#ff6900] text-white text-[11px] font-black uppercase tracking-widest transition-all transform hover:-translate-y-[1px] active:scale-95 shadow-[0_0_15px_rgba(255,88,54,0.3)] hover:shadow-[0_0_25px_rgba(255,88,54,0.5)]"
       >
-        <MaterialIcon name="add_comment" size={16} />
+        <MessageSquarePlus size={16} />
         DRAFT REPLY
       </button>
       <button 
         suppressHydrationWarning
-        className="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-gray-400 hover:text-white transition-all hover:bg-white/10 active:scale-95"
+        className="p-3.5 rounded-2xl bg-white/5 border border-white/5 text-gray-400 hover:text-white transition-all hover:bg-white/10 active:scale-95"
       >
-        <MaterialIcon name="bookmark" size={18} />
+        <BookmarkIcon size={18} />
       </button>
       <button 
         suppressHydrationWarning
-        className="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-gray-400 hover:text-white transition-all hover:bg-white/10 active:scale-95"
+        className="p-3.5 rounded-2xl bg-white/5 border border-white/5 text-gray-400 hover:text-white transition-all hover:bg-white/10 active:scale-95"
       >
-        <MaterialIcon name="open_in_new" size={18} />
+        <ExternalLink size={18} />
       </button>
     </div>
   </div>
@@ -111,7 +110,7 @@ const InboxPreview = () => (
     {[1, 10, 4, 10, 6].map((count, i) => (
       <div 
         key={i} 
-        className="flex items-center justify-between p-4 rounded-xl bg-[#0c0c0c] border border-white/5 hover:border-white/10 transition-colors group/item"
+        className="flex items-center justify-between p-4 rounded-xl bg-[#0f0f13] border border-white/5 hover:border-white/10 hover:bg-white/[0.04] transition-colors group/item"
       >
         <div className="flex items-center gap-4 min-w-0">
           <div className="px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-500 text-[10px] font-black uppercase tracking-wider flex-shrink-0">
@@ -121,7 +120,7 @@ const InboxPreview = () => (
             Daily Intelligence: {count} Top Opportunities
           </span>
         </div>
-        <MaterialIcon name="target" size={16} className="text-orange-500 opacity-60 group-hover/item:opacity-100 transition-opacity flex-shrink-0" />
+        <Target size={16} className="text-primary opacity-60 group-hover/item:opacity-100 transition-opacity flex-shrink-0" />
       </div>
     ))}
   </div>
@@ -133,7 +132,7 @@ const MonitoringPreview = () => (
     <div className="flex items-center justify-between mb-8">
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500">
-          <MaterialIcon name="bolt" size={20} />
+          <Zap size={20} />
         </div>
         <div>
           <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 leading-none mb-1">AUTOMATED</p>
@@ -155,13 +154,13 @@ const MonitoringPreview = () => (
         { sub: "SOLOPRENEUR", time: "23:21", title: "Hire Me: to Fix Your Lead Generation System and Help You Close More Deals" },
         { sub: "MARKETINGAUTOMATION", time: "23:21", title: "How do you use Ai in insta to grow your agency 10 times more?" }
       ].map((item, i) => (
-        <div key={i} className="p-5 rounded-2xl bg-[#0c0c0c] border border-white/5 space-y-4">
+        <div key={i} className="p-5 rounded-2xl bg-[#0f0f13] border border-white/5 space-y-4 hover:border-white/10 transition-colors">
           <div className="flex items-center justify-between">
              <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                <span className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-gray-400">MEDIUM MATCH</span>
                <span className="text-[10px] font-black uppercase tracking-widest text-orange-500/80">R/{item.sub}</span>
                <div className="flex items-center gap-1 text-[10px] font-bold text-gray-600">
-                 <MaterialIcon name="schedule" size={10} />
+                 <Clock size={10} />
                  {item.time}
                </div>
              </div>
@@ -172,22 +171,22 @@ const MonitoringPreview = () => (
           <div className="flex items-center gap-3">
             <button 
               suppressHydrationWarning
-              className="flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-orange-500 text-white text-[11px] font-black uppercase tracking-widest hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/10"
+              className="flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-primary hover:bg-[#ff6900] text-white text-[11px] font-black uppercase tracking-widest transition-all transform hover:-translate-y-[1px] active:scale-95 shadow-[0_0_15px_rgba(255,88,54,0.3)] hover:shadow-[0_0_25px_rgba(255,88,54,0.5)]"
             >
-              <MaterialIcon name="add_comment" size={16} />
+              <MessageSquarePlus size={16} />
               DRAFT REPLY
             </button>
             <button 
               suppressHydrationWarning
-              className="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-gray-400 hover:text-white transition-all hover:bg-white/10"
+              className="p-3.5 rounded-2xl bg-white/5 border border-white/5 text-gray-400 hover:text-white transition-all hover:bg-white/10 active:scale-95"
             >
-              <MaterialIcon name="bookmark" size={18} />
+              <BookmarkIcon size={18} />
             </button>
             <button 
               suppressHydrationWarning
-              className="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-gray-400 hover:text-white transition-all hover:bg-white/10"
+              className="p-3.5 rounded-2xl bg-white/5 border border-white/5 text-gray-400 hover:text-white transition-all hover:bg-white/10 active:scale-95"
             >
-              <MaterialIcon name="open_in_new" size={18} />
+              <ExternalLink size={18} />
             </button>
           </div>
         </div>
@@ -203,26 +202,26 @@ const AIRepliesPreview = () => {
       <div className="flex items-center justify-between mb-6 pb-6 border-b border-white/5">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500">
-            <MaterialIcon name="sparkles" size={20} />
+            <Sparkles size={20} />
           </div>
           <div>
             <h4 className="text-lg font-black text-white leading-none mb-1 tracking-tight">AI INTELLIGENCE</h4>
             <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">DRAFTING RESPONSE</p>
           </div>
         </div>
-        <MaterialIcon name="close" size={20} className="text-gray-600 cursor-pointer hover:text-white transition-colors" />
+        <X size={20} className="text-gray-600 cursor-pointer hover:text-white transition-colors" />
       </div>
 
       {/* Post Context */}
       <div className="mb-6 p-5 rounded-2xl bg-white/[0.02] border border-white/5 relative overflow-hidden group">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <MaterialIcon name="sparkles" size={14} className="text-orange-500" />
+            <Sparkles size={14} className="text-orange-500" />
             <h5 className="text-[12px] font-black text-white uppercase tracking-[0.2em]">INTELLIGENCE</h5>
           </div>
           <div className="flex items-center gap-4">
-            <MaterialIcon name="open_in_new" size={14} className="text-gray-600 cursor-pointer hover:text-white transition-colors" />
-            <MaterialIcon name="close" size={14} className="text-gray-600 cursor-pointer hover:text-white transition-colors" />
+            <ExternalLink size={14} className="text-gray-600 cursor-pointer hover:text-white transition-colors" />
+            <X size={14} className="text-gray-600 cursor-pointer hover:text-white transition-colors" />
           </div>
         </div>
         
@@ -252,7 +251,7 @@ const AIRepliesPreview = () => {
         ].map((option, i) => (
           <div 
             key={i} 
-            className="p-5 rounded-2xl bg-[#0c0c0c] border border-white/5 relative group/reply hover:border-orange-500/20 transition-colors"
+            className="p-5 rounded-2xl bg-[#0f0f13] border border-white/5 relative group/reply hover:border-orange-500/30 transition-colors shadow-lg hover:shadow-[0_0_20px_rgba(255,88,54,0.1)]"
           >
             <div className="flex items-center justify-between mb-4">
               <span className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-gray-400 group-hover/reply:text-orange-500 transition-colors">
@@ -260,9 +259,9 @@ const AIRepliesPreview = () => {
               </span>
               <button 
                 suppressHydrationWarning
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-white hover:bg-white/10 transition-all"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-white hover:bg-white/10 transition-all active:scale-95"
               >
-                <MaterialIcon name="content_copy" size={12} />
+                <Copy size={12} />
                 COPY
               </button>
             </div>
@@ -281,9 +280,9 @@ const AIRepliesPreview = () => {
         </div>
         <button 
           suppressHydrationWarning
-          className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-white transition-colors group/regen"
+          className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-primary transition-colors group/regen"
         >
-          <MaterialIcon name="refresh" size={12} className="group-hover/regen:rotate-180 transition-transform duration-500" />
+          <RefreshCw size={12} className="group-hover/regen:rotate-180 transition-transform duration-500 text-primary" />
           REGENERATE
         </button>
       </div>
@@ -294,12 +293,12 @@ const AIRepliesPreview = () => {
 const SEOPreview = () => (
   <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-4">
     <div className="mx-auto flex-1 w-full max-w-sm">
-      <div className="w-full bg-[#0c0c0c] border border-white/10 rounded-2xl overflow-hidden ">
+      <div className="w-full bg-[#0f0f13] border border-white/10 rounded-[1.5rem] overflow-hidden shadow-2xl">
       {/* Search Bar */}
       <div className="p-4 border-b border-white/5 bg-white/[0.02] flex items-center gap-3">
-        <MaterialIcon name="public" size={16} className="text-gray-600" />
-        <div className="flex-1 h-8 rounded-full bg-white/5 border border-white/5 flex items-center px-4">
-          <span className="text-xs text-gray-400">google.com</span>
+        <Globe size={16} className="text-gray-500" />
+        <div className="flex-1 h-8 rounded-full bg-black/40 border border-white/5 flex items-center px-4">
+          <span className="text-xs text-gray-400 font-medium tracking-tight">google.com</span>
         </div>
       </div>
       
@@ -344,17 +343,17 @@ const SavePreview = () => (
     {/* Header */}
     <div className="flex items-center justify-between mb-8">
       <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-500">LEAD HISTORY</h4>
-      <div className="flex items-center p-1 rounded-xl bg-[#0a0a0a] border border-white/5">
-        <button suppressHydrationWarning className="px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest text-gray-500">ALL</button>
-        <button suppressHydrationWarning className="px-4 py-1.5 rounded-lg bg-orange-500 text-white text-[10px] font-black uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-orange-500/20">
-          <MaterialIcon name="bookmark" size={12} fill={true} />
+      <div className="flex items-center p-1 rounded-xl bg-black border border-white/5">
+        <button suppressHydrationWarning className="px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white transition-colors">ALL</button>
+        <button suppressHydrationWarning className="px-4 py-1.5 rounded-lg bg-primary text-white text-[10px] font-black uppercase tracking-widest flex items-center gap-2 shadow-[0_0_15px_rgba(255,88,54,0.3)]">
+          <BookmarkIcon size={12} fill="currentColor" />
           SAVED
         </button>
       </div>
     </div>
 
     {/* Monitoring Status */}
-    <div className="mb-6 p-6 rounded-2xl bg-[#0c0c0c] border border-white/5 flex items-center gap-6">
+    <div className="mb-6 p-6 rounded-[1.5rem] bg-[#0f0f13] border border-white/5 flex items-center gap-6">
       <div className="flex items-center gap-3">
         <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
         <span className="text-xs font-bold text-white/90">Monitoring Active</span>
@@ -371,17 +370,17 @@ const SavePreview = () => (
         { date: "SUNDAY, 8 FEBRUARY 2026", count: "4 LEADS" },
         { date: "FRIDAY, 6 FEBRUARY 2026", count: "5 LEADS" }
       ].map((item, i) => (
-        <div key={i} className="p-6 rounded-2xl bg-[#0c0c0c] border border-white/5 hover:border-white/10 transition-colors flex items-center justify-between group cursor-pointer">
+        <div key={i} className="p-6 rounded-[1.5rem] bg-[#0f0f13] border border-white/5 hover:border-white/10 hover:bg-white/[0.02] transition-colors flex items-center justify-between group cursor-pointer">
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-orange-500/5 flex items-center justify-center text-orange-500 border border-orange-500/10">
-              <MaterialIcon name="calendar_today" size={18} />
+            <div className="w-10 h-10 rounded-xl bg-orange-500/5 flex items-center justify-center text-orange-500 border border-orange-500/10 group-hover:scale-105 transition-transform">
+              <Calendar size={18} />
             </div>
             <div className="flex items-center gap-4">
               <h5 className="text-[11px] font-black text-white/90 uppercase tracking-widest">{item.date}</h5>
-              <span className="px-3 py-1 rounded-full bg-white/5 text-[9px] font-black text-blue-400 border border-white/5">{item.count}</span>
+              <span className="px-3 py-1 rounded-full bg-white/5 text-[9px] font-black text-blue-400 border border-white/5 group-hover:bg-blue-500/10 transition-colors">{item.count}</span>
             </div>
           </div>
-          <MaterialIcon name="chevron_right" size={16} className="text-gray-600 group-hover:text-white transition-colors" />
+          <ChevronRight size={16} className="text-gray-600 group-hover:text-white transition-colors group-hover:translate-x-1" />
         </div>
       ))}
     </div>
@@ -406,36 +405,39 @@ const Features = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {features.map((feature) => (
-              <button 
-                key={feature.id}
-                suppressHydrationWarning
-                onClick={() => setActiveTab(feature.id)}
-                className={`text-left p-6 rounded-[2rem] border transition-all duration-300 relative group overflow-hidden ${
-                  activeTab === feature.id 
-                    ? 'bg-[#0c0c0c] border-[#ff9154]/30 ring-1 ring-[#ff9154]/20' 
-                    : 'bg-[#080808] border-white/5 hover:border-white/10'
-                }`}
-              >
-                {activeTab === feature.id && (
-                  <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                )}
-                <div className={`${feature.bg} ${feature.color} w-10 h-10 rounded-xl flex items-center justify-center mb-4 border border-white/5`}>
-                  <MaterialIcon name={feature.icon} size={20} />
-                </div>
-                <h3 className="text-white font-bold text-base mb-2 tracking-tight">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-500 text-[12px] leading-relaxed font-medium">
-                  {feature.description}
-                </p>
-              </button>
-            ))}
+            {features.map((feature) => {
+              const Icon = feature.icon;
+              return (
+                <button 
+                  key={feature.id}
+                  suppressHydrationWarning
+                  onClick={() => setActiveTab(feature.id)}
+                  className={`text-left p-5 md:p-6 rounded-[1.25rem] md:rounded-[1.5rem] border transition-all duration-300 relative group overflow-hidden ${
+                    activeTab === feature.id 
+                      ? 'bg-[#0f0f13] border-primary/30 shadow-[0_4px_20px_rgba(255,88,54,0.15)] ring-1 ring-primary/20' 
+                      : 'bg-[#050505] border-white/5 hover:border-white/10 hover:bg-white/[0.02]'
+                  }`}
+                >
+                  {activeTab === feature.id && (
+                    <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+                  )}
+                  <div className={`${feature.bg} ${feature.color} w-9 h-9 md:w-10 md:h-10 rounded-[0.6rem] flex items-center justify-center mb-4 border border-white/5`}>
+                    <Icon size={18} />
+                  </div>
+                  <h3 className={`font-black text-[13px] md:text-sm mb-2 tracking-tight ${activeTab === feature.id ? 'text-white' : 'text-gray-300 group-hover:text-white transition-colors'}`}>
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-500 text-[11px] md:text-[12px] leading-relaxed font-medium">
+                    {feature.description}
+                  </p>
+                </button>
+              );
+            })}
           </div>
 
           <div className="lg:col-span-6">
             <div className="p-2 bg-white/5 border border-white/5 rounded-[2.5rem]">
-              <div className="relative w-full min-h-[400px] sm:h-[580px] rounded-[2rem] bg-[#0c0c0c] border border-white/5 p-6 md:p-10 flex flex-col justify-center overflow-hidden">
+              <div className="relative w-full min-h-[400px] sm:h-[580px] rounded-[2rem] bg-[#0f0f13] border border-white/5 p-6 md:p-10 flex flex-col justify-center overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                 
                   {activeTab === 'inbox' ? (
@@ -471,23 +473,23 @@ const Features = () => {
         <div className="mt-20 flex flex-col items-center">
             <a 
                 href="/login?next=/dashboard" 
-                className="bg-[#ff6900] hover:bg-[#ff814d] text-white text-lg md:text-xl font-bold py-4 px-10 rounded-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2 border-t border-white/20"
+                className="bg-primary hover:bg-[#ff814d] text-white text-lg md:text-xl font-bold py-4 px-10 rounded-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2 border-t border-white/20 shadow-[0_0_20px_rgba(255,88,54,0.3)] hover:shadow-[0_0_30px_rgba(255,88,54,0.5)]"
             >
-                Start Finding Leads Free <MaterialIcon name="arrow_right" size={20} />
+                Start Finding Customers <ArrowRight size={20} />
             </a>
             
             <div className="mt-6 flex flex-row justify-center items-center gap-6 md:gap-12 text-gray-500 text-[10px] md:text-xs font-bold uppercase tracking-[0.15em]">
                 <div className="flex items-center gap-3">
                     <div className="w-5 h-5 rounded-full border border-gray-600 flex items-center justify-center">
-                        <MaterialIcon name="check" size={10} className="text-gray-400" />
+                        <Check size={10} className="text-gray-400" strokeWidth={3} />
                     </div>
                     <span>No card required</span>
                 </div>
                 <div className="flex items-center gap-3">
                      <div className="w-5 h-5 rounded-full border border-gray-600 flex items-center justify-center">
-                        <MaterialIcon name="check" size={10} className="text-gray-400" />
+                        <Check size={10} className="text-gray-400" strokeWidth={3} />
                     </div>
-                    <span>3-day free trial</span>
+                    <span>7-day free trial</span>
                 </div>
             </div>
         </div>

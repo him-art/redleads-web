@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Lock, Activity, Clock, Bookmark, ExternalLink, Navigation, Map, Archive, SlidersHorizontal, Shield, Plus } from 'lucide-react';
+import { Lock, Activity, Clock, Bookmark, ExternalLink, Navigation, Map, Archive, SlidersHorizontal, Shield, Plus, Brain } from 'lucide-react';
 import Image from 'next/image';
 
 export default function DashboardDemo() {
@@ -86,8 +86,9 @@ export default function DashboardDemo() {
               >
                 <Lock size={14} className="text-[#52525b] group-focus-within:text-primary transition-colors" />
                 <span className="flex-1 text-xs font-medium text-[#a1a1aa] tracking-tight">RedLeads.app</span>
-                <button suppressHydrationWarning className="bg-[#ff5836] hover:bg-[#ff6900] text-[9px] font-black uppercase tracking-[0.15em] px-6 py-2 rounded-lg transition-all transform hover:scale-[1.02] active:scale-95 leading-none text-white whitespace-nowrap">
-                  Power Search
+                <button suppressHydrationWarning className="flex items-center gap-1.5 bg-[#ff5836] hover:bg-[#ff6900] text-[9px] font-black uppercase tracking-[0.15em] px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-[1.03] active:scale-95 hover:shadow-[0_0_20px_rgba(255,88,54,0.5)] shadow-[0_0_10px_rgba(255,88,54,0.2)] leading-none text-white whitespace-nowrap">
+                  <Brain size={12} />
+                  AI Scan
                 </button>
               </motion.div>
             </section>

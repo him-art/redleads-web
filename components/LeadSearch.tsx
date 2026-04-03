@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import MaterialIcon from '@/components/ui/MaterialIcon';
-import { CheckCircle2, Bookmark, ExternalLink, MessageSquarePlus } from 'lucide-react';
+import { CheckCircle2, Bookmark, ExternalLink, MessageSquarePlus, Brain } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
@@ -42,7 +42,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
     const [teaserInfo, setTeaserInfo] = useState<{ isTeaser: boolean, totalFound: number } | null>(null);
     const { draftingLead, setDraftingLead, profile } = useDashboardData();
     const [productContext, setProductContext] = useState('');
-    const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d'>('24h');
+    const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d'>('7d');
     const supabase = useMemo(() => createClient(), []);
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -255,9 +255,9 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                         <button 
                             type="submit"
                             disabled={isScanning || url.trim().length < 3}
-                            className={`absolute right-2 sm:right-3 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-black uppercase text-[9px] sm:text-[10px] tracking-widest transition-all flex items-center gap-2 ${
+                            className={`absolute right-2 sm:right-3 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-black uppercase text-[9px] sm:text-[10px] tracking-widest transition-all duration-300 flex items-center gap-2 ${
                                 !isScanning && url.trim().length >= 3 
-                                    ? 'bg-primary text-white shadow-[0_0_20px_rgba(255,88,54,0.3)]' 
+                                    ? 'bg-primary hover:bg-[#ff6900] transform hover:scale-[1.03] active:scale-95 hover:shadow-[0_0_30px_rgba(255,88,54,0.5)] text-white shadow-[0_0_15px_rgba(255,88,54,0.3)]' 
                                     : 'bg-white/5 text-text-secondary cursor-not-allowed opacity-50'
                             }`}
                         >
@@ -266,7 +266,12 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                     <LoadingIcon className="w-3.5 h-3.5" />
                                     <span>Analyzing</span>
                                 </>
-                            ) : 'Power Search'}
+                            ) : (
+                                <>
+                                    <Brain size={14} className="-ml-0.5" />
+                                    <span>AI Scan</span>
+                                </>
+                            )}
                         </button>
                     </div>
 

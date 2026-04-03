@@ -37,7 +37,7 @@ export async function POST(req: Request) {
             if (!trialEndsAt || trialEndsAt < new Date()) {
                 return NextResponse.json({ 
                     error: 'Trial expired or not started', 
-                    message: 'Your 3-day free trial has ended or not yet started. Please complete setup or upgrade to a paid plan.',
+                    message: 'Your 7-day free trial has ended or not yet started. Please complete setup or upgrade to a paid plan.',
                     code: 'PAYWALL_REQUIRED'
                 }, { status: 403 });
             }

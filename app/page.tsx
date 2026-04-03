@@ -14,6 +14,7 @@ const ROI = dynamic(() => import("@/components/ROI"));
 const FAQ = dynamic(() => import("@/components/FAQ"));
 const Footer = dynamic(() => import("@/components/Footer"));
 const TawkToScript = dynamic(() => import("@/components/TawkToScript"));
+const WhyAIFirst = dynamic(() => import("@/components/WhyAIFirst"));
 
 export default function Home() {
   return (
@@ -24,6 +25,7 @@ export default function Home() {
         {/* <SocialProof /> */}
         <CreatorProof />
         <HowItWorks />
+        <WhyAIFirst />
 
 
         <RedditOpportunity />

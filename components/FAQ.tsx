@@ -40,7 +40,7 @@ const faqs = [
     answer: "Very. We use advanced LLMs trained to distinguish between someone just 'venting' and someone 'actively looking for a solution.' You'll only spend time on the leads that actually have a high chance of converting."
   },
   {
-    question: "What happens after the 3-day free trial?",
+    question: "What happens after the 7-day free trial?",
     answer: "You'll have full access to all features for 7 days. Use it to find your first few customers. If it doesn't pay for itself by day three, you can cancel with one click in your settings and you won't be charged a cent."
   },
   {

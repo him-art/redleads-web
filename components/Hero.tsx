@@ -108,7 +108,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
         <p 
           className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-8 leading-relaxed font-medium"
         >
-          Every day, thousands of people ask Reddit for tools like yours. RedLeads finds them automatically and sends the best ones to your inbox.
+          Stop drowning in noisy keyword alerts. RedLeads drops an autonomous AI engine onto Reddit to pinpoint high-intent buyers, map their pain points, and draft your winning reply.
         </p>
 
         {/* Social Proof Widget */}
@@ -147,14 +147,14 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                 value={urlInput}
                 onChange={(e) => setUrlInput(e.target.value)}
                 suppressHydrationWarning
-                className="flex-1 bg-transparent border-none text-lg text-white placeholder:text-slate-600 focus:ring-0 focus:outline-none h-12 w-full font-light"
+                className="flex-1 bg-transparent border-none text-lg text-white placeholder:text-slate-600 focus:ring-0 focus:outline-none h-12 w-full font-light min-w-0 px-2 sm:px-0"
               />
               
               <button 
                 suppressHydrationWarning
                 type="submit"
                 disabled={isScanning}
-                className={`m-1 px-6 py-2.5 rounded-lg font-black text-[10px] uppercase tracking-[0.2em] transition-all flex items-center gap-2 active:scale-95 disabled:opacity-80 ${
+                className={`m-1 px-4 sm:px-6 py-2.5 rounded-lg font-black text-[10px] uppercase tracking-[0.2em] transition-all flex items-center gap-2 active:scale-95 disabled:opacity-80 ${
                   isScanning 
                     ? 'bg-[#ff914d] text-white' 
                     : 'bg-white text-black hover:bg-slate-200'
@@ -167,7 +167,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                   </>
                 ) : (
                   <>
-                    Start Free <ArrowRight size={14} />
+                    Find users <ArrowRight size={14} />
                   </>
                 )}
               </button>
@@ -179,10 +179,10 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                 <CheckCircle2 size={12} /> No Card Required
              </div>
              <div className="flex items-center gap-2 text-xs text-slate-400 uppercase tracking-wider font-medium">
-                <CheckCircle2 size={12} /> 7-Day Full Access Trial
+                <CheckCircle2 size={12} /> 7-Day Trial
              </div>
              <div className="flex items-center gap-2 text-xs text-slate-400 uppercase tracking-wider font-medium">
-                <CheckCircle2 size={12} /> For Indie Hackers & Solo Founders
+                <CheckCircle2 size={12} /> For Founders
              </div>
           </div>
         </div>

@@ -86,7 +86,7 @@ const Pricing = () => {
             description: 'For solo founders finding their first Reddit customers',
             features: {
                 inbound: [
-                    { name: '2 Power Search for top ranking post /day', icon: <MaterialIcon name="public" size={14} /> },
+                    { name: '2 Deep AI Intent Search /day', icon: <MaterialIcon name="public" size={14} /> },
                     { name: '10 tracked keywords', icon: <MaterialIcon name="search" size={14} /> },
                     { name: 'Monitor + 5 custom subreddits', icon: <MaterialIcon name="forum" size={14} /> },
                     { name: 'Daily SEO opportunities', icon: <MaterialIcon name="monitoring" size={14} /> },
@@ -109,7 +109,7 @@ const Pricing = () => {
             badge: 'BEST VALUE',
             features: {
                 inbound: [
-                    { name: '5 Power Search for top ranking post /day', icon: <MaterialIcon name="public" size={14} /> },
+                    { name: '5 Deep AI Intent Search /day', icon: <MaterialIcon name="public" size={14} /> },
                     { name: '20 tracked keywords', icon: <MaterialIcon name="search" size={14} /> },
                     { name: 'Monitor + 15 custom subreddits', icon: <MaterialIcon name="forum" size={14} /> },
                     { name: 'Daily SEO opportunities', icon: <MaterialIcon name="monitoring" size={14} /> },
@@ -138,10 +138,10 @@ const Pricing = () => {
                     
                     {/* Billing Toggle with Card Border */}
                     <div className={`inline-flex items-center p-1 bg-white/5 border rounded-[2.5rem] mx-auto transition-all duration-500 ${billingCycle === 'annual' ? 'border-orange-500/40' : 'border-white/10'}`}>
-                        <div className={`bg-[#0c0c0c] border rounded-[2.2rem] py-3 px-8 sm:py-4 sm:px-12 flex items-center justify-center gap-6 sm:gap-10 relative overflow-hidden transition-all duration-500 ${billingCycle === 'annual' ? 'border-orange-500/20' : 'border-white/5'}`}>
+                        <div className={`bg-[#0c0c0c] border rounded-[2.2rem] py-3 px-4 sm:py-4 sm:px-12 flex items-center justify-center gap-4 sm:gap-10 relative overflow-hidden transition-all duration-500 ${billingCycle === 'annual' ? 'border-orange-500/20' : 'border-white/5'}`}>
                             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                             
-                            <div className="flex items-center gap-6 sm:gap-10">
+                            <div className="flex items-center gap-4 sm:gap-10">
                                 <button 
                                     onClick={() => setBillingCycle('monthly')}
                                     className={`text-[11px] font-bold uppercase tracking-[0.25em] transition-all duration-300 transform ${billingCycle === 'monthly' ? 'text-white scale-110' : 'text-gray-600 hover:text-gray-400'}`}
@@ -426,7 +426,7 @@ const Pricing = () => {
                                         const pos = ((tick - 100) / 160) * 100;
                                         const tickPrice = tick < 80 ? 59 : 79 + Math.floor((tick - 80) / 20) * 20;
                                         return (
-                                            <div key={tick} className="absolute flex flex-col items-center -translate-x-1/2" style={{ left: `${pos}%` }}>
+                                            <div key={tick} className={`absolute flex flex-col items-center -translate-x-1/2 ${tick % 40 !== 0 ? 'hidden sm:flex' : ''}`} style={{ left: `${pos}%` }}>
                                                 {/* Vertical Notch */}
                                                 <div className={`w-[2px] h-8 mb-2 ${currentPrice >= tickPrice ? 'bg-green-500' : 'bg-white/10'}`} />
                                                 {/* Price Label (Below) */}

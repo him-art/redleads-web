@@ -25,8 +25,8 @@ const ebGaramond = EB_Garamond({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.redleads.app'),
-  title: "RedLeads | #1 AI Reddit Marketing Tool for SaaS & Founders",
-  description: "The ultimate AI Reddit marketing tool. RedLeads uses autonomous AI to find high-intent conversations on Reddit and turn them into customers.",
+  title: "RedLeads | #1 AI-First Reddit Marketing & Lead Gen Engine",
+  description: "Stop tracking keywords, start scanning intent. RedLeads is the AI-First intelligence engine that finds high-value Reddit conversations and turns them into customers automatically.",
   alternates: {
     canonical: '/',
   },
@@ -37,16 +37,16 @@ export const metadata: Metadata = {
   
   // Open Graph (Facebook, LinkedIn, general social)
   openGraph: {
-    title: "RedLeads | Turn Reddit users into customers",
-    description: "AI-powered Reddit lead generation for SaaS founders. Find your first 100 users.",
+    title: "RedLeads | The AI-First Reddit Intelligence Engine",
+    description: "Find high-intent leads on Reddit with proprietary AI. The ultimate growth tool for SaaS founders.",
     url: "https://www.redleads.app",
-    siteName: "RedLeads",
+    siteName: "RedLeads AI",
     images: [
       {
         url: "https://www.redleads.app/og-image.webp?v=3",
         width: 1200,
         height: 630,
-        alt: "RedLeads - Turn Reddit users into customers",
+        alt: "RedLeads AI - Turn Reddit Conversations into Customers",
       },
     ],
     locale: "en_US",
@@ -56,13 +56,13 @@ export const metadata: Metadata = {
   // Twitter Card
   twitter: {
     card: "summary_large_image",
-    title: "RedLeads | Turn Reddit users into customers",
-    description: "Find Your First 100 Users. Stop guessing and start monitoring high-intent conversations on Reddit.",
+    title: "RedLeads AI | Turn Reddit Conversations into Customers",
+    description: "The AI-First Reddit Intelligence Engine. Stop guessing and start monitoring high-intent conversations with AI.",
     images: ["https://www.redleads.app/og-image.webp?v=3"],
   },
   
   // Additional SEO metadata
-  keywords: ["Reddit Marketing", "Reddit Marketing Tool", "Reddit Lead Generation", "RedLeads", "find customers on Reddit", "SaaS marketing", "startup growth"],
+  keywords: ["AI Reddit Marketing", "Reddit AI Lead Gen", "Automated Reddit Outreach", "RedLeads AI", "Reddit Intent Engine", "Best Reddit Marketing Tools 2025", "Reddit Lead Generation", "SaaS marketing", "startup growth"],
   authors: [{ name: "RedLeads" }],
   robots: {
     index: true,

@@ -42,7 +42,8 @@ const Footer = () => {
               <Link href="/tools" className="text-orange-500 font-bold hover:text-white transition-colors text-[13px]">
                 Free Reddit Tools
               </Link>
-             <Link href="/compare" className="text-gray-400 hover:text-white transition-colors text-[13px]">Compare RedLeads</Link>
+             <Link href="/compare/f5bot" className="text-gray-400 hover:text-white transition-colors text-[13px]">vs F5Bot</Link>
+             <Link href="/compare/reppit-ai" className="text-gray-400 hover:text-white transition-colors text-[13px]">vs Reppit AI</Link>
              <Link href="/protocol" className="text-gray-400 hover:text-white transition-colors text-[13px]">Success Protocol</Link>
              <Link href="/#pricing" className="text-gray-400 hover:text-white transition-colors text-[13px]">Pricing Plans</Link>
              <Link href="/login?next=/dashboard" className="text-gray-400 hover:text-white transition-colors text-[13px]">Dashboard Login</Link>
