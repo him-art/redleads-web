@@ -100,6 +100,15 @@ h1, h2, h3, h4, h5, h6 {
   animation: ticker-right 55s linear infinite;
 }
 
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
 /* Custom Minimalist Scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
   width: 5px;

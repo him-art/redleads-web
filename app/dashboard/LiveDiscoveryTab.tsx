@@ -205,8 +205,8 @@ export default function LiveDiscoveryTab({
                                 <LeadSearch 
                                     user={user} 
                                     isDashboardView={true} 
-                                    initialUrl={profile?.website_url} 
-                                    autoScan={false}
+                                    initialUrl={initialSearch || profile?.website_url} 
+                                    autoScan={!!initialSearch && !profile?.has_initial_scan}
                                     isLocked={true}
                                     onResultsFound={(count) => setHasResults(count > 0)}
                                     onNavigate={onNavigate}

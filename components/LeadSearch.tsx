@@ -77,6 +77,11 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
             hasAutoScanned.current = true;
             handleScan(null as any);
             
+            // Mark initial scan as done in DB so it never re-fires on refresh
+            if (user?.id) {
+                supabase.from('profiles').update({ has_initial_scan: true }).eq('id', user.id).then();
+            }
+
             // Consume the URL parameter
             try {
                 const params = new URLSearchParams(searchParams.toString());
@@ -89,6 +94,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
         } else if (initialUrl) {
             setUrl(initialUrl);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [initialUrl, initialLeads, autoScan]);
 
     const scanSteps = [

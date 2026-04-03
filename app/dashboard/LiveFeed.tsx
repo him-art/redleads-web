@@ -47,7 +47,6 @@ export default function LiveFeed({ onViewArchive }: { onViewArchive: () => void 
                                 {leads.map((lead) => (
                                     <motion.div
                                         key={lead.id}
-                                        layout
                                         initial={{ opacity: 0, y: 10 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, scale: 0.98 }}
@@ -69,11 +68,10 @@ export default function LiveFeed({ onViewArchive }: { onViewArchive: () => void 
                                                 <span className="text-[9px] font-black text-ai bg-ai-muted px-2.5 py-1 rounded-full uppercase tracking-widest border border-ai/10">
                                                     r/{lead.subreddit}
                                                 </span>
-                                                <div className="flex items-center gap-1.5 text-[9px] font-black text-text-secondary/40 uppercase tracking-widest">
+                                                <div suppressHydrationWarning className="flex items-center gap-1.5 text-[9px] font-black text-text-secondary/40 uppercase tracking-widest">
                                                     <Clock size={10} className="text-text-secondary/30" />
-                                                    {(() => {
+                                                    <span suppressHydrationWarning>{(() => {
                                                         try {
-                                                            if (!isMounted) return '--:--';
                                                             const d = new Date(lead.created_at);
                                                             if (isNaN(d.getTime())) return '--:--';
                                                             return new Intl.DateTimeFormat('en-US', {
@@ -84,7 +82,7 @@ export default function LiveFeed({ onViewArchive }: { onViewArchive: () => void 
                                                         } catch (e) {
                                                             return '--:--';
                                                         }
-                                                    })()}
+                                                    })()}</span>
                                                 </div>
                                                 {lead.has_responded && (
                                                     <div className="flex items-center gap-1 px-2.5 py-1 bg-green-500/10 text-green-500 rounded-full border border-green-500/20 text-[9px] font-black uppercase tracking-widest shadow-[0_0_10px_rgba(34,197,94,0.1)]">

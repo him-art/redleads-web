@@ -29,18 +29,6 @@ interface DashboardClientProps {
 }
 
 export default function DashboardClient({ profile, reports, user, initialSearch = '' }: DashboardClientProps) {
-    const router = useRouter();
-    const [isMounted, setIsMounted] = useState(false);
-    useEffect(() => { setIsMounted(true); }, []);
-
-    if (!isMounted) {
-        return (
-            <div className="flex items-center justify-center min-h-[calc(100vh-12rem)]">
-                <LoadingIcon className="w-10 h-10 text-orange-500" />
-            </div>
-        );
-    }
-
     return (
         <DashboardDataProvider userId={user.id} profile={profile}>
             <InnerDashboard reports={reports} user={user} initialSearch={initialSearch} />
@@ -128,6 +116,7 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                                 src="/redleads-logo-white.webp" 
                                 alt="RedLeads Logo" 
                                 fill
+                                priority={true}
                                 sizes="32px"
                                 className="object-contain" 
                             />
@@ -177,6 +166,7 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                                     src="/redleads-logo-white.webp" 
                                     alt="RedLeads Logo" 
                                     fill
+                                    priority={true}
                                     sizes="40px"
                                     className="object-contain"
                                 />

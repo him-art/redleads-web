@@ -7,7 +7,7 @@ export default function TawkToScript() {
     <>
       <Script
         id="tawk-to-script"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
         dangerouslySetInnerHTML={{
           __html: `
             var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
