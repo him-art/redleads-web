@@ -401,7 +401,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                 ))}
                                 {keywords.length === 0 && (
                                     <p className="text-text-secondary/40 text-xs font-bold uppercase tracking-widest">
-                                        No keywords yet — add some below
+                                        No keywords yet. Add some below
                                     </p>
                                 )}
                             </div>

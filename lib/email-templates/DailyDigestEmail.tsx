@@ -26,35 +26,55 @@ export default function DailyDigestEmail({ fullName, leads }: DailyDigestEmailPr
   const topLeads = leads.slice(0, 10); // Show up to 10
   const firstName = fullName ? fullName.split(' ')[0] : 'there';
   const siteUrl = 'https://redleads.app'; // Fixed to production
-  const logoUrl = `${siteUrl}/redleads-logo-white.webp`;
+  const logoUrl = `${siteUrl}/redleads-logo-white.png`;
   
   // Use a tip based on the current day of the year so it rotates daily but is consistent for all users that day
   const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 1000 / 60 / 60 / 24);
   const selectedTip = EXPERT_TIPS[dayOfYear % EXPERT_TIPS.length];
 
   return (
-    <div style={{
-      backgroundColor: '#050505',
-      color: '#ffffff',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-      padding: '40px 10px',
-      lineHeight: '1.6'
-    }}>
-      {/* Preheader element (hidden in email body, visible in inbox preview) */}
-      <div style={{ display: 'none', maxWidth: 0, maxHeight: 0, overflow: 'hidden', opacity: 0 }}>
-        We found {leads.length} high-intent Reddit threads to check out today.
-      </div>
-      <div style={{
-        maxWidth: '600px',
-        margin: '0 auto',
-        backgroundColor: '#111111',
-        borderRadius: '24px',
-        border: '1px solid rgba(255, 255, 255, 0.05)',
-        overflow: 'hidden',
-        boxShadow: '0 20px 40px rgba(0,0,0,0.4)'
+    <html lang="en" style={{ colorScheme: 'dark' }}>
+      <head>
+        <meta name="color-scheme" content="light dark" />
+        <meta name="supported-color-schemes" content="light dark" />
+        <style dangerouslySetInnerHTML={{ __html: `
+          :root {
+            color-scheme: light dark;
+          }
+          @media (prefers-color-scheme: light) {
+            body { background-color: #0f0f13 !important; color: #ffffff !important; }
+            .email-container { background-color: #1a1a1a !important; }
+          }
+        ` }} />
+      </head>
+      <body style={{
+        backgroundColor: '#0f0f13',
+        margin: 0,
+        padding: 0,
+        WebkitTextSizeAdjust: '100%',
       }}>
+        <div style={{
+          backgroundColor: '#0f0f13',
+          color: '#ffffff',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+          padding: '40px 10px',
+          lineHeight: '1.6'
+        }}>
+          {/* Preheader element (hidden in email body, visible in inbox preview) */}
+          <div style={{ display: 'none', maxWidth: 0, maxHeight: 0, overflow: 'hidden', opacity: 0 }}>
+            We found {leads.length} high-intent Reddit threads to check out today.
+          </div>
+          <div className="email-container" style={{
+            maxWidth: '600px',
+            margin: '0 auto',
+            backgroundColor: '#1a1a1a',
+            borderRadius: '24px',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            overflow: 'hidden',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.6)'
+          }}>
         {/* Header */}
-        <div style={{ padding: '40px 30px 20px 30px', textAlign: 'center' }}>
+        <div style={{ padding: '40px 30px', textAlign: 'center' }}>
           <img src={logoUrl} alt="RedLeads Logo" style={{ height: '28px', marginBottom: '24px' }} />
           <span style={{ 
             fontSize: '10px', 
@@ -212,9 +232,11 @@ export default function DailyDigestEmail({ fullName, leads }: DailyDigestEmailPr
         color: '#444444', 
         marginTop: '32px' 
       }}>
-        RedLeads.app — Get your First 100 Leads on Reddit. <br/>
+        RedLeads.app - Get your First 100 Leads on Reddit. <br/>
         You can adjust your notification frequency in your dashboard.
       </p>
     </div>
+      </body>
+    </html>
   );
 }

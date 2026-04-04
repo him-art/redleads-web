@@ -420,7 +420,6 @@ const Pricing = () => {
                             
                             {/* Global Roadmap Visual */}
                             <div className="relative mb-8 pt-4">
-                                {/* Checkpoints and Price Labels (Above/Below bar for legibility) */}
                                 <div className="absolute inset-0 flex justify-between items-start z-20 pointer-events-none">
                                     {[120, 140, 160, 180, 200, 220, 240].map((tick) => {
                                         const pos = ((tick - 100) / 160) * 100;

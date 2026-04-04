@@ -1,6 +1,3 @@
-'use client';
-
-import { motion } from 'framer-motion';
 import { Brain, Zap, Shield, Target, MousePointer2, Clock } from 'lucide-react';
 
 const reasons = [
@@ -27,6 +24,13 @@ const reasons = [
   }
 ];
 
+const comparisonData = [
+  { label: "Filtering", legacy: "Keyword Based", ai: "Intent Based" },
+  { label: "Drafting", legacy: "Templates", ai: "Dynamic Context" },
+  { label: "Speed", legacy: "Batch/Delayed", ai: "Real-time Intel" },
+  { label: "Account Safety", legacy: "None", ai: "Humanized Simulation" }
+];
+
 export default function WhyAIFirst() {
   return (
     <section className="py-24 bg-[#1a1a1a] relative overflow-hidden">
@@ -42,12 +46,8 @@ export default function WhyAIFirst() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {reasons.map((reason, i) => (
-            <motion.div
+            <div
               key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
               className="p-2 bg-white/5 border border-white/5 rounded-[2.5rem]"
             >
               <div className="bg-[#0c0c0c] rounded-[2rem] p-8 border border-white/5 flex flex-col h-full relative overflow-hidden group hover:border-orange-500/20 transition-all">
@@ -66,46 +66,68 @@ export default function WhyAIFirst() {
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
         
-        {/* Comparison Table Mini */}
+        {/* Comparison Section (Responsive: Table on Desktop, Cards on Mobile) */}
         <div className="mt-20 max-w-4xl mx-auto p-1 bg-gradient-to-b from-white/10 to-transparent rounded-[2.5rem]">
-          <div className="bg-[#0f0f13] rounded-[2.4rem] overflow-x-auto border border-white/5 custom-scrollbar">
-            <table className="w-full text-left min-w-[500px]">
-              <thead>
-                <tr className="border-b border-white/5">
-                  <th className="p-4 md:p-6 text-[10px] font-black uppercase tracking-widest text-slate-500">Feature</th>
-                  <th className="p-4 md:p-6 text-[10px] font-black uppercase tracking-widest text-slate-500">Legacy Tools</th>
-                  <th className="p-4 md:p-6 text-[10px] font-black uppercase tracking-widest text-orange-500 bg-orange-500/5">RedLeads AI (Power Search)</th>
-                </tr>
-              </thead>
-              <tbody className="text-sm">
-                <ComparisonRow label="Filtering" legacy="Keyword Based" ai="Intent Based" />
-                <ComparisonRow label="Drafting" legacy="Templates" ai="Dynamic Context" />
-                <ComparisonRow label="Speed" legacy="Batch/Delayed" ai="Real-time Intel" />
-                <ComparisonRow label="Account Safety" legacy="None" ai="Humanized Simulation" />
-              </tbody>
-            </table>
+          <div className="bg-[#0f0f13] rounded-[2.4rem] border border-white/5 overflow-hidden">
+            
+            {/* Desktop Table - Hidden on Mobile */}
+            <div className="hidden md:block overflow-x-auto custom-scrollbar">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="border-b border-white/5">
+                    <th className="p-6 text-[10px] font-black uppercase tracking-widest text-slate-500 italic">Feature</th>
+                    <th className="p-6 text-[10px] font-black uppercase tracking-widest text-slate-500 italic">Legacy Tools</th>
+                    <th className="p-6 text-[10px] font-black uppercase tracking-widest text-orange-500 bg-orange-500/5 italic">RedLeads AI (AI Scan)</th>
+                  </tr>
+                </thead>
+                <tbody className="text-sm">
+                  {comparisonData.map((row) => (
+                    <tr key={row.label} className="border-b border-white/5 group last:border-0 hover:bg-white/[0.02] transition-colors">
+                      <td className="p-6 text-slate-300 font-medium">{row.label}</td>
+                      <td className="p-6 text-slate-500">{row.legacy}</td>
+                      <td className="p-6 text-white font-bold bg-orange-500/5">
+                        <div className="flex items-center gap-2">
+                          <div className="w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(255,88,54,0.8)]" />
+                          {row.ai}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Cards - Hidden on Desktop */}
+            <div className="md:hidden divide-y divide-white/5">
+              {comparisonData.map((row) => (
+                <div key={row.label} className="p-6 flex flex-col gap-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 italic">Feature</span>
+                    <span className="text-sm font-bold text-white">{row.label}</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <span className="text-[9px] font-black uppercase tracking-widest text-slate-600 block italic">Legacy</span>
+                      <span className="text-xs font-medium text-slate-400 block">{row.legacy}</span>
+                    </div>
+                    <div className="p-3 bg-orange-500/5 rounded-xl border border-orange-500/10 space-y-1">
+                      <span className="text-[9px] font-black uppercase tracking-widest text-orange-500/70 block italic">RedLeads AI</span>
+                      <span className="text-xs font-bold text-white flex items-center gap-2">
+                        <div className="w-1 h-1 rounded-full bg-orange-500" />
+                        {row.ai}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
     </section>
-  );
-}
-
-function ComparisonRow({ label, legacy, ai }: { label: string; legacy: string; ai: string }) {
-  return (
-    <tr className="border-b border-white/5 group">
-      <td className="p-4 md:p-6 text-slate-300 font-medium whitespace-nowrap">{label}</td>
-      <td className="p-4 md:p-6 text-slate-500 whitespace-nowrap">{legacy}</td>
-      <td className="p-4 md:p-6 text-white font-bold bg-orange-500/5 whitespace-nowrap">
-        <div className="flex items-center gap-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(255,88,54,0.8)]" />
-          {ai}
-        </div>
-      </td>
-    </tr>
   );
 }

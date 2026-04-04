@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   
   // Open Graph (Facebook, LinkedIn, general social)
   openGraph: {
-    title: "RedLeads | The AI-First Reddit Intelligence Engine",
+    title: "RedLeads - The AI-First Reddit Intelligence Engine",
     description: "Find high-intent leads on Reddit with proprietary AI. The ultimate growth tool for SaaS founders.",
     url: "https://www.redleads.app",
     siteName: "RedLeads AI",

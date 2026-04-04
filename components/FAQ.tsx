@@ -49,7 +49,7 @@ const faqs = [
   },
   {
     question: "Can I monitor multiple products or competitors?",
-    answer: "Yes. Our Growth plan is designed exactly for that—allowing you to track up to 15 different keywords or competitor names across all of Reddit simultaneously."
+    answer: "Yes. Our Growth plan is designed exactly for that, allowing you to track up to 15 different keywords or competitor names across all of Reddit simultaneously."
   },
   {
     question: "What is Power Search?",
@@ -57,11 +57,11 @@ const faqs = [
   },
   {
     question: "Is $29/mo worth it if I'm a solo founder just starting out?",
-    answer: "Yes — one customer found on Reddit typically covers 3–12 months of the subscription. The Growth plan costs less than a lunch out per day. If you're manually searching Reddit already, RedLeads replaces 2–3 hours of daily work immediately. Most founders close their first Reddit customer within 2 weeks of using it."
+    answer: "Yes. One customer found on Reddit typically covers 3–12 months of the subscription. The Growth plan costs less than a lunch out per day. If you're manually searching Reddit already, RedLeads replaces 2–3 hours of daily work immediately. Most founders close their first Reddit customer within 2 weeks of using it."
   },
   {
     question: "How is RedLeads different from just using Reddit search?",
-    answer: "Reddit search shows you old, random posts. RedLeads monitors in real-time, scores every post for buying intent using AI, and sends the best ones to your inbox every day automatically. It's the difference between fishing with a net vs. a rod — you stop searching and start receiving."
+    answer: "Reddit search shows you old, random posts. RedLeads monitors in real-time, scores every post for buying intent using AI, and sends the best ones to your inbox every day automatically. It's the difference between fishing with a net vs. a rod. You stop searching and start receiving."
   }
 ];
 

@@ -17,7 +17,7 @@ const WaitlistCTA = () => {
           Stop Wasting Hours on Reddit.<br /><span className="text-orange-500 italic font-serif font-light">Start Finding Customers Today.</span>
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-400">
-          Join {FOUNDER_COUNT} founders who stopped manually searching Reddit. Start your 7-day trial access — no card required.
+          Join {FOUNDER_COUNT} founders who stopped manually searching Reddit. Start your 7-day trial access. No card required.
         </p>
 
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">

@@ -9,7 +9,7 @@ const features = [
     id: 'scoring',
     icon: Target,
     title: "AI-Powered Scoring",
-    description: "Know instantly which posts have buyers ready to act — skip the noise, focus on the money.",
+    description: "Know instantly which posts have buyers ready to act, skip the noise, focus on the money.",
     color: "text-orange-500",
     bg: "bg-orange-500/10"
   },
@@ -17,7 +17,7 @@ const features = [
     id: 'inbox',
     icon: Inbox,
     title: "Daily Inbox",
-    description: "Wake up to a curated list of warm leads, scored and ready to engage — before your competitors see them.",
+    description: "Wake up to a curated list of warm leads, scored and ready to engage, before your competitors see them.",
     color: "text-blue-500",
     bg: "bg-blue-500/10"
   },

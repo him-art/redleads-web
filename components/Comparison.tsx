@@ -78,7 +78,7 @@ const Comparison = () => {
 
                     <ul className="relative z-10 space-y-8 mb-12 flex-1">
                         <BenefitItem 
-                            title="Setup in 2 minutes — leads arrive same day"
+                            title="Setup in 2 minutes, leads arrive same day"
                             description="Simply add your website &amp; description. RedLeads AI automatically finds the most relevant keywords for your business and niche."
                         />
                         <BenefitItem 

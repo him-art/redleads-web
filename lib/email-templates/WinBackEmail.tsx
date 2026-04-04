@@ -18,31 +18,50 @@ export default function WinBackEmail({
   const firstName = fullName ? fullName.split(' ')[0] : 'there';
   const siteUrl = 'https://redleads.app';
   const logoUrl = `${siteUrl}/redleads-logo-white.png`;
-
   const ctaUrl = `${siteUrl}/pricing?utm_source=winback&utm_medium=email&utm_campaign=expired_trial`;
 
   return (
-    <div style={{
-      backgroundColor: '#050505',
-      color: '#ffffff',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-      padding: '40px 10px',
-      lineHeight: '1.6'
-    }}>
-      {/* Preheader */}
-      <div style={{ display: 'none', maxWidth: 0, maxHeight: 0, overflow: 'hidden', opacity: 0 }}>
-        We extended your trial by 7 days to let you claim your {leadCount} leads.
-      </div>
-
-      <div style={{
-        maxWidth: '600px',
-        margin: '0 auto',
-        backgroundColor: '#111111',
-        borderRadius: '24px',
-        border: '1px solid rgba(255, 255, 255, 0.05)',
-        overflow: 'hidden',
-        boxShadow: '0 20px 40px rgba(0,0,0,0.4)'
+    <html lang="en" style={{ colorScheme: 'dark' }}>
+      <head>
+        <meta name="color-scheme" content="light dark" />
+        <meta name="supported-color-schemes" content="light dark" />
+        <style dangerouslySetInnerHTML={{ __html: `
+          :root {
+            color-scheme: light dark;
+          }
+          @media (prefers-color-scheme: light) {
+            body { background-color: #0f0f13 !important; color: #ffffff !important; }
+            .email-container { background-color: #1a1a1a !important; }
+          }
+        ` }} />
+      </head>
+      <body style={{
+        backgroundColor: '#0f0f13',
+        margin: 0,
+        padding: 0,
+        WebkitTextSizeAdjust: '100%',
       }}>
+        <div style={{
+          backgroundColor: '#0f0f13',
+          color: '#ffffff',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+          padding: '40px 10px',
+          lineHeight: '1.6'
+        }}>
+          {/* Preheader */}
+          <div style={{ display: 'none', maxWidth: 0, maxHeight: 0, overflow: 'hidden', opacity: 0 }}>
+            We extended your trial by 7 days to let you claim your {leadCount} leads.
+          </div>
+
+          <div className="email-container" style={{
+            maxWidth: '600px',
+            margin: '0 auto',
+            backgroundColor: '#1a1a1a',
+            borderRadius: '24px',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            overflow: 'hidden',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.6)'
+          }}>
         {/* Header */}
         <div style={{ padding: '40px 30px', textAlign: 'center' }}>
           <img src={logoUrl} alt="RedLeads" style={{ height: '28px', marginBottom: '24px' }} />
@@ -103,7 +122,7 @@ export default function WinBackEmail({
           }}>
             <p>Hey {firstName},</p>
             <p>
-              Your RedLeads trial ended {daysSinceExpiry} day{daysSinceExpiry !== 1 ? 's' : ''} ago — but we kept scanning for you.
+              Your RedLeads trial ended {daysSinceExpiry} day{daysSinceExpiry !== 1 ? 's' : ''} ago, but we kept scanning for you.
             </p>
             <p>
               In that time, <strong style={{ color: '#ffffff' }}>{leadCount}+ people posted in r/{topSubreddit}</strong> asking questions that {productName} can answer.
@@ -135,7 +154,7 @@ export default function WinBackEmail({
           </div>
 
           <p style={{ textAlign: 'center', fontSize: '12px', color: '#555555', margin: '0' }}>
-            Plans start at $19/mo · Cancel anytime
+            Plans start at $19/mo . Cancel anytime
           </p>
         </div>
 
@@ -152,7 +171,7 @@ export default function WinBackEmail({
             </p>
           </div>
           {[
-            ['🕵️', 'Live Reddit monitoring for your keywords — 24/7'],
+            ['🕵️', 'Live Reddit monitoring for your keywords, 24/7'],
             ['🤖', 'AI-generated replies that sound human, not spammy'],
             ['🛡️', 'Anti-ban safety engine (no account risk)'],
             ['📧', 'Daily digest of your top leads, straight to your inbox'],
@@ -180,5 +199,7 @@ export default function WinBackEmail({
         </div>
       </div>
     </div>
+      </body>
+    </html>
   );
 }

@@ -136,7 +136,7 @@ export const solutions: SolutionData[] = [
       badgeText: 'Agency Growth Vertical',
       title: 'Scale Your Agency',
       titleHighlight: 'Lead Gen',
-      description: 'Stop waiting for referrals. RedLeads identifies potential clients on Reddit the moment they express a need for your services—from Web Design to B2B Sales.',
+      description: 'Stop waiting for referrals. RedLeads identifies potential clients on Reddit the moment they express a need for your services, from Web Design to B2B Sales.',
       primaryCta: 'Start Finding Clients'
     },
     tldr: "Stop relying on inconsistent referrals. Use AI-scored Reddit intent to find high-ticket clients for your Dev, Design, or Marketing agency.",
@@ -760,7 +760,7 @@ export const solutions: SolutionData[] = [
       badgeText: 'Validation Protocol',
       title: 'Validate Your Idea',
       titleHighlight: 'With Real Pain',
-      description: 'The best validation isn\'t an email signup—it\'s a Reddit user describing a "hair on fire" problem. RedLeads finds these conversations for you in real-time.',
+      description: 'The best validation isn\'t an email signup, it\'s a Reddit user describing a "hair on fire" problem. RedLeads finds these conversations for you in real-time.',
       primaryCta: 'Start Validating'
     },
     tldr: "Skip the landing page 'waitlist' trap. Validate your SaaS by finding people already articulating the problem on Reddit. Demand-first building starts here.",

@@ -38,7 +38,7 @@ export default function TrialLifecycleEmail({
       body: (
         <>
           <p>Hi {firstName},</p>
-          <p>I'm Tim, the founder of RedLeads. I built this tool to automate the exact process I used to get my first 100 customers—without spending all day on Reddit.</p>
+          <p>I'm Tim, the founder of RedLeads. I built this tool to automate the exact process I used to get my first 100 customers, without spending all day on Reddit.</p>
           <p>While you were setting up, our scanner was already working. We've already flagged <strong>{leadCount} people</strong> who are actively looking for what you offer with <strong>{productName}</strong>.</p>
           <p>On Reddit, the first person to provide value usually wins the customer. Click below to see your initial leads and use <strong>AI Reply</strong> to engage them before a competitor does.</p>
         </>
@@ -70,7 +70,7 @@ export default function TrialLifecycleEmail({
           <p>Hi {firstName},</p>
           <p>Most founders fail on Reddit because they sound like a salesperson. Here is the secret: <strong>Provide 90% value, 10% link.</strong></p>
           <p>I call this the <strong>Helping Hook</strong>. Instead of saying "buy my tool," try: <i>"I actually dealt with this exact issue last month. What worked for me was X. I actually built a small tool to automate this if you want to check it out."</i></p>
-          <p>Our **AI Reply** is trained on this exact framework. You have <strong>4 days left</strong> in your trial—go use it to turn one of your leads into a conversation today.</p>
+          <p>Our **AI Reply** is trained on this exact framework. You have <strong>4 days left</strong> in your trial, so go use it to turn one of your leads into a conversation today.</p>
         </>
       ),
       cta: 'Try the Helping Hook →',
@@ -133,7 +133,7 @@ export default function TrialLifecycleEmail({
           <p>Hi {firstName},</p>
           <p>Your 7-day trial ends in exactly 24 hours. Tomorrow morning, your dashboard goes dark and we'll stop monitoring Reddit for <strong>{productName}</strong>.</p>
           <p>I'd love to keep it running for you. Upgrading to a Starter plan is just $19/mo—less than the cost of a single lunch—to keep your lead machine running 24/7.</p>
-          <p><strong>Quick question:</strong> If you haven't upgraded yet, what's been the biggest hurdle? Hit reply and let me know—I read every email.</p>
+          <p><strong>Quick question:</strong> If you haven't upgraded yet, what's been the biggest hurdle? Hit reply and let me know. I read every email.</p>
         </>
       ),
       cta: 'Keep My Access Live →',
