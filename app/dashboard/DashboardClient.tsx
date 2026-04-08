@@ -381,30 +381,12 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                             transition={{ type: "spring", stiffness: 300, damping: 30 }}
                             className="fixed top-0 right-0 z-[60] w-full sm:w-[500px] h-screen bg-[#0A0A0A] border-l border-white/5 shadow-2xl flex flex-col pt-20 lg:pt-0"
                         >
-                            {/* Sidebar Header */}
-                            <div className="flex items-center justify-between p-6 border-b border-white/5 bg-void/80">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-                                        <Sparkles size={18} className="text-primary" />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-sm font-black uppercase tracking-widest text-text-primary">AI Intelligence</h3>
-                                        <p className="text-[10px] text-text-secondary font-medium uppercase tracking-wider opacity-60">Drafting Response</p>
-                                    </div>
-                                </div>
-                                <button 
-                                    onClick={() => setDraftingLead(null)}
-                                    className="p-2 rounded-xl hover:bg-white/5 text-text-secondary hover:text-text-primary transition-all flex items-center justify-center"
-                                >
-                                    <X size={20} />
-                                </button>
-                            </div>
-
                             {/* Sidebar Content */}
                             <div className="flex-1 overflow-hidden">
                                 <ReplyPanel 
                                     lead={draftingLead}
                                     productContext={profile?.description || ''}
+                                    websiteUrl={profile?.website_url || ''}
                                     onClose={() => setDraftingLead(null)}
                                     isSidebar={true}
                                     onResponded={() => {

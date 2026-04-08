@@ -8,7 +8,15 @@ const replyAi = new AIManager([process.env.AI_API_KEY_2].filter(Boolean) as stri
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { title, subreddit, content, productContext } = body;
+        const { 
+            title, 
+            subreddit, 
+            content, 
+            productContext,
+            tone = 'Casual & Friendly',
+            mentionStrategy = 'Subtle Side-note',
+            customRules = ''
+        } = body;
 
         // 1. Auth Check (Protect the API)
         const supabase = await createClient();
@@ -107,6 +115,9 @@ export async function POST(req: Request) {
             3. "The Anti-Tool" (Lite solution): "Instead of using [Clunky Competitor], I just use [Product] for this."
 
             RULES:
+            - TONE: ${tone}
+            - PRODUCT PITCH LEVEL: ${mentionStrategy}
+            ${customRules ? `- CUSTOM INSTRUCTIONS: ${customRules}` : ''}
             - NO generic AI fluff ("Great post!", "I agree").
             - NO aggressive sales pitches.
             - Keep it conversational (lowercase start often works better).
