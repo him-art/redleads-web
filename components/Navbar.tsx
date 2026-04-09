@@ -42,11 +42,11 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="fixed top-4 sm:top-6 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-12 pointer-events-none">
+      <div className="fixed top-2.5 sm:top-6 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-12 pointer-events-none">
         {/* Left: RedLeads Brand */}
         <Link 
           href="/"
-          className="px-8 py-3 bg-white border border-white/40 rounded-full pointer-events-auto flex items-center"
+          className="px-6 py-2.5 sm:px-8 sm:py-3 bg-white border border-white/40 rounded-full pointer-events-auto flex items-center"
         >
           <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
             RedLeads
@@ -118,7 +118,7 @@ const Navbar = () => {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-20 sm:top-24 left-4 right-4 z-50 lg:hidden"
+              className="fixed top-16 sm:top-24 left-4 right-4 z-50 lg:hidden"
             >
               <div className="bg-white border border-white/40 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
                 

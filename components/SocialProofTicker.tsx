@@ -175,17 +175,20 @@ const TickerRow = ({ tweets, direction }: { tweets: CreatorTweet[]; direction: '
   // Return null if no tweets to display
   if (tweets.length === 0) return null;
 
-  // Duplicate for seamless infinite loop
-  const doubled = [...tweets, ...tweets, ...tweets];
+  // 4 copies ensures 50% translation is exactly 2 copies. 
+  // With padding instead of gap, the width math is perfectly seamless.
+  const multiplied = [...tweets, ...tweets, ...tweets, ...tweets];
 
   return (
     <div className="relative overflow-hidden py-2">
       <div
-        className={`flex gap-4 ${direction === 'left' ? 'animate-ticker-left' : 'animate-ticker-right'} hover:[animation-play-state:paused]`}
+        className={`flex ${direction === 'left' ? 'animate-ticker-left' : 'animate-ticker-right'} hover:[animation-play-state:paused]`}
         style={{ width: 'max-content' }}
       >
-        {doubled.map((tweet, i) => (
-          <TweetCard key={`${tweet.handle}-${i}`} tweet={tweet} />
+        {multiplied.map((tweet, i) => (
+          <div key={`${tweet.handle}-${i}`} className="pr-4 shrink-0">
+            <TweetCard tweet={tweet} />
+          </div>
         ))}
       </div>
     </div>

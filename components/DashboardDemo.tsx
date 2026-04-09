@@ -59,10 +59,8 @@ export default function DashboardDemo() {
 
           {/* Power Search Container */}
           <motion.div 
-            initial={{ y: 20 }}
-            whileInView={{ y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+            initial={false}
+            animate={{ y: 0 }}
             className="bg-void border border-white/5 rounded-[1.25rem] md:rounded-[1.5rem] p-4 md:p-6 space-y-4 shadow-xl shadow-black/40 relative overflow-hidden"
           >
             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
@@ -97,10 +95,8 @@ export default function DashboardDemo() {
           {/* Live Intelligence */}
           <section className="px-1 md:px-2 mt-2">
             <motion.div 
-              initial={{ y: 15 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.8, ease: "easeOut" }}
+              initial={false}
+              animate={{ y: 0 }}
               className="flex items-start sm:items-center justify-between mb-4 md:mb-6 gap-2"
             >
               <div className="flex items-center gap-2.5">
@@ -172,10 +168,8 @@ function LiveCard({ subreddit, time, matchLevel, title, delay = 0 }: { subreddit
   const isHigh = matchLevel === "HIGH MATCH";
   return (
     <motion.div 
-      initial={{ x: 20 }}
-      whileInView={{ x: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, delay, type: "spring", stiffness: 150, damping: 20 }}
+      initial={false}
+      animate={{ x: 0 }}
       whileHover={{ y: -2, transition: { duration: 0.2, delay: 0 } }}
       className="bg-void border border-white/5 rounded-[1rem] flex overflow-hidden hover:bg-white/[0.06] hover:border-white/10 transition-colors group shadow-lg relative"
     >

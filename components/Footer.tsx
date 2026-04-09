@@ -49,21 +49,38 @@ const Footer = () => {
              <Link href="/login?next=/dashboard" className="text-gray-400 hover:text-white transition-colors text-[13px]">Dashboard Login</Link>
           </div>
 
-          {/* Column 3: Industries */}
+          {/* Column 3: Solutions */}
           <div className="flex flex-col gap-4">
-             <h3 className="font-bold text-gray-400 text-[10px] tracking-widest uppercase">Industries</h3>
-             <Link href="/solutions/b2b-saas" className="text-gray-400 hover:text-white transition-colors text-[13px]">B2B SaaS</Link>
-             <Link href="/solutions/agencies" className="text-gray-400 hover:text-white transition-colors text-[13px]">Agencies</Link>
-             <Link href="/solutions/ai-wrappers" className="text-gray-400 hover:text-white transition-colors text-[13px]">AI Wrappers</Link>
-             <Link href="/solutions/mobile-apps" className="text-gray-400 hover:text-white transition-colors text-[13px]">Mobile Apps</Link>
+             <h3 className="font-bold text-gray-400 text-[10px] tracking-widest uppercase">Solutions</h3>
+             <div className="flex flex-col gap-3">
+               <Link href="/solutions/b2b-saas" className="text-gray-400 hover:text-white transition-colors text-[13px]">B2B SaaS</Link>
+               <Link href="/solutions/agencies" className="text-gray-400 hover:text-white transition-colors text-[13px]">Agencies</Link>
+               <Link href="/solutions/ai-wrappers" className="text-gray-400 hover:text-white transition-colors text-[13px]">AI Wrappers</Link>
+               <Link href="/solutions/mobile-apps" className="text-gray-400 hover:text-white transition-colors text-[13px]">Mobile Apps</Link>
+             </div>
+             <h4 className="font-bold text-orange-500/80 text-[9px] tracking-widest uppercase mt-4">Industry Hubs</h4>
+             <div className="flex flex-col gap-2">
+               <Link href="/solutions/b2b-saas/saas" className="text-gray-500 hover:text-orange-500 transition-colors text-[11px]">r/SaaS Strategies</Link>
+               <Link href="/solutions/ai-wrappers/localllama" className="text-gray-500 hover:text-orange-500 transition-colors text-[11px]">r/LocalLlama for AI</Link>
+               <Link href="/solutions/agencies/marketing" className="text-gray-500 hover:text-orange-500 transition-colors text-[11px]">r/Marketing Growth</Link>
+               <Link href="/solutions/directory" className="text-orange-500/80 hover:text-orange-500 font-bold transition-colors text-[11px] mt-2">View Full Directory &rarr;</Link>
+             </div>
           </div>
 
           {/* Column 4: Resources */}
           <div className="flex flex-col gap-4">
              <h3 className="font-bold text-gray-400 text-[10px] tracking-widest uppercase">Resources</h3>
-             <Link href="/subreddits" className="text-gray-400 hover:text-white transition-colors text-[13px]">Subreddit Guides</Link>
-             <Link href="/solutions/directory" className="text-orange-500 font-bold hover:text-white transition-colors text-[13px]">Growth Directory</Link>
-             <Link href="/blog" className="text-gray-400 hover:text-white transition-colors text-[13px]">Strategy Blog</Link>
+             <div className="flex flex-col gap-3">
+                <Link href="/blog" className="text-gray-400 hover:text-white transition-colors text-[13px]">Strategy Blog</Link>
+                <Link href="/subreddits" className="text-gray-400 hover:text-white transition-colors text-[13px]">Subreddit Guides</Link>
+                <Link href="/solutions/directory" className="text-gray-400 hover:text-white transition-colors text-[13px]">Growth Directory</Link>
+             </div>
+             <h4 className="font-bold text-orange-500/80 text-[9px] tracking-widest uppercase mt-4">Latest Guides</h4>
+             <div className="flex flex-col gap-2">
+               <Link href="/blog/reddit-engagement-rate-benchmarks" className="text-gray-500 hover:text-orange-500 transition-colors text-[11px]">Reddit Engagement (2026)</Link>
+               <Link href="/blog/how-much-do-reddit-ads-cost" className="text-gray-500 hover:text-orange-500 transition-colors text-[11px]">Reddit Ad Costs Guide</Link>
+               <Link href="/blog/reddit-marketing-roi-calculator" className="text-gray-500 hover:text-orange-500 transition-colors text-[11px]">Reddit Marketing ROI</Link>
+             </div>
           </div>
 
           {/* Column 5: Company */}
@@ -74,7 +91,7 @@ const Footer = () => {
              <Link href="/terms" className="text-gray-400 hover:text-white transition-colors text-[13px]">Terms of Service</Link>
              <div className="mt-4 pt-4 border-t border-white/5">
                 <p className="text-[9px] text-gray-600 font-medium leading-relaxed uppercase tracking-tighter">
-                  Not affiliated with <br /> Reddit Inc.
+                   Not affiliated with <br /> Reddit Inc.
                 </p>
              </div>
           </div>

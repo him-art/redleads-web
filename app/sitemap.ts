@@ -8,77 +8,79 @@ import masterSubreddits from '@/data/pseo-subreddits.json';
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.redleads.app';
 
+  const lastModified = new Date();
+
   // Static pages
   const staticPages = [
     {
       url: baseUrl,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: 'weekly' as const,
       priority: 1,
     },
     {
       url: `${baseUrl}/login`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: 'monthly' as const,
       priority: 0.8,
     },
     {
       url: `${baseUrl}/blog`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     },
     {
       url: `${baseUrl}/protocol`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: 'monthly' as const,
       priority: 0.9,
     },
     {
       url: `${baseUrl}/compare`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     },
     {
       url: `${baseUrl}/terms`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: 'yearly' as const,
       priority: 0.3,
     },
     {
       url: `${baseUrl}/privacy`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: 'yearly' as const,
       priority: 0.3,
     },
     {
       url: `${baseUrl}/tools/reddit-opportunity-finder`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: 'weekly' as const,
       priority: 1,
     },
     {
       url: `${baseUrl}/tools/reddit-niche-explorer`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: 'weekly' as const,
       priority: 1,
     },
     {
       url: `${baseUrl}/tools`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     },
     {
       url: `${baseUrl}/tools/reddit-engagement-calculator`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: 'monthly' as const,
       priority: 0.8,
     },
     {
       url: `${baseUrl}/tools/reddit-ad-cost-calculator`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: 'monthly' as const,
       priority: 0.8,
     },
@@ -87,7 +89,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Blog posts
   const blogPosts = getAllPosts().map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: new Date(post.date),
+    lastModified: new Date(post.lastModified || post.date),
     changeFrequency: 'monthly' as const,
     priority: 0.7,
   }));
@@ -95,7 +97,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Comparison pages
   const comparisonPages = getAllComparisons().map((comparison) => ({
     url: `${baseUrl}/compare/${comparison.slug}`,
-    lastModified: new Date(),
+    lastModified,
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }));
@@ -103,7 +105,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Subreddit hub pages
   const subredditPages = getAllSubredditHubs().map((hub) => ({
     url: `${baseUrl}/subreddits/${hub.slug}`,
-    lastModified: new Date(),
+    lastModified,
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }));
@@ -111,7 +113,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Solution pages
   const solutionPages = getAllSolutions().map((solution) => ({
     url: `${baseUrl}/solutions/${solution.slug}`,
-    lastModified: new Date(),
+    lastModified,
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }));
@@ -122,7 +124,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       const subSlug = subreddit.toLowerCase().replace(/r\//, '').replace(/\//g, '');
       return {
         url: `${baseUrl}/solutions/${solution.slug}/${subSlug}`,
-        lastModified: new Date(),
+        lastModified,
         changeFrequency: 'monthly' as const,
         priority: 0.6,
       };
@@ -133,7 +135,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...staticPages, 
     {
       url: `${baseUrl}/solutions/directory`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     },

@@ -6,7 +6,7 @@ import ClarityProvider from "@/components/providers/ClarityProvider";
 
 // Lazy-load heavy client components to reduce initial JS bundle
 const AnalyticsListener = dynamic(() => import("@/components/AnalyticsListener"));
-const StickyLeadMagnet = dynamic(() => import("@/components/StickyLeadMagnet"));
+
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
   },
   
   // Additional SEO metadata
-  keywords: ["AI Reddit Marketing", "Reddit AI Lead Gen", "Automated Reddit Outreach", "RedLeads AI", "Reddit Intent Engine", "Best Reddit Marketing Tools 2025", "Reddit Lead Generation", "SaaS marketing", "startup growth"],
+  keywords: ["AI Reddit Marketing", "Reddit AI Lead Gen", "Automated Reddit Outreach", "RedLeads AI", "Reddit Intent Engine", "Best Reddit Marketing Tools 2026", "Reddit Lead Generation", "SaaS marketing", "startup growth"],
   authors: [{ name: "RedLeads" }],
   robots: {
     index: true,
@@ -185,7 +185,6 @@ export default function RootLayout({
         <ClarityProvider>
           {children}
           <AnalyticsListener />
-          <StickyLeadMagnet />
         </ClarityProvider>
         {/* Deferred Material Icons font loader — avoids render-blocking */}
         <script

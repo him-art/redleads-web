@@ -18,6 +18,7 @@ export interface PseoCombination {
     vibe: string;
     strategy: string;
     topHacks: string[];
+    communityRules: string[];
     archetypeName: string;
   };
 }
@@ -65,6 +66,7 @@ export function getCombinationData(solutionSlug: string, subredditName: string):
       vibe: archetype.vibe,
       strategy: archetype.strategy,
       topHacks: archetype.topHacks,
+      communityRules: archetype.communityRules,
       archetypeName: archetype.name
     },
   };

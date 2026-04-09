@@ -5,6 +5,9 @@ import MaterialIcon from '@/components/ui/MaterialIcon';
 import { getPostBySlug, getAllPosts } from '../posts';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import TableOfContents from '@/components/blog/TableOfContents';
+import ToolCallout from '@/components/blog/ToolCallout';
+import ProTipBox from '@/components/blog/ProTipBox';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -192,10 +195,13 @@ export default async function BlogPostPage({ params }: Props) {
                 TL;DR Summary
               </div>
               <p className="text-white text-lg font-medium leading-relaxed italic">
-                "{post.tldr}"
+                &quot;{post.tldr}&quot;
               </p>
             </div>
           </div>
+
+          {/* Table of Contents */}
+          <TableOfContents content={post.content} />
 
           {/* Context Insight (Mirroring pSEO) */}
           <div className="mb-16 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -232,6 +238,15 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
           </div>
 
+          {/* Pro Tips */}
+          {post.proTips && post.proTips.length > 0 && (
+            <div className="mb-12">
+              {post.proTips.map((tip, idx) => (
+                <ProTipBox key={idx} tip={tip} />
+              ))}
+            </div>
+          )}
+
           <div 
             className="prose prose-invert prose-lg max-w-none font-[family-name:var(--font-merriweather)]
               prose-headings:font-sans prose-headings:font-black prose-headings:tracking-tight
@@ -250,6 +265,50 @@ export default async function BlogPostPage({ params }: Props) {
             "
             dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
           />
+
+          {/* Tool Callout — PostPlanify-style mid-article embed */}
+          {post.relatedTool && (
+            <ToolCallout
+              toolName={post.relatedTool.name}
+              toolDescription={post.relatedTool.description}
+              toolHref={post.relatedTool.href}
+              toolIcon={post.relatedTool.icon}
+            />
+          )}
+        </div>
+
+        {/* Internal Linking Bridge to pSEO Hubs */}
+        <div className="max-w-3xl mx-auto mt-16 p-8 bg-black/40 border border-white/5 rounded-3xl">
+          <div className="flex items-center gap-2 text-slate-400 font-bold text-xs uppercase tracking-wider mb-6">
+            <MaterialIcon name="lan" size={16} className="text-orange-500" />
+            Related Growth Strategies
+          </div>
+          <p className="text-sm text-slate-500 mb-6">Explore actionable, data-driven playbooks for top-tier communities:</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <Link href="/solutions/b2b-saas/saas" className="flex items-center gap-2 p-3 bg-white/5 rounded-xl border border-white/5 hover:border-orange-500/30 hover:bg-orange-500/5 transition-all group">
+               <span className="text-orange-500 font-black group-hover:scale-110 transition-transform">r/</span>
+               <span className="text-slate-300 font-bold text-sm">SaaS</span>
+            </Link>
+            <Link href="/solutions/agencies/marketing" className="flex items-center gap-2 p-3 bg-white/5 rounded-xl border border-white/5 hover:border-orange-500/30 hover:bg-orange-500/5 transition-all group">
+               <span className="text-orange-500 font-black group-hover:scale-110 transition-transform">r/</span>
+               <span className="text-slate-300 font-bold text-sm">Marketing</span>
+            </Link>
+            <Link href="/solutions/ai-wrappers/localllama" className="flex items-center gap-2 p-3 bg-white/5 rounded-xl border border-white/5 hover:border-orange-500/30 hover:bg-orange-500/5 transition-all group">
+               <span className="text-orange-500 font-black group-hover:scale-110 transition-transform">r/</span>
+               <span className="text-slate-300 font-bold text-sm">LocalLlama</span>
+            </Link>
+            <Link href="/solutions/business/entrepreneur" className="flex items-center gap-2 p-3 bg-white/5 rounded-xl border border-white/5 hover:border-orange-500/30 hover:bg-orange-500/5 transition-all group">
+               <span className="text-orange-500 font-black group-hover:scale-110 transition-transform">r/</span>
+               <span className="text-slate-300 font-bold text-sm">Entrepreneur</span>
+            </Link>
+            <Link href="/solutions/b2b-saas/startups" className="flex items-center gap-2 p-3 bg-white/5 rounded-xl border border-white/5 hover:border-orange-500/30 hover:bg-orange-500/5 transition-all group">
+               <span className="text-orange-500 font-black group-hover:scale-110 transition-transform">r/</span>
+               <span className="text-slate-300 font-bold text-sm">Startups</span>
+            </Link>
+            <Link href="/solutions/directory" className="flex items-center justify-center gap-2 p-3 bg-white/5 rounded-xl border border-white/5 hover:border-orange-500/50 hover:bg-orange-500/20 transition-all group text-orange-500 font-black text-sm uppercase tracking-widest">
+               View All
+            </Link>
+          </div>
         </div>
 
         {/* Keywords */}
@@ -358,43 +417,104 @@ export default async function BlogPostPage({ params }: Props) {
       <Footer />
     </main>
   );
-}
+}function formatContent(content: string): string {
+  const lines = content.split('\n');
+  let html = '';
+  let inList = false;
+  let inTable = false;
 
-// Simple markdown-like formatting
-function formatContent(content: string): string {
-  return content
-    .split('\n')
-    .map(line => {
-      // Headers
-      if (line.startsWith('### ')) return `<h3>${line.slice(4)}</h3>`;
-      if (line.startsWith('## ')) return `<h2>${line.slice(3)}</h2>`;
-      if (line.startsWith('# ')) return `<h1>${line.slice(2)}</h1>`;
-      
-      // Bold
-      line = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      
-      // Links
-      line = line.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
-      
-      // Lists
-      if (line.startsWith('- ')) return `<li>${line.slice(2)}</li>`;
-      if (line.match(/^\d+\. /)) return `<li>${line.replace(/^\d+\. /, '')}</li>`;
-      
-      // Tables (basic)
-      if (line.startsWith('|')) {
-        const cells = line.split('|').filter(c => c.trim());
-        if (line.includes('---')) return '';
-        const isHeader = line.includes('Keyword') || line.includes('Tool') || line.includes('Intent');
-        const tag = isHeader ? 'th' : 'td';
-        return `<tr>${cells.map(c => `<${tag}>${c.trim()}</${tag}>`).join('')}</tr>`;
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+
+    // Handle horizontal rules
+    if (line.trim() === '---') {
+      if (inList) { html += '</ul>'; inList = false; }
+      if (inTable) { html += '</table></div>'; inTable = false; }
+      html += '<hr class="my-10 border-white/10" />';
+      continue;
+    }
+
+    // Handle headers
+    if (line.startsWith('### ')) {
+      if (inList) { html += '</ul>'; inList = false; }
+      if (inTable) { html += '</table></div>'; inTable = false; }
+      const text = line.slice(4).trim();
+      const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      html += `<h3 id="${id}" class="text-xl font-bold text-white mt-10 mb-4">${text}</h3>`;
+      continue;
+    }
+    if (line.startsWith('## ')) {
+      if (inList) { html += '</ul>'; inList = false; }
+      if (inTable) { html += '</table></div>'; inTable = false; }
+      const text = line.slice(3).trim();
+      const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      html += `<h2 id="${id}" class="text-2xl font-black text-white mt-12 mb-6 tracking-tight">${text}</h2>`;
+      continue;
+    }
+    if (line.startsWith('# ')) {
+      if (inList) { html += '</ul>'; inList = false; }
+      if (inTable) { html += '</table></div>'; inTable = false; }
+      html += `<h1 class="text-3xl md:text-5xl font-black text-white mb-8 tracking-tighter">${line.slice(2)}</h1>`;
+      continue;
+    }
+
+    // Handle Tables
+    if (line.startsWith('|')) {
+      if (line.includes('---')) continue; // Skip separator line
+      if (!inTable) {
+        if (inList) { html += '</ul>'; inList = false; }
+        html += '<div class="overflow-x-auto my-8 rounded-2xl border border-white/10 shadow-2xl overflow-hidden"><table class="w-full text-left border-collapse">';
+        inTable = true;
       }
       
-      // Horizontal rule
-      if (line.trim() === '---') return '<hr />';
+      const cells = line.split('|').filter((_, index, array) => index > 0 && index < array.length - 1);
+      const isHeader = line.includes('Grade') || line.includes('Keyword') || line.includes('Tool') || i === 0 || (i > 0 && lines[i-1].trim() === '');
+      const tag = isHeader ? 'th' : 'td';
+      const cellClass = isHeader 
+        ? 'p-4 bg-white/[0.03] text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-white/10' 
+        : 'p-4 text-sm text-slate-300 border-b border-white/[0.05]';
       
-      // Paragraphs
-      if (line.trim()) return `<p>${line}</p>`;
-      return '';
-    })
-    .join('\n');
+      html += `<tr>${cells.map(c => `<${tag} class="${cellClass}">${c.trim()}</${tag}>`).join('')}</tr>`;
+      continue;
+    } else if (inTable) {
+      html += '</table></div>';
+      inTable = false;
+    }
+
+    // Handle Lists
+    const listMatch = line.match(/^[-*] (.*)/) || line.match(/^\d+\. (.*)/);
+    if (listMatch) {
+      if (!inList) {
+        if (inTable) { html += '</table></div>'; inTable = false; }
+        html += '<ul class="space-y-3 my-6 text-slate-400 leading-relaxed">';
+        inList = true;
+      }
+      let itemContent = listMatch[1];
+      // Basic formatting inside list item
+      itemContent = itemContent.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>');
+      itemContent = itemContent.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="text-orange-500 hover:underline">$1</a>');
+      html += `<li class="flex gap-3"><span class="text-orange-500 mt-1.5">•</span><span>${itemContent}</span></li>`;
+      continue;
+    } else if (inList) {
+      html += '</ul>';
+      inList = false;
+    }
+
+    // Basic line formatting (Bold, Italic, Code, Links)
+    line = line.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>');
+    line = line.replace(/\*(.*?)\*/g, '<em class="text-slate-300 font-serif-italic">$1</em>');
+    line = line.replace(/`(.*?)`/g, '<code class="px-1.5 py-0.5 bg-white/10 rounded-md text-orange-400 text-xs font-mono">$1</code>');
+    line = line.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="text-orange-500 hover:underline font-bold">$1</a>');
+
+    // Paragraphs
+    if (line.trim()) {
+      html += `<p class="my-6 text-slate-400 leading-relaxed">${line}</p>`;
+    }
+  }
+
+  // Cleanup
+  if (inList) html += '</ul>';
+  if (inTable) html += '</table></div>';
+
+  return html;
 }

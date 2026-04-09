@@ -191,6 +191,19 @@ export default async function PseoCombinationPage({ params }: Props) {
                 </li>
               ))}
             </ul>
+            
+            <h4 className="text-white font-black text-xs uppercase tracking-widest mt-10 mb-6 flex items-center gap-2">
+              <MaterialIcon name="gavel" size={16} className="text-red-500" /> 
+              Unwritten Subreddit Rules
+            </h4>
+            <ul className="space-y-4">
+              {data.insights.communityRules && data.insights.communityRules.map((rule, i) => (
+                <li key={i} className="flex gap-3 text-sm text-slate-400">
+                  <MaterialIcon name="error_outline" size={18} className="text-red-500/80 shrink-0" />
+                  {rule}
+                </li>
+              ))}
+            </ul>
           </div>
 
           <div className="bg-[#141414] p-10 rounded-[2.5rem] border border-white/5">

@@ -35,9 +35,9 @@ const testimonials: Testimonial[] = [
     name: "Konny",
     handle: "@konnydev",
     image: "/konny.webp",
-    url: "https://x.com/konnydev/status/2020141367507275965",
-    content: "Thats useful I guess👀",
-    highlights: ["useful I guess"],
+    url: "https://x.com/konnydev/status/2041811233288921192?s=20",
+    content: "Thats so cool man",
+    highlights: ["so cool man"],
   },
   {
     name: "sachanh.farcaster.eth",
@@ -129,7 +129,7 @@ const testimonials: Testimonial[] = [
   },
 ];
 
-const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
+const TestimonialCard = ({ testimonial, className = "" }: { testimonial: Testimonial; className?: string }) => {
   const getHighlightedText = (text: string, highlights: string[]) => {
     if (!highlights || highlights.length === 0) return text;
     
@@ -161,7 +161,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
       href={testimonial.url} 
       target="_blank" 
       rel="noopener noreferrer" 
-      className="break-inside-avoid block group p-0.5"
+      className={`break-inside-avoid block group p-0.5 ${className}`}
     >
       <div className="p-2 bg-white/5 border border-white/10 rounded-[2.5rem] transition-all duration-300 group-hover:border-orange-500/20">
         <div className="bg-white rounded-[2rem] p-6 border border-gray-100 flex flex-col relative overflow-hidden h-full shadow-none group-hover:border-orange-500/10 transition-colors">
@@ -211,7 +211,36 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
   );
 };
 
+const TestimonialTickerRow = ({ testimonials, direction }: { testimonials: Testimonial[]; direction: 'left' | 'right' }) => {
+  if (testimonials.length === 0) return null;
+
+  // 4 copies ensures 50% translation is exactly 2 copies.
+  // With padding instead of gap, the width math is perfectly seamless.
+  const multiplied = [...testimonials, ...testimonials, ...testimonials, ...testimonials];
+
+  return (
+    <div className="relative overflow-hidden py-2 flex">
+      <div
+        className={`flex ${direction === 'left' ? 'animate-ticker-left' : 'animate-ticker-right'} hover:[animation-play-state:paused]`}
+        style={{ width: 'max-content' }}
+      >
+        {multiplied.map((testimonial, i) => (
+          <div key={`${testimonial.handle}-${i}`} className="pr-4 shrink-0 flex items-stretch">
+            <TestimonialCard 
+              testimonial={testimonial}
+              className="flex-shrink-0 w-[340px] sm:w-[380px] md:w-[420px] h-full"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export default function FounderNote() {
+  const row1 = testimonials.slice(0, 7);
+  const row2 = testimonials.slice(7);
+
   return (
     <section className="py-24 bg-[#1a1a1a] overflow-hidden border-t border-white/5">
       <div className="max-w-7xl mx-auto px-6">
@@ -275,32 +304,19 @@ export default function FounderNote() {
         {/* User Testimonials */}
         <div className="pt-24 border-t border-white/5">
           
-          <div className="text-center mb-12">
-            <h4 className="text-2xl font-black text-white mb-4">Real reactions from the community</h4>
-            <p className="text-gray-500 text-sm font-medium opacity-60">{FOUNDER_COUNT} founders who signed up during our opening month</p>
+          <div className="text-center mb-14 md:mb-20">
+            <h2 className="text-4xl md:text-7xl font-black text-white mb-6 tracking-tighter leading-[1.05] max-w-4xl mx-auto">
+              Real reactions from <br />
+              <span className="text-orange-500 font-serif-italic">the community</span>
+            </h2>
+            <p className="text-gray-500 text-sm md:text-base font-medium opacity-60 max-w-2xl mx-auto">
+              {FOUNDER_COUNT} founders who signed up during our opening month
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 items-start">
-            {/* Column 1 */}
-            <div className="flex flex-col gap-3">
-              {[testimonials[5]!, testimonials[8]!, testimonials[10]!, testimonials[2]!, testimonials[12]!].map((testimonial, idx) => (
-                <TestimonialCard key={`col1-${idx}`} testimonial={testimonial} />
-              ))}
-            </div>
-            
-            {/* Column 2 */}
-            <div className="flex flex-col gap-3">
-              {[testimonials[13]!, testimonials[3]!, testimonials[7]!, testimonials[11]!, testimonials[1]!].map((testimonial, idx) => (
-                <TestimonialCard key={`col2-${idx}`} testimonial={testimonial} />
-              ))}
-            </div>
- 
-            {/* Column 3 */}
-            <div className="flex flex-col gap-3">
-              {[testimonials[6]!, testimonials[4]!, testimonials[9]!, testimonials[0]!].map((testimonial, idx) => (
-                <TestimonialCard key={`col3-${idx}`} testimonial={testimonial} />
-              ))}
-            </div>
+          <div className="-mx-4 md:-mx-[max(1rem,calc((100vw-1152px)/2+1rem))] overflow-hidden space-y-4">
+            <TestimonialTickerRow testimonials={row1} direction="left" />
+            <TestimonialTickerRow testimonials={row2} direction="right" />
           </div>
         </div>
       </div>

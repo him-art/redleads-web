@@ -411,11 +411,33 @@ async function runPollCycle() {
                     }
 
                     // Bulk insert leads
-                    // Limit concurrent AI categorization calls to avoid rate limits
-                    const limit = pLimit(5);
+                    // SEVERE RATE LIMIT HANDLING: Serialize AI calls (pLimit(1)) and add delays
+                    // Groq has strict RPM / TPM limits. 
+                    const limit = pLimit(1);
                     const leadsToInsert = await Promise.all(newUserIds.map((uid) => limit(async () => {
                         const prof = profiles?.find(p => p.id === uid);
-                        const category = await getLeadCategory(post, prof?.description || '');
+                        
+                        // Internal retry logic for rate-limits
+                        let category = 'Medium';
+                        let retries = 3;
+                        while (retries > 0) {
+                            try {
+                                category = await getLeadCategory(post, prof?.description || '');
+                                break; // Success
+                            } catch (e: any) {
+                                if (e.message.includes('rate-limited') || e.message.includes('all available keys')) {
+                                    console.warn(`[AI] ⚠️ Rate limited formatting lead ${uid}. Waiting 15s... (${retries} retries left)`);
+                                    await delay(15000);
+                                    retries--;
+                                } else {
+                                    console.error(`[AI] Error categorizing lead:`, e);
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        // Enforce pacing between sequential AI calls
+                        await delay(2000); 
                         
                         return {
                             user_id: uid,
