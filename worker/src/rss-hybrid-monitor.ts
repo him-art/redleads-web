@@ -289,47 +289,39 @@ function findMatchingUsers(post: RSSPost, keywordIndex: Map<string, string[]>): 
     return Array.from(matchedUsers);
 }
 
-/**
- * Categorize a lead for a user using AI
- */
 async function getLeadCategory(post: RSSPost, businessDescription: string): Promise<string> {
     if (!businessDescription) return 'Medium';
     
-    try {
-        const prompt = `
-            You are an expert Lead Qualification Assistant. Your goal is to categorize a Reddit post based on its relevance and intent for a specific business.
-            
-            BUSINESS CONTEXT:
-            The business is described as: "${businessDescription}"
-            
-            REDDIT POST TO ANALYZE:
-            Title: "${post.title}"
-            Snippet: "${post.snippet.slice(0, 1000)}"
-            Subreddit: r/${post.subreddit}
-            
-            CATEGORIZATION CRITERIA:
-            - "High": The user is explicitly asking for a solution, expressing a strong pain point that the business solves, or looking for recommendations in the business's niche. This indicates clear "buying intent" or a direct need that the business can fulfill.
-            - "Medium": The post is highly relevant to the niche or industry of the business, but the intent is more informational, conversational, or exploratory (e.g., sharing a story, asking a general question, discussing trends). It's a good lead, but not immediately actionable.
-            - "Low": The post mentions a keyword relevant to the business but is unrelated to its core offering (e.g., a casual mention, a different context, or a tangential discussion). This also includes spam, noise, or posts where the business cannot provide value.
-            
-            Return ONLY one word: "High", "Medium", or "Low".
-        `;
+    const prompt = `
+        You are an expert Lead Qualification Assistant. Your goal is to categorize a Reddit post based on its relevance and intent for a specific business.
+        
+        BUSINESS CONTEXT:
+        The business is described as: "${businessDescription}"
+        
+        REDDIT POST TO ANALYZE:
+        Title: "${post.title}"
+        Snippet: "${post.snippet.slice(0, 1000)}"
+        Subreddit: r/${post.subreddit}
+        
+        CATEGORIZATION CRITERIA:
+        - "High": The user is explicitly asking for a solution, expressing a strong pain point that the business solves, or looking for recommendations in the business's niche. This indicates clear "buying intent" or a direct need that the business can fulfill.
+        - "Medium": The post is highly relevant to the niche or industry of the business, but the intent is more informational, conversational, or exploratory (e.g., sharing a story, asking a general question, discussing trends). It's a good lead, but not immediately actionable.
+        - "Low": The post mentions a keyword relevant to the business but is unrelated to its core offering (e.g., a casual mention, a different context, or a tangential discussion). This also includes spam, noise, or posts where the business cannot provide value.
+        
+        Return ONLY one word: "High", "Medium", or "Low".
+    `;
 
-        const res = await AI.call({
-            model: "llama-3.3-70b-versatile",
-            messages: [{ role: "user", content: prompt }],
-            temperature: 0,
-            max_tokens: 10
-        });
+    const res = await AI.call({
+        model: "llama-3.3-70b-versatile",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0,
+        max_tokens: 10
+    });
 
-        const content = res.choices?.[0]?.message?.content?.trim();
-        if (content?.toLowerCase().includes('high')) return 'High';
-        if (content?.toLowerCase().includes('low')) return 'Low';
-        return 'Medium';
-    } catch (e) {
-        console.error(`[AI] Error categorizing lead:`, e);
-        return 'Medium';
-    }
+    const content = res.choices?.[0]?.message?.content?.trim();
+    if (content?.toLowerCase().includes('high')) return 'High';
+    if (content?.toLowerCase().includes('low')) return 'Low';
+    return 'Medium';
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -425,19 +417,19 @@ async function runPollCycle() {
                                 category = await getLeadCategory(post, prof?.description || '');
                                 break; // Success
                             } catch (e: any) {
-                                if (e.message.includes('rate-limited') || e.message.includes('all available keys')) {
-                                    console.warn(`[AI] ⚠️ Rate limited formatting lead ${uid}. Waiting 15s... (${retries} retries left)`);
-                                    await delay(15000);
+                                if (e?.message?.includes('rate-limited') || e?.message?.includes('all available keys') || e?.message?.includes('429')) {
+                                    console.warn(`[AI] ⚠️ Rate limited categorizing lead ${uid}. Waiting 65s... (${retries} retries left)`);
+                                    await delay(65000);
                                     retries--;
                                 } else {
-                                    console.error(`[AI] Error categorizing lead:`, e);
+                                    console.error(`[AI] Error categorizing lead (Fallback to Medium):`, e);
                                     break;
                                 }
                             }
                         }
                         
-                        // Enforce pacing between sequential AI calls
-                        await delay(2000); 
+                        // Enforce pacing between sequential AI calls to prevent RPM exhaustion
+                        await delay(4000); 
                         
                         return {
                             user_id: uid,
