@@ -50,6 +50,10 @@ export async function POST(req: Request) {
         }
 
         let metaKeywords = '';
+        let siteContext = '';
+        let metaDescription = '';
+        let title = '';
+
         // 1. Light scrape (Best Effort)
         try {
             const response = await axios.get(url.startsWith('http') ? url : `https://${url}`, {
@@ -131,7 +135,7 @@ export async function POST(req: Request) {
         let keywords = result.keywords || [];
         if (keywords.length === 0) {
             // Try to extract from meta tags or title if AI failed
-            const rawKws = (metaKeywords || title || '').split(/[,\s|]+/).filter(k => k.length > 3 && k.length < 20);
+            const rawKws = (metaKeywords || title || '').split(/[,\s|]+/).filter((k: string) => k.length > 3 && k.length < 20);
             keywords = [...new Set(rawKws)].slice(0, 6);
         }
         // Final fallback if still empty
