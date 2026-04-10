@@ -370,10 +370,10 @@ async function runPollCycle() {
             successCount++;
             totalPosts += newPosts.length;
             
-            // Worker Hard Timeout Guard: 35 minutes
-            const MAX_EXECUTION_TIME_MS = 35 * 60 * 1000;
+            // Worker Hard Timeout Guard: 110 minutes
+            const MAX_EXECUTION_TIME_MS = 110 * 60 * 1000;
             if (Date.now() - startTime > MAX_EXECUTION_TIME_MS) {
-                console.warn(`[RSS] ⏱️ Hard timeout reached (35 mins). Exiting loop early to prevent overlapping crons.`);
+                console.warn(`[RSS] ⏱️ Hard timeout reached (110 mins). Exiting loop early to prevent overlapping crons.`);
                 break;
             }
 
@@ -508,11 +508,10 @@ async function start() {
         process.exit(0);
     }
 
-    // Schedule: Every 15 minutes
-    // 100 subs * 1.8s = 180s = 3 mins. 
-    // 15 min interval gives plenty of buffer.
-    cron.schedule('*/45 * * * *', runPollCycle);
-    console.log('[RSS] ⏰ Scheduled cron: */45 * * * *');
+    // Schedule: Every 2 hours
+    // Gives plenty of buffer for long ingestion cycles with rate limiting
+    cron.schedule('0 */2 * * *', runPollCycle);
+    console.log('[RSS] ⏰ Scheduled cron: 0 */2 * * *');
 }
 
 // Graceful Shutdown
