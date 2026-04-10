@@ -37,10 +37,10 @@ function isUnsafeUrl(inputUrl: string): boolean {
 
 export async function POST(req: Request) {
     try {
-        const { url } = await req.json();
+        const { url, description: providedDescription } = await req.json();
 
-        if (!url) {
-            return NextResponse.json({ error: 'URL is required' }, { status: 400 });
+        if (!url && !providedDescription) {
+            return NextResponse.json({ error: 'URL or Description is required' }, { status: 400 });
         }
 
         // SSRF Protection
@@ -49,14 +49,11 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'This URL is not allowed for security reasons (private or local network).' }, { status: 400 });
         }
 
-        let siteContext = '';
-        let metaDescription = '';
-        let title = '';
-
+        let metaKeywords = '';
         // 1. Light scrape (Best Effort)
         try {
             const response = await axios.get(url.startsWith('http') ? url : `https://${url}`, {
-                timeout: 5000, // Slightly increased timeout
+                timeout: 5000, 
                 headers: {
                     'User-Agent': 'Mozilla/5.0 (compatible; RedLeadsBot/1.0; +http://redleads.app)'
                 }
@@ -69,8 +66,11 @@ export async function POST(req: Request) {
 
             const metaMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']*)["'][^>]*>/i);
             metaDescription = metaMatch ? metaMatch[1] : '';
+
+            const keywordsMatch = html.match(/<meta[^>]*name=["']keywords["'][^>]*content=["']([^"']*)["'][^>]*>/i);
+            metaKeywords = keywordsMatch ? keywordsMatch[1] : '';
             
-            siteContext = `Title: ${title}\nDescription: ${metaDescription}`;
+            siteContext = `Title: ${title}\nDescription: ${metaDescription}\nKeywords: ${metaKeywords}`;
         } catch (e) {
             console.log('[Onboarding] Scrape failed, relying on URL inference.', url);
             siteContext = `URL: ${url} (Site could not be scraped directly)`;
@@ -79,6 +79,8 @@ export async function POST(req: Request) {
         // 2. AI Analysis
         const prompt = `
             Analyze this product/service context to generate a precise profile for Reddit lead generation.
+            
+            ${providedDescription ? `USER PROVIDED DESCRIPTION: ${providedDescription}` : ''}
             
             Context from Site:
             ${siteContext}
@@ -91,23 +93,8 @@ export async function POST(req: Request) {
             - Focus on the PRIMARY platform (e.g., LinkedIn, Reddit, Twitter, Email) and the PRIMARY problem solved (e.g., "reach", "engagement", "hiring").
 
             1. Generate a "Pitch Description" (max 2 sentences) that describes exactly what this tool does. 
-               Bad: "It is a marketing tool."
-               Good: "Meet Lea helps LinkedIn users triple their reach by finding high-impact posts to comment on via an AI-powered browser extension."
-
             2. Generate EXACTLY 6 "High-Intent Topic Keywords" for Reddit monitoring.
-               
-            Requirements for Keywords:
-            - **STRICTLY 1-2 words maximum per keyword.**
-            - **NO SENTENCES. NO QUESTIONS.**
-            - **NO VERBS** at the start (e.g., do NOT use "find", "get", "increase", "boost").
-            - Focus on the **platform name**, **specific niche**, **competitor name**, or **user pain point**.
-            
             3. Generate 8-10 "Target Subreddits" where the target audience for this product hangs out.
-               
-            Requirements for Subreddits:
-            - **Return ONLY the name of the subreddit (no "r/" prefix).**
-            - Focus on subreddits related to the **platform**, **niche**, **job function**, or **problem category**.
-            - Examples for a LinkedIn tool: "sales", "marketing", "entrepreneur", "smallbusiness", "leadgeneration", "copywriting"
             
             Return JSON:
             {
@@ -138,12 +125,23 @@ export async function POST(req: Request) {
             }
         } catch (aiErr: any) {
             console.warn('[Onboarding API] AI Generation failed, using metadata fallback.', aiErr.message);
-            // Fallback result is empty, will use defaults below
+        }
+
+        // --- HEURISTIC FALLBACK ---
+        let keywords = result.keywords || [];
+        if (keywords.length === 0) {
+            // Try to extract from meta tags or title if AI failed
+            const rawKws = (metaKeywords || title || '').split(/[,\s|]+/).filter(k => k.length > 3 && k.length < 20);
+            keywords = [...new Set(rawKws)].slice(0, 6);
+        }
+        // Final fallback if still empty
+        if (keywords.length === 0) {
+            keywords = ['lead generation', 'marketing', 'sales', 'growth'];
         }
 
         return NextResponse.json({
             description: result.description || metaDescription || title || `A solution for ${url}`,
-            keywords: result.keywords || [],
+            keywords: keywords.map((k: string) => k.toLowerCase()),
             subreddits: result.subreddits || []
         });
 

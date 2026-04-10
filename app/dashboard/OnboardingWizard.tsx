@@ -23,6 +23,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
     const [step, setStep] = useState(0);
     const [url, setUrl] = useState('');
     const [isGenerating, setIsGenerating] = useState(false);
+    const [isGeneratingKeywords, setIsGeneratingKeywords] = useState(false);
     const [description, setDescription] = useState('');
     const [keywords, setKeywords] = useState<string[]>([]);
     const [newKeyword, setNewKeyword] = useState('');
@@ -110,6 +111,36 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
             setIsGenerating(false);
         }
     };
+
+    const handleGenerateKeywords = async () => {
+        if (!description && !url) return;
+        
+        setIsGeneratingKeywords(true);
+        try {
+            const { data } = await axios.post('/api/onboarding/generate', { 
+                url, 
+                description 
+            });
+            if (data.keywords && data.keywords.length > 0) {
+                // Merge without duplicates
+                setKeywords(prev => {
+                    const combined = [...prev, ...data.keywords];
+                    return [...new Set(combined)].slice(0, keywordLimit);
+                });
+            }
+        } catch (err: any) {
+            console.error('Failed to generate keywords:', err);
+        } finally {
+            setIsGeneratingKeywords(false);
+        }
+    };
+
+    // Auto-generate keywords if empty when reaching step 2
+    useEffect(() => {
+        if (step === 2 && keywords.length === 0 && (description || url) && !isGeneratingKeywords) {
+            handleGenerateKeywords();
+        }
+    }, [step, keywords.length, description, url]);
 
     // ──────────────────────────────
     // Step 3 → 4: Save profile when leaving keywords step
@@ -399,11 +430,31 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                         </button>
                                     </motion.span>
                                 ))}
-                                {keywords.length === 0 && (
-                                    <p className="text-text-secondary/40 text-xs font-bold uppercase tracking-widest">
+                                {keywords.length === 0 && !isGeneratingKeywords && (
+                                    <p className="text-text-secondary/40 text-xs font-bold uppercase tracking-widest text-center py-4">
                                         No keywords yet. Add some below
                                     </p>
                                 )}
+                                {isGeneratingKeywords && (
+                                    <div className="flex flex-col items-center justify-center py-6 space-y-3 w-full">
+                                        <LoadingIcon className="w-6 h-6 text-primary" />
+                                        <div className="flex items-center gap-2">
+                                            <Sparkles size={12} className="text-primary animate-pulse" />
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-primary animate-pulse">AI is thinking...</span>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="flex justify-center">
+                                <button
+                                    onClick={handleGenerateKeywords}
+                                    disabled={isGeneratingKeywords || keywords.length >= keywordLimit}
+                                    className="flex items-center gap-2 px-6 py-2.5 bg-primary/5 hover:bg-primary/10 border border-primary/20 rounded-xl text-[10px] font-black uppercase tracking-widest text-primary transition-all disabled:opacity-30 group"
+                                >
+                                    <Sparkles size={12} className={isGeneratingKeywords ? 'animate-spin' : 'group-hover:rotate-12 transition-transform'} />
+                                    {isGeneratingKeywords ? 'Thinking...' : 'Autofill with AI Intelligence'}
+                                </button>
                             </div>
 
                             {keywords.length < keywordLimit && (
