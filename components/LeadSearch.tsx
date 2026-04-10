@@ -74,13 +74,18 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
             onResultsFound?.(initialLeads.length);
             hasAutoScanned.current = true; // Prevent duplicate scan
         } else if (autoScan && initialUrl && !isScanning && results.length === 0 && !hasAutoScanned.current) {
-            setUrl(initialUrl);
+            console.log('[LeadSearch] Auto-scan triggered for:', initialUrl);
             hasAutoScanned.current = true;
-            handleScan(null as any);
+            
+            // Fix: Use direct URL to bypass React state update delay
+            handleScan(undefined, initialUrl);
             
             // Mark initial scan as done in DB so it never re-fires on refresh
             if (user?.id) {
-                supabase.from('profiles').update({ has_initial_scan: true }).eq('id', user.id).then();
+                supabase.from('profiles').update({ has_initial_scan: true }).eq('id', user.id).then(({ error }) => {
+                    if (error) console.error('[LeadSearch] Failed to mark has_initial_scan:', error);
+                    else console.log('[LeadSearch] Mark has_initial_scan complete');
+                });
             }
 
             // Consume the URL parameter
@@ -96,7 +101,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
             setUrl(initialUrl);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [initialUrl, initialLeads, autoScan]);
+    }, [initialUrl, initialLeads, autoScan, user?.id]);
 
     const scanSteps = [
         "Initializing Precision Search Interface...",
@@ -106,11 +111,16 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
         "Generating Intelligence Report..."
     ];
 
-    const handleScan = async (e: React.FormEvent) => {
+    const handleScan = async (e?: React.FormEvent, overrideUrl?: string) => {
         if (e) e.preventDefault();
-        if (!url) return;
+        
+        const scanUrl = overrideUrl || url;
+        if (!scanUrl) return;
 
-        let normalizedUrl = url.trim();
+        // If we have an overrideUrl, ensure the input state matches for visual consistency
+        if (overrideUrl) setUrl(overrideUrl);
+
+        let normalizedUrl = scanUrl.trim();
         if (!/^https?:\/\//i.test(normalizedUrl)) {
             normalizedUrl = `https://${normalizedUrl}`;
         }
@@ -322,16 +332,11 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                         <div className="space-y-1">
                             <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
                                 <MaterialIcon name="search" size={18} className="text-primary" />
-                                {teaserInfo?.isTeaser ? `Top 3 Sample Leads` : `Intel Report: ${results.length} Potential Leads`}
+                                Intel Report: {results.length} Potential Leads
                             </h2>
-                            {activeQuery && (
-                                <div className="flex items-center gap-2">
-                                    <span className="text-[9px] text-primary bg-primary/10 px-2 py-0.5 rounded-full font-black uppercase tracking-widest border border-primary/20">Precision Vector</span>
-                                    <p className="text-[10px] text-gray-500 font-medium italic opacity-80 decoration-primary/30 decoration-dotted underline underline-offset-4">
-                                        "{activeQuery}"
-                                    </p>
-                                </div>
-                            )}
+                            <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">
+                                High-intent conversations identified
+                            </p>
                         </div>
                     </div>
 
@@ -366,131 +371,79 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                         <AnimatePresence>
                                             {isOpen && (
                                                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="space-y-4">
-                                                    {(() => {
-                                                        const isTrialUser = profile?.subscription_tier === 'trial' || profile?.subscription_tier === 'free';
-                                                        const visibleCount = isTrialUser ? Math.ceil(leads.length / 2) : leads.length;
-                                                        const visibleLeads = leads.slice(0, visibleCount);
-                                                        const blurredLeads = leads.slice(visibleCount);
-
-                                                        return (
-                                                            <>
-                                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                                    {visibleLeads.map((lead, i) => (
-                                                                        <div key={i} className="group p-5 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.04] transition-all relative overflow-hidden flex flex-col justify-between gap-4">
-                                                                            <div className="space-y-3">
-                                                                                <div className="flex flex-wrap items-center justify-between gap-3">
-                                                                                    <div className="flex flex-wrap items-center gap-2">
-                                                                                        <span className="text-[9px] font-black text-orange-500 bg-orange-500/10 px-2.5 py-1 rounded-full uppercase tracking-widest border border-orange-500/10">r/{lead.subreddit}</span>
-                                                                                        <span className={`text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-widest ${
-                                                                                            lead.relevance === 'Best Match' ? 'bg-green-500/10 text-green-500 border border-green-500/20' :
-                                                                                            lead.relevance === 'Good Match' ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' :
-                                                                                            'bg-gray-500/10 text-gray-500 border border-gray-500/20'
-                                                                                        }`}>
-                                                                                            {lead.relevance}
-                                                                                        </span>
-                                                                                        {lead.has_responded && (
-                                                                                            <div className="flex items-center gap-1 px-2 py-0.5 bg-green-500/10 text-green-500 rounded-md border border-green-500/20 text-[9px] font-black uppercase tracking-widest">
-                                                                                                <CheckCircle2 size={10} /> Responded
-                                                                                            </div>
-                                                                                        )}
-                                                                                    </div>
-                                                                                    <div className="flex items-center gap-2 ml-auto">
-                                                                                        <a href={lead.url} target="_blank" rel="noopener noreferrer" className="p-1 text-gray-600 hover:text-white transition-colors">
-                                                                                            <ExternalLink size={14} />
-                                                                                        </a>
-                                                                                    </div>
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                        {leads.map((lead, i) => (
+                                                            <div key={i} className="group p-5 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.04] transition-all relative overflow-hidden flex flex-col justify-between gap-4">
+                                                                <div className="space-y-3">
+                                                                    <div className="flex flex-wrap items-center justify-between gap-3">
+                                                                        <div className="flex flex-wrap items-center gap-2">
+                                                                            <span className="text-[9px] font-black text-orange-500 bg-orange-500/10 px-2.5 py-1 rounded-full uppercase tracking-widest border border-orange-500/10">r/{lead.subreddit}</span>
+                                                                            <span className={`text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-widest ${
+                                                                                lead.relevance === 'Best Match' ? 'bg-green-500/10 text-green-500 border border-green-500/20' :
+                                                                                lead.relevance === 'Good Match' ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' :
+                                                                                'bg-gray-500/10 text-gray-500 border border-gray-500/20'
+                                                                            }`}>
+                                                                                {lead.relevance}
+                                                                            </span>
+                                                                            {lead.has_responded && (
+                                                                                <div className="flex items-center gap-1 px-2 py-0.5 bg-green-500/10 text-green-500 rounded-md border border-green-500/20 text-[9px] font-black uppercase tracking-widest">
+                                                                                    <CheckCircle2 size={10} /> Responded
                                                                                 </div>
-                                                                                <h4 className="text-xs sm:text-sm font-bold text-text-secondary group-hover:text-text-primary leading-relaxed tracking-tight line-clamp-3 transition-all">{lead.title}</h4>
-                                                                            </div>
-
-                                                                            <div className="flex flex-wrap items-center gap-2 pt-1">
-                                                                                <button 
-                                                                                    onClick={(e) => {
-                                                                                        e.preventDefault();
-                                                                                        setDraftingLead(lead as any);
-                                                                                    }}
-                                                                                    className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground border border-primary text-[10px] font-black uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center gap-1.5 group/btn whitespace-nowrap"
-                                                                                    title="Open Reply Generator"
-                                                                                >
-                                                                                    <MessageSquarePlus size={12} className="text-primary-foreground" />
-                                                                                    Draft Reply
-                                                                                </button>
-
-                                                                                {lead.id && (
-                                                                                    <>
-                                                                                        <button 
-                                                                                            onClick={() => toggleResponded(lead)}
-                                                                                            className={`p-1.5 rounded-lg transition-all duration-200 ${
-                                                                                                lead.has_responded 
-                                                                                                    ? 'bg-green-500 text-white shadow-lg shadow-green-500/20' 
-                                                                                                    : 'bg-white/5 text-text-secondary hover:text-green-500 hover:bg-green-500/10'
-                                                                                            }`}
-                                                                                            title={lead.has_responded ? "Mark as Unresponded" : "Mark as Responded"}
-                                                                                        >
-                                                                                            <CheckCircle2 size={14} />
-                                                                                        </button>
-
-                                                                                        <button 
-                                                                                            onClick={() => toggleSaved(lead)}
-                                                                                            className={`p-1.5 rounded-lg transition-all duration-200 ${
-                                                                                                lead.is_saved 
-                                                                                                    ? 'bg-primary text-white shadow-lg shadow-primary/20' 
-                                                                                                    : 'bg-white/5 text-text-secondary hover:text-primary hover:bg-primary/10'
-                                                                                            }`}
-                                                                                            title={lead.is_saved ? "Unsave Lead" : "Save Lead"}
-                                                                                        >
-                                                                                            <Bookmark size={14} fill={lead.is_saved ? 'currentColor' : 'none'} />
-                                                                                        </button>
-                                                                                    </>
-                                                                                )}
-                                                                            </div>
+                                                                            )}
                                                                         </div>
-                                                                    ))}
-                                                                </div>
-
-                                                                {blurredLeads.length > 0 && (
-                                                                    <div className="relative mt-4">
-                                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 filter blur-md opacity-50 select-none pointer-events-none">
-                                                                            {blurredLeads.map((lead, i) => (
-                                                                                <div key={`blurred-${i}`} className="group p-5 bg-white/[0.02] border border-white/5 rounded-2xl relative overflow-hidden">
-                                                                                    <div className="flex flex-col h-full justify-between gap-4">
-                                                                                        <div className="space-y-3">
-                                                                                            <div className="flex items-center justify-between">
-                                                                                                <div className="flex items-center gap-2">
-                                                                                                    <span className="text-[9px] font-black text-orange-500 bg-orange-500/10 px-2.5 py-1 rounded-full uppercase tracking-widest border border-orange-500/10">r/{lead.subreddit}</span>
-                                                                                                    <span className="text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-widest bg-gray-500/10 text-gray-500 border border-gray-500/20">{lead.relevance} Match</span>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <h4 className="text-xs sm:text-sm font-bold text-text-secondary leading-relaxed tracking-tight line-clamp-3">{lead.title.replace(/./g, '█')}</h4>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            ))}
-                                                                        </div>
-                                                                        <div className="absolute inset-0 flex flex-col items-center justify-center z-10 px-4 text-center">
-                                                                           <div className="bg-black/60 p-6 rounded-3xl border border-white/10 backdrop-blur-md shadow-2xl flex flex-col items-center">
-                                                                               <MaterialIcon name="lock" size={28} className="text-orange-500 mb-3" />
-                                                                               <h4 className="text-white font-bold text-lg mb-2">🔒 {blurredLeads.length} more {groupKey} relevancy leads</h4>
-                                                                               <p className="text-sm text-gray-400 mb-4 max-w-sm">Upgrade to unlock the second half of these high-intent leads and directly engage with them.</p>
-                                                                               <button 
-                                                                                   onClick={() => {
-                                                                                       if (onNavigate) {
-                                                                                           onNavigate('billing');
-                                                                                       } else {
-                                                                                           router.push('/dashboard?tab=billing');
-                                                                                       }
-                                                                                   }} 
-                                                                                   className="px-6 py-3 bg-white text-black font-black uppercase tracking-widest text-xs rounded-xl hover:bg-gray-200 transition-colors shadow-lg active:scale-95"
-                                                                               >
-                                                                                   Unlock Full Results
-                                                                               </button>
-                                                                           </div>
+                                                                        <div className="flex items-center gap-2 ml-auto">
+                                                                            <a href={lead.url} target="_blank" rel="noopener noreferrer" className="p-1 text-gray-600 hover:text-white transition-colors">
+                                                                                <ExternalLink size={14} />
+                                                                            </a>
                                                                         </div>
                                                                     </div>
-                                                                )}
-                                                            </>
-                                                        );
-                                                    })()}
+                                                                    <h4 className="text-xs sm:text-sm font-bold text-text-secondary group-hover:text-text-primary leading-relaxed tracking-tight line-clamp-3 transition-all">{lead.title}</h4>
+                                                                </div>
+
+                                                                <div className="flex flex-wrap items-center gap-2 pt-1">
+                                                                    <button 
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            setDraftingLead(lead as any);
+                                                                        }}
+                                                                        className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground border border-primary text-[10px] font-black uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center gap-1.5 group/btn whitespace-nowrap"
+                                                                        title="Open Reply Generator"
+                                                                    >
+                                                                        <MessageSquarePlus size={12} className="text-primary-foreground" />
+                                                                        Draft Reply
+                                                                    </button>
+
+                                                                    {lead.id && (
+                                                                        <>
+                                                                            <button 
+                                                                                onClick={() => toggleResponded(lead)}
+                                                                                className={`p-1.5 rounded-lg transition-all duration-200 ${
+                                                                                    lead.has_responded 
+                                                                                        ? 'bg-green-500 text-white shadow-lg shadow-green-500/20' 
+                                                                                        : 'bg-white/5 text-text-secondary hover:text-green-500 hover:bg-green-500/10'
+                                                                                }`}
+                                                                                title={lead.has_responded ? "Mark as Unresponded" : "Mark as Responded"}
+                                                                            >
+                                                                                <CheckCircle2 size={14} />
+                                                                            </button>
+
+                                                                            <button 
+                                                                                onClick={() => toggleSaved(lead)}
+                                                                                className={`p-1.5 rounded-lg transition-all duration-200 ${
+                                                                                    lead.is_saved 
+                                                                                        ? 'bg-primary text-white shadow-lg shadow-primary/20' 
+                                                                                        : 'bg-white/5 text-text-secondary hover:text-primary hover:bg-primary/10'
+                                                                                }`}
+                                                                                title={lead.is_saved ? "Unsave Lead" : "Save Lead"}
+                                                                            >
+                                                                                <Bookmark size={14} fill={lead.is_saved ? 'currentColor' : 'none'} />
+                                                                            </button>
+                                                                        </>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
                                                 </motion.div>
                                             )}
                                         </AnimatePresence>
@@ -499,26 +452,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                             })}
                         </motion.div>
 
-                    {teaserInfo?.isTeaser && (
-                        <div className="pt-8 flex flex-col items-center text-center space-y-6">
-                            <div className="h-[1px] w-20 bg-white/10" />
-                            <div className="space-y-2">
-                                <h3 className="text-lg font-bold text-white flex items-center justify-center gap-2">
-                                    <MaterialIcon name="lock" size={16} className="text-gray-500" /> 
-                                    {teaserInfo.totalFound - 3} additional leads filtered
-                                </h3>
-                                <p className="text-xs text-gray-500 max-w-xs mx-auto leading-relaxed">
-                                    Unlock the full intelligence report and watch your dashboard populate automatically.
-                                </p>
-                            </div>
-                            <button 
-                                onClick={onShowModal}
-                                className="px-10 py-4 bg-white text-black font-black uppercase text-[10px] tracking-widest rounded-2xl hover:bg-gray-100 transition-all active:scale-95"
-                            >
-                                Get Full Access
-                            </button>
-                        </div>
-                    )}
+                    {/* Removed trial access footer */}
                 </motion.div>
             )}
             </AnimatePresence>
