@@ -18,6 +18,9 @@ jobs:
     if: github.event.schedule == '*/45 * * * *' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 40
+    concurrency:
+      group: worker-ingestion
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
