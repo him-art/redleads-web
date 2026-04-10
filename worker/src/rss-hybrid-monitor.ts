@@ -370,6 +370,13 @@ async function runPollCycle() {
             successCount++;
             totalPosts += newPosts.length;
             
+            // Worker Hard Timeout Guard: 35 minutes
+            const MAX_EXECUTION_TIME_MS = 35 * 60 * 1000;
+            if (Date.now() - startTime > MAX_EXECUTION_TIME_MS) {
+                console.warn(`[RSS] ⏱️ Hard timeout reached (35 mins). Exiting loop early to prevent overlapping crons.`);
+                break;
+            }
+
             // Match & Store
             for (const post of newPosts) {
                 processedPosts.add(post.id);
