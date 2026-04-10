@@ -385,7 +385,7 @@ async function runPollCycle() {
 
                 if (matchedUserIds.length > 0) {
                     totalMatches += matchedUserIds.length;
-                    console.log(`[RSS] 🎯 Match in r/${subreddit}: "${post.title.slice(0, 30)}..." -> ${matchedUserIds.length} users ${isMasterSub ? '(Global)' : '(Custom)'}`);
+                    console.log(`[RSS] 🎯 Match in r/${subreddit} (${isMasterSub ? 'Global' : 'Custom'}) -> ${matchedUserIds.length} user(s) matched.`);
                     
                     // DEDUPLICATION: Check which users already have this title
                     const { data: existing } = await supabase
@@ -418,7 +418,8 @@ async function runPollCycle() {
                                 break; // Success
                             } catch (e: any) {
                                 if (e?.message?.includes('rate-limited') || e?.message?.includes('all available keys') || e?.message?.includes('429')) {
-                                    console.warn(`[AI] ⚠️ Rate limited categorizing lead ${uid}. Waiting 65s... (${retries} retries left)`);
+                                    const maskedUid = uid.slice(0, 4);
+                                    console.warn(`[AI] ⚠️ Rate limited for user ${maskedUid}... Waiting 65s... (${retries} retries left)`);
                                     await delay(65000);
                                     retries--;
                                 } else {
