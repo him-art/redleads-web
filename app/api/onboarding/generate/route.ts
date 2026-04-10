@@ -117,36 +117,40 @@ export async function POST(req: Request) {
             }
         `;
 
-        const aiResponse = await ai.call({
-            model: "llama-3.3-70b-versatile",
-            messages: [
-                { 
-                    role: "system", 
-                    content: "You are a professional Lead Generation Expert. You specialize in identifying niche keywords and communities that capture high-intent users looking for specific solutions." 
-                },
-                { role: "user", content: prompt }
-            ],
-            response_format: { type: "json_object" },
-            temperature: 0.1
-        });
+        let result: any = {};
+        try {
+            const aiResponse = await ai.call({
+                model: "llama-3.3-70b-versatile",
+                messages: [
+                    { 
+                        role: "system", 
+                        content: "You are a professional Lead Generation Expert. You specialize in identifying niche keywords and communities that capture high-intent users looking for specific solutions." 
+                    },
+                    { role: "user", content: prompt }
+                ],
+                response_format: { type: "json_object" },
+                temperature: 0.1
+            });
 
-        if (!aiResponse || !aiResponse.choices?.length) {
-            throw new Error('AI provider returned an empty response.');
+            if (aiResponse && aiResponse.choices?.length) {
+                const content = aiResponse.choices[0]?.message?.content;
+                result = JSON.parse(content || '{}');
+            }
+        } catch (aiErr: any) {
+            console.warn('[Onboarding API] AI Generation failed, using metadata fallback.', aiErr.message);
+            // Fallback result is empty, will use defaults below
         }
 
-        const content = aiResponse.choices[0]?.message?.content;
-        const result = JSON.parse(content || '{}');
-
         return NextResponse.json({
-            description: result.description || metaDescription || 'A helpful tool for your workflow.',
+            description: result.description || metaDescription || title || `A solution for ${url}`,
             keywords: result.keywords || [],
             subreddits: result.subreddits || []
         });
 
     } catch (error: any) {
-        console.error('[Onboarding API Error]', error);
+        console.error('[Onboarding API Fatal Error]', error);
         return NextResponse.json({ 
-            error: error.message || 'Failed to generate profile. Please check the URL and try again.' 
+            error: error.message || 'Failed to analyze URL. Please check the URL and try again.' 
         }, { status: 500 });
     }
 }
