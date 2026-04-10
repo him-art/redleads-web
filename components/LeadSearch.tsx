@@ -39,7 +39,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
     const [scanStep, setScanStep] = useState(0);
     const [results, setResults] = useState<RedditLead[]>([]);
     const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
-    const [teaserInfo, setTeaserInfo] = useState<{ isTeaser: boolean, totalFound: number } | null>(null);
+    const [activeQuery, setActiveQuery] = useState<string | null>(null);
     const { draftingLead, setDraftingLead, profile } = useDashboardData();
     const [productContext, setProductContext] = useState('');
     const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d'>('7d');
@@ -98,11 +98,11 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
     }, [initialUrl, initialLeads, autoScan]);
 
     const scanSteps = [
-        "Analyzing target product model...",
-        "Identifying high-intent keywords...",
-        "Querying global Reddit communities...",
-        "Filtering for social selling signals...",
-        "Finalizing intel report..."
+        "Initializing Precision Search Interface...",
+        "AI is drafting high-intent search vectors...",
+        "Executing Mega-Query across Reddit...",
+        "Processing real-time social signals...",
+        "Generating Intelligence Report..."
     ];
 
     const handleScan = async (e: React.FormEvent) => {
@@ -151,6 +151,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
 
             if (data.leads) {
                 setTeaserInfo(data.isTeaser ? { isTeaser: true, totalFound: data.totalFound } : null);
+                setActiveQuery(data.query || null);
                 const enrichedLeads = data.leads.map((lead: any) => ({
                     ...lead,
                     relevance: lead.match_category || 'Good Match',
@@ -281,12 +282,26 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                 initial={{ opacity: 0, y: 5 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0 }}
-                                className="mt-4 flex items-center justify-center gap-2"
+                                className="mt-4 flex flex-col items-center justify-center gap-3"
                             >
-                                <MaterialIcon name="activity" size={12} className="text-primary/50" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.15em] text-text-secondary animate-pulse">
-                                    {scanSteps[scanStep]}
-                                </span>
+                                <div className="flex items-center gap-2">
+                                    <MaterialIcon name="activity" size={12} className="text-primary/50" />
+                                    <span className="text-[10px] font-black uppercase tracking-[0.15em] text-text-secondary animate-pulse">
+                                        {scanSteps[scanStep]}
+                                    </span>
+                                </div>
+                                
+                                {scanStep >= 2 && activeQuery && (
+                                     <motion.div 
+                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        className="px-4 py-2 bg-white/5 border border-white/5 rounded-xl max-w-md"
+                                     >
+                                        <p className="text-[10px] text-primary/70 font-mono text-center truncate italic">
+                                            {activeQuery}
+                                        </p>
+                                     </motion.div>
+                                )}
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -308,9 +323,14 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                 <MaterialIcon name="search" size={18} className="text-primary" />
                                 {teaserInfo?.isTeaser ? `Top 3 Sample Leads` : `Intel Report: ${results.length} Potential Leads`}
                             </h2>
-                            <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">
-                                High-intent conversations identified
-                            </p>
+                            {activeQuery && (
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[9px] text-primary bg-primary/10 px-2 py-0.5 rounded-full font-black uppercase tracking-widest border border-primary/20">Precision Vector</span>
+                                    <p className="text-[10px] text-gray-500 font-medium italic opacity-80 decoration-primary/30 decoration-dotted underline underline-offset-4">
+                                        "{activeQuery}"
+                                    </p>
+                                </div>
+                            )}
                         </div>
                     </div>
 
