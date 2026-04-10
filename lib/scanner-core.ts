@@ -23,100 +23,113 @@ export async function performScan(url: string, options: ScannerOptions): Promise
 
     console.log(`[ScannerLib] Analyzing site: ${url} with timeRange: ${timeRange}`);
 
-    let searchQuery = '';
-    // B. STEP A: Let AI Generate Search Queries
+    let searchQueries: string[] = [];
+    const siteContextString = `URL: ${url}\nDescription: ${description || 'Not provided'}\nKeywords: ${keywords?.join(', ') || 'Not provided'}\nSubreddits: ${subreddits?.join(', ') || 'General Reddit'}`;
+
+    // A. STEP A: Let AI Generate multiple Search Queries
     try {
         const prompt = `
-            Analyze this product:
-            URL: ${url}
-            Description: ${description || 'Not provided'}
-            Key Target Words: ${keywords?.join(', ') || 'Not provided'}
-            Focus Subreddits: ${subreddits?.join(', ') || 'General Reddit'}
+            Analyze this product context:
+            ${siteContextString}
             
-            Generate 1 ADVANCED and HIGH-INTENT search query for "site:reddit.com" that a professional lead hunter would use.
-            The query MUST target people with PAIN POINTS or specific needs.
-            Combine intent signals like (recommend OR "best" OR "alternative to" OR "how to" OR "problem with").
+            Generate EXACTLY 3 distinct and HIGH-INTENT search queries for "site:reddit.com".
+            Each query should target a different angle:
+            1. Problem/Pain Point: People complaining about the specific issue this product solves.
+            2. Recommendations: People looking for the "best" or "top" tools in this niche.
+            3. Comparisons/Competitors: People asking for alternatives to known competitors.
+
+            Requirements:
+            - Target people with high buying intent or urgent needs.
+            - Use specific keywords like (recommend OR "best" OR "alternative to" OR "how to" OR "problem with").
+            - Target specific subreddits if provided using site:reddit.com/r/subredditname.
             
-            1. If focus subreddits are provided, target them using "site:reddit.com/r/subredditname".
-            2. If no subreddits are provided, use "site:reddit.com".
-            3. Use the Keywords to find people with PAIN POINTS. (e.g. if keyword is "linkedin reach", search for people complaining about low reach).
-            4. EXCLUDE unrelated generic niches.
-            
-            Example: site:reddit.com/r/SaaS "outreach" (recommend OR "best" OR "tool")
-            
-            ONLY return the query string, nothing else. No quotes, no intro text.
+            Return ONLY a JSON array of strings. 
+            Example: ["query 1", "query 2", "query 3"]
         `;
 
         const AIData = await AI.call({
             model: "llama-3.3-70b-versatile",
             messages: [{ role: "user", content: prompt }],
             temperature: 0.1,
+            response_format: { type: "json_object" }
         });
 
-        searchQuery = AIData.choices?.[0]?.message?.content?.trim() || '';
+        const content = AIData.choices?.[0]?.message?.content?.trim() || '[]';
+        const parsed = JSON.parse(content);
+        searchQueries = Array.isArray(parsed) ? parsed : (parsed.queries || []);
     } catch (e) {
         console.error('[ScannerLib] AI API Failed for search query generation:', e);
     }
 
-    if (!searchQuery) {
-        console.warn('[ScannerLib] AI analysis failed or returned empty query, falling back to mock.');
-        return { leads: getMockLeads(url), warning: 'AI Analysis Failed. Using representative leads instead.' };
+    // FALLBACK: If AI failed to provide queries, generate smart manual ones
+    if (searchQueries.length === 0) {
+        console.warn('[ScannerLib] AI analysis failed, generating fallback keyword queries.');
+        const baseKeywords = keywords?.slice(0, 3) || [normalizedUrl.split('.')[0]];
+        searchQueries = baseKeywords.map(kw => `site:reddit.com "${kw}" (recommend OR best OR alternative)`);
     }
 
     let leads: any[] = [];
+    const seenUrls = new Set<string>();
 
     // C. STEP B: PRIMARY SEARCH (Tavily AI Search)
     if (tavilyApiKey) {
         try {
-            // Map our timeRange to Tavily time_range
-            // Tavily options: "day", "week", "month", "year" or shorthands "d", "w", "m", "y"
             const tavilyTimeRange = 
                 timeRange === '24h' ? 'day' :
                 timeRange === '7d' ? 'week' :
                 timeRange === '30d' ? 'month' : undefined;
 
-            console.log(`[ScannerLib] Attempting Tavily Search for: ${searchQuery} (Tavily Range: ${tavilyTimeRange})`);
-            
-            const fetchBody: any = {
-                api_key: tavilyApiKey,
-                query: searchQuery.includes('site:reddit.com') ? searchQuery : `site:reddit.com ${searchQuery}`,
-                search_depth: "advanced",
-                include_domains: ["reddit.com"],
-                max_results: 40
-            };
+            // Run searches in parallel (limited)
+            const searchPromises = searchQueries.map(async (query) => {
+                const fetchBody: any = {
+                    api_key: tavilyApiKey,
+                    query: query.includes('site:reddit.com') ? query : `site:reddit.com ${query}`,
+                    search_depth: "advanced",
+                    include_domains: ["reddit.com"],
+                    max_results: 30 // 30 per query = ~90 results total
+                };
 
-            if (tavilyTimeRange) {
-                fetchBody.time_range = tavilyTimeRange;
-            }
+                if (tavilyTimeRange) fetchBody.time_range = tavilyTimeRange;
 
-            const tavilyRes = await fetch('https://api.tavily.com/search', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(fetchBody)
+                const res = await fetch('https://api.tavily.com/search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(fetchBody)
+                });
+                
+                if (!res.ok) return [];
+                const data = await res.json();
+                return data.results || [];
             });
-            
-            if (!tavilyRes.ok) {
-                const errorBody = await tavilyRes.text();
-                throw new Error(`Tavily API responded with ${tavilyRes.status}: ${errorBody}`);
-            }
 
-            const tavilyData = await tavilyRes.json();
-            
-            if (tavilyData.results && tavilyData.results.length > 0) {
-                leads = tavilyData.results
-                    .filter((item: any) => item.url.includes('reddit.com/r/'))
-                    .map((item: any) => ({
-                        subreddit: extractSubreddit(item.url),
-                        title: item.title,
-                        url: item.url,
-                        body_text: item.content,
-                        post_created_at: item.published_date || null
-                    }));
+            const allResultsSets = await Promise.all(searchPromises);
+            const flatResults = allResultsSets.flat();
+
+            for (const item of flatResults) {
+                if (!item.url.includes('reddit.com/r/')) continue;
+                if (seenUrls.has(item.url)) continue;
+                
+                seenUrls.add(item.url);
+                leads.push({
+                    subreddit: extractSubreddit(item.url),
+                    title: item.title,
+                    url: item.url,
+                    body_text: item.content,
+                    post_created_at: item.published_date || null
+                });
             }
+            
+            console.log(`[ScannerLib] Aggregate Tavily results: ${leads.length} unique leads found.`);
         } catch (tError) {
             console.error('[ScannerLib] Tavily Search failed:', tError);
         }
     }
+
+    if (leads.length === 0) {
+        console.warn('[ScannerLib] No real leads found, falling back to mock leads.');
+        return { leads: getMockLeads(url), warning: 'No live matches found for these keywords. Showing representative leads instead.' };
+    }
+
 
     // D. STEP D: Categorize with AI (New Requirement)
     if (leads.length > 0 && description) {
