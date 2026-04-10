@@ -97,7 +97,13 @@ export async function POST(req: Request) {
             - Focus on the PRIMARY platform (e.g., LinkedIn, Reddit, Twitter, Email) and the PRIMARY problem solved (e.g., "reach", "engagement", "hiring").
 
             1. Generate a "Pitch Description" (max 2 sentences) that describes exactly what this tool does. 
-            2. Generate EXACTLY 6 "High-Intent Topic Keywords" for Reddit monitoring.
+            2. Generate EXACTLY 10 "High-Intent Topic Keywords" for Reddit monitoring.
+            
+            Requirements for Keywords:
+            - **STRICTLY SINGLE WORDS ONLY.**
+            - **NO PHRASES. NO HYPHENS.**
+            - **Examples: "marketing", "leads", "sales", "outreach", "cold", "automation".**
+            
             3. Generate 8-10 "Target Subreddits" where the target audience for this product hangs out.
             
             Return JSON:
@@ -115,7 +121,7 @@ export async function POST(req: Request) {
                 messages: [
                     { 
                         role: "system", 
-                        content: "You are a professional Lead Generation Expert. You specialize in identifying niche keywords and communities that capture high-intent users looking for specific solutions." 
+                        content: "You are a professional Lead Generation Expert. You specialize in identifying niche keywords and communities. You communicate only in single-word high-impact terms for keyword lists." 
                     },
                     { role: "user", content: prompt }
                 ],
@@ -131,21 +137,28 @@ export async function POST(req: Request) {
             console.warn('[Onboarding API] AI Generation failed, using metadata fallback.', aiErr.message);
         }
 
-        // --- HEURISTIC FALLBACK ---
-        let keywords = result.keywords || [];
-        if (keywords.length === 0) {
-            // Try to extract from meta tags or title if AI failed
-            const rawKws = (metaKeywords || title || '').split(/[,\s|]+/).filter((k: string) => k.length > 3 && k.length < 20);
-            keywords = [...new Set(rawKws)].slice(0, 6);
+        // --- POST-PROCESSING & HEURISTIC FALLBACK ---
+        // Ensure all keywords are single words
+        let rawKeywords = result.keywords || [];
+        let singleWordKeywords = rawKeywords.flatMap((k: string) => k.split(/[\s\-_]+/)).filter((k: string) => k.length > 2);
+
+        if (singleWordKeywords.length === 0) {
+            // Try to extract from meta tags or title if AI failed or returned junk
+            const rawKws = (metaKeywords || title || '').split(/[,\s|\-_]+/).filter((k: string) => k.length > 3 && k.length < 20);
+            singleWordKeywords = [...new Set(rawKws)];
         }
+        
         // Final fallback if still empty
-        if (keywords.length === 0) {
-            keywords = ['lead generation', 'marketing', 'sales', 'growth'];
+        if (singleWordKeywords.length === 0) {
+            singleWordKeywords = ['leads', 'marketing', 'sales', 'growth'];
         }
+
+        // Limit and Clean
+        const finalKeywords = [...new Set(singleWordKeywords.map((k: string) => k.toLowerCase()))].slice(0, 10);
 
         return NextResponse.json({
             description: result.description || metaDescription || title || `A solution for ${url}`,
-            keywords: keywords.map((k: string) => k.toLowerCase()),
+            keywords: finalKeywords,
             subreddits: result.subreddits || []
         });
 
