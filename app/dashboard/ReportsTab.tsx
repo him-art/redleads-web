@@ -236,12 +236,12 @@ export default function ReportsTab({ reports, user }: { reports: any[], user: an
                                                             })()}
                                                      </div>
                                                      <div className={`px-2 py-0.5 rounded border transition-all duration-300 ${
-                                                        lead.match_category === 'High' 
+                                                        lead.match_category === 'Best Match' 
                                                             ? 'bg-green-500/10 border-green-500/30 text-green-400 shadow-[0_0_10px_rgba(34,197,94,0.1)]' 
                                                             : 'bg-white/5 border-white/10 text-text-secondary/60'
                                                      }`}>
                                                         <span className="text-[9px] font-black uppercase tracking-widest whitespace-nowrap">
-                                                            {lead.match_category || 'Medium'} Match
+                                                            {lead.match_category || 'Good Match'}
                                                         </span>
                                                     </div>
                                                     {lead.has_responded && (

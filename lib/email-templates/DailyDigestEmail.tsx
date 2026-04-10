@@ -139,7 +139,7 @@ export default function DailyDigestEmail({ fullName, leads }: DailyDigestEmailPr
                     padding: '2px 8px',
                     borderRadius: '4px'
                   }}>
-                    {lead.match_score >= 0.9 ? '🔥 High Match' : 'Neutral Match'}
+                    {lead.match_score >= 0.9 ? '🔥 Best Match' : 'Good Match'}
                   </span>
                 </div>
                 <div style={{ marginBottom: '16px' }}>

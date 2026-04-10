@@ -141,18 +141,18 @@ export async function performScan(url: string, options: ScannerOptions): Promise
                 Product Description: "${description}"
                 Target Keywords: "${keywords?.join(', ')}"
                 
-                Task: Categorize these ${leads.length} Reddit leads as "High", "Medium", or "Low" based on their relevance to the product.
+                Task: Categorize these ${leads.length} Reddit leads as "Best Match", "Good Match", or "Low" based on their relevance to the product.
                 
                 **Strictness Guidelines:**
-                - **HIGH**: The post is explicitly asking for a tool like yours, or complaining about a specific problem your product solves.
-                - **MEDIUM**: The post is related to the industry or niche but not a direct buying signal (e.g., general discussion).
-                - **LOW**: The post is unrelated, a generic advertisement, or a different industry entirely (e.g., if product is LinkedIn tool and post is about a CRM).
+                - **Best Match**: The post is explicitly asking for a tool like yours, or complaining about a specific problem your product solves.
+                - **Good Match**: The post is highly related to the industry or niche but not a direct buying signal (e.g., general discussion).
+                - **Low**: The post is unrelated, a generic advertisement, or a different industry entirely.
                 
                 Leads to analyze:
                 ${JSON.stringify(leads.map((l, i) => ({ id: i, title: l.title, subreddit: l.subreddit })))}
                 
                 Return a JSON object mapping the lead index to its category.
-                Output format: { "categories": { "0": "High", "1": "Medium", ... } }
+                Output format: { "categories": { "0": "Best Match", "1": "Good Match", ... } }
                 ONLY return the JSON.
             `;
 
@@ -170,26 +170,26 @@ export async function performScan(url: string, options: ScannerOptions): Promise
                     if (parsed.categories) {
                         leads = leads.map((l, i) => ({
                             ...l,
-                            match_category: parsed.categories[i.toString()] || 'Medium'
+                            match_category: parsed.categories[i.toString()] || 'Good Match'
                         }));
                     } else {
                         throw new Error('AI response missing "categories" field');
                     }
                 } catch (parseError) {
                     console.error('[ScannerLib] JSON Parse Failed for Categorization:', content);
-                    leads = leads.map(l => ({ ...l, match_category: 'Medium' }));
+                    leads = leads.map(l => ({ ...l, match_category: 'Good Match' }));
                 }
             } else {
                 throw new Error('AI returned empty content for categorization');
             }
         } catch (catError: any) {
             console.error('[ScannerLib] Categorization failed:', catError.message);
-            // Default to Medium if AI fails
-            leads = leads.map(l => ({ ...l, match_category: 'Medium' }));
+            // Default to Good Match if AI fails
+            leads = leads.map(l => ({ ...l, match_category: 'Good Match' }));
         }
     } else if (leads.length > 0) {
         // Fallback if no description
-        leads = leads.map(l => ({ ...l, match_category: 'Medium' }));
+        leads = leads.map(l => ({ ...l, match_category: 'Good Match' }));
     }
 
     // E. FINAL FILTERING: Remove Low relevance and Old leads

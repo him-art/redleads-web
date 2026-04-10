@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { ai } from '@/lib/ai';
+import { onboardingAi } from '@/lib/ai';
 import { createClient } from '@/lib/supabase/server';
 import axios from 'axios';
 
@@ -119,7 +119,7 @@ export async function POST(req: Request) {
 
         let result: any = {};
         try {
-            const aiResponse = await ai.call({
+            const aiResponse = await onboardingAi.call({
                 model: "llama-3.3-70b-versatile",
                 messages: [
                     { 

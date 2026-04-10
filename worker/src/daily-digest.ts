@@ -123,7 +123,7 @@ async function runDailyDigest() {
                     Return a JSON object:
                     {
                       "top_ids": ["id1", "id2", ...],
-                      "categories": { "id1": "High", "id2": "Medium", ... }
+                      "categories": { "id1": "Best Match", "id2": "Good Match", ... }
                     }
                     ONLY return JSON.
                     
@@ -149,7 +149,7 @@ async function runDailyDigest() {
                         const aiSelected = userLeads.filter(l => result.top_ids.includes(l.id));
                         finalLeads = aiSelected.map(l => ({
                             ...l,
-                            match_score: result.categories?.[l.id] === 'High' ? 0.95 : result.categories?.[l.id] === 'Medium' ? 0.75 : 0.45
+                            match_score: result.categories?.[l.id] === 'Best Match' ? 0.95 : result.categories?.[l.id] === 'Good Match' ? 0.75 : 0.45
                         })).slice(0, 10);
                     }
                 }

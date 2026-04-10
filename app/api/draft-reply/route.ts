@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server';
-import { AIManager } from '@/lib/ai';
+import { repliesAi } from '@/lib/ai';
 import { createClient } from '@/lib/supabase/server';
-
-// Forced use of AI_API_KEY_2 for this specific feature as requested
-const replyAi = new AIManager([process.env.AI_API_KEY_2].filter(Boolean) as string[]);
 
 export async function POST(req: Request) {
     try {
@@ -134,8 +131,8 @@ export async function POST(req: Request) {
             }
         `;
 
-        // 6. Call AI (Using AI_API_KEY_2)
-        const aiResponse = await replyAi.call({
+        // 6. Call AI (Using strategic singleton)
+        const aiResponse = await repliesAi.call({
             model: "llama-3.3-70b-versatile",
             messages: [{ role: "user", content: prompt }],
             response_format: { type: "json_object" },

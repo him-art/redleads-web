@@ -23,12 +23,9 @@ export class AIManager {
 
     private getNextKey(): string | null {
         const now = Date.now();
-        for (let i = 0; i < this.keys.length; i++) {
-            const index = (this.currentIndex + i) % this.keys.length;
-            const key = this.keys[index];
-            
+        // Priority Mode: Always try the first available key in the list
+        for (const key of this.keys) {
             if (!this.disabledUntil[key] || now > this.disabledUntil[key]) {
-                this.currentIndex = (index + 1) % this.keys.length;
                 return key;
             }
         }
@@ -92,5 +89,18 @@ export class AIManager {
     }
 }
 
-// Singleton instance for easy import
-export const ai = new AIManager();
+// Specialized Singletons for Strategic Priority
+// Onboarding/Config uses Key 1 as primary
+export const onboardingAi = new AIManager([
+    process.env.AI_API_KEY, 
+    process.env.AI_API_KEY_2
+].filter(Boolean) as string[]);
+
+// Replies uses Key 2 as primary to isolate traffic
+export const repliesAi = new AIManager([
+    process.env.AI_API_KEY_2, 
+    process.env.AI_API_KEY
+].filter(Boolean) as string[]);
+
+// Legacy singleton for backwards compatibility
+export const ai = onboardingAi;

@@ -16,7 +16,7 @@ interface RedditLead {
     subreddit: string;
     title: string;
     url: string;
-    relevance: 'High' | 'Medium' | 'Low';
+    relevance: 'Best Match' | 'Good Match' | 'Low';
     has_responded?: boolean;
     is_saved?: boolean;
 }
@@ -68,7 +68,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
         if (initialLeads && initialLeads.length > 0 && results.length === 0) {
             setResults(initialLeads);
             if (initialLeads.length > 0) {
-                setOpenGroups({ 'High': true, 'Medium': true });
+                setOpenGroups({ 'Best Match': true, 'Good Match': true });
             }
             onResultsFound?.(initialLeads.length);
             hasAutoScanned.current = true; // Prevent duplicate scan
@@ -153,12 +153,12 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                 setTeaserInfo(data.isTeaser ? { isTeaser: true, totalFound: data.totalFound } : null);
                 const enrichedLeads = data.leads.map((lead: any) => ({
                     ...lead,
-                    relevance: lead.match_category || 'Medium',
+                    relevance: lead.match_category || 'Good Match',
                 }));
                 setResults(enrichedLeads);
                 onResultsFound?.(enrichedLeads.length);
                 if (enrichedLeads.length > 0) {
-                    setOpenGroups({ 'High': true, 'Medium': true, 'Low': true });
+                    setOpenGroups({ 'Best Match': true, 'Good Match': true, 'Low': true });
                 }
             }
         } catch (error: any) {
@@ -306,7 +306,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                         <div className="space-y-1">
                             <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
                                 <MaterialIcon name="search" size={18} className="text-primary" />
-                                {teaserInfo?.isTeaser ? `Top 3 Sample Leads` : `Intel Report: ${results.length} Matches`}
+                                {teaserInfo?.isTeaser ? `Top 3 Sample Leads` : `Intel Report: ${results.length} Potential Leads`}
                             </h2>
                             <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">
                                 High-intent conversations identified
@@ -327,7 +327,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                 }, {} as Record<string, RedditLead[]>)
                             )
                             .sort(([keyA], [keyB]) => {
-                                const order: Record<string, number> = { 'High': 0, 'Medium': 1, 'Low': 2 };
+                                const order: Record<string, number> = { 'Best Match': 0, 'Good Match': 1, 'Low': 2 };
                                 return (order[keyA] ?? 9) - (order[keyB] ?? 9);
                             })
                             .map(([groupKey, leads]) => {
@@ -361,11 +361,11 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                                                                     <div className="flex flex-wrap items-center gap-2">
                                                                                         <span className="text-[9px] font-black text-orange-500 bg-orange-500/10 px-2.5 py-1 rounded-full uppercase tracking-widest border border-orange-500/10">r/{lead.subreddit}</span>
                                                                                         <span className={`text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-widest ${
-                                                                                            lead.relevance === 'High' ? 'bg-green-500/10 text-green-500 border border-green-500/20' :
-                                                                                            lead.relevance === 'Medium' ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' :
+                                                                                            lead.relevance === 'Best Match' ? 'bg-green-500/10 text-green-500 border border-green-500/20' :
+                                                                                            lead.relevance === 'Good Match' ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' :
                                                                                             'bg-gray-500/10 text-gray-500 border border-gray-500/20'
                                                                                         }`}>
-                                                                                            {lead.relevance} Match
+                                                                                            {lead.relevance}
                                                                                         </span>
                                                                                         {lead.has_responded && (
                                                                                             <div className="flex items-center gap-1 px-2 py-0.5 bg-green-500/10 text-green-500 rounded-md border border-green-500/20 text-[9px] font-black uppercase tracking-widest">

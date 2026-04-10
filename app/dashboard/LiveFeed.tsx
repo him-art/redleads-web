@@ -55,11 +55,11 @@ export default function LiveFeed({ onViewArchive }: { onViewArchive: () => void 
                                     >
                                         <div className="flex flex-col items-center gap-2 pt-1 h-full min-w-[70px]">
                                             <div className={`px-2 py-1 rounded-md border text-[9px] font-black uppercase tracking-widest whitespace-nowrap transition-all duration-500 ${
-                                                lead.match_category === 'High' 
+                                                lead.match_category === 'Best Match' 
                                                     ? 'bg-green-500/10 border-green-500/30 text-green-400 shadow-[0_0_10px_rgba(34,197,94,0.1)]' 
                                                     : 'bg-white/5 border-white/10 text-text-secondary/60'
                                             }`}>
-                                                {lead.match_category || 'Medium'} Match
+                                                {lead.match_category || 'Good Match'}
                                             </div>
                                         </div>
 

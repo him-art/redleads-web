@@ -148,8 +148,8 @@ export async function POST(req: Request) {
                                 url: lead.url,
                                 body_text: lead.body_text || '',
                                 status: 'scanner',
-                                match_score: lead.match_category === 'High' ? 0.95 : lead.match_category === 'Medium' ? 0.75 : 0.45,
-                                match_category: lead.match_category || 'Medium',
+                                match_score: lead.match_category === 'Best Match' ? 0.95 : lead.match_category === 'Good Match' ? 0.75 : 0.45,
+                                match_category: lead.match_category || 'Good Match',
                                 is_saved: false,
                                 post_created_at: lead.post_created_at || null
                             });

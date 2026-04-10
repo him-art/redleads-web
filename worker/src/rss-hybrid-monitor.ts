@@ -387,8 +387,8 @@ async function runPollCycle() {
                             url: post.link,
                             author: post.author,
                             status: 'new',
-                            match_score: 0.75, // Default Medium
-                            match_category: 'Medium',
+                            match_score: 0.75,
+                            match_category: 'Good Match',
                             reddit_score: 0,
                             comment_count: 0
                         };
