@@ -39,6 +39,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
     const [scanStep, setScanStep] = useState(0);
     const [results, setResults] = useState<RedditLead[]>([]);
     const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
+    const [teaserInfo, setTeaserInfo] = useState<{ isTeaser: boolean, totalFound: number } | null>(null);
     const [activeQuery, setActiveQuery] = useState<string | null>(null);
     const { draftingLead, setDraftingLead, profile } = useDashboardData();
     const [productContext, setProductContext] = useState('');
