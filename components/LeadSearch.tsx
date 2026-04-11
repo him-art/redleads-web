@@ -41,7 +41,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
     const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
     const [teaserInfo, setTeaserInfo] = useState<{ isTeaser: boolean, totalFound: number } | null>(null);
     const [activeQuery, setActiveQuery] = useState<string | null>(null);
-    const { draftingLead, setDraftingLead, profile } = useDashboardData();
+    const { draftingLead, setDraftingLead, profile, refreshProfile } = useDashboardData();
     const [productContext, setProductContext] = useState('');
     const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d'>('7d');
     const supabase = useMemo(() => createClient(), []);
@@ -173,6 +173,9 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                 if (enrichedLeads.length > 0) {
                     setOpenGroups({ 'Best Match': true, 'Good Match': true, 'Low': true });
                 }
+                
+                // Immediately sync profile stats (e.g. scan count)
+                refreshProfile();
             }
         } catch (error: any) {
             console.error(error);

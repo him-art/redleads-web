@@ -42,6 +42,7 @@ interface DashboardData {
     };
     planDetails: any;
     profile: any;
+    refreshProfile: () => Promise<void>;
 }
 
 const DashboardDataContext = createContext<DashboardData | undefined>(undefined);
@@ -129,6 +130,22 @@ export function DashboardDataProvider({ children, userId, draftingState, profile
         }
     }, [userId, supabase]);
 
+    const refreshProfile = useCallback(async () => {
+        if (!userId) return;
+        try {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', userId)
+                .single();
+            if (!error && data) {
+                setActiveProfile(data);
+            }
+        } catch (err) {
+            console.error('Error refreshing profile:', err);
+        }
+    }, [userId, supabase]);
+
     useEffect(() => {
         let isMounted = true;
         
@@ -176,8 +193,9 @@ export function DashboardDataProvider({ children, userId, draftingState, profile
           setDraftingLead: currentSetDraftingLead,
           trialStatus,
           planDetails,
-          profile: activeProfile
-      }), [leads, analyses, isLoading, fetchLeads, updateLead, deleteLead, currentDraftingLead, currentSetDraftingLead, trialStatus, planDetails, activeProfile]);
+          profile: activeProfile,
+          refreshProfile
+      }), [leads, analyses, isLoading, fetchLeads, updateLead, deleteLead, currentDraftingLead, currentSetDraftingLead, trialStatus, planDetails, activeProfile, refreshProfile]);
 
     return (
         <DashboardDataContext.Provider value={value}>
