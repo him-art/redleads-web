@@ -113,6 +113,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
 
     const handleScan = async (e?: React.FormEvent, overrideUrl?: string) => {
         if (e) e.preventDefault();
+        if (isScanning) return;
         
         const scanUrl = overrideUrl || url;
         if (!scanUrl) return;

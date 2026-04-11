@@ -100,7 +100,6 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                     onComplete={(data, onboardingUrl) => {
                         setShowOnboarding(false);
                         router.push(`/dashboard?search=${encodeURIComponent(onboardingUrl || '')}`);
-                        router.refresh();
                     }} 
                 />
             )}

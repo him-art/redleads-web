@@ -86,19 +86,6 @@ export async function POST(req: Request) {
                 return NextResponse.json({ error: msg, code: 'DAILY_LIMIT_REACHED' }, { status: 403 });
             }
 
-            // Using Admin Supabase to bypass RLS/Triggers for updating usage
-            const { error: updateError } = await adminSupabase
-                .from('profiles')
-                .update({ 
-                    scan_count: (today === lastDay) ? (profile?.scan_count || 0) + 1 : 1,
-                    last_scan_at: new Date().toISOString()
-                })
-                .eq('id', user.id);
-
-            if (updateError) {
-                console.error('[Scanner] Failed to update scan count (Admin Mode):', updateError);
-            }
-
             const scanResult = await performScan(url, {
                 tavilyApiKey: process.env.TAVILY_API_KEY,
                 keywords: profile?.keywords,
@@ -109,6 +96,20 @@ export async function POST(req: Request) {
             if (scanResult.error) {
                 console.error('[Scanner API] performScan Error:', scanResult.error);
                 return NextResponse.json({ error: scanResult.error }, { status: 500 });
+            }
+
+            // 3. QUOTA DEDUCTION (SaaS 2.0 - Charge ONLY on success)
+            const { error: updateError } = await adminSupabase
+                .from('profiles')
+                .update({ 
+                    scan_count: (today === lastDay) ? (profile?.scan_count || 0) + 1 : 1,
+                    last_scan_at: new Date().toISOString()
+                })
+                .eq('id', user.id);
+
+            if (updateError) {
+                console.error('[Scanner] Failed to update scan count (Admin Mode):', updateError);
+                // We proceed anyway since the scan is already done, but log the failure
             }
 
             console.log(`[Scanner API] Scan completed. Found ${scanResult.leads?.length || 0} leads.`);
