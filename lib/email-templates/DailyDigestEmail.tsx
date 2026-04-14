@@ -11,6 +11,8 @@ interface Lead {
 interface DailyDigestEmailProps {
   fullName: string;
   leads: Lead[];
+  isTrialUser?: boolean;
+  trialDaysLeft?: number | null;
 }
 
 const EXPERT_TIPS = [
@@ -22,12 +24,50 @@ const EXPERT_TIPS = [
   "Ask a follow-up question in your reply to encourage a conversation and build trust."
 ];
 
-export default function DailyDigestEmail({ fullName, leads }: DailyDigestEmailProps) {
+export default function DailyDigestEmail({ fullName, leads, isTrialUser, trialDaysLeft }: DailyDigestEmailProps) {
   const topLeads = leads.slice(0, 10); // Show up to 10
   const firstName = fullName ? fullName.split(' ')[0] : 'there';
   const siteUrl = 'https://redleads.app'; // Fixed to production
   const logoUrl = `${siteUrl}/redleads-logo-white.png`;
-  
+  const pricingUrl = `${siteUrl}/pricing?utm_source=digest_trial_countdown&utm_medium=email&utm_campaign=trial_banner`;
+
+  // Trial countdown banner config. Only shown when 3 or fewer days remain.
+  const showTrialBanner = isTrialUser && trialDaysLeft !== null && trialDaysLeft !== undefined && trialDaysLeft <= 3;
+  const trialBannerConfig = showTrialBanner ? (() => {
+    if (trialDaysLeft !== null && trialDaysLeft !== undefined && trialDaysLeft <= 1) {
+      return {
+        bg: 'rgba(239,68,68,0.08)',
+        border: 'rgba(239,68,68,0.25)',
+        accent: '#ef4444',
+        icon: '🛑',
+        headline: 'Today is your last day.',
+        body: 'Your lead scanner stops tonight. Upgrade now and never miss a lead again.',
+        cta: 'Upgrade Before It Expires',
+      };
+    }
+    if (trialDaysLeft === 2) {
+      return {
+        bg: 'rgba(249,115,22,0.08)',
+        border: 'rgba(249,115,22,0.25)',
+        accent: '#f97316',
+        icon: '⚠️',
+        headline: '2 days left on your trial.',
+        body: 'Your scanner shuts down in 48 hours. Upgrade to keep your leads coming in.',
+        cta: 'Keep My Scanner Running',
+      };
+    }
+    return {
+      bg: 'rgba(234,179,8,0.08)',
+      border: 'rgba(234,179,8,0.2)',
+      accent: '#eab308',
+      icon: '⏳',
+      headline: '3 days left on your trial.',
+      body: 'Your free trial ends soon. Upgrade to Starter for $19/mo and keep your lead machine running.',
+      cta: 'Upgrade My Plan',
+    };
+  })() : null;
+
+
   // Use a tip based on the current day of the year so it rotates daily but is consistent for all users that day
   const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 1000 / 60 / 60 / 24);
   const selectedTip = EXPERT_TIPS[dayOfYear % EXPERT_TIPS.length];
@@ -108,6 +148,52 @@ export default function DailyDigestEmail({ fullName, leads }: DailyDigestEmailPr
         </div>
 
         <div style={{ height: '1px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent)', margin: '0 40px' }}></div>
+
+        {/* Trial Countdown Banner: only shown to trial users with 3 or fewer days left */}
+        {trialBannerConfig && (
+          <div style={{
+            margin: '24px 20px 0 20px',
+            backgroundColor: trialBannerConfig.bg,
+            border: `1px solid ${trialBannerConfig.border}`,
+            borderRadius: '16px',
+            padding: '20px 24px',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+              <span style={{ fontSize: '20px', lineHeight: '1', flexShrink: 0 }}>{trialBannerConfig.icon}</span>
+              <div style={{ flex: 1 }}>
+                <p style={{
+                  margin: '0 0 4px 0',
+                  fontSize: '14px',
+                  fontWeight: '800',
+                  color: trialBannerConfig.accent,
+                }}>
+                  {trialBannerConfig.headline}
+                </p>
+                <p style={{
+                  margin: '0 0 14px 0',
+                  fontSize: '13px',
+                  fontWeight: '500',
+                  color: '#cccccc',
+                  lineHeight: '1.5',
+                }}>
+                  {trialBannerConfig.body}
+                </p>
+                <a href={pricingUrl} style={{
+                  display: 'inline-block',
+                  backgroundColor: trialBannerConfig.accent,
+                  color: '#ffffff',
+                  padding: '10px 24px',
+                  borderRadius: '8px',
+                  fontWeight: '800',
+                  textDecoration: 'none',
+                  fontSize: '13px',
+                }}>
+                  {trialBannerConfig.cta} &rarr;
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Lead List - VERTICAL STACK FOR MOBILE */}
         <div style={{ padding: '30px 20px' }}>

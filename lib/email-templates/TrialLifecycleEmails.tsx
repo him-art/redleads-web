@@ -115,7 +115,7 @@ export default function TrialLifecycleEmail({
       body: (
         <>
           <p>Hi {firstName},</p>
-          <p>Our scanner just flagged <strong>{leadCount} posts</strong> that are "High Intent." These aren't casual chats—these are people explicitly asking for a recommendation for a solution like <strong>{productName}</strong>.</p>
+          <p>Our scanner just flagged <strong>{leadCount} posts</strong> that are "High Intent." These aren't casual chats. These are people explicitly asking for a recommendation for a solution like <strong>{productName}</strong>.</p>
           <p>Your trial ends tomorrow. Once it expires, your dashboard access will lock and these leads will go to your competitors instead.</p>
           <p>Don't leave easy revenue on the table. Reply to these final leads today.</p>
         </>
@@ -132,7 +132,7 @@ export default function TrialLifecycleEmail({
         <>
           <p>Hi {firstName},</p>
           <p>Your 7-day trial ends in exactly 24 hours. Tomorrow morning, your dashboard goes dark and we'll stop monitoring Reddit for <strong>{productName}</strong>.</p>
-          <p>I'd love to keep it running for you. Upgrading to a Starter plan is just $19/mo—less than the cost of a single lunch—to keep your lead machine running 24/7.</p>
+          <p>I'd love to keep it running for you. Upgrading to a Starter plan is just $19/mo. That is less than the cost of a single lunch, and it keeps your lead machine running 24/7.</p>
           <p><strong>Quick question:</strong> If you haven't upgraded yet, what's been the biggest hurdle? Hit reply and let me know. I read every email.</p>
         </>
       ),

@@ -86,6 +86,17 @@ async function runDailyDigest() {
 
         if (!email) continue;
 
+        // Compute trial awareness for the countdown banner in the email
+        const tier = (profile.subscription_tier || '').toLowerCase();
+        const isPaidUser = tier === 'starter' || tier === 'growth' || tier === 'lifetime' || tier === 'scout';
+        const trialEndsAt = profile.trial_ends_at
+            ? new Date(profile.trial_ends_at)
+            : (profile.created_at ? new Date(new Date(profile.created_at).getTime() + 3 * 24 * 60 * 60 * 1000) : null);
+        const trialDaysLeft = trialEndsAt
+            ? Math.ceil((trialEndsAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+            : null;
+        const isTrialUser = !isPaidUser && trialDaysLeft !== null && trialDaysLeft > 0;
+
         // Fetch top leads for THIS user only
         const { data: userLeads, error: userLeadsError } = await supabase
             .from('monitored_leads')
@@ -180,8 +191,10 @@ async function runDailyDigest() {
                 to: email,
                 subject: `[r/${topSubreddit}] ${finalLeads.length} New Opportunities 🎯`,
                 react: DailyDigestEmail({
-                    fullName: email.split('@')[0], 
-                    leads: finalLeads
+                    fullName: email.split('@')[0],
+                    leads: finalLeads,
+                    isTrialUser,
+                    trialDaysLeft,
                 })
             });
 

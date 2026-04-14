@@ -29,14 +29,16 @@ const TrialLifecycleEmailModule = require('../../lib/email-templates/TrialLifecy
 const TrialLifecycleEmail = TrialLifecycleEmailModule.default || TrialLifecycleEmailModule;
 
 // 7-day trial sequence timing (hours since trial start)
-// Optimized to 5 high-impact emails to prevent inbox fatigue
+// Optimized to 3 high-impact emails to prevent inbox fatigue.
+// Day 5 and Day 6 removed: users are already receiving the Daily Digest every day.
+// Keeping only the three highest-conversion touchpoints.
 const STAGE_WINDOWS: Record<string, { from: number; to: number; subject: string }> = {
     day1: { from: 1,   to: 24,  subject: 'RedLeads: Your Reddit scanner is now live 🛰️' },
     // Day 2 skipped to give users space
-    day3: { from: 48,  to: 72,  subject: 'The "2-Hour Rule" (How to win Reddit deals) ⏱️' },
+    day3: { from: 48,  to: 72,  subject: 'The "Helping Hook" (How to win Reddit deals without selling) ⏱️' },
     // Day 4 skipped
-    day5: { from: 96,  to: 120, subject: 'How one founder turned 1 reply into a $500 customer 📈' },
-    day6: { from: 120, to: 144, subject: '🔥 Hot Leads Alert: High-intent signals detected' },
+    // day5 removed: replaced by Daily Digest countdown banner (see DailyDigestEmail.tsx)
+    // day6 removed: replaced by Daily Digest countdown banner (see DailyDigestEmail.tsx)
     day7: { from: 144, to: 200, subject: 'Final 24h: Should I keep your scanner running? 🛑' },
 };
 
