@@ -159,7 +159,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                 suppressHydrationWarning
                 type="submit"
                 disabled={isScanning}
-                className={`m-1 px-4 sm:px-6 py-2.5 rounded-lg font-black text-[10px] uppercase tracking-[0.2em] transition-all flex items-center gap-2 active:scale-95 disabled:opacity-80 ${
+                className={`m-1 px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg font-black text-[9px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all flex items-center gap-1.5 sm:gap-2 active:scale-95 disabled:opacity-80 whitespace-nowrap ${
                   isScanning 
                     ? 'bg-[#ff914d] text-white' 
                     : 'bg-white text-black hover:bg-slate-200'
@@ -168,11 +168,14 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                 {isScanning ? (
                   <>
                     <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Scanning...
+                    <span className="hidden xs:inline">Scanning...</span>
+                    <span className="xs:hidden">...</span>
                   </>
                 ) : (
                   <>
-                    Find users <ArrowRight size={14} />
+                    <span className="xs:inline">Find users</span>
+                    <span className="xs:hidden">Go</span>
+                    <ArrowRight size={14} className="shrink-0" />
                   </>
                 )}
               </button>

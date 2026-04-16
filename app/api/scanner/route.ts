@@ -98,18 +98,22 @@ export async function POST(req: Request) {
                 return NextResponse.json({ error: scanResult.error }, { status: 500 });
             }
 
-            // 3. QUOTA DEDUCTION (SaaS 2.0 - Charge ONLY on success)
-            const { error: updateError } = await adminSupabase
-                .from('profiles')
-                .update({ 
-                    scan_count: (today === lastDay) ? (profile?.scan_count || 0) + 1 : 1,
-                    last_scan_at: new Date().toISOString()
-                })
-                .eq('id', user.id);
+            // 3. QUOTA DEDUCTION (SaaS 2.0 - Charge ONLY on success + finding leads)
+            if (scanResult.leads && scanResult.leads.length > 0) {
+                const { error: updateError } = await adminSupabase
+                    .from('profiles')
+                    .update({ 
+                        scan_count: (today === lastDay) ? (profile?.scan_count || 0) + 1 : 1,
+                        last_scan_at: new Date().toISOString()
+                    })
+                    .eq('id', user.id);
 
-            if (updateError) {
-                console.error('[Scanner] Failed to update scan count (Admin Mode):', updateError);
-                // We proceed anyway since the scan is already done, but log the failure
+                if (updateError) {
+                    console.error('[Scanner] Failed to update scan count (Admin Mode):', updateError);
+                    // We proceed anyway since the scan is already done, but log the failure
+                }
+            } else {
+                console.log(`[Scanner API] No leads found. Skipping quota deduction.`);
             }
 
             console.log(`[Scanner API] Scan completed. Found ${scanResult.leads?.length || 0} leads.`);

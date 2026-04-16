@@ -97,6 +97,7 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                 <OnboardingWizard 
                     userEmail={user.email} 
                     keywordLimit={planDetails.keywordLimit}
+                    defaultUrl={effectiveSearch}
                     onComplete={(data, onboardingUrl) => {
                         setShowOnboarding(false);
                         router.push(`/dashboard?search=${encodeURIComponent(onboardingUrl || '')}`);

@@ -14,14 +14,15 @@ interface OnboardingWizardProps {
     onComplete: (data: any, url?: string) => void;
     userEmail?: string;
     keywordLimit?: number;
+    defaultUrl?: string;
 }
 
 const TOTAL_STEPS = 4; // 0-3
 
 
-export default function OnboardingWizard({ onComplete, userEmail, keywordLimit = 20 }: OnboardingWizardProps) {
+export default function OnboardingWizard({ onComplete, userEmail, keywordLimit = 20, defaultUrl = '' }: OnboardingWizardProps) {
     const [step, setStep] = useState(0);
-    const [url, setUrl] = useState('');
+    const [url, setUrl] = useState(defaultUrl);
     const [isGenerating, setIsGenerating] = useState(false);
     const [isGeneratingKeywords, setIsGeneratingKeywords] = useState(false);
     const [description, setDescription] = useState('');
@@ -84,9 +85,9 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
     // ──────────────────────────────
     // Step 1: Generate description + keywords from URL
     // ──────────────────────────────
-    const handleGenerate = async () => {
+    const handleGenerate = useCallback(async (overrideUrl?: string) => {
         setError('');
-        let normalizedUrl = url.trim();
+        let normalizedUrl = (overrideUrl || url).trim();
         if (!/^https?:\/\//i.test(normalizedUrl)) {
             normalizedUrl = `https://${normalizedUrl}`;
         }
@@ -110,7 +111,14 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
         } finally {
             setIsGenerating(false);
         }
-    };
+    }, [url, keywordLimit]);
+
+    // Auto-trigger analysis if defaultUrl is provided from landing page
+    useEffect(() => {
+        if (defaultUrl && !saveResolvedRef.current) {
+            handleGenerate(defaultUrl);
+        }
+    }, []); // Only on mount
 
     const handleGenerateKeywords = async () => {
         if (!description && !url) return;

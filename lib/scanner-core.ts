@@ -3,6 +3,7 @@ import { ai as AI } from '@/lib/ai';
 export interface ScannerResult {
     leads: any[];
     query?: string;
+    suggestions?: string[];
     error?: string;
     warning?: string;
 }
@@ -120,8 +121,43 @@ export async function performScan(url: string, options: ScannerOptions): Promise
     }
 
     if (leads.length === 0) {
-        console.warn('[ScannerLib] No real leads found, falling back to mock leads.');
-        return { leads: getMockLeads(url), warning: 'No live matches found for these keywords. Showing representative leads instead.' };
+        console.warn('[ScannerLib] No real leads found for keywords/description. Requesting suggestions.');
+        let suggestions: string[] = [];
+        try {
+            const suggestionPrompt = `
+                The user was searching for Reddit leads but found 0 results in their selected timeframe.
+                
+                Context:
+                Description: "${description}"
+                Keywords: "${keywords?.join(', ')}"
+                
+                Task: Provide exactly 3 very short, actionable tips on how they can broaden their search keywords to find more general leads in their space. 
+                Keep each tip under 12 words. Focus on specific keyword replacements or broadening the niche.
+                
+                Return a JSON object with a 'suggestions' array of strings.
+            `;
+            const suggestionRes = await AI.call({
+                model: "llama-3.3-70b-versatile",
+                messages: [{ role: "user", content: suggestionPrompt }],
+                response_format: { type: "json_object" },
+                temperature: 0.3,
+            });
+            const content = suggestionRes.choices?.[0]?.message?.content;
+            if (content) {
+                const parsed = JSON.parse(content);
+                if (parsed.suggestions && Array.isArray(parsed.suggestions)) {
+                    suggestions = parsed.suggestions.slice(0, 3);
+                }
+            }
+        } catch (e) {
+            console.error('[ScannerLib] Failed to generate suggestions:', e);
+            suggestions = [
+                "Try using fewer, more general keywords.",
+                "Remove competitor names to expand the search.",
+                "Focus on the core problem rather than the solution."
+            ];
+        }
+        return { leads: [], suggestions };
     }
 
 
@@ -186,8 +222,12 @@ export async function performScan(url: string, options: ScannerOptions): Promise
         leads = leads.map(l => ({ ...l, match_category: 'Good Match' }));
     }
 
-    // E. FINAL FILTERING: Remove Low relevance and Old leads
-    const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+    // E. FINAL FILTERING: Remove Low relevance and Old leads (Respect Timeframe)
+    const timeframeMs = 
+        timeRange === '24h' ? 24 * 60 * 60 * 1000 :
+        timeRange === '7d' ? 7 * 24 * 60 * 60 * 1000 :
+        30 * 24 * 60 * 60 * 1000;
+
     const now = Date.now();
 
     leads = leads.filter(lead => {
@@ -197,11 +237,11 @@ export async function performScan(url: string, options: ScannerOptions): Promise
             return false;
         }
 
-        // 2. Freshness Check (Optional based on data availability)
+        // 2. Freshness Check (Enforce selected timeRange)
         if (lead.post_created_at) {
             const postDate = new Date(lead.post_created_at).getTime();
-            if (now - postDate > THIRTY_DAYS_MS) {
-                console.log(`[ScannerLib] Dropping OLD lead (>30d): ${lead.title} (${lead.post_created_at})`);
+            if (now - postDate > timeframeMs) {
+                console.log(`[ScannerLib] Dropping lead older than selected range: ${lead.title} (${lead.post_created_at})`);
                 return false;
             }
         }
@@ -217,36 +257,6 @@ export async function performScan(url: string, options: ScannerOptions): Promise
     return result;
 }
 
-// --- Helpers ---
-function getMockLeads(url: string) {
-    return [
-        { 
-            subreddit: 'SaaS', 
-            title: `How do I find customers for a tool like ${url.includes('redleads') ? 'this' : 'RedLeads'}?`,
-            url: 'https://reddit.com/r/SaaS' 
-        },
-        { 
-            subreddit: 'Entrepreneur', 
-            title: 'Any tips for Reddit marketing that actually works in 2026?', 
-            url: 'https://reddit.com/r/Entrepreneur' 
-        },
-        { 
-            subreddit: 'marketing', 
-            title: 'Is there an AI tool that scans subreddits for buying intent?', 
-            url: 'https://reddit.com/r/marketing' 
-        },
-        { 
-            subreddit: 'startup', 
-            title: 'Need advice on finding my first 100 users via social selling...', 
-            url: 'https://reddit.com/r/startup' 
-        },
-        { 
-            subreddit: 'product', 
-            title: 'What is the best way to handle lead generation on a budget?', 
-            url: 'https://reddit.com/r/product' 
-        }
-    ];
-}
 
 function extractSubreddit(url: string) {
     try {

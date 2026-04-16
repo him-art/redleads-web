@@ -38,6 +38,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
     const [isScanning, setIsScanning] = useState(false);
     const [scanStep, setScanStep] = useState(0);
     const [results, setResults] = useState<RedditLead[]>([]);
+    const [suggestions, setSuggestions] = useState<string[]>([]);
     const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
     const [teaserInfo, setTeaserInfo] = useState<{ isTeaser: boolean, totalFound: number } | null>(null);
     const [activeQuery, setActiveQuery] = useState<string | null>(null);
@@ -134,10 +135,8 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
         }
 
         setIsScanning(true);
-        setScanStep(0);
         setResults([]);
-
-
+        setSuggestions([]);
 
         const scannerPromise = fetch('/api/scanner', {
             method: 'POST',
@@ -145,23 +144,16 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
             headers: { 'Content-Type': 'application/json' }
         });
 
-        // Sophisticated progress loop
-        const interval = setInterval(() => {
-            setScanStep(s => (s < scanSteps.length - 1 ? s + 1 : s));
-        }, 1200);
-
         try {
             const response = await scannerPromise;
             const data = await response.json();
-            
-            clearInterval(interval);
 
             if (response.status === 403 && data.code === 'DAILY_LIMIT_REACHED') {
                 onShowModal?.();
                 return;
             }
 
-            if (data.leads) {
+            if (data.leads && data.leads.length > 0) {
                 setTeaserInfo(data.isTeaser ? { isTeaser: true, totalFound: data.totalFound } : null);
                 setActiveQuery(data.query || null);
                 const enrichedLeads = data.leads.map((lead: any) => ({
@@ -170,18 +162,18 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                 }));
                 setResults(enrichedLeads);
                 onResultsFound?.(enrichedLeads.length);
-                if (enrichedLeads.length > 0) {
-                    setOpenGroups({ 'Best Match': true, 'Good Match': true, 'Low': true });
-                }
+                setOpenGroups({ 'Best Match': true, 'Good Match': true, 'Low': true });
                 
                 // Immediately sync profile stats (e.g. scan count)
                 refreshProfile();
+            } else if (data.suggestions) {
+                 setSuggestions(data.suggestions);
+                 onResultsFound?.(0);
             }
         } catch (error: any) {
             console.error(error);
         } finally {
             setIsScanning(false);
-            setScanStep(0);
         }
     };
 
@@ -266,17 +258,26 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                             disabled={isScanning}
                             readOnly={isLocked}
                             suppressHydrationWarning
-                            className={`w-full bg-black/50 border border-white/10 rounded-2xl py-4 sm:py-6 pl-12 sm:pl-16 pr-24 sm:pr-32 text-base sm:text-lg focus:outline-none focus:bg-black/70 focus:border-primary/50 focus:shadow-[0_0_20px_rgba(255,88,54,0.15)] transition-all placeholder:text-text-secondary/60 font-medium tracking-tight text-text-primary shadow-[inset_0_4px_20px_rgba(0,0,0,0.5)] ${isLocked ? 'cursor-default' : ''}`}
+                            className={`w-full bg-black/50 border rounded-2xl py-4 sm:py-6 pl-12 sm:pl-16 pr-24 sm:pr-32 text-base sm:text-lg focus:outline-none transition-all placeholder:text-text-secondary/60 font-medium tracking-tight text-text-primary shadow-[inset_0_4px_20px_rgba(0,0,0,0.5)] ${
+                                isScanning 
+                                ? 'border-primary/50 bg-black/70 shadow-[0_0_30px_rgba(255,88,54,0.15)] ring-1 ring-primary/30' 
+                                : 'border-white/10 focus:bg-black/70 focus:border-primary/50 focus:shadow-[0_0_20px_rgba(255,88,54,0.15)]'
+                            } ${isLocked ? 'cursor-default' : ''}`}
                         />
                         <button 
                             type="submit"
                             disabled={isScanning || url.trim().length < 3}
-                            className={`absolute right-2 sm:right-3 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-black uppercase text-[9px] sm:text-[10px] tracking-widest transition-all duration-300 flex items-center gap-2 ${
-                                !isScanning && url.trim().length >= 3 
-                                    ? 'bg-primary hover:bg-[#ff6900] transform hover:scale-[1.03] active:scale-95 hover:shadow-[0_0_30px_rgba(255,88,54,0.5)] text-white shadow-[0_0_15px_rgba(255,88,54,0.3)]' 
-                                    : 'bg-white/5 text-text-secondary cursor-not-allowed opacity-50'
+                            className={`absolute right-2 sm:right-3 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-black uppercase text-[9px] sm:text-[10px] tracking-widest transition-all duration-500 overflow-hidden flex items-center gap-2 ${
+                                isScanning
+                                    ? 'bg-transparent text-primary border border-primary/30 shadow-[0_0_20px_rgba(255,88,54,0.2)]'
+                                    : url.trim().length >= 3 
+                                        ? 'bg-primary hover:bg-[#ff6900] transform hover:scale-[1.03] active:scale-95 hover:shadow-[0_0_30px_rgba(255,88,54,0.5)] text-white shadow-[0_0_15px_rgba(255,88,54,0.3)]' 
+                                        : 'bg-white/5 text-text-secondary cursor-not-allowed opacity-50'
                             }`}
                         >
+                            {isScanning && (
+                                <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/20 to-primary/0 animate-[shimmer_2s_infinite]" />
+                            )}
                             {isScanning ? (
                                 <>
                                     <LoadingIcon className="w-3.5 h-3.5" />
@@ -296,27 +297,24 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                             <motion.div 
                                 initial={{ opacity: 0, y: 5 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0 }}
-                                className="mt-4 flex flex-col items-center justify-center gap-3"
+                                exit={{ opacity: 0, transition: { duration: 0.2 } }}
+                                className="mt-8 flex flex-col items-center justify-center gap-4"
                             >
-                                <div className="flex items-center gap-2">
-                                    <MaterialIcon name="activity" size={12} className="text-primary/50" />
-                                    <span className="text-[10px] font-black uppercase tracking-[0.15em] text-text-secondary animate-pulse">
-                                        {scanSteps[scanStep]}
-                                    </span>
+                                {/* Magic Pulse Visual */}
+                                <div className="relative flex items-center justify-center h-16 w-16">
+                                    <div className="absolute inset-0 rounded-full border border-primary/20 animate-[ping_3s_cubic-bezier(0,0,0.2,1)_infinite]" />
+                                    <div className="absolute inset-2 rounded-full border border-primary/40 animate-[ping_3s_cubic-bezier(0,0,0.2,1)_infinite_1s]" />
+                                    <div className="absolute inset-4 rounded-full bg-primary/20 animate-pulse backdrop-blur-sm" />
+                                    <Brain className="text-primary relative z-10 animate-pulse" size={24} />
                                 </div>
-                                
-                                {scanStep >= 2 && activeQuery && (
-                                     <motion.div 
-                                        initial={{ opacity: 0, scale: 0.95 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        className="px-4 py-2 bg-white/5 border border-white/5 rounded-xl max-w-md"
-                                     >
-                                        <p className="text-[10px] text-primary/70 font-mono text-center truncate italic">
-                                            {activeQuery}
-                                        </p>
-                                     </motion.div>
-                                )}
+                                <div className="space-y-1 text-center">
+                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/80 animate-pulse">
+                                        Expanding Intelligence
+                                    </p>
+                                    <p className="text-xs text-text-secondary/60 font-medium">
+                                        Scanning millions of subreddits to find your target audience...
+                                    </p>
+                                </div>
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -324,7 +322,70 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
             </div>
 
             {/* Results Section */}
-            <AnimatePresence>
+            <AnimatePresence mode="popLayout">
+            {suggestions.length > 0 && results.length === 0 && !isScanning && (
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }} 
+                    animate={{ opacity: 1, y: 0 }} 
+                    exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
+                    className="mt-8 space-y-6 max-w-xl mx-auto"
+                >
+                    <div className="p-8 rounded-[2rem] bg-void border border-white/5 relative overflow-hidden group">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500/0 via-orange-500/50 to-orange-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+                        <div className="flex flex-col items-center text-center space-y-4 relative z-10">
+                            <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-text-secondary group-hover:text-white transition-colors">
+                                <MaterialIcon name="travel_explore" size={24} />
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-bold text-white mb-2 tracking-tight">Zero Matches Found</h3>
+                                <p className="text-sm text-text-secondary leading-relaxed">
+                                    No high-intent discussions matched your exact criteria in the last {timeRanges.find(t => t.value === timeRange)?.label || 'period'}. 
+                                    Your scanning quota was <strong className="text-green-500">not deducted</strong>.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="mt-8 pt-8 border-t border-white/5">
+                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary/60 mb-4 flex items-center gap-2">
+                                <Brain size={12} className="text-primary/70" />
+                                Smart Suggestions
+                            </h4>
+                            <div className="space-y-3">
+                                {suggestions.map((suggestion, i) => (
+                                    <motion.div 
+                                        key={i}
+                                        initial={{ opacity: 0, x: -10 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: i * 0.1 }}
+                                        className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors"
+                                    >
+                                        <div className="mt-0.5 text-primary">
+                                            <MaterialIcon name="lightbulb" size={16} />
+                                        </div>
+                                        <p className="text-sm text-text-secondary/90 leading-relaxed">
+                                            {suggestion}
+                                        </p>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Quick Actions */}
+                        {timeRange === '24h' && (
+                            <div className="mt-6 flex justify-center">
+                                <button 
+                                    onClick={() => setTimeRange('7d')}
+                                    className="px-6 py-2.5 rounded-full bg-white/5 hover:bg-white/10 text-xs font-black uppercase tracking-wider text-text-primary transition-all border border-white/5 hover:border-white/10 flex items-center gap-2"
+                                >
+                                    <MaterialIcon name="history" size={14} />
+                                    Scan Last 7 Days Instead
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </motion.div>
+            )}
+
             {results.length > 0 && !isScanning && (
                 <motion.div 
                     initial={{ opacity: 0, y: 20 }} 
@@ -377,7 +438,13 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="space-y-4">
                                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                         {leads.map((lead, i) => (
-                                                            <div key={i} className="group p-5 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.04] transition-all relative overflow-hidden flex flex-col justify-between gap-4">
+                                                            <motion.div 
+                                                                key={i}
+                                                                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                                                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                                                transition={{ delay: i * 0.05 }}
+                                                                className="group p-5 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.04] transition-all relative overflow-hidden flex flex-col justify-between gap-4"
+                                                            >
                                                                 <div className="space-y-3">
                                                                     <div className="flex flex-wrap items-center justify-between gap-3">
                                                                         <div className="flex flex-wrap items-center gap-2">
@@ -445,7 +512,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                                                         </>
                                                                     )}
                                                                 </div>
-                                                            </div>
+                                                            </motion.div>
                                                         ))}
                                                     </div>
                                                 </motion.div>
