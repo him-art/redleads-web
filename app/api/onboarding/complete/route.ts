@@ -43,6 +43,8 @@ export async function POST(req: Request) {
             throw new Error('Failed to save profile');
         }
 
+        console.log(`[Onboarding] Successfully saved profile for ${user.id} with URL: ${url}`);
+
         return NextResponse.json({ success: true });
 
     } catch (error: any) {

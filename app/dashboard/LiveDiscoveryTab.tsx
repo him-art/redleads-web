@@ -49,7 +49,8 @@ export default function LiveDiscoveryTab({
 
     const isSetupComplete = !!(
         profile?.description?.length > 10 && 
-        profile?.keywords?.length > 0
+        profile?.keywords?.length > 0 &&
+        profile?.website_url
     );
 
     const handleUpgrade = async (plan: 'starter' | 'growth' = 'growth') => {
@@ -214,19 +215,21 @@ export default function LiveDiscoveryTab({
                             ) : (
                                 <div className="flex flex-col items-center justify-center py-10 space-y-6 text-center">
                                     <div className="p-4 bg-orange-500/10 rounded-2xl text-primary flex items-center justify-center">
-                                        <ShieldCheck size={40} className="animate-pulse" />
+                                        <Compass size={40} className="animate-pulse" />
                                     </div>
                                     <div className="space-y-2 max-w-sm">
-                                        <h3 className="text-lg font-bold text-text-primary">Tracking Setup Incomplete</h3>
+                                        <h3 className="text-lg font-bold text-text-primary">Website Tracking Missing</h3>
                                         <p className="text-xs text-text-secondary leading-relaxed uppercase tracking-widest font-black opacity-60">
-                                            Connect your website in settings to unlock target-specific power searching.
+                                            {profile?.description && profile?.keywords?.length > 0 
+                                                ? "Your profile is set up, but we need your website URL to unlock Power Searching."
+                                                : "Connect your website in settings to unlock target-specific power searching."}
                                         </p>
                                     </div>
                                     <button 
                                         onClick={() => onNavigate('settings')}
                                         className="px-8 py-3 bg-primary text-white font-black uppercase text-[10px] tracking-[0.2em] rounded-xl hover:bg-primary/90 transition-all shadow-[0_0_20px_rgba(255,88,54,0.2)]"
                                     >
-                                        Go to Tracking Setup
+                                        Add Website URL
                                     </button>
                                 </div>
                             )}

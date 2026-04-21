@@ -203,7 +203,14 @@ export default function SettingsTab({ user }: { user: any }) {
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
-                                <label htmlFor="website-url" className="text-[9px] font-black uppercase tracking-[0.2em] text-text-secondary">Website URL</label>
+                                <div className="flex items-center gap-2">
+                                    <label htmlFor="website-url" className="text-[9px] font-black uppercase tracking-[0.2em] text-text-secondary">Website URL</label>
+                                    {!profile?.website_url && (
+                                        <span className="text-[8px] font-black bg-primary/10 text-primary px-2 py-0.5 rounded-full border border-primary/20 uppercase tracking-widest animate-pulse">
+                                            Required for Search
+                                        </span>
+                                    )}
+                                </div>
                             </div>
                             <div className="relative group">
                                 <input

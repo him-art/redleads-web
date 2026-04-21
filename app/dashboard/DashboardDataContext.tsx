@@ -83,10 +83,10 @@ export function DashboardDataProvider({ children, userId, draftingState, profile
         try {
             const { data, error } = await supabase
                 .from('monitored_leads')
-                .select('*')
+                .select('id, title, subreddit, url, status, match_score, match_category, is_saved, has_responded, created_at')
                 .eq('user_id', userId)
                 .order('created_at', { ascending: false })
-                .limit(1000);
+                .limit(100);
             
             if (!error && data) {
                 setLeads(data);
@@ -162,8 +162,32 @@ export function DashboardDataProvider({ children, userId, draftingState, profile
             .channel(`dashboard-updates-${userId}`)
             .on(
                 'postgres_changes',
-                { event: '*', schema: 'public', table: 'monitored_leads', filter: `user_id=eq.${userId}` },
-                () => { fetchLeads(true); }
+                { event: 'INSERT', schema: 'public', table: 'monitored_leads', filter: `user_id=eq.${userId}` },
+                (payload) => {
+                    // Append new lead to state instead of re-fetching all
+                    if (payload.new) {
+                        setLeads(prev => [payload.new as MonitoredLead, ...prev]);
+                    }
+                }
+            )
+            .on(
+                'postgres_changes',
+                { event: 'UPDATE', schema: 'public', table: 'monitored_leads', filter: `user_id=eq.${userId}` },
+                (payload) => {
+                    // Update single lead in state instead of re-fetching all
+                    if (payload.new) {
+                        setLeads(prev => prev.map(l => l.id === (payload.new as MonitoredLead).id ? { ...l, ...payload.new } as MonitoredLead : l));
+                    }
+                }
+            )
+            .on(
+                'postgres_changes',
+                { event: 'DELETE', schema: 'public', table: 'monitored_leads', filter: `user_id=eq.${userId}` },
+                (payload) => {
+                    if (payload.old && (payload.old as any).id) {
+                        setLeads(prev => prev.filter(l => l.id !== (payload.old as any).id));
+                    }
+                }
             )
             .on(
                 'postgres_changes',

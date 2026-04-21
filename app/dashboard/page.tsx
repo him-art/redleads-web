@@ -21,7 +21,7 @@ export default async function DashboardPage(props: { searchParams: Promise<{ sea
     const [profileRes, accessStatusRes] = await Promise.all([
         supabase
             .from('profiles')
-            .select('*')
+            .select('id, email, subscription_tier, trial_started_at, description, keywords, website_url, subreddits, user_metadata, onboarding_completed, has_initial_scan, daily_scans_used, reply_credits_used, is_admin')
             .eq('id', user.id)
             .single(),
         supabase
