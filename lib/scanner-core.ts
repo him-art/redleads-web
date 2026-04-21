@@ -34,15 +34,15 @@ export async function performScan(url: string, options: ScannerOptions): Promise
                 Analyze this product context:
                 ${siteContextString}
                 
-                Generate a Natural Language search query for site:reddit.com that Tavily's AI can use to find your target audience.
+                Generate a Natural Language search query that Tavily's AI search engine can use to find your target audience on Reddit.
                 
                 The query should be a descriptive request, like:
-                "People on reddit looking for [problem solved] or asking for recommendations for [niche/product type]"
+                "People looking for [problem solved] or asking for recommendations for [niche/product type]"
                 
                 Requirements:
-                - Focus on semantic meaning, not just keywords.
+                - Focus on semantic meaning and high intent.
                 - Do NOT use Boolean operators (OR, AND).
-                - Target the "Target Audience" persona.
+                - Do NOT include site:reddit.com in the query string itself.
                 - Return ONLY the query string.
             `;
 
@@ -63,7 +63,7 @@ export async function performScan(url: string, options: ScannerOptions): Promise
     if (searchQueries.length === 0) {
         console.warn('[ScannerLib] AI analysis failed, generating fallback keyword queries.');
         const baseKeywords = keywords?.slice(0, 3) || [normalizedUrl.split('.')[0]];
-        searchQueries = [`"${baseKeywords.join(' ')}" (recommend OR best OR alternative)`];
+        searchQueries = [`people asking for recommendations or alternatives for ${baseKeywords.join(' ')}`];
     }
 
     let leads: any[] = [];
@@ -80,10 +80,10 @@ export async function performScan(url: string, options: ScannerOptions): Promise
             const query = searchQueries[0];
             const fetchBody: any = {
                 api_key: tavilyApiKey,
-                query: query.includes('site:reddit.com') ? query : `site:reddit.com ${query}`,
+                query: query.replace(/site:reddit\.com/gi, '').trim(),
                 search_depth: "advanced",
                 include_domains: ["reddit.com"],
-                max_results: 60 // High sample size for AI filtering
+                max_results: 30 // High sample size optimized for Tavily AI filtering without secondary Llama sorting
             };
 
             if (tavilyTimeRange) fetchBody.time_range = tavilyTimeRange;
@@ -162,64 +162,8 @@ export async function performScan(url: string, options: ScannerOptions): Promise
     }
 
 
-    // D. STEP D: Categorize with AI (New Requirement)
-    if (leads.length > 0 && description) {
-        try {
-            console.log(`[ScannerLib] Categorizing ${leads.length} leads with AI...`);
-            const categorizationPrompt = `
-                You are an expert Lead Qualifier.
-                
-                Product Description: "${description}"
-                Target Keywords: "${keywords?.join(', ')}"
-                
-                Task: Act as a "Chief Audience Officer". Review these ${leads.length} Reddit leads and qualify them against our Target Audience criteria.
-                
-                **Strictness Guidelines:**
-                - **Best Match**: The user is currently experiencing the EXACT problem we solve, or is actively asking for a recommendation we fulfill. High intent.
-                - **Good Match**: The user is in the correct audience/niche and talking about relevant topics, but maybe not ready to buy yet.
-                - **Low**: Generic noise, ads, or the user is not actually in the target market.
-                
-                Leads to qualify:
-                ${JSON.stringify(leads.map((l, i) => ({ id: i, title: l.title, subreddit: l.subreddit, snippet: l.body_text?.substring(0, 150) })))}
-                
-                Return a JSON object mapping the lead index to its category.
-                Format: { "categories": { "0": "Best Match", "1": "Good Match", ... } }
-                ONLY return the JSON.
-            `;
-
-            const aiRes = await AI.call({
-                model: "llama-3.3-70b-versatile",
-                messages: [{ role: "user", content: categorizationPrompt }],
-                response_format: { type: "json_object" },
-                temperature: 0.1,
-            });
-
-            const content = aiRes.choices?.[0]?.message?.content;
-            if (content) {
-                try {
-                    const parsed = JSON.parse(content);
-                    if (parsed.categories) {
-                        leads = leads.map((l, i) => ({
-                            ...l,
-                            match_category: parsed.categories[i.toString()] || 'Good Match'
-                        }));
-                    } else {
-                        throw new Error('AI response missing "categories" field');
-                    }
-                } catch (parseError) {
-                    console.error('[ScannerLib] JSON Parse Failed for Categorization:', content);
-                    leads = leads.map(l => ({ ...l, match_category: 'Good Match' }));
-                }
-            } else {
-                throw new Error('AI returned empty content for categorization');
-            }
-        } catch (catError: any) {
-            console.error('[ScannerLib] Categorization failed:', catError.message);
-            // Default to Good Match if AI fails
-            leads = leads.map(l => ({ ...l, match_category: 'Good Match' }));
-        }
-    } else if (leads.length > 0) {
-        // Fallback if no description
+    // D. Assign default match category (Tavily already filtered for relevance)
+    if (leads.length > 0) {
         leads = leads.map(l => ({ ...l, match_category: 'Good Match' }));
     }
 
@@ -238,16 +182,16 @@ export async function performScan(url: string, options: ScannerOptions): Promise
             return false;
         }
 
-        // 2. Freshness Check (Strictly Enforce selected timeRange)
+        // 2. Freshness Check (Trust Tavily TimeRange, but enforce explicit old dates)
         if (!lead.post_created_at) {
-            console.log(`[ScannerLib] Strictly Dropping lead with missing date to satisfy timeframe requirement: ${lead.title}`);
-            return false;
+            console.log(`[ScannerLib] Keeping lead with missing date: ${lead.title}`);
+            return true;
         }
 
         const postDate = new Date(lead.post_created_at).getTime();
         if (isNaN(postDate)) {
-            console.log(`[ScannerLib] Dropping lead with invalid date format: ${lead.post_created_at}`);
-            return false;
+            console.log(`[ScannerLib] Keeping lead with invalid date format: ${lead.post_created_at}`);
+            return true;
         }
 
         if (now - postDate > timeframeMs) {
