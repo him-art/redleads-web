@@ -61,7 +61,8 @@ const creatorTweets: CreatorTweet[] = [
 
 // Split into two rows for opposite-direction scrolling
 // With 4 cards, we repeat them to ensure a wide enough track for a seamless infinite loop
-const row1 = [...creatorTweets, ...creatorTweets]; // Duplicating once is enough for 4 cards (8 items) to cover width
+// 3 copies for seamless loop with fewer DOM nodes
+const row1 = [...creatorTweets, ...creatorTweets, ...creatorTweets];
 
 const TweetCard = ({ tweet }: { tweet: CreatorTweet }) => {
   const getHighlightedText = (text: string, highlights: string[]) => {
@@ -175,9 +176,8 @@ const TickerRow = ({ tweets, direction }: { tweets: CreatorTweet[]; direction: '
   // Return null if no tweets to display
   if (tweets.length === 0) return null;
 
-  // 4 copies ensures 50% translation is exactly 2 copies. 
-  // With padding instead of gap, the width math is perfectly seamless.
-  const multiplied = [...tweets, ...tweets, ...tweets, ...tweets];
+  // 3 copies for seamless loop with fewer DOM nodes
+  const multiplied = [...tweets, ...tweets, ...tweets];
 
   return (
     <div className="relative overflow-hidden py-2">

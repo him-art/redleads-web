@@ -468,7 +468,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                                                             </a>
                                                                         </div>
                                                                     </div>
-                                                                    <h4 className="text-xs sm:text-sm font-bold text-text-secondary group-hover:text-text-primary leading-relaxed tracking-tight line-clamp-3 transition-all">{lead.title}</h4>
+                                                                    <h4 className="text-xs sm:text-sm font-bold text-text-secondary group-hover:text-gray-200 leading-relaxed tracking-tight line-clamp-3 transition-all">{lead.title}</h4>
                                                                 </div>
 
                                                                 <div className="flex flex-wrap items-center gap-2 pt-1">

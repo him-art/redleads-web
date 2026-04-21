@@ -162,9 +162,68 @@ export async function performScan(url: string, options: ScannerOptions): Promise
     }
 
 
-    // D. Assign default match category (Tavily already filtered for relevance)
+    // D. Llama Segregation (High Match vs Good Match)
     if (leads.length > 0) {
-        leads = leads.map(l => ({ ...l, match_category: 'Good Match' }));
+        console.log(`[ScannerLib] Segregating ${leads.length} leads via Llama...`);
+        try {
+            // Trim leads to avoid token limits. Limit body text to 400 chars.
+            const gradingPayload = leads.map(l => ({
+                url: l.url,
+                title: l.title,
+                body: l.body_text?.substring(0, 400) || ''
+            }));
+
+            const gradingPrompt = `
+                You are a lead categorization AI. 
+                
+                USER PRODUCT CONTEXT:
+                Description: "${description}"
+                Keywords: "${keywords?.join(', ')}"
+
+                We have found ${gradingPayload.length} Reddit posts using an AI search engine. 
+                Your job is to strictly segregate them into exactly two buckets:
+                1. "High Match": The user in the post is explicitly asking for a solution that matches the product context, or they are experiencing a severe pain point the product solves directly.
+                2. "Good Match": The post is relevant to the niche/industry, but the user is not explicitly begging for a solution right now (e.g., general discussion, tangentially related).
+
+                You must NOT drop any leads. You must strictly assign either "High Match" or "Good Match".
+                
+                Analyze these posts:
+                ${JSON.stringify(gradingPayload, null, 2)}
+                
+                Respond ONLY with a JSON object mapping the post 'url' to either "High Match" or "Good Match".
+                Format:
+                {
+                    "grades": {
+                        "https://reddit.com/r/example/post1": "High Match",
+                        "https://reddit.com/r/example/post2": "Good Match"
+                    }
+                }
+            `;
+
+            const gradingRes = await AI.call({
+                model: "llama-3.3-70b-versatile",
+                messages: [{ role: "user", content: gradingPrompt }],
+                response_format: { type: "json_object" },
+                temperature: 0.1,
+            });
+
+            const content = gradingRes.choices?.[0]?.message?.content;
+            if (content) {
+                const parsed = JSON.parse(content);
+                const grades = parsed.grades || {};
+                
+                leads = leads.map(l => ({
+                    ...l,
+                    match_category: grades[l.url] === 'High Match' ? 'High Match' : 'Good Match'
+                }));
+            } else {
+                // Fallback if AI fails
+                leads = leads.map(l => ({ ...l, match_category: 'Good Match' }));
+            }
+        } catch (e) {
+            console.error('[ScannerLib] Failed to grade leads via Llama:', e);
+            leads = leads.map(l => ({ ...l, match_category: 'Good Match' }));
+        }
     }
 
     // E. FINAL FILTERING: Remove Low relevance and Old leads (Respect Timeframe)

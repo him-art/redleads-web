@@ -214,9 +214,8 @@ const TestimonialCard = ({ testimonial, className = "" }: { testimonial: Testimo
 const TestimonialTickerRow = ({ testimonials, direction }: { testimonials: Testimonial[]; direction: 'left' | 'right' }) => {
   if (testimonials.length === 0) return null;
 
-  // 4 copies ensures 50% translation is exactly 2 copies.
-  // With padding instead of gap, the width math is perfectly seamless.
-  const multiplied = [...testimonials, ...testimonials, ...testimonials, ...testimonials];
+  // 3 copies ensures 33% translation for seamless loop with fewer DOM nodes
+  const multiplied = [...testimonials, ...testimonials, ...testimonials];
 
   return (
     <div className="relative overflow-hidden py-2 flex">
@@ -243,7 +242,7 @@ export default function FounderNote() {
 
   return (
     <section className="py-24 bg-[#1a1a1a] overflow-hidden border-t border-white/5">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Split Founder Note Layout */}
         <div className="max-w-4xl mx-auto mb-24">
         <div className="flex flex-col md:flex-row gap-12 md:gap-20 items-start">

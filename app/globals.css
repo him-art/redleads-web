@@ -166,10 +166,10 @@ h1, h2, h3, h4, h5, h6 {
                 0 8px 16px -4px rgba(0, 0, 0, 0.7), 
                 0 4px 8px -2px rgba(0, 0, 0, 0.5);
   }
+}
 
-  .border-subtle {
-    border-color: var(--color-subtle);
-  }
+@utility border-subtle {
+  border-color: var(--color-subtle);
 }
 
 .material-symbols-outlined {

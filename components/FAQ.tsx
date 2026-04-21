@@ -87,7 +87,7 @@ const FAQ = () => {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <h2 className="text-center text-4xl sm:text-[4.5rem] font-black text-white leading-[1.1] tracking-tighter">
           <span className="block sm:whitespace-nowrap">Frequently Asked</span>
           <span className="block text-orange-500 font-serif-italic sm:whitespace-nowrap">Questions</span>

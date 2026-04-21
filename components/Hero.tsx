@@ -1,12 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Globe, ArrowRight, CheckCircle2 } from 'lucide-react';
 import Image from 'next/image';
-import { createClient } from '@/lib/supabase/client';
-import { type User as SupabaseUser } from '@supabase/supabase-js';
 import { FOUNDER_COUNT } from '@/data/stats';
 import dynamic from 'next/dynamic';
 
@@ -18,27 +15,9 @@ const DashboardDemo = dynamic(() => import('@/components/DashboardDemo'), {
 });
 
 export default function Hero({ children }: { children?: React.ReactNode }) {
-  const [user, setUser] = useState<SupabaseUser | null>(null);
   const [urlInput, setUrlInput] = useState('');
   const [isScanning, setIsScanning] = useState(false);
   const router = useRouter();
-  const supabase = createClient();
-  
-  useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-    };
-    getUser();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,14 +26,9 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
     let domain = urlInput.trim().toLowerCase();
     domain = domain.replace(/^(https?:\/\/)?(www\.)?/, '');
     
-    
     setIsScanning(true);
-    
-    if (user) {
-      router.push(`/dashboard?search=${encodeURIComponent(domain)}`);
-    } else {
-      router.push(`/login?next=/dashboard&search=${encodeURIComponent(domain)}`);
-    }
+    // Always route through login — it auto-redirects if already authenticated
+    router.push(`/login?next=/dashboard&search=${encodeURIComponent(domain)}`);
   };
 
   return (
@@ -75,7 +49,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
          <FloatingBubble className="top-[40%] right-[7%] xl:right-[10%]" delay={1.2} scale={0.75} duration={3.3} floatDelay={0.2} />
          </div>
 
-      <div className="relative z-10 container mx-auto px-4 pt-32 pb-0 md:pt-27 md:pb-0 flex flex-col items-center text-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-0 md:pt-27 md:pb-0 flex flex-col items-center text-center">
       
 
         <h1 

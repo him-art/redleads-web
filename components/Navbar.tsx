@@ -10,33 +10,31 @@ import { type User as SupabaseUser } from '@supabase/supabase-js';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState<SupabaseUser | null>(null);
-  const [loading, setLoading] = useState(true);
-  const supabase = createClient();
+  const [loading, setLoading] = useState(false); // Default to false: render CTA immediately
 
   useEffect(() => {
+    // Deferred auth check — non-blocking, runs after hydration
+    const supabase = createClient();
     const getUser = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         setUser(user);
       } catch (err) {
-        console.error('Navbar session check error:', err);
-      } finally {
-        setLoading(false);
+        // Silently fail — user just sees "Get Started" CTA
       }
     };
     getUser();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
-      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
-  }, [supabase]);
+  }, []);
 
   const handleLogout = async () => {
+    const supabase = createClient();
     await supabase.auth.signOut();
-    // Force a full page reload to clear any server-side state/cookies ensuring a clean logout
     window.location.href = '/';
   };
 

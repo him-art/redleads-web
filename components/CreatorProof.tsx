@@ -3,7 +3,7 @@ import SocialProofTicker from './SocialProofTicker';
 export default function CreatorProof() {
   return (
     <section className="py-16 md:py-24 bg-[#1a1a1a] overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Heading */}
         <div className="text-center mb-14 md:mb-20">

@@ -34,7 +34,7 @@ const comparisonData = [
 export default function WhyAIFirst() {
   return (
     <section className="py-24 bg-[#1a1a1a] relative overflow-hidden">
-      <div className="container mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tight">
             Why <span className="text-orange-500">AI-First</span> Marketing?

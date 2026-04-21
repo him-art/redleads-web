@@ -12,7 +12,8 @@ import BillingTab from './BillingTab';
 import LiveDiscoveryTab from './LiveDiscoveryTab';
 import PaywallModal from '@/components/PaywallModal';
 import { createClient } from '@/lib/supabase/client';
-import OnboardingWizard from './OnboardingWizard';
+import dynamic from 'next/dynamic';
+const OnboardingWizard = dynamic(() => import('./OnboardingWizard'), { ssr: false });
 import GuideTab from './GuideTab'; // [NEW]
 import { DashboardDataProvider } from '@/app/dashboard/DashboardDataContext';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -336,7 +337,7 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                                                 exit={{ opacity: 0, y: -10 }}
                                                 transition={{ duration: 0.2 }}
                                             >
-                                                <GuideTab onNavigate={(tab) => setActiveTab(tab as any)} />
+                                                <GuideTab user={user} onNavigate={(tab) => setActiveTab(tab as any)} />
                                             </motion.div>
                                         )}
 

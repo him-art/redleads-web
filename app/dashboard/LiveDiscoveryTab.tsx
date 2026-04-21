@@ -79,129 +79,129 @@ export default function LiveDiscoveryTab({
     // Unified trial logic is now at the top
 
     return (
-        <section className="space-y-6 max-w-7xl mx-auto">
-            {/* 1. Status Cards Grid (Slimmer Version) */}
+        <section className="space-y-10 max-w-7xl mx-auto">
+            {/* 1. Status Cards Grid (Premium Version) */}
             <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, staggerChildren: 0.1 }}
-                className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8"
+                className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10"
             >
                 {/* Card 1: Plan Status */}
-                <div className="p-0.5 surface-1 rounded-[1.5rem] transition-all duration-300">
+                <div className="p-0.5 surface-1 rounded-[2rem] transition-all duration-700">
                     <motion.div 
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.3 }}
-                        className="relative overflow-hidden rounded-[1.3rem] bg-void p-6 border border-white/5 group transition-all hover:bg-white/[0.04]"
+                        className="relative overflow-hidden rounded-[1.8rem] bg-[#0c0c0c] border border-white/[0.08] backdrop-blur-xl p-8 group transition-all hover:bg-[#0c0c0c]/20"
                     >
-                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-                        <div className="flex items-center justify-between mb-4">
-                            <div className="p-1.5 bg-primary/10 rounded-lg text-primary flex items-center justify-center">
-                                {isActuallySubscribed ? <ShieldCheck size={16} /> : <Clock size={16} />}
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="p-2 bg-primary/10 rounded-xl text-primary flex items-center justify-center border border-primary/20">
+                                {isActuallySubscribed ? <ShieldCheck size={18} /> : <Clock size={18} />}
                             </div>
-                            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-text-secondary/60">Plan Status</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary/40">Operation Status</span>
                         </div>
                         <div>
-                            <h3 className="text-xl font-bold text-text-primary mb-0.5 tracking-tight">
+                            <h3 className="text-2xl font-bold text-text-primary mb-1 tracking-tight">
                                 {planDetails.name}
                             </h3>
-                            <p className="text-[10px] text-text-secondary font-black uppercase tracking-widest opacity-60">
+                            <p className="text-[11px] text-text-secondary font-black uppercase tracking-[0.2em] opacity-40">
                                 {isInTrial 
-                                    ? `${daysRemaining} Days Left` 
+                                    ? `${daysRemaining} Days Remaining` 
                                     : isActuallySubscribed 
-                                        ? 'Active' 
-                                        : 'Trial Expired'}
+                                        ? 'Verified Active' 
+                                        : 'Radar Offline'}
                             </p>
                         </div>
                     </motion.div>
                 </div>
 
                 {/* Card 2: Usage Stats */}
-                <div className="p-0.5 surface-1 rounded-[1.5rem] transition-all duration-300">
+                <div className="p-0.5 surface-1 rounded-[2rem] transition-all duration-700">
                     <motion.div 
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.3, delay: 0.1 }}
-                        className="relative overflow-hidden rounded-[1.3rem] bg-void p-6 border border-white/5 group transition-all hover:bg-white/[0.04]"
+                        transition={{ duration: 0.3 }}
+                        className="relative overflow-hidden rounded-[1.8rem] bg-[#0c0c0c] border border-white/[0.08] backdrop-blur-xl p-8 group transition-all hover:bg-[#0c0c0c]/20"
                     >
-                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-                        <div className="flex items-center justify-between mb-4">
-                            <div className="p-1.5 bg-blue-500/10 rounded-lg text-blue-500 flex items-center justify-center">
-                                <Activity size={16} />
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="p-2 bg-blue-500/10 rounded-xl text-blue-500 flex items-center justify-center border border-blue-500/20">
+                                <Activity size={18} />
                             </div>
-                            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-text-secondary/60">Usage</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary/40">Intelligence Limit</span>
                         </div>
                         <div>
-                            <h3 className="text-xl font-bold text-text-primary mb-0.5 tracking-tight">
+                            <h3 className="text-2xl font-bold text-text-primary mb-1 tracking-tight">
                                 {isMounted ? `${currentUsage}/${searchLimit}` : '...'}
                             </h3>
-                            <p className="text-[10px] text-text-secondary font-black uppercase tracking-widest opacity-60">
-                                Scans Today
+                            <p className="text-[11px] text-text-secondary font-black uppercase tracking-[0.2em] opacity-40">
+                                Global Scans Today
                             </p>
                         </div>
-                        {/* Thinner Progress Bar background */}
-                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/5">
-                            <div 
-                                className="h-full bg-blue-500/50" 
-                                style={{ width: `${Math.min(100, (currentUsage / searchLimit) * 100)}%` }} 
-                            />
+                        {/* High-end Progress Bar */}
+                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/[0.02] overflow-hidden">
+                            <motion.div 
+                                initial={{ width: 0 }}
+                                animate={{ width: `${Math.min(100, (currentUsage / searchLimit) * 100)}%` }}
+                                transition={{ duration: 1.5, ease: "circOut" }}
+                                className="h-full bg-gradient-to-r from-blue-600 to-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.5)] relative" 
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" style={{ backgroundSize: '200% 100%' }} />
+                            </motion.div>
                         </div>
                     </motion.div>
                 </div>
 
                 {/* Card 3: Keywords / Setup */}
-                <div className="p-0.5 surface-1 rounded-[1.5rem] transition-all duration-300">
+                <div className="p-0.5 surface-1 rounded-[2rem] transition-all duration-700">
                     <motion.div 
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.3, delay: 0.2 }}
-                        className="relative overflow-hidden rounded-[1.3rem] bg-void p-6 border border-white/5 group transition-all hover:bg-white/[0.04] cursor-pointer" 
+                        className="relative overflow-hidden rounded-[1.8rem] bg-[#0c0c0c] border border-white/[0.08] backdrop-blur-xl p-8 group transition-all hover:bg-[#0c0c0c]/20 cursor-pointer" 
                         onClick={() => onNavigate('settings')}
                     >
-                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-                        <div className="flex items-center justify-between mb-4">
-                            <div className="p-1.5 bg-purple-500/10 rounded-lg text-purple-500 flex items-center justify-center">
-                                <Compass size={16} />
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="p-2 bg-purple-500/10 rounded-xl text-purple-500 flex items-center justify-center border border-purple-500/20">
+                                <Compass size={18} />
                             </div>
-                            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-text-secondary/60">Tracking</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary/40">Radar Filter</span>
                         </div>
                         <div>
-                            <h3 className="text-xl font-bold text-text-primary mb-0.5 tracking-tight">
+                            <h3 className="text-2xl font-bold text-text-primary mb-1 tracking-tight">
                                 {profile?.keywords?.length || 0}
                             </h3>
                             <div className="flex items-center gap-2">
-                                <p className="text-[10px] text-text-secondary font-black uppercase tracking-widest opacity-60">Active Keywords</p>
+                                <p className="text-[11px] text-text-secondary font-black uppercase tracking-[0.2em] opacity-40">Active Directives</p>
                                 {!isSetupComplete && (
-                                    <span className="flex h-1.5 w-1.5 relative">
+                                    <span className="flex h-2 w-2 relative">
                                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary"></span>
+                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                                     </span>
                                 )}
                             </div>
                         </div>
                         {/* Hover Hint */}
-                        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <ArrowRight size={14} className="text-text-secondary" />
+                        <div className="absolute top-8 right-8 opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1">
+                            <ArrowRight size={18} className="text-text-secondary/40" />
                         </div>
                     </motion.div>
                 </div>
             </motion.div>
 
-            {/* 2. Main Search Area */}
-            <div className="relative group mb-8">
-                <div className="p-0.5 surface-1 rounded-[2rem]">
-                    <div className={`relative bg-void border border-white/5 rounded-[1.8rem] p-1 transition-all overflow-hidden ${
-                        hasResults ? 'border-primary/50 shadow-[0_0_30px_rgba(255,88,54,0.1)]' : ''
+            {/* 2. Main Search Area - Elevated Elevation */}
+            <div className="relative group mb-12">
+                <div className="p-0.5 surface-1 rounded-[2.5rem]">
+                    <div className={`relative bg-[#0c0c0c] backdrop-blur-xl border border-white/[0.08] rounded-[2.3rem] p-1 transition-all duration-700 ${
+                        hasResults ? 'border-primary/40 shadow-[0_0_50px_rgba(255,88,54,0.15)]' : ''
                     }`}>
-                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                        <div className="px-4 sm:px-6 py-4 border-b border-white/5 flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary">Power Search</span>
+                        <div className="px-8 py-6 border-b border-white/[0.05] flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                                <div className="w-2.5 h-2.5 rounded-full bg-primary animate-[pulse_1.5s_infinite] shadow-[0_0_12px_rgba(255,88,54,0.8)]" />
+                                <span className="text-[11px] font-black uppercase tracking-[0.3em] text-text-secondary/60">Power Search Hub</span>
                             </div>
                         </div>
-                        <div className="p-4 sm:p-6">
+                        <div className="p-4 sm:p-10">
                             {profile?.website_url ? (
                                 <LeadSearch 
                                     user={user} 
@@ -213,23 +213,23 @@ export default function LiveDiscoveryTab({
                                     onNavigate={onNavigate}
                                 />
                             ) : (
-                                <div className="flex flex-col items-center justify-center py-10 space-y-6 text-center">
-                                    <div className="p-4 bg-orange-500/10 rounded-2xl text-primary flex items-center justify-center">
-                                        <Compass size={40} className="animate-pulse" />
+                                <div className="flex flex-col items-center justify-center py-16 space-y-8 text-center">
+                                    <div className="p-6 bg-orange-500/10 rounded-3xl text-primary flex items-center justify-center border border-white/5">
+                                        <Compass size={48} className="animate-pulse" />
                                     </div>
-                                    <div className="space-y-2 max-w-sm">
-                                        <h3 className="text-lg font-bold text-text-primary">Website Tracking Missing</h3>
-                                        <p className="text-xs text-text-secondary leading-relaxed uppercase tracking-widest font-black opacity-60">
+                                    <div className="space-y-3 max-w-sm">
+                                        <h3 className="text-xl font-bold text-text-primary">Intelligence Bridge Offline</h3>
+                                        <p className="text-[11px] text-text-secondary leading-relaxed uppercase tracking-[0.15em] font-black opacity-40">
                                             {profile?.description && profile?.keywords?.length > 0 
-                                                ? "Your profile is set up, but we need your website URL to unlock Power Searching."
-                                                : "Connect your website in settings to unlock target-specific power searching."}
+                                                ? "Bridge online but target URL missing. Provide your website to calibrate."
+                                                : "Radar needs directives. Complete tracking setup to activate."}
                                         </p>
                                     </div>
                                     <button 
                                         onClick={() => onNavigate('settings')}
-                                        className="px-8 py-3 bg-primary text-white font-black uppercase text-[10px] tracking-[0.2em] rounded-xl hover:bg-primary/90 transition-all shadow-[0_0_20px_rgba(255,88,54,0.2)]"
+                                        className="px-10 py-4 bg-primary text-white font-black uppercase text-[11px] tracking-[0.2em] rounded-2xl hover:bg-primary/90 transition-all shadow-[0_10px_30px_rgba(255,88,54,0.3)] hover:-translate-y-0.5 active:translate-y-0"
                                     >
-                                        Add Website URL
+                                        Activate Radar
                                     </button>
                                 </div>
                             )}
@@ -237,6 +237,7 @@ export default function LiveDiscoveryTab({
                     </div>
                 </div>
             </div>
+
 
             {/* 3. Main Discovery Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 pt-4">
@@ -323,7 +324,7 @@ export default function LiveDiscoveryTab({
                 {/* Info / Sidebar Column */}
                 {isActuallyExpired && (
                     <div className="lg:col-span-4 space-y-8">
-                        <div className="p-6 bg-gradient-to-br from-white/10 to-white/5 rounded-3xl text-text-primary border border-white/5 shadow-xl relative overflow-hidden group">
+                        <div className="p-6 bg-[#0c0c0c] hover:bg-[#0c0c0c]/80 transition-all rounded-3xl text-text-primary border border-white/5 shadow-xl relative overflow-hidden group">
                            <div className="relative z-10 space-y-4">
                                 <h3 className="font-black text-lg leading-tight">Pick Your Plan</h3>
                                 <p className="text-xs font-bold opacity-80 leading-relaxed text-text-secondary">

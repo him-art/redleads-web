@@ -27,3 +27,11 @@ export const adminRatelimit = (redisUrl && redisToken) ? new Ratelimit({
   analytics: true,
   prefix: "@upstash/ratelimit-admin",
 }) : mockRatelimit as any;
+
+// Guide generation rate limit (2 per 24 hours)
+export const guideRatelimit = (redisUrl && redisToken) ? new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(2, "24 h"),
+  analytics: true,
+  prefix: "@upstash/ratelimit-guide",
+}) : mockRatelimit as any;

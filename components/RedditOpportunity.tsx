@@ -57,7 +57,7 @@ export default function RedditOpportunity() {
           })
         }}
       />
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Heading */}
         <div className="text-center max-w-[90vw] mx-auto mb-16 px-4">

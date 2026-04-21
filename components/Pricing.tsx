@@ -22,25 +22,18 @@ const Pricing = () => {
         const fetchSlots = async () => {
             const supabase = createClient();
             try {
-                console.log('Fetching slots from total_users...');
                 const { data, error } = await supabase
                     .from('total_users')
                     .select('user_count, total_slots')
                     .single();
                 
-                if (error) {
-                    console.error('Supabase error fetching slots:', error);
-                    return;
-                }
+                if (error) return;
 
                 if (data && typeof data.user_count === 'number') {
-                    console.log('Successfully fetched slots:', data);
                     setSlots({ sold: data.user_count, total: data.total_slots || 250 });
-                } else {
-                    console.warn('Fetched data is invalid:', data);
                 }
             } catch (err) {
-                console.error('Unexpected error in fetchSlots:', err);
+                // Silently fail — slots display defaults
             }
         };
         fetchSlots();
@@ -127,7 +120,7 @@ const Pricing = () => {
 
     return (
         <section id="pricing" className="pt-32 pb-10 px-4 bg-[#1a1a1a] relative overflow-hidden border-t border-white/5">
-            <div className="max-w-6xl mx-auto relative z-10">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Header */}
                 <div className="text-center mb-6">
                     <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ff914d] mb-6 font-mono">PRICING</p>
@@ -240,7 +233,7 @@ const Pricing = () => {
                                         </AnimatePresence>
                                     </div>
                                 <p className="text-xs font-bold text-gray-500 leading-relaxed max-w-[240px] uppercase tracking-wider mb-4">{plan.description}</p>
-                                <p className="text-[10px] font-bold text-orange-500/60 uppercase tracking-wider mb-8">Competitors charge $49-99/mo for monitoring alone</p>
+                                
                                 
                                 <div className="mt-auto">
                                     <button

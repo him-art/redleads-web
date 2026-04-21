@@ -64,7 +64,7 @@ const ROI = () => {
                     })
                 }}
             />
-            <div className="max-w-5xl mx-auto px-6">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 
                 <div className="p-2 bg-white/5 border border-white/5 rounded-[3.5rem]">
                 <div className="bg-[#0c0c0c] rounded-[3rem] p-8 md:p-16 border border-white/5 relative overflow-hidden shadow-none">

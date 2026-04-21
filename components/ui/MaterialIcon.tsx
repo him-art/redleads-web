@@ -1,6 +1,18 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
+
+// Inject Material Symbols font on first render (once per app lifecycle)
+let fontInjected = false;
+function injectMaterialFont() {
+  if (fontInjected || typeof document === 'undefined') return;
+  fontInjected = true;
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200';
+  link.crossOrigin = 'anonymous';
+  document.head.appendChild(link);
+}
 
 interface MaterialIconProps {
   name: string;
@@ -31,6 +43,8 @@ export default function MaterialIcon({
   opticalSize = 24,
   className = '',
 }: MaterialIconProps) {
+  // Load the Material Symbols font on first component render
+  useEffect(() => { injectMaterialFont(); }, []);
   // Mapping some Lucide names to Material Symbols if they differ significantly
   const iconMap: Record<string, string> = {
     'zap': 'bolt',

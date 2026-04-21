@@ -5,7 +5,7 @@ import MaterialIcon from '@/components/ui/MaterialIcon';
 const Footer = () => {
   return (
     <footer className="relative bg-[#1a1a1a] pt-24 overflow-hidden border-t border-white/5">
-      <div className="mx-auto max-w-7xl px-6 mb-32 md:mb-40">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-32 md:mb-40">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-12 md:gap-8 lg:gap-8">
           
           {/* Column 1: Brand & Social */}
@@ -100,7 +100,7 @@ const Footer = () => {
 
       {/* Bottom Bar */}
       <div className="border-t border-white/5 bg-[#1a1a1a]">
-        <div className="mx-auto max-w-7xl px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-gray-500 text-xs">
             &copy; {new Date().getFullYear()} RedLeads. All rights reserved.
           </p>

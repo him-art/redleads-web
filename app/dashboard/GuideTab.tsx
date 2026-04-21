@@ -3,7 +3,7 @@
 import GuideView from './guide/GuideView';
 import { BookOpen } from 'lucide-react';
 
-export default function GuideTab({ onNavigate }: { onNavigate: (tab: string) => void }) {
+export default function GuideTab({ onNavigate, user }: { onNavigate: (tab: string) => void, user: any }) {
 
     return (
         <div className="space-y-6">
@@ -13,13 +13,16 @@ export default function GuideTab({ onNavigate }: { onNavigate: (tab: string) => 
                         <BookOpen size={18} className="text-primary" />
                     </div>
                     <div>
-                        <h2 className="text-xl font-bold text-text-primary tracking-tight">Guide</h2>
-                        <p className="text-xs text-text-secondary">Your 90-day roadmap to first 100 users.</p>
+                        <h2 className="text-xl font-bold text-text-primary tracking-tight flex items-center gap-2">
+                            RedLeads OS
+                            <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/20">Beta</span>
+                        </h2>
+                        <p className="text-xs text-text-secondary mt-1">Your 14-day gamified sprint to your first users.</p>
                     </div>
                 </div>
             </div>
 
-            <GuideView onNavigate={onNavigate} />
+            <GuideView onNavigate={onNavigate} user={user} />
         </div>
     );
 }

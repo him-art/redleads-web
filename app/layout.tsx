@@ -3,6 +3,8 @@ import { Outfit, EB_Garamond } from "next/font/google";
 import "./globals.css";
 import dynamic from "next/dynamic";
 import ClarityProvider from "@/components/providers/ClarityProvider";
+import { cn } from "@/lib/utils";
+
 
 // Lazy-load heavy client components to reduce initial JS bundle
 const AnalyticsListener = dynamic(() => import("@/components/AnalyticsListener"));
@@ -17,7 +19,7 @@ const outfit = Outfit({
 
 const ebGaramond = EB_Garamond({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "700"],
   style: ["normal", "italic"],
   variable: "--font-garamond",
   display: 'swap',
@@ -83,19 +85,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${outfit.variable} ${ebGaramond.variable}`}>
-      <head>
-        {/* Non-render-blocking Material Icons font: preload hint + deferred stylesheet injection */}
-        <link
-          rel="preload"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-          as="style"
-          crossOrigin="anonymous"
-        />
-        <noscript>
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-        </noscript>
-      </head>
+    <html lang="en" suppressHydrationWarning className={cn(outfit.variable, ebGaramond.variable, "font-sans")}>
+      <head />
       <body className="antialiased font-sans">
         <script
           type="application/ld+json"
@@ -186,24 +177,6 @@ export default function RootLayout({
           {children}
           <AnalyticsListener />
         </ClarityProvider>
-        {/* Deferred Material Icons font loader — avoids render-blocking */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if (typeof window !== 'undefined') {
-                var link = document.createElement('link');
-                link.rel = 'stylesheet';
-                link.href = 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200';
-                link.crossOrigin = 'anonymous';
-                if (document.readyState === 'complete') {
-                  document.head.appendChild(link);
-                } else {
-                  window.addEventListener('load', function() { document.head.appendChild(link); });
-                }
-              }
-            `,
-          }}
-        />
       </body>
     </html>
   );

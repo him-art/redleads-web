@@ -51,6 +51,16 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        // Cache static assets aggressively (images, fonts, icons)
+        source: '/:path*.(webp|png|jpg|jpeg|svg|ico|woff|woff2|ttf|eot)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
     ];
   },
   async rewrites() {

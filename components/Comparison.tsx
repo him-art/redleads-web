@@ -7,7 +7,7 @@ import Image from 'next/image';
 const Comparison = () => {
   return (
     <section className="py-24 bg-[#1a1a1a] relative border-t border-white/5">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
         <div className="text-center max-w-4xl mx-auto mb-20">
