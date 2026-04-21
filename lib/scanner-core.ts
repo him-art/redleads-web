@@ -31,19 +31,20 @@ export async function performScan(url: string, options: ScannerOptions): Promise
     // A. STEP A: Let AI Generate a High-Precision Mega-Query
     try {
         const prompt = `
-            Analyze this product context:
-            ${siteContextString}
-            
-            Generate ONE extremely high-intent search query for site:reddit.com.
-            The query MUST combine multiple intent signals using the OR operator.
-            
-            Format: "niche keywords" (recommend OR best OR alternative OR problem OR help OR "looking for")
-            
-            Requirements:
-            - Capture pain points, recommendation requests, and competitor alternatives in this ONE query.
-            - Target people with urgent needs or high buying intent.
-            - Return ONLY the query string.
-        `;
+                Analyze this product context:
+                ${siteContextString}
+                
+                Generate a Natural Language search query for site:reddit.com that Tavily's AI can use to find your target audience.
+                
+                The query should be a descriptive request, like:
+                "People on reddit looking for [problem solved] or asking for recommendations for [niche/product type]"
+                
+                Requirements:
+                - Focus on semantic meaning, not just keywords.
+                - Do NOT use Boolean operators (OR, AND).
+                - Target the "Target Audience" persona.
+                - Return ONLY the query string.
+            `;
 
         const AIData = await AI.call({
             model: "llama-3.3-70b-versatile",
@@ -82,7 +83,7 @@ export async function performScan(url: string, options: ScannerOptions): Promise
                 query: query.includes('site:reddit.com') ? query : `site:reddit.com ${query}`,
                 search_depth: "advanced",
                 include_domains: ["reddit.com"],
-                max_results: 40 // Increased for the single query to get better variety
+                max_results: 60 // High sample size for AI filtering
             };
 
             if (tavilyTimeRange) fetchBody.time_range = tavilyTimeRange;
@@ -171,18 +172,18 @@ export async function performScan(url: string, options: ScannerOptions): Promise
                 Product Description: "${description}"
                 Target Keywords: "${keywords?.join(', ')}"
                 
-                Task: Categorize these ${leads.length} Reddit leads as "Best Match", "Good Match", or "Low" based on their relevance to the product.
+                Task: Act as a "Chief Audience Officer". Review these ${leads.length} Reddit leads and qualify them against our Target Audience criteria.
                 
                 **Strictness Guidelines:**
-                - **Best Match**: The post is explicitly asking for a tool like yours, or complaining about a specific problem your product solves.
-                - **Good Match**: The post is highly related to the industry or niche but not a direct buying signal (e.g., general discussion).
-                - **Low**: The post is unrelated, a generic advertisement, or a different industry entirely.
+                - **Best Match**: The user is currently experiencing the EXACT problem we solve, or is actively asking for a recommendation we fulfill. High intent.
+                - **Good Match**: The user is in the correct audience/niche and talking about relevant topics, but maybe not ready to buy yet.
+                - **Low**: Generic noise, ads, or the user is not actually in the target market.
                 
-                Leads to analyze:
-                ${JSON.stringify(leads.map((l, i) => ({ id: i, title: l.title, subreddit: l.subreddit })))}
+                Leads to qualify:
+                ${JSON.stringify(leads.map((l, i) => ({ id: i, title: l.title, subreddit: l.subreddit, snippet: l.body_text?.substring(0, 150) })))}
                 
                 Return a JSON object mapping the lead index to its category.
-                Output format: { "categories": { "0": "Best Match", "1": "Good Match", ... } }
+                Format: { "categories": { "0": "Best Match", "1": "Good Match", ... } }
                 ONLY return the JSON.
             `;
 
