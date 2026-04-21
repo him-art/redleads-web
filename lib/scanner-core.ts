@@ -238,13 +238,21 @@ export async function performScan(url: string, options: ScannerOptions): Promise
             return false;
         }
 
-        // 2. Freshness Check (Enforce selected timeRange)
-        if (lead.post_created_at) {
-            const postDate = new Date(lead.post_created_at).getTime();
-            if (now - postDate > timeframeMs) {
-                console.log(`[ScannerLib] Dropping lead older than selected range: ${lead.title} (${lead.post_created_at})`);
-                return false;
-            }
+        // 2. Freshness Check (Strictly Enforce selected timeRange)
+        if (!lead.post_created_at) {
+            console.log(`[ScannerLib] Strictly Dropping lead with missing date to satisfy timeframe requirement: ${lead.title}`);
+            return false;
+        }
+
+        const postDate = new Date(lead.post_created_at).getTime();
+        if (isNaN(postDate)) {
+            console.log(`[ScannerLib] Dropping lead with invalid date format: ${lead.post_created_at}`);
+            return false;
+        }
+
+        if (now - postDate > timeframeMs) {
+            console.log(`[ScannerLib] Dropping lead older than selected range: ${lead.title} (${lead.post_created_at})`);
+            return false;
         }
 
         return true;
