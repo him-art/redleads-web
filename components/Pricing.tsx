@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import MaterialIcon from '@/components/ui/MaterialIcon';
 import { createClient } from '@/lib/supabase/client';
@@ -39,19 +39,17 @@ const Pricing = () => {
         fetchSlots();
     }, []);
 
-    const handleCheckout = async (plan: string) => {
+    const handleCheckout = useCallback(async (plan: string, overrideInterval?: string) => {
         setIsLoading(plan);
         try {
             // Map our UI plans to the backend plan keys
             const planKey = plan === 'Starter' ? 'starter' : plan === 'Growth' ? 'growth' : 'lifetime';
+            const interval = overrideInterval ?? (planKey === 'lifetime' ? 'monthly' : billingCycle);
             
             const res = await fetch('/api/payments/create-checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    plan: planKey,
-                    interval: planKey === 'lifetime' ? 'monthly' : billingCycle 
-                })
+                body: JSON.stringify({ plan: planKey, interval })
             });
             
             const data = await res.json().catch(() => ({}));
@@ -59,6 +57,9 @@ const Pricing = () => {
             if (res.ok && data.checkout_url) {
                 window.location.href = data.checkout_url;
             } else if (res.status === 401) {
+                // Save intent so we can auto-trigger after login
+                sessionStorage.setItem('rl_pending_plan', plan);
+                sessionStorage.setItem('rl_pending_interval', billingCycle);
                 window.location.href = `/login?next=/pricing`;
             } else {
                 alert(data.error || `Error ${res.status}: Failed to initiate checkout`);
@@ -69,7 +70,25 @@ const Pricing = () => {
         } finally {
             setIsLoading(null);
         }
-    };
+    }, [billingCycle]);
+
+    // Auto-trigger checkout if user just returned from login with a pending plan
+    useEffect(() => {
+        const pendingPlan = sessionStorage.getItem('rl_pending_plan');
+        const pendingInterval = sessionStorage.getItem('rl_pending_interval');
+        if (!pendingPlan) return;
+
+        const supabase = createClient();
+        supabase.auth.getUser().then(({ data: { user } }) => {
+            if (user) {
+                sessionStorage.removeItem('rl_pending_plan');
+                sessionStorage.removeItem('rl_pending_interval');
+                if (pendingInterval === 'annual') setBillingCycle('annual');
+                // Small delay to let the UI settle before triggering checkout
+                setTimeout(() => handleCheckout(pendingPlan, pendingInterval ?? undefined), 300);
+            }
+        });
+    }, [handleCheckout]);
 
     const plans = [
         {

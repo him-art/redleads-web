@@ -53,12 +53,6 @@ export async function GET(request: NextRequest) {
       console.error('OAuth Code Exchange Error:', error?.message || 'No session returned');
       return NextResponse.redirect(`${siteUrl}/login?error=OAuth failed`)
     }
-
-    // EXPLICITLY set the session to force cookie persistence across browser/server
-    await supabase.auth.setSession({
-      access_token: data.session.access_token,
-      refresh_token: data.session.refresh_token,
-    })
     
     return NextResponse.redirect(`${siteUrl}${next}`)
   }
