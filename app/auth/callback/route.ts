@@ -60,7 +60,18 @@ export async function GET(request: NextRequest) {
       access_token: data.session.access_token,
       refresh_token: data.session.refresh_token,
     })
-    
+
+    // Fast-track: if user clicked a pricing CTA before login, skip the landing page
+    // and go directly to the Dodo checkout session server-side.
+    const checkoutIntent = cookieStore.get('rl_checkout_intent')?.value;
+    if (checkoutIntent) {
+      const [plan, interval] = checkoutIntent.split(':');
+      const checkoutUrl = new URL(`${origin}/api/payments/checkout-redirect`);
+      checkoutUrl.searchParams.set('plan', plan);
+      checkoutUrl.searchParams.set('interval', interval || 'monthly');
+      return NextResponse.redirect(checkoutUrl.toString());
+    }
+
     return NextResponse.redirect(`${origin}${next}`)
   }
 

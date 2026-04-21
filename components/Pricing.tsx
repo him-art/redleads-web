@@ -57,9 +57,9 @@ const Pricing = () => {
             if (res.ok && data.checkout_url) {
                 window.location.href = data.checkout_url;
             } else if (res.status === 401) {
-                // Save intent so we can auto-trigger after login
-                sessionStorage.setItem('rl_pending_plan', plan.toLowerCase());
-                sessionStorage.setItem('rl_pending_interval', billingCycle);
+                // Set a short-lived checkout intent cookie (server-readable for fast-track)
+                const cookieVal = `${planKey}:${planKey === 'lifetime' ? 'monthly' : billingCycle}`;
+                document.cookie = `rl_checkout_intent=${cookieVal}; path=/; max-age=600; SameSite=Lax`;
                 window.location.href = `/login?next=/`;
             } else {
                 alert(data.error || `Error ${res.status}: Failed to initiate checkout`);
@@ -72,23 +72,24 @@ const Pricing = () => {
         }
     }, [billingCycle]);
 
-    // Auto-trigger checkout if user just returned from login with a pending plan
+    // Fallback for email/password login: read checkout intent from cookie
     useEffect(() => {
-        const pendingPlan = sessionStorage.getItem('rl_pending_plan');
-        const pendingInterval = sessionStorage.getItem('rl_pending_interval');
+        const match = document.cookie.match(/rl_checkout_intent=([^;]+)/);
+        if (!match) return;
+
+        const [pendingPlan, pendingInterval] = match[1].split(':');
         if (!pendingPlan) return;
 
         const supabase = createClient();
         supabase.auth.getUser().then(({ data: { user } }) => {
             if (user) {
-                sessionStorage.removeItem('rl_pending_plan');
-                sessionStorage.removeItem('rl_pending_interval');
+                // Clear the cookie immediately to prevent re-trigger
+                document.cookie = 'rl_checkout_intent=; path=/; max-age=0; SameSite=Lax';
                 if (pendingInterval === 'annual') setBillingCycle('annual');
-                
-                // Map to UI plan name for handleCheckout
+
                 const lowerPlan = pendingPlan.toLowerCase();
-                const planName = lowerPlan === 'starter' ? 'Starter' 
-                               : lowerPlan === 'growth' ? 'Growth' 
+                const planName = lowerPlan === 'starter' ? 'Starter'
+                               : lowerPlan === 'growth' ? 'Growth'
                                : 'Lifetime';
 
                 // Small delay to let the session hydrate before triggering checkout
