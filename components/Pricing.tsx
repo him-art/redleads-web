@@ -58,9 +58,9 @@ const Pricing = () => {
                 window.location.href = data.checkout_url;
             } else if (res.status === 401) {
                 // Save intent so we can auto-trigger after login
-                sessionStorage.setItem('rl_pending_plan', plan);
+                sessionStorage.setItem('rl_pending_plan', plan.toLowerCase());
                 sessionStorage.setItem('rl_pending_interval', billingCycle);
-                window.location.href = `/login?next=/pricing`;
+                window.location.href = `/login?next=/`;
             } else {
                 alert(data.error || `Error ${res.status}: Failed to initiate checkout`);
             }
@@ -84,8 +84,15 @@ const Pricing = () => {
                 sessionStorage.removeItem('rl_pending_plan');
                 sessionStorage.removeItem('rl_pending_interval');
                 if (pendingInterval === 'annual') setBillingCycle('annual');
-                // Small delay to let the UI settle before triggering checkout
-                setTimeout(() => handleCheckout(pendingPlan, pendingInterval ?? undefined), 300);
+                
+                // Map to UI plan name for handleCheckout
+                const lowerPlan = pendingPlan.toLowerCase();
+                const planName = lowerPlan === 'starter' ? 'Starter' 
+                               : lowerPlan === 'growth' ? 'Growth' 
+                               : 'Lifetime';
+
+                // Small delay to let the session hydrate before triggering checkout
+                setTimeout(() => handleCheckout(planName, pendingInterval ?? undefined), 500);
             }
         });
     }, [handleCheckout]);

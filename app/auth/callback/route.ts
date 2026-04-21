@@ -51,11 +51,18 @@ export async function GET(request: NextRequest) {
     
     if (error || !data.session) {
       console.error('OAuth Code Exchange Error:', error?.message || 'No session returned');
-      return NextResponse.redirect(`${siteUrl}/login?error=OAuth failed`)
+      return NextResponse.redirect(`${origin}/login?error=OAuth failed`)
     }
+
+    // EXPLICITLY set the session to force cookie persistence across browser/server
+    // This is often required in Next.js Route Handlers to ensure cookies stick on redirect
+    await supabase.auth.setSession({
+      access_token: data.session.access_token,
+      refresh_token: data.session.refresh_token,
+    })
     
-    return NextResponse.redirect(`${siteUrl}${next}`)
+    return NextResponse.redirect(`${origin}${next}`)
   }
 
-  return NextResponse.redirect(`${siteUrl}/login?error=No code provided`)
+  return NextResponse.redirect(`${origin}/login?error=No code provided`)
 }
