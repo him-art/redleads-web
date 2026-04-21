@@ -59,7 +59,7 @@ const Pricing = () => {
             if (res.ok && data.checkout_url) {
                 window.location.href = data.checkout_url;
             } else if (res.status === 401) {
-                window.location.href = `/login?next=/dashboard`;
+                window.location.href = `/login?next=/pricing`;
             } else {
                 alert(data.error || `Error ${res.status}: Failed to initiate checkout`);
             }
