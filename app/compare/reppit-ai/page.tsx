@@ -57,7 +57,7 @@ export default function ReppitComparison() {
                 </div>
                 
                 <div className="relative">
-                  <div className="text-[10px] font-black uppercase tracking-widest text-orange-500 mb-4">RedLeads AI (Context-Focused)</div>
+                  <div className="text-[10px] font-black uppercase tracking-widest text-orange-500 mb-4">RedLeads.app (Context-Focused)</div>
                   <div className="space-y-4">
                      <div className="p-4 bg-orange-500/5 border border-orange-500/20 rounded-xl">
                         <div className="text-[10px] font-black text-orange-500 uppercase mb-2">Intent: Solution Seeker</div>
@@ -111,7 +111,7 @@ export default function ReppitComparison() {
               <tr className="border-b border-white/10 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
                 <th className="py-6 pr-4">Intelligence Feature</th>
                 <th className="py-6 px-4">Reppit AI</th>
-                <th className="py-6 pl-4 text-orange-500">RedLeads AI</th>
+                <th className="py-6 pl-4 text-orange-500">RedLeads.app</th>
               </tr>
             </thead>
             <tbody className="text-sm">

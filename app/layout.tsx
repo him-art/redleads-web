@@ -42,13 +42,13 @@ export const metadata: Metadata = {
     title: "RedLeads - The AI-First Reddit Intelligence Engine",
     description: "Find high-intent leads on Reddit with proprietary AI. The ultimate growth tool for SaaS founders.",
     url: "https://www.redleads.app",
-    siteName: "RedLeads AI",
+    siteName: "RedLeads.app",
     images: [
       {
         url: "https://www.redleads.app/og-image.webp?v=3",
         width: 1200,
         height: 630,
-        alt: "RedLeads AI - Turn Reddit Conversations into Customers",
+        alt: "RedLeads.app - Turn Reddit Conversations into Customers",
       },
     ],
     locale: "en_US",
@@ -58,13 +58,13 @@ export const metadata: Metadata = {
   // Twitter Card
   twitter: {
     card: "summary_large_image",
-    title: "RedLeads AI | Turn Reddit Conversations into Customers",
+    title: "RedLeads.app | Turn Reddit Conversations into Customers",
     description: "The AI-First Reddit Intelligence Engine. Stop guessing and start monitoring high-intent conversations with AI.",
     images: ["https://www.redleads.app/og-image.webp?v=3"],
   },
   
   // Additional SEO metadata
-  keywords: ["AI Reddit Marketing", "Reddit AI Lead Gen", "Automated Reddit Outreach", "RedLeads AI", "Reddit Intent Engine", "Best Reddit Marketing Tools 2026", "Reddit Lead Generation", "SaaS marketing", "startup growth"],
+  keywords: ["AI Reddit Marketing", "Reddit AI Lead Gen", "Automated Reddit Outreach", "RedLeads.app", "Reddit Intent Engine", "Best Reddit Marketing Tools 2026", "Reddit Lead Generation", "SaaS marketing", "startup growth"],
   authors: [{ name: "RedLeads" }],
   robots: {
     index: true,

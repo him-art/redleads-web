@@ -3,7 +3,7 @@ import { Brain, Zap, Shield, Target, MousePointer2, Clock } from 'lucide-react';
 const reasons = [
   {
     title: "Intent vs. Keywords",
-    description: "Legacy tools ping you for every keyword mention. RedLeads AI understands the *intent* behind the post, filtering out the noise and only surfacing ready-to-buy prospects.",
+    description: "Legacy tools ping you for every keyword mention. RedLeads.app understands the *intent* behind the post, filtering out the noise and only surfacing ready-to-buy prospects.",
     icon: Brain,
     color: "text-orange-500",
     bg: "bg-orange-500/10"
@@ -81,7 +81,7 @@ export default function WhyAIFirst() {
                   <tr className="border-b border-white/5">
                     <th className="p-6 text-[10px] font-black uppercase tracking-widest text-slate-500 italic">Feature</th>
                     <th className="p-6 text-[10px] font-black uppercase tracking-widest text-slate-500 italic">Legacy Tools</th>
-                    <th className="p-6 text-[10px] font-black uppercase tracking-widest text-orange-500 bg-orange-500/5 italic">RedLeads AI (AI Scan)</th>
+                    <th className="p-6 text-[10px] font-black uppercase tracking-widest text-orange-500 bg-orange-500/5 italic">RedLeads.app (AI Scan)</th>
                   </tr>
                 </thead>
                 <tbody className="text-sm">
@@ -115,7 +115,7 @@ export default function WhyAIFirst() {
                       <span className="text-xs font-medium text-slate-400 block">{row.legacy}</span>
                     </div>
                     <div className="p-3 bg-orange-500/5 rounded-xl border border-orange-500/10 space-y-1">
-                      <span className="text-[9px] font-black uppercase tracking-widest text-orange-500/70 block italic">RedLeads AI</span>
+                      <span className="text-[9px] font-black uppercase tracking-widest text-orange-500/70 block italic">RedLeads.app</span>
                       <span className="text-xs font-bold text-white flex items-center gap-2">
                         <div className="w-1 h-1 rounded-full bg-orange-500" />
                         {row.ai}

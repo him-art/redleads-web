@@ -18,10 +18,10 @@ export default function BillingTab() {
     const [slots, setSlots] = useState<{ sold: number; total: number } | null>(null);
     const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
 
-    // Dynamic Pricing Logic ($20 every 20 users) - Aligned with Pricing.tsx
+    // Dynamic Pricing Logic ($40 every 40 users) - Aligned with Pricing.tsx
     const currentUsers = slots?.sold || 0; 
-    const currentPrice = currentUsers < 80 ? 59 : 79 + Math.floor((currentUsers - 80) / 20) * 20;
-    const nextCheckpoint = currentUsers < 80 ? 80 : 80 + (Math.floor((currentUsers - 80) / 20) + 1) * 20;
+    const currentPrice = currentUsers < 260 ? 259 : 259 + Math.floor((currentUsers - 260) / 40) * 40;
+    const nextCheckpoint = currentUsers < 260 ? 260 : 260 + (Math.floor((currentUsers - 260) / 40) + 1) * 40;
     const spotsLeft = nextCheckpoint - currentUsers;
 
     useEffect(() => { 
@@ -41,7 +41,7 @@ export default function BillingTab() {
                 }
 
                 if (data && typeof data.user_count === 'number') {
-                    setSlots({ sold: data.user_count, total: data.total_slots || 150 });
+                    setSlots({ sold: data.user_count, total: Math.max(data.total_slots || 500, 500) });
                 }
             } catch (err) {
                 console.error('Unexpected error in fetchSlots (Billing):', err);

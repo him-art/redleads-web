@@ -301,7 +301,7 @@ export function getUniqueTitles(solutionName: string, subName: string, archetype
     {
       title: `Get customers from ${subName}`,
       highlight: `for your ${solutionName}`,
-      desc: `Discover how to identify high-intent buyers for ${solutionName} in ${subName}. Use RedLeads AI to monitor conversations and close leads faster.`
+      desc: `Discover how to identify high-intent buyers for ${solutionName} in ${subName}. Use RedLeads.app to monitor conversations and close leads faster.`
     },
     {
       title: `${subName} Marketing Strategy`,

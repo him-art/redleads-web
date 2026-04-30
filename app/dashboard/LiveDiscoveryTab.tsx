@@ -99,7 +99,7 @@ export default function LiveDiscoveryTab({
                             <div className="p-2 bg-primary/10 rounded-xl text-primary flex items-center justify-center border border-primary/20">
                                 {isActuallySubscribed ? <ShieldCheck size={18} /> : <Clock size={18} />}
                             </div>
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary/40">Operation Status</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary/40">Plan Status</span>
                         </div>
                         <div>
                             <h3 className="text-2xl font-bold text-text-primary mb-1 tracking-tight">
@@ -128,7 +128,7 @@ export default function LiveDiscoveryTab({
                             <div className="p-2 bg-blue-500/10 rounded-xl text-blue-500 flex items-center justify-center border border-blue-500/20">
                                 <Activity size={18} />
                             </div>
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary/40">Intelligence Limit</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary/40">Scans Limit</span>
                         </div>
                         <div>
                             <h3 className="text-2xl font-bold text-text-primary mb-1 tracking-tight">
@@ -165,7 +165,7 @@ export default function LiveDiscoveryTab({
                             <div className="p-2 bg-purple-500/10 rounded-xl text-purple-500 flex items-center justify-center border border-purple-500/20">
                                 <Compass size={18} />
                             </div>
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary/40">Radar Filter</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary/40">Keywords</span>
                         </div>
                         <div>
                             <h3 className="text-2xl font-bold text-text-primary mb-1 tracking-tight">

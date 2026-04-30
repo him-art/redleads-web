@@ -52,7 +52,8 @@ export async function POST(req: Request) {
                 .select('user_count, total_slots')
                 .single();
             
-            if (slots && slots.user_count >= slots.total_slots) {
+            const maxSlots = Math.max(slots?.total_slots || 500, 500);
+            if (slots && slots.user_count >= maxSlots) {
                 return NextResponse.json({ 
                     error: 'Lifetime slots are sold out! Please select a monthly plan.',
                 }, { status: 410 });

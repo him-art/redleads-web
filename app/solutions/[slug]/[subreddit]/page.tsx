@@ -207,7 +207,7 @@ export default async function PseoCombinationPage({ params }: Props) {
           </div>
 
           <div className="bg-[#141414] p-10 rounded-[2.5rem] border border-white/5">
-            <h2 className="text-3xl font-black text-white mb-8">RedLeads AI for {subredditName}</h2>
+            <h2 className="text-3xl font-black text-white mb-8">RedLeads.app for {subredditName}</h2>
             <p className="text-slate-400 leading-relaxed mb-6">
               Stop manual scrolling. Our AI intent engine monitors {subredditName} 24/7 and alerts you only when a "Ready-to-Buy" signal is detected.
             </p>

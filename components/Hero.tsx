@@ -148,7 +148,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                 ) : (
                   <>
                     <span className="xs:inline">Find users</span>
-                    <span className="xs:hidden">Go</span>
+                  
                     <ArrowRight size={14} className="shrink-0" />
                   </>
                 )}

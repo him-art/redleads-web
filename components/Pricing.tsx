@@ -11,11 +11,11 @@ const Pricing = () => {
     const [slots, setSlots] = useState<{ sold: number; total: number } | null>(null);
     const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
 
-    // New Dynamic Pricing Logic ($20 every 20 users)
+    // New Dynamic Pricing Logic ($40 every 40 users)
     const currentUsers = slots?.sold || 0; 
-    const currentPrice = currentUsers < 80 ? 59 : 79 + Math.floor((currentUsers - 80) / 20) * 20;
-    const nextPrice = currentPrice + 20;
-    const nextCheckpoint = currentUsers < 80 ? 80 : 80 + (Math.floor((currentUsers - 80) / 20) + 1) * 20;
+    const currentPrice = currentUsers < 260 ? 259 : 259 + Math.floor((currentUsers - 260) / 40) * 40;
+    const nextPrice = currentPrice + 40;
+    const nextCheckpoint = currentUsers < 260 ? 260 : 260 + (Math.floor((currentUsers - 260) / 40) + 1) * 40;
     const spotsLeft = nextCheckpoint - currentUsers;
 
     useEffect(() => {
@@ -30,7 +30,7 @@ const Pricing = () => {
                 if (error) return;
 
                 if (data && typeof data.user_count === 'number') {
-                    setSlots({ sold: data.user_count, total: data.total_slots || 250 });
+                    setSlots({ sold: data.user_count, total: Math.max(data.total_slots || 500, 500) });
                 }
             } catch (err) {
                 // Silently fail — slots display defaults
@@ -339,15 +339,7 @@ const Pricing = () => {
                         </div>
                         <div className="relative h-full p-8 md:p-12 bg-gradient-to-br from-[#0c0c0c] to-black border-2 border-red-500/50 rounded-[2rem] group flex flex-col overflow-hidden">
                             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                            {/* Sold Out Overlay */}
-                            {slots && slots.sold >= slots.total && (
-                                <div className="absolute inset-0 bg-black/80 z-50 flex items-center justify-center rounded-[2rem]">
-                                    <div className="text-center">
-                                        <div className="bg-red-500 text-white px-6 py-2 rounded-full font-black uppercase tracking-widest text-xs mb-4">Sold Out</div>
-                                        <p className="text-gray-400 text-sm font-bold uppercase tracking-widest">Join the waitlist</p>
-                                    </div>
-                                </div>
-                            )}
+                            {/* Sold Out Overlay Removed */}
                             
                             
 
@@ -365,7 +357,7 @@ const Pricing = () => {
                                 <div className="mt-auto">
                                     <button
                                         onClick={() => handleCheckout('Lifetime')}
-                                        disabled={!!isLoading || (slots ? slots.sold >= slots.total : false)}
+                                        disabled={!!isLoading}
                                         suppressHydrationWarning
                                         className="w-full py-6 rounded-2xl bg-white text-black font-black text-xs uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95 shadow-none"
                                     >
@@ -409,7 +401,7 @@ const Pricing = () => {
                                             <MaterialIcon name="bolt" size={14} />
                                         </div>
                                         <span className="text-xs font-black uppercase tracking-widest text-red-500">
-                                            Price increase by $20 after {spotsLeft} users
+                                            Price increase by $40 after {spotsLeft} users
                                         </span>
                                     </li>
                                 </ul>
@@ -441,9 +433,9 @@ const Pricing = () => {
                             {/* Global Roadmap Visual */}
                             <div className="relative mb-8 pt-4">
                                 <div className="absolute inset-0 flex justify-between items-start z-20 pointer-events-none">
-                                    {[120, 140, 160, 180, 200, 220, 240].map((tick) => {
-                                        const pos = ((tick - 100) / 160) * 100;
-                                        const tickPrice = tick < 80 ? 59 : 79 + Math.floor((tick - 80) / 20) * 20;
+                                    {[300, 340, 380, 420, 460].map((tick) => {
+                                        const pos = ((tick - 250) / 250) * 100;
+                                        const tickPrice = tick < 260 ? 259 : 259 + Math.floor((tick - 260) / 40) * 40;
                                         return (
                                             <div key={tick} className={`absolute flex flex-col items-center -translate-x-1/2 ${tick % 40 !== 0 ? 'hidden sm:flex' : ''}`} style={{ left: `${pos}%` }}>
                                                 {/* Vertical Notch */}
@@ -461,7 +453,7 @@ const Pricing = () => {
                                 <div className="relative h-4 bg-white/5 rounded-full border border-white/10 overflow-hidden shadow-inner">
                                     <div 
                                         className="h-full bg-gradient-to-r from-orange-600 via-orange-500 to-red-500 rounded-r-full shadow-[0_0_40px_rgba(249,115,22,0.4)] transition-all duration-1000 ease-out"
-                                        style={{ width: `${Math.min(100, Math.max(0, ((currentUsers - 100) / 160) * 100))}%` }}
+                                        style={{ width: `${Math.min(100, Math.max(0, ((currentUsers - 250) / 250) * 100))}%` }}
                                     />
                                 </div>
                             </div>
@@ -470,11 +462,11 @@ const Pricing = () => {
                             <div className="flex justify-between items-center text-[13px] font-black text-white/70 uppercase tracking-[0.2em] px-2">
                                 <div className="flex flex-col items-start gap-1">
                                     <span className="text-white/20">|</span>
-                                    <span>100 USERS</span>
+                                    <span>250 USERS</span>
                                 </div>
                                 <div className="flex flex-col items-end gap-1">
                                     <span className="text-white/20">|</span>
-                                    <span>260 USERS</span>
+                                    <span>500 USERS</span>
                                 </div>
                             </div>
                         </div>

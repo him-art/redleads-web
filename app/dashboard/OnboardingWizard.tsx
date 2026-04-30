@@ -73,7 +73,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                 }
 
                 if (data && typeof data.user_count === 'number') {
-                    setSlots({ sold: data.user_count, total: data.total_slots || 250 });
+                    setSlots({ sold: data.user_count, total: Math.max(data.total_slots || 500, 500) });
                 }
             } catch (err) {
                 console.error('Unexpected error in fetchSlots (Onboarding):', err);
@@ -560,14 +560,14 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-black mb-3">Lifetime</h3>
                                     <div className="flex items-baseline gap-2 mb-1">
                                         <span className="text-3xl font-black text-black">
-                                            ${slots ? (slots.sold < 80 ? 59 : 79 + Math.floor((slots.sold - 80) / 20) * 20) : "..."}
+                                            ${slots ? (slots.sold < 260 ? 259 : 259 + Math.floor((slots.sold - 260) / 40) * 40) : "..."}
                                         </span>
                                         <span className="text-[8px] text-gray-600 font-bold uppercase tracking-tight">One-time</span>
                                     </div>
                                     {slots && (
                                         <div className="mb-4">
                                             <p className="text-[8px] font-black uppercase tracking-[0.2em] text-orange-600">
-                                            Only {slots.sold < 80 ? 80 - slots.sold : 20 - ((slots.sold - 80) % 20)} spots left at this price
+                                            Only {slots.sold < 260 ? 260 - slots.sold : 40 - ((slots.sold - 260) % 40)} spots left at this price
                                             </p>
                                         </div>
                                     )}
@@ -580,7 +580,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                     </ul>
                                     <button
                                         onClick={() => handleSelectPlan('lifetime')}
-                                        disabled={!!checkoutLoading || (slots ? slots.sold >= slots.total : false)}
+                                        disabled={!!checkoutLoading}
                                         className="w-full py-4 rounded-xl bg-black text-white font-black text-[10px] uppercase tracking-widest hover:bg-orange-600 transition-all disabled:opacity-50 flex items-center justify-center"
                                     >
                                         {checkoutLoading === 'lifetime' ? <LoadingIcon className="w-4 h-4" /> : 'Select LTD'}
