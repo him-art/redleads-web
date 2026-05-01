@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
-
+import path from "path";
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    // Pin the project root explicitly to silence the multi-lockfile warning
+    root: path.resolve(__dirname),
+  },
   async headers() {
     return [
       {
@@ -92,6 +96,8 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: '2mb',
     },
+    // Explicitly tree-shake lucide-react so only the icons used per page are bundled
+    optimizePackageImports: ['lucide-react'],
   },
 };
 

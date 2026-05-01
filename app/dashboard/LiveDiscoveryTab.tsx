@@ -146,7 +146,7 @@ export default function LiveDiscoveryTab({
                                 transition={{ duration: 1.5, ease: "circOut" }}
                                 className="h-full bg-gradient-to-r from-blue-600 to-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.5)] relative" 
                             >
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" style={{ backgroundSize: '200% 100%' }} />
+
                             </motion.div>
                         </div>
                     </motion.div>

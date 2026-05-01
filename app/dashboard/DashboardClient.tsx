@@ -13,7 +13,14 @@ import LiveDiscoveryTab from './LiveDiscoveryTab';
 import PaywallModal from '@/components/PaywallModal';
 import { createClient } from '@/lib/supabase/client';
 import dynamic from 'next/dynamic';
-const OnboardingWizard = dynamic(() => import('./OnboardingWizard'), { ssr: false });
+const OnboardingWizard = dynamic(() => import('./OnboardingWizard'), {
+    ssr: false,
+    loading: () => (
+        <div className="fixed inset-0 z-[200] bg-[#050505] flex items-center justify-center">
+            <LoadingIcon className="w-10 h-10 text-orange-500" />
+        </div>
+    )
+});
 import GuideTab from './GuideTab'; // [NEW]
 import { DashboardDataProvider } from '@/app/dashboard/DashboardDataContext';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -43,14 +50,13 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
     const effectiveSearch = searchParams.get('search') || initialSearch;
     
     // Consume reactive data from context
-    const { profile, planDetails, trialStatus, draftingLead, setDraftingLead, updateLead } = useDashboardData();
+    const { profile, planDetails, trialStatus, draftingLead, setDraftingLead, updateLead, refreshProfile } = useDashboardData();
     const { isActuallyExpired } = trialStatus;
 
     const [activeTab, setActiveTab] = useState<'reports' | 'live' | 'settings' | 'billing' | 'Guide'>(effectiveSearch ? 'live' : 'live'); 
     
     // Check onboarding status reactive to profile from context
-    const hasCompletedOnboarding = profile?.onboarding_completed || (profile?.description && profile?.keywords?.length > 0);
-    const [showOnboarding, setShowOnboarding] = useState(!hasCompletedOnboarding);
+    const showOnboarding = !profile?.onboarding_completed && !(profile?.description && profile?.keywords?.length > 0);
 
     // Force Billing tab if expired - only if not in onboarding
     useEffect(() => {
@@ -96,11 +102,10 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
         <>
             {showOnboarding && (
                 <OnboardingWizard 
-                    userEmail={user.email} 
                     keywordLimit={planDetails.keywordLimit}
                     defaultUrl={effectiveSearch}
                     onComplete={(data, onboardingUrl) => {
-                        setShowOnboarding(false);
+                        refreshProfile();
                         router.push(`/dashboard?search=${encodeURIComponent(onboardingUrl || '')}`);
                     }} 
                 />

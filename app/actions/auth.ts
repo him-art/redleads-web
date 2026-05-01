@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 
-export async function signInWithEmail(formData: FormData): Promise<{ error: string } | never> {
+export async function signInWithEmail(formData: FormData): Promise<{ error?: string; success?: boolean }> {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
   const supabase = await createClient();
@@ -18,20 +18,16 @@ export async function signInWithEmail(formData: FormData): Promise<{ error: stri
     return { error: error.message };
   }
 
-  const redirectTo = formData.get('redirectTo') as string || '/dashboard';
-  redirect(redirectTo);
+  return { success: true };
 }
 
-export async function signUpWithEmail(formData: FormData): Promise<{ error?: string; success?: string }> {
+export async function signUpWithEmail(formData: FormData): Promise<{ error?: string; success?: boolean }> {
   const headersList = await headers();
   const host = headersList.get('host') || '';
   const protocol = headersList.get('x-forwarded-proto') || 'http';
   
-  // Use localhost origin for local development, production URL otherwise
-  const isLocalhost = host.includes('localhost') || host.includes('127.0.0.1');
-  const siteUrl = isLocalhost 
-    ? `http://${host}` 
-    : (process.env.NEXT_PUBLIC_SITE_URL || `${protocol}://${host}`);
+  // Strictly use the dynamic origin from headers to prevent subdomain mismatches (redleads.app vs www.redleads.app)
+  const origin = `${protocol}://${host}`;
 
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
@@ -43,7 +39,7 @@ export async function signUpWithEmail(formData: FormData): Promise<{ error?: str
     email,
     password,
     options: {
-      emailRedirectTo: `${siteUrl}/auth/callback`,
+      emailRedirectTo: `${origin}/auth/callback`,
     },
   });
 
@@ -53,9 +49,8 @@ export async function signUpWithEmail(formData: FormData): Promise<{ error?: str
   }
 
   // With "Confirm Email" disabled, data.user or data.session will be present immediately.
-  console.log('Signup successful, redirecting to scanner');
-  const redirectTo = formData.get('redirectTo') as string || '/dashboard';
-  redirect(redirectTo);
+  console.log('Signup successful');
+  return { success: true };
 }
 
 export async function signInWithGoogle(redirectTo?: string) {
@@ -63,26 +58,23 @@ export async function signInWithGoogle(redirectTo?: string) {
   const host = headersList.get('host') || '';
   const protocol = headersList.get('x-forwarded-proto') || 'http';
   
-  // Use localhost origin for local development, production URL otherwise
-  const isLocalhost = host.includes('localhost') || host.includes('127.0.0.1');
-  const siteUrl = isLocalhost 
-    ? `http://${host}` 
-    : (process.env.NEXT_PUBLIC_SITE_URL || `${protocol}://${host}`);
+  // Strictly use the dynamic origin from headers to prevent subdomain mismatches
+  const origin = `${protocol}://${host}`;
   
   const supabase = await createClient();
   
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${siteUrl}/auth/callback${redirectTo ? `?next=${encodeURIComponent(redirectTo)}` : ''}`,
+      redirectTo: `${origin}/auth/callback${redirectTo ? `?next=${encodeURIComponent(redirectTo)}` : ''}`,
     },
   });
 
   if (error) {
-    redirect('/login?error=' + encodeURIComponent(error.message));
+    return { error: error.message };
   }
 
   if (data.url) {
-    redirect(data.url);
+    return { url: data.url };
   }
 }

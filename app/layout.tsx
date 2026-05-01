@@ -86,7 +86,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={cn(outfit.variable, ebGaramond.variable, "font-sans")}>
-      <head />
+      <head>
+        {/* Preconnect eliminates DNS + TLS round-trip latency for Google Fonts */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Material Symbols — declared here so the browser discovers it immediately,
+            not after React hydrates. Pinned to default axes (opsz=24,wght=400,FILL=0,GRAD=0)
+            instead of the full variable range — reduces font payload from ~150KB to ~35KB */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
+        />
+      </head>
       <body className="antialiased font-sans">
         <script
           type="application/ld+json"

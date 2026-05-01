@@ -4,7 +4,6 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { ArrowRight, Globe, Check, X, Crown, Shield, Sparkles, Users } from 'lucide-react';
-import Image from 'next/image';
 import LoadingIcon from '@/components/ui/LoadingIcon';
 import { FOUNDER_COUNT } from '@/data/stats';
 
@@ -12,7 +11,6 @@ import { FOUNDER_COUNT } from '@/data/stats';
 
 interface OnboardingWizardProps {
     onComplete: (data: any, url?: string) => void;
-    userEmail?: string;
     keywordLimit?: number;
     defaultUrl?: string;
 }
@@ -20,7 +18,7 @@ interface OnboardingWizardProps {
 const TOTAL_STEPS = 4; // 0-3
 
 
-export default function OnboardingWizard({ onComplete, userEmail, keywordLimit = 20, defaultUrl = '' }: OnboardingWizardProps) {
+export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaultUrl = '' }: OnboardingWizardProps) {
     const [step, setStep] = useState(0);
     const [url, setUrl] = useState(defaultUrl);
     const [isGenerating, setIsGenerating] = useState(false);
@@ -44,18 +42,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
     // Auto-focus input refs
     const urlInputRef = useRef<HTMLInputElement>(null);
 
-    // Social proof ticker
-    const socialProof = [
-        "50+ founders automated on Reddit",
-        "42 leads found in the last hour",
-        "Average user finds 10+ leads per day",
-        "Trusted by founders worldwide"
-    ];
-    const [proofIndex, setProofIndex] = useState(0);
-    useEffect(() => {
-        const timer = setInterval(() => setProofIndex(i => (i + 1) % socialProof.length), 4000);
-        return () => clearInterval(timer);
-    }, []);
+
 
     useEffect(() => {
         const fetchSlots = async () => {
@@ -284,7 +271,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
     };
 
     return (
-        <div className="fixed inset-0 z-[200] bg-[#050505] flex flex-col items-center justify-center overflow-hidden p-4 sm:p-6">
+        <div className="fixed inset-0 z-[200] bg-[#050505] flex flex-col items-center justify-center overflow-hidden p-4 sm:p-6 pt-[max(1rem,env(safe-area-inset-top))]">
             {/* Subtle background gradient */}
             <div className="absolute inset-0 bg-gradient-to-br from-orange-900/[0.1] via-transparent to-orange-900/[0.05] pointer-events-none" />
             
@@ -301,7 +288,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                 </div>
 
                 {/* Step Indicator */}
-                <div className="absolute top-8 right-8 flex items-center gap-2 z-50">
+                <div className="absolute top-4 sm:top-8 right-4 sm:right-8 flex items-center gap-2 z-50">
                     <span className="text-[10px] font-bold text-text-secondary/50 uppercase tracking-widest mr-2">
                         Step {step + 1} of {TOTAL_STEPS}
                     </span>
@@ -314,7 +301,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                 </div>
 
                 {/* Main Content Scrollable Area */}
-                <div className="flex-1 overflow-hidden p-6 sm:p-10 flex flex-col items-center justify-center relative">
+                <div className="flex-1 overflow-y-auto p-6 sm:p-10 flex flex-col items-center justify-center relative custom-scrollbar">
                     {/* Global Error Message */}
                     <AnimatePresence>
                         {error && (
@@ -358,7 +345,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
 
                             <div className="space-y-4">
                                 <div className="relative group">
-                                    <div className="absolute left-5 top-1/2 -translate-y-1/2 text-text-secondary/50 group-focus-within:text-primary transition-colors flex items-center justify-center">
+                                    <div className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 text-text-secondary/50 group-focus-within:text-primary transition-colors flex items-center justify-center">
                                         <Globe size={18} />
                                     </div>
                                     <input
@@ -369,7 +356,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                         onChange={(e) => { setUrl(e.target.value); setError(''); }}
                                         onKeyDown={(e) => e.key === 'Enter' && canProceed() && goNext()}
                                         autoFocus
-                                        className="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-5 pl-14 pr-6 text-lg focus:outline-none focus:border-primary/30 focus:bg-white/[0.05] transition-all placeholder:text-text-secondary/40 font-medium tracking-tight"
+                                        className="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-3 sm:py-5 pl-10 sm:pl-14 pr-4 sm:pr-6 text-base sm:text-lg focus:outline-none focus:border-primary/30 focus:bg-white/[0.05] transition-all placeholder:text-text-secondary/40 font-medium tracking-tight"
                                     />
                                 </div>
                                 <p className="text-center text-[10px] text-text-secondary/40 font-bold uppercase tracking-widest">
@@ -401,7 +388,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     rows={5}
-                                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl p-5 text-sm leading-relaxed focus:outline-none focus:border-primary/30 focus:bg-white/[0.05] transition-all resize-none text-text-secondary"
+                                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl p-4 sm:p-5 text-sm leading-relaxed focus:outline-none focus:border-primary/30 focus:bg-white/[0.05] transition-all resize-none text-text-secondary max-h-[140px] sm:max-h-none overflow-y-auto custom-scrollbar"
                                 />
                                 <div className="absolute bottom-3 right-4 text-[9px] font-bold text-text-secondary/40 uppercase tracking-widest">
                                     {description.length} chars
@@ -424,7 +411,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                 </p>
                             </div>
 
-                            <div className="flex flex-wrap gap-2 justify-center min-h-[60px] p-4 bg-white/[0.02] border border-white/5 rounded-2xl">
+                            <div className="flex flex-wrap gap-2 justify-center min-h-[60px] max-h-[110px] overflow-y-auto p-4 bg-white/[0.02] border border-white/5 rounded-2xl custom-scrollbar">
                                 {keywords.map((kw) => (
                                     <motion.span 
                                         key={kw} 
@@ -500,9 +487,9 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
 
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 {/* Starter Plan */}
-                                <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/5 flex flex-col">
+                                <div className="p-4 sm:p-6 rounded-2xl bg-white/[0.03] border border-white/5 flex flex-col">
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary mb-3">Starter</h3>
                                     <div className="flex items-baseline gap-2 mb-1">
                                         <span className="text-sm font-bold text-text-secondary/40 line-through">$38</span>
@@ -526,7 +513,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                 </div>
 
                                 {/* Growth Plan */}
-                                <div className="p-6 rounded-2xl bg-orange-500/[0.03] border border-orange-500/20 flex flex-col relative overflow-hidden">
+                                <div className="p-4 sm:p-6 rounded-2xl bg-orange-500/[0.03] border border-orange-500/20 flex flex-col relative overflow-hidden">
                                     <div className="absolute top-3 right-4 flex items-center gap-1 text-[8px] font-black uppercase text-orange-500 tracking-[0.3em]">
                                         <Crown size={10} /> Popular
                                     </div>
@@ -553,7 +540,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                 </div>
 
                                 {/* Lifetime Plan */}
-                                <div className="p-6 rounded-2xl bg-white text-black flex flex-col relative overflow-hidden border border-white">
+                                <div className="p-4 sm:p-6 rounded-2xl bg-white text-black flex flex-col relative overflow-hidden border border-white">
                                     <div className="absolute top-3 right-4 flex items-center gap-1 text-[8px] font-black uppercase text-black/50 tracking-[0.3em]">
                                         <Sparkles size={10} className="text-orange-600" /> LTD
                                     </div>
@@ -592,7 +579,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
                                 <button
                                     onClick={handleSkipToTrial}
                                     disabled={isCompletingSetup}
-                                    className="group px-12 py-5 bg-white hover:bg-slate-100 text-black font-black uppercase text-sm tracking-[0.2em] rounded-2xl shadow-xl transition-all active:scale-[0.98] w-full sm:w-auto flex flex-col items-center justify-center mx-auto disabled:opacity-50"
+                                    className="group px-8 sm:px-12 py-3 sm:py-5 bg-white hover:bg-slate-100 text-black font-black uppercase text-sm tracking-[0.2em] rounded-2xl shadow-xl transition-all active:scale-[0.98] w-full sm:w-auto flex flex-col items-center justify-center mx-auto disabled:opacity-50"
                                 >
                                     {isCompletingSetup ? (
                                         <div className="flex items-center gap-2">
@@ -620,7 +607,7 @@ export default function OnboardingWizard({ onComplete, userEmail, keywordLimit =
 
 
             {/* Bottom Navigation */}
-            <div className="p-6 border-t border-white/5 bg-white/[0.02]">
+            <div className="p-3 sm:p-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] border-t border-white/5 bg-white/[0.02]">
                 <div className="flex items-center justify-between min-h-[40px]">
                     {step !== 3 ? (
                         <>

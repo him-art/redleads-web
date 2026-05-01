@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import MaterialIcon from '@/components/ui/MaterialIcon';
-import { signInWithEmail, signUpWithEmail, signInWithGoogle } from '../actions/auth';
+import { createClient } from '@/lib/supabase/client';
 
 export default function LoginForm({ 
   next = '/dashboard', 
@@ -32,28 +32,34 @@ export default function LoginForm({
     formData.append('password', password);
     formData.append('redirectTo', redirectTo);
 
+    const supabase = createClient();
     let result;
     try {
       result = isSignUp 
-        ? await signUpWithEmail(formData)
-        : await signInWithEmail(formData);
+        ? await supabase.auth.signUp({ 
+            email, 
+            password,
+            options: {
+              emailRedirectTo: `${window.location.origin}/auth/callback`,
+            }
+          })
+        : await supabase.auth.signInWithPassword({ email, password });
     } catch (err: any) {
-      if (err?.message === 'NEXT_REDIRECT') {
-        return;
-      }
-      
       console.error('Submission error:', err);
       setError('An unexpected error occurred. Please try again.');
       setLoading(false);
       return;
     }
 
-    if (result && 'error' in result && result.error) {
-      setError(result.error);
+    if (result?.error) {
+      setError(result.error.message);
       setLoading(false);
-    } else if (result && 'success' in result && result.success) {
-      setSuccess(result.success);
-      setTimeout(() => setLoading(false), 1000);
+    } else if (result?.data?.user || result?.data?.session) {
+      // Use top-level navigation to ensure clean state and fresh cookie read.
+      // Wait 500ms to guarantee document.cookie is fully flushed by the browser client.
+      setTimeout(() => {
+        window.location.href = redirectTo;
+      }, 500);
     } else {
       setLoading(false);
     }
@@ -63,11 +69,20 @@ export default function LoginForm({
     setLoading(true);
     setError(null);
     try {
-      await signInWithGoogle(redirectTo);
-    } catch (err: any) {
-      if (err?.message === 'NEXT_REDIRECT') {
-        return;
+      const supabase = createClient();
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirectTo)}`,
+        },
+      });
+      
+      if (error) {
+        setError(error.message);
+        setLoading(false);
       }
+      // If successful, Supabase automatically redirects the browser
+    } catch (err: any) {
       console.error('Google login error:', err);
       setError('Failed to initialize Google Login.');
       setLoading(false);
