@@ -55,7 +55,7 @@ async function runDailyDigest() {
         const tier = (p.subscription_tier || '').toLowerCase();
         
         // Paid users always get the digest
-        const isPaid = tier === 'starter' || tier === 'growth' || tier === 'lifetime' || tier === 'scout';
+        const isPaid = tier === 'starter' || tier === 'growth' || tier === 'lifetime';
         if (isPaid) return true;
 
         // For non-paid users (free/trial), check if they are currently in an active trial.
@@ -88,7 +88,7 @@ async function runDailyDigest() {
 
         // Compute trial awareness for the countdown banner in the email
         const tier = (profile.subscription_tier || '').toLowerCase();
-        const isPaidUser = tier === 'starter' || tier === 'growth' || tier === 'lifetime' || tier === 'scout';
+        const isPaidUser = tier === 'starter' || tier === 'growth' || tier === 'lifetime';
         const trialEndsAt = profile.trial_ends_at
             ? new Date(profile.trial_ends_at)
             : (profile.created_at ? new Date(new Date(profile.created_at).getTime() + 3 * 24 * 60 * 60 * 1000) : null);
@@ -134,7 +134,7 @@ async function runDailyDigest() {
                     Return a JSON object:
                     {
                       "top_ids": ["id1", "id2", ...],
-                      "categories": { "id1": "Best Match", "id2": "Good Match", ... }
+                      "categories": { "id1": "High Match", "id2": "Good Match", ... }
                     }
                     ONLY return JSON.
                     
@@ -160,7 +160,7 @@ async function runDailyDigest() {
                         const aiSelected = userLeads.filter(l => result.top_ids.includes(l.id));
                         finalLeads = aiSelected.map(l => ({
                             ...l,
-                            match_score: result.categories?.[l.id] === 'Best Match' ? 0.95 : result.categories?.[l.id] === 'Good Match' ? 0.75 : 0.45
+                            match_score: result.categories?.[l.id] === 'High Match' ? 0.95 : result.categories?.[l.id] === 'Good Match' ? 0.75 : 0.45
                         })).slice(0, 10);
                     }
                 }

@@ -89,3 +89,16 @@ export function getPlanDetails(profile: any) {
 export function formatCurrency(amount: number) {
     return `$${amount}`;
 }
+
+/**
+ * Cleans Reddit titles by removing redundant suffixes and subreddit mentions.
+ */
+export function cleanRedditTitle(title: string): string {
+    if (!title) return '';
+    
+    return title
+        .replace(/\s*-\s*Reddit\s*$/gi, '') // Remove "- Reddit" at the end
+        .replace(/\s*[:|]\s*r\/[a-zA-Z0-9_]+\s*$/gi, '') // Remove ": r/subreddit" or "| r/subreddit" at the end
+        .replace(/\s*\.\.\.\s*$/g, '') // Remove trailing ellipsis if it's just from a simple cut
+        .trim();
+}

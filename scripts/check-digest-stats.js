@@ -20,8 +20,8 @@ async function checkDigestStats() {
   const { data, error, count } = await supabase
     .from('email_logs')
     .select('*', { count: 'exact' })
-    .ilike('subject', '%Daily Intelligence%')
-    .gt('created_at', yesterday);
+    .ilike('subject', '%New Opportunities%')
+    .gt('sent_at', yesterday);
 
   if (error) {
     console.error('Error querying email_logs:', error);
@@ -31,15 +31,8 @@ async function checkDigestStats() {
   console.log(`\n📊 Total Digests Sent (last 24h): ${count}`);
   
   if (data && data.length > 0) {
-    console.log('\nDetails:');
-    const statusCounts = {};
-    data.forEach(log => {
-        statusCounts[log.status] = (statusCounts[log.status] || 0) + 1;
-    });
-    console.table(statusCounts);
-    
     console.log('\nRecipients:');
-    data.forEach(log => console.log(`- ${log.to_address} (${log.status})`));
+    data.forEach(log => console.log(`- ${log.to_email} (${log.subject})`));
   } else {
     console.log('No digest emails found in the last 24 hours.');
   }

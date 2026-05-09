@@ -48,7 +48,7 @@ export async function POST(req: Request) {
             }
         }
 
-        // --- Reset Logic (Monthly for Scout & Pro) ---
+        // --- Reset Logic (Monthly for Paid Plans) ---
         if (isPaid && lastReplyAt) {
             const lastDate = new Date(lastReplyAt);
             const now = new Date();

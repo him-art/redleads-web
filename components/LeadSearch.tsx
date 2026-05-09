@@ -10,15 +10,17 @@ import { createClient } from '@/lib/supabase/client';
 import { type User as SupabaseUser } from '@supabase/supabase-js';
 import { useDashboardData } from '@/app/dashboard/DashboardDataContext';
 import LoadingIcon from '@/components/ui/LoadingIcon';
+import { cleanRedditTitle } from '@/lib/dashboard-utils';
 
 interface RedditLead {
     id?: string;
     subreddit: string;
     title: string;
     url: string;
-    relevance: 'Best Match' | 'Good Match' | 'Low';
+    relevance: 'High Match' | 'Good Match' | 'Low';
     has_responded?: boolean;
     is_saved?: boolean;
+    body_text?: string;
 }
 
 interface LeadSearchProps {
@@ -70,7 +72,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
         if (initialLeads && initialLeads.length > 0 && results.length === 0) {
             setResults(initialLeads);
             if (initialLeads.length > 0) {
-                setOpenGroups({ 'Best Match': true, 'Good Match': true });
+                setOpenGroups({ 'High Match': true, 'Good Match': true });
             }
             onResultsFound?.(initialLeads.length);
             hasAutoScanned.current = true; // Prevent duplicate scan
@@ -162,7 +164,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                 }));
                 setResults(enrichedLeads);
                 onResultsFound?.(enrichedLeads.length);
-                setOpenGroups({ 'Best Match': true, 'Good Match': true, 'Low': true });
+                setOpenGroups({ 'High Match': true, 'Good Match': true, 'Low': true });
                 
                 // Immediately sync profile stats (e.g. scan count)
                 refreshProfile();
@@ -418,7 +420,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                 }, {} as Record<string, RedditLead[]>)
                             )
                             .sort(([keyA], [keyB]) => {
-                                const order: Record<string, number> = { 'Best Match': 0, 'Good Match': 1, 'Low': 2 };
+                                const order: Record<string, number> = { 'High Match': 0, 'Good Match': 1, 'Low': 2 };
                                 return (order[keyA] ?? 9) - (order[keyB] ?? 9);
                             })
                             .map(([groupKey, leads]) => {
@@ -450,7 +452,7 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                                                         <div className="flex flex-wrap items-center gap-2">
                                                                             <span className="text-[9px] font-black text-orange-500 bg-orange-500/10 px-2.5 py-1 rounded-full uppercase tracking-widest border border-orange-500/10">r/{lead.subreddit}</span>
                                                                             <span className={`text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-widest ${
-                                                                                lead.relevance === 'Best Match' ? 'bg-green-500/10 text-green-500 border border-green-500/20' :
+                                                                                lead.relevance === 'High Match' ? 'bg-green-500/10 text-green-500 border border-green-500/20' :
                                                                                 lead.relevance === 'Good Match' ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' :
                                                                                 'bg-gray-500/10 text-gray-500 border border-gray-500/20'
                                                                             }`}>
@@ -468,7 +470,16 @@ export default function LeadSearch({ user, isDashboardView = false, initialUrl =
                                                                             </a>
                                                                         </div>
                                                                     </div>
-                                                                    <h4 className="text-xs sm:text-sm font-bold text-text-secondary group-hover:text-gray-200 leading-relaxed tracking-tight line-clamp-3 transition-all">{lead.title}</h4>
+                                                                    <div className="space-y-3">
+                                                                        <h4 className="text-sm sm:text-base font-bold text-text-primary group-hover:text-white leading-snug tracking-tight transition-all">
+                                                                            {cleanRedditTitle(lead.title)}
+                                                                        </h4>
+                                                                        {lead.body_text && (
+                                                                            <p className="text-[13px] text-text-secondary/60 leading-relaxed line-clamp-2">
+                                                                                {lead.body_text}
+                                                                            </p>
+                                                                        )}
+                                                                    </div>
                                                                 </div>
 
                                                                 <div className="flex flex-wrap items-center gap-2 pt-1">

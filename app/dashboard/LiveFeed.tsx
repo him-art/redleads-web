@@ -4,6 +4,7 @@ import { Activity, Clock, MessageSquarePlus, Bookmark, ExternalLink, Navigation,
 import LoadingIcon from '@/components/ui/LoadingIcon';
 import { createClient } from '@/lib/supabase/client';
 import { useDashboardData, MonitoredLead } from '@/app/dashboard/DashboardDataContext';
+import { cleanRedditTitle } from '@/lib/dashboard-utils';
 
 export default function LiveFeed({ onViewArchive }: { onViewArchive: () => void }) {
     const { leads: allLeads, isLoading: isDataLoading, draftingLead, setDraftingLead, profile } = useDashboardData();
@@ -57,9 +58,11 @@ export default function LiveFeed({ onViewArchive }: { onViewArchive: () => void 
                                             {/* Left Column: Match Status & Metadata */}
                                             <div className="flex flex-col items-center sm:items-start gap-4 min-w-[100px]">
                                                 <div className={`px-4 py-1.5 rounded-full border text-[10px] font-black uppercase tracking-[0.2em] whitespace-nowrap transition-all duration-500 ${
-                                                    lead.match_category === 'Best Match' 
+                                                    lead.match_category === 'High Match' 
                                                         ? 'bg-green-500/10 border-green-500/40 text-green-400 shadow-[0_0_20px_rgba(34,197,94,0.15)] ring-1 ring-green-500/20' 
-                                                        : 'bg-white/5 border-white/10 text-text-secondary/60 group-hover:text-text-secondary'
+                                                        : lead.match_category === 'Good Match'
+                                                            ? 'bg-blue-500/10 border-blue-500/40 text-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.15)] ring-1 ring-blue-500/20'
+                                                            : 'bg-white/5 border-white/10 text-text-secondary/60 group-hover:text-text-secondary'
                                                 }`}>
                                                     {lead.match_category || 'Good Match'}
                                                 </div>
@@ -98,14 +101,21 @@ export default function LiveFeed({ onViewArchive }: { onViewArchive: () => void 
                                                         )}
                                                     </div>
                                                     
-                                                    <a 
-                                                        href={(lead.url.startsWith('http') ? lead.url : `https://${lead.url}`)}
-                                                        target="_blank" 
-                                                        rel="noopener noreferrer" 
-                                                        className="block text-base sm:text-lg font-bold text-text-primary/90 group-hover:text-gray-200 leading-tight tracking-tight transition-all"
-                                                    >
-                                                        {lead.title}
-                                                    </a>
+                                                    <div className="space-y-3">
+                                                        <a 
+                                                            href={(lead.url.startsWith('http') ? lead.url : `https://${lead.url}`)}
+                                                            target="_blank" 
+                                                            rel="noopener noreferrer" 
+                                                            className="block text-lg sm:text-xl font-bold text-text-primary group-hover:text-white leading-snug tracking-tight transition-all"
+                                                        >
+                                                            {cleanRedditTitle(lead.title)}
+                                                        </a>
+                                                        {lead.body_text && (
+                                                            <p className="text-sm text-text-secondary/60 leading-relaxed line-clamp-2 max-w-2xl">
+                                                                {lead.body_text}
+                                                            </p>
+                                                        )}
+                                                    </div>
                                                 </div>
 
                                                 <div className="flex items-center gap-2 transition-all duration-300">

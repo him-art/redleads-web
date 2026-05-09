@@ -16,6 +16,7 @@ interface MonitoredLead {
     is_saved?: boolean;
     has_responded?: boolean;
     match_category?: string;
+    body_text?: string;
 }
 
 interface Draft {
@@ -181,6 +182,7 @@ export default function ReplyPanel({ lead, productContext, onClose, isSidebar = 
             const apiCall = axios.post('/api/draft-reply', {
                 title: lead.title,
                 subreddit: lead.subreddit,
+                content: lead.body_text || '',
                 productContext, 
                 tone,
                 mentionStrategy,
@@ -284,9 +286,16 @@ export default function ReplyPanel({ lead, productContext, onClose, isSidebar = 
                                 <div className="mt-1 w-1 h-8 bg-ai/40 rounded-full shrink-0"></div>
                                 <div>
                                     <h4 className="text-[8px] font-black uppercase tracking-widest text-text-secondary mb-1 opacity-50">Post Context</h4>
-                                    <p className="text-[11px] text-text-primary/80 leading-relaxed font-bold italic line-clamp-2">
-                                        "{lead.title}"
-                                    </p>
+                                    <div className="space-y-1.5">
+                                        <p className="text-[11px] text-text-primary/90 leading-snug font-bold italic line-clamp-2">
+                                            "{lead.title}"
+                                        </p>
+                                        {lead.body_text && (
+                                            <p className="text-[10px] text-text-secondary/50 leading-relaxed line-clamp-3 pl-2 border-l border-white/5 italic">
+                                                {lead.body_text}
+                                            </p>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         
@@ -442,7 +451,7 @@ export default function ReplyPanel({ lead, productContext, onClose, isSidebar = 
                                                     }`}
                                                 >
                                                     {copiedIndex === i ? <Check size={14} className="mb-0.5" /> : <Copy size={14} className="mb-0.5 opacity-70" />}
-                                                    {copiedIndex === i ? 'Copied to clipboard!' : (i === 0 ? 'Copy Best Match' : 'Copy Draft')}
+                                                    {copiedIndex === i ? 'Copied to clipboard!' : (i === 0 ? 'Copy High Match' : 'Copy Draft')}
                                                 </button>
                                             </div>
                                         </motion.div>

@@ -16,6 +16,7 @@ export interface MonitoredLead {
     is_saved?: boolean;
     has_responded?: boolean;
     match_category?: string;
+    body_text?: string;
 }
 
 export interface LeadAnalysis {
@@ -83,7 +84,7 @@ export function DashboardDataProvider({ children, userId, draftingState, profile
         try {
             const { data, error } = await supabase
                 .from('monitored_leads')
-                .select('id, title, subreddit, url, status, match_score, match_category, is_saved, has_responded, created_at')
+                .select('id, title, subreddit, url, status, match_score, match_category, is_saved, has_responded, created_at, body_text')
                 .eq('user_id', userId)
                 .order('created_at', { ascending: false })
                 .limit(100);

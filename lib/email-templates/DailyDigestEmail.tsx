@@ -225,7 +225,7 @@ export default function DailyDigestEmail({ fullName, leads, isTrialUser, trialDa
                     padding: '2px 8px',
                     borderRadius: '4px'
                   }}>
-                    {lead.match_score >= 0.9 ? '🔥 Best Match' : 'Good Match'}
+                    {lead.match_score >= 0.9 ? '🔥 High Match' : 'Good Match'}
                   </span>
                 </div>
                 <div style={{ marginBottom: '16px' }}>
