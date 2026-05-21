@@ -11,10 +11,10 @@ const Pricing = () => {
     const [slots, setSlots] = useState<{ sold: number; total: number } | null>(null);
     const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
 
-    // New Dynamic Pricing Logic ($40 every 40 users)
+    // New Dynamic Pricing Logic ($40 every 40 users after 260)
     const currentUsers = slots?.sold || 0; 
-    const currentPrice = currentUsers < 260 ? 259 : 259 + Math.floor((currentUsers - 260) / 40) * 40;
-    const nextPrice = currentPrice + 40;
+    const currentPrice = currentUsers < 260 ? 199 : 259 + Math.floor((currentUsers - 260) / 40) * 40;
+    const nextPrice = currentPrice === 199 ? 259 : currentPrice + 40;
     const nextCheckpoint = currentUsers < 260 ? 260 : 260 + (Math.floor((currentUsers - 260) / 40) + 1) * 40;
     const spotsLeft = nextCheckpoint - currentUsers;
 
@@ -193,9 +193,8 @@ const Pricing = () => {
                 {/* Urgency Banner */}
                 <div className="mb-8 flex justify-center">
                     <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-orange-500/10 border border-orange-500/20 rounded-full">
-                        <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse flex-shrink-0" />
                         <span className="text-[11px] font-black uppercase tracking-[0.2em] text-orange-400">
-                            ⚡ Early Adopter Pricing — Price increases as we grow
+                            ⚡ <span className="text-white">7-days free trial</span>
                         </span>
                     </div>
                 </div>
@@ -435,7 +434,7 @@ const Pricing = () => {
                                 <div className="absolute inset-0 flex justify-between items-start z-20 pointer-events-none">
                                     {[300, 340, 380, 420, 460].map((tick) => {
                                         const pos = ((tick - 250) / 250) * 100;
-                                        const tickPrice = tick < 260 ? 259 : 259 + Math.floor((tick - 260) / 40) * 40;
+                                        const tickPrice = tick < 260 ? 199 : 259 + Math.floor((tick - 260) / 40) * 40;
                                         return (
                                             <div key={tick} className={`absolute flex flex-col items-center -translate-x-1/2 ${tick % 40 !== 0 ? 'hidden sm:flex' : ''}`} style={{ left: `${pos}%` }}>
                                                 {/* Vertical Notch */}

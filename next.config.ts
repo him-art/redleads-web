@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import path from "path";
+import { withDualmark } from "@dualmark/nextjs";
 
 const nextConfig: NextConfig = {
   turbopack: {
@@ -103,4 +104,6 @@ const nextConfig: NextConfig = {
 
 
 
-export default nextConfig;
+export default withDualmark(nextConfig, {
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.redleads.app',
+});

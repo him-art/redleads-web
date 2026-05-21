@@ -104,6 +104,11 @@ export async function POST(req: Request) {
                     quantity: 1,
                 }
             ],
+            ...(plan === 'starter' || plan === 'growth' ? {
+                subscription_data: {
+                    trial_period_days: 7
+                }
+            } : {}),
             return_url: `${siteUrl}/dashboard?payment=success&plan=${plan}`,
             metadata: {
                 user_id: user.id,

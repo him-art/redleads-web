@@ -104,7 +104,7 @@ export default function BillingTab() {
     const [feedbackReason, setFeedbackReason] = useState('');
     const [submittingFeedback, setSubmittingFeedback] = useState(false);
 
-    const { isActuallyExpired, isInTrial, daysRemaining, trialEndsAt } = trialStatus;
+    const { isActuallyExpired, isInTrial, daysRemaining, trialEndsAt, needsCheckout } = trialStatus;
     
     // Cancellation guarantee logic - specific to BillingTab
     const subStartedAt = profile?.subscription_started_at ? new Date(profile.subscription_started_at) : (isSubscribed ? new Date(profile.created_at) : null);
@@ -229,7 +229,7 @@ export default function BillingTab() {
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                         <div className="absolute top-0 right-0 p-8">
                             <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all duration-500 ${isSubscribed || isAdmin ? (isLifetime ? 'bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'bg-primary/10 text-primary border-primary/20 shadow-void') : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
-                                {isMounted ? (isSubscribed || isAdmin ? (isLifetime ? 'Lifetime Access' : 'Active Subscription') : (isInTrial ? `${daysRemaining} Days Left` : 'Trial Expired')) : '...'}
+                                {isMounted ? (isSubscribed || isAdmin ? (isLifetime ? 'Lifetime Access' : 'Active Subscription') : (isInTrial ? `${daysRemaining} Days Left` : (needsCheckout ? 'Activation Required' : 'Trial Expired'))) : '...'}
                             </div>
                         </div>
 

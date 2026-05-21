@@ -482,7 +482,7 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
                             <div className="text-center space-y-2">
 
                                 <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-text-primary">
-                                    Your 7-day free trial is active
+                                    Select your plan to start your 7-day free trial
                                 </h2>
 
                             </div>
@@ -492,8 +492,8 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
                                 <div className="p-4 sm:p-6 rounded-2xl bg-white/[0.03] border border-white/5 flex flex-col">
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary mb-3">Starter</h3>
                                     <div className="flex items-baseline gap-2 mb-1">
-                                        <span className="text-sm font-bold text-text-secondary/40 line-through">$38</span>
-                                        <span className="text-3xl font-black text-text-primary">$19</span>
+                                        <span className="text-sm font-bold text-text-secondary/40 line-through">$58</span>
+                                        <span className="text-3xl font-black text-text-primary">$29</span>
                                         <span className="text-xs text-text-secondary/50 font-bold uppercase">/mo</span>
                                     </div>
                                     <ul className="space-y-2.5 my-5 flex-grow">
@@ -508,7 +508,7 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
                                         disabled={!!checkoutLoading}
                                         className="w-full py-4 rounded-xl bg-white/5 border border-white/10 text-text-primary font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all disabled:opacity-50 flex items-center justify-center"
                                     >
-                                        {checkoutLoading === 'starter' ? <LoadingIcon className="w-4 h-4" /> : 'Select Starter'}
+                                        {checkoutLoading === 'starter' ? <LoadingIcon className="w-4 h-4" /> : 'Start 7-Day Free Trial'}
                                     </button>
                                 </div>
 
@@ -519,8 +519,8 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
                                     </div>
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 mb-3">Growth</h3>
                                     <div className="flex items-baseline gap-2 mb-1">
-                                        <span className="text-sm font-bold text-orange-500/30 line-through">$58</span>
-                                        <span className="text-3xl font-black text-text-primary">$29</span>
+                                        <span className="text-sm font-bold text-orange-500/30 line-through">$78</span>
+                                        <span className="text-3xl font-black text-text-primary">$39</span>
                                         <span className="text-xs text-text-secondary/50 font-bold uppercase">/mo</span>
                                     </div>
                                     <ul className="space-y-2.5 my-5 flex-grow">
@@ -535,7 +535,7 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
                                         disabled={!!checkoutLoading}
                                         className="w-full py-4 rounded-xl bg-orange-500 text-black font-black text-[10px] uppercase tracking-widest hover:bg-orange-400 transition-all disabled:opacity-50 shadow-[0_0_20px_rgba(249,115,22,0.2)] flex items-center justify-center"
                                     >
-                                        {checkoutLoading === 'growth' ? <LoadingIcon className="w-4 h-4" /> : 'Select Growth'}
+                                        {checkoutLoading === 'growth' ? <LoadingIcon className="w-4 h-4" /> : 'Start 7-Day Free Trial'}
                                     </button>
                                 </div>
 
@@ -547,7 +547,7 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-black mb-3">Lifetime</h3>
                                     <div className="flex items-baseline gap-2 mb-1">
                                         <span className="text-3xl font-black text-black">
-                                            ${slots ? (slots.sold < 260 ? 259 : 259 + Math.floor((slots.sold - 260) / 40) * 40) : "..."}
+                                            ${slots ? (slots.sold < 260 ? 199 : 259 + Math.floor((slots.sold - 260) / 40) * 40) : "..."}
                                         </span>
                                         <span className="text-[8px] text-gray-600 font-bold uppercase tracking-tight">One-time</span>
                                     </div>
@@ -570,33 +570,15 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
                                         disabled={!!checkoutLoading}
                                         className="w-full py-4 rounded-xl bg-black text-white font-black text-[10px] uppercase tracking-widest hover:bg-orange-600 transition-all disabled:opacity-50 flex items-center justify-center"
                                     >
-                                        {checkoutLoading === 'lifetime' ? <LoadingIcon className="w-4 h-4" /> : 'Select LTD'}
+                                        {checkoutLoading === 'lifetime' ? <LoadingIcon className="w-4 h-4" /> : 'Get Lifetime Access'}
                                     </button>
                                 </div>
                             </div>
 
-                            <div className="flex flex-col items-center space-y-4">
-                                <button
-                                    onClick={handleSkipToTrial}
-                                    disabled={isCompletingSetup}
-                                    className="group px-8 sm:px-12 py-3 sm:py-5 bg-white hover:bg-slate-100 text-black font-black uppercase text-sm tracking-[0.2em] rounded-2xl shadow-xl transition-all active:scale-[0.98] w-full sm:w-auto flex flex-col items-center justify-center mx-auto disabled:opacity-50"
-                                >
-                                    {isCompletingSetup ? (
-                                        <div className="flex items-center gap-2">
-                                            <LoadingIcon className="w-4 h-4" /> Setting Up...
-                                        </div>
-                                    ) : (
-                                        <div className="flex flex-col items-center">
-                                            <div className="flex items-center gap-2">
-                                                Claim My Free 7-Day Trial <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                                            </div>
-                                            <span className="text-[10px] opacity-60 font-medium tracking-normal mt-1 capitalize">No Credit Card Required • Instant Access</span>
-                                        </div>
-                                    )}
-                                </button>
-                                <p className="text-[9px] font-bold text-text-secondary/40 uppercase tracking-[0.2em] flex items-center justify-center gap-1">
-                                    <Shield size={10} />
-                                    Cancel Anytime • Secure Dodo Checkout
+                            <div className="flex flex-col items-center space-y-4 pt-6">
+                                <p className="text-[10px] font-bold text-text-secondary/60 uppercase tracking-[0.2em] flex items-center justify-center gap-1.5 bg-white/5 px-6 py-3 rounded-full border border-white/10">
+                                    <Shield size={12} className="text-orange-500" />
+                                    No charge today. Cancel anytime in 1-click. Secure Dodo Checkout.
                                 </p>
                             </div>
                         </motion.div>

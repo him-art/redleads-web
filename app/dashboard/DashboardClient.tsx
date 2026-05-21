@@ -51,7 +51,7 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
     
     // Consume reactive data from context
     const { profile, planDetails, trialStatus, draftingLead, setDraftingLead, updateLead, refreshProfile } = useDashboardData();
-    const { isActuallyExpired } = trialStatus;
+    const { isActuallyExpired, needsCheckout } = trialStatus;
 
     const [activeTab, setActiveTab] = useState<'reports' | 'live' | 'settings' | 'billing' | 'Guide'>(effectiveSearch ? 'live' : 'live'); 
     
@@ -265,23 +265,28 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                             {/* Scrollable Content Container - Custom Scrollbar */}
                             <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 lg:p-4 custom-scrollbar scrollbar-hide lg:scrollbar-default">
                                 
-                                {trialStatus.isInTrial && activeTab !== 'billing' && (
-                                    <div className="max-w-7xl mx-auto mb-6 mt-16 lg:mt-0 bg-orange-500/10 border border-orange-500/20 rounded-xl px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 z-40 relative text-orange-500 text-sm font-medium shadow-lg shadow-orange-500/5 backdrop-blur-md">
-                                        <div className="flex items-center gap-2 font-bold tracking-tight">
-                                            <Sparkles size={16} className="text-orange-500 shrink-0" /> 
-                                            <span>Your 7-day free trial ends in {trialStatus.daysRemaining} day{trialStatus.daysRemaining !== 1 ? 's' : ''}.</span>
+
+                                {/* Activation Required banner for users who skipped checkout */}
+                                {needsCheckout && activeTab !== 'billing' && (
+                                    <div className="max-w-7xl mx-auto mb-6 mt-16 lg:mt-0 bg-blue-500/10 border border-blue-500/30 rounded-xl px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 z-40 relative shadow-lg shadow-blue-500/5 backdrop-blur-md">
+                                        <div className="flex flex-col gap-0.5">
+                                            <div className="flex items-center gap-2 font-black text-blue-400 text-sm tracking-tight">
+                                                <span>🔒</span>
+                                                <span>Activation Required — Complete your checkout</span>
+                                            </div>
+                                            <p className="text-[11px] text-blue-400/80 font-medium pl-6">Your 7-day free trial is ready. Start your trial to unlock the dashboard.</p>
                                         </div>
                                         <button 
                                             onClick={() => setActiveTab('billing')}
-                                            className="w-full sm:w-auto px-6 py-2 bg-gradient-to-r from-orange-500 to-orange-400 text-black rounded-lg uppercase tracking-[0.1em] text-[10px] font-black shadow-md hover:from-orange-400 hover:to-orange-300 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                                            className="w-full sm:w-auto px-6 py-2.5 bg-blue-500 hover:bg-blue-400 text-white rounded-lg uppercase tracking-[0.1em] text-[10px] font-black shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap"
                                         >
-                                            Upgrade Plan
+                                            Complete Setup →
                                         </button>
                                     </div>
                                 )}
 
                                 {/* Win-back banner for expired trial users */}
-                                {isActuallyExpired && activeTab !== 'billing' && (
+                                {isActuallyExpired && !needsCheckout && activeTab !== 'billing' && (
                                     <div className="max-w-7xl mx-auto mb-6 mt-16 lg:mt-0 bg-red-500/10 border border-red-500/30 rounded-xl px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 z-40 relative shadow-lg shadow-red-500/5 backdrop-blur-md">
                                         <div className="flex flex-col gap-0.5">
                                             <div className="flex items-center gap-2 font-black text-red-400 text-sm tracking-tight">
@@ -300,7 +305,7 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                                 )}
 
                                 {/* Content Wrapper limit width */}
-                                <div className={`max-w-7xl mx-auto space-y-10 ${(trialStatus.isInTrial || isActuallyExpired) && activeTab !== 'billing' ? '' : 'mt-16 lg:mt-0'}`}>
+                                <div className={`max-w-7xl mx-auto space-y-10 ${isActuallyExpired && activeTab !== 'billing' ? '' : 'mt-16 lg:mt-0'}`}>
 
                                     
                                     {/* Dynamic Tab Content - Hidden but mounted for caching */}

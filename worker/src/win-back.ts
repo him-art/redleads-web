@@ -57,7 +57,7 @@ async function runWinBack() {
     const now = new Date();
     const { data: expiredProfiles, error } = await supabase
         .from('profiles')
-        .select('id, email, subscription_tier, trial_ends_at, description, website_url, user_metadata')
+        .select('id, email, subscription_tier, trial_ends_at, description, website_url, user_metadata, unsubscribed')
         .eq('subscription_tier', 'trial')
         .lt('trial_ends_at', now.toISOString())
         .limit(40); // Batched to max 40 per run to stay under Resend's 90/day limit over 3-4 days
@@ -77,7 +77,7 @@ async function runWinBack() {
     // Filter out those who already received a win-back email
     const eligible = expiredProfiles.filter((p: any) => {
         const meta = (p.user_metadata as any) || {};
-        return !meta.win_back_sent;
+        return !meta.win_back_sent && !p.unsubscribed;
     });
 
     console.log(`[WinBack] ${eligible.length} users are eligible for win-back (${expiredProfiles.length - eligible.length} already received it).`);
@@ -143,6 +143,7 @@ async function runWinBack() {
                 to: email,
                 from: EMAIL_FROM,
                 subject: `We unlocked your RedLeads account for 7 more days 👀`,
+                includeUnsubscribe: true,
                 react: WinBackEmail({
                     fullName,
                     leadCount,

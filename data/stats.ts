@@ -1,1 +1,1 @@
-export const FOUNDER_COUNT = "260+";
+export const FOUNDER_COUNT = "300+";

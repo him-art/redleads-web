@@ -43,7 +43,7 @@ async function runDailyDigest() {
     const TRIAL_DAYS = 3;
     const { data: allProfiles, error: profileError } = await supabase
         .from('profiles')
-        .select('id, email, description, subscription_tier, trial_ends_at, created_at');
+        .select('id, email, description, subscription_tier, trial_ends_at, created_at, unsubscribed');
 
     if (profileError) {
         console.error('[Digest] Failed to fetch profiles:', profileError);
@@ -52,6 +52,7 @@ async function runDailyDigest() {
 
     const now = new Date();
     const eligibleProfiles = allProfiles?.filter((p: any) => {
+        if (p.unsubscribed) return false;
         const tier = (p.subscription_tier || '').toLowerCase();
         
         // Paid users always get the digest
@@ -190,6 +191,7 @@ async function runDailyDigest() {
             const emailResult = await sendEmail({
                 to: email,
                 subject: `[r/${topSubreddit}] ${finalLeads.length} New Opportunities 🎯`,
+                includeUnsubscribe: true,
                 react: DailyDigestEmail({
                     fullName: email.split('@')[0],
                     leads: finalLeads,

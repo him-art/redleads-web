@@ -93,6 +93,16 @@ export async function POST(req: Request) {
                     let keywordLimit = 10;
                     if (planType === 'growth') keywordLimit = 20;
                     if (planType === 'lifetime') keywordLimit = 20;
+
+                    // Calculate trial_ends_at for trial-eligible plans
+                    let trialEndsAt = null;
+                    if (planType === 'starter' || planType === 'growth') {
+                        if (data.next_billing_date) {
+                            trialEndsAt = new Date(data.next_billing_date).toISOString();
+                        } else {
+                            trialEndsAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+                        }
+                    }
                     
                     await supabase
                         .from('profiles')
@@ -100,6 +110,7 @@ export async function POST(req: Request) {
                             subscription_tier: planType,
                             keyword_limit: keywordLimit,
                             subscription_started_at: new Date().toISOString(),
+                            trial_ends_at: trialEndsAt,
                             dodo_customer_id: data.customer?.customer_id || data.customer_id || null,
                             dodo_subscription_id: data.subscription_id || null,
                         })

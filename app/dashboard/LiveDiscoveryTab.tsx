@@ -19,7 +19,7 @@ export default function LiveDiscoveryTab({
     onNavigate: (tab: string) => void 
 }) {
     const { profile, trialStatus, planDetails } = useDashboardData();
-    const { isActuallyExpired, isInTrial, daysRemaining, trialEndsAt } = trialStatus;
+    const { isActuallyExpired, isInTrial, daysRemaining, trialEndsAt, needsCheckout } = trialStatus;
     const { isStarter, isGrowth, isAdmin, isLifetime, powerSearchLimit: searchLimit } = planDetails;
 
     const isActuallySubscribed = isStarter || isGrowth || isAdmin;
@@ -279,7 +279,7 @@ export default function LiveDiscoveryTab({
                     <div className="relative">
                         <LiveFeed onViewArchive={() => onNavigate('reports')} />
                         
-                        {/* Trial Expired Overlay */}
+                        {/* Trial Expired / Activation Overlay */}
                         {isActuallyExpired && (
                             <div className="absolute inset-0 z-20 bg-black/80 rounded-3xl lg:rounded-[2rem] flex items-center justify-center p-4 sm:p-8 text-center border border-white/10">
                                 <motion.div 
@@ -287,13 +287,17 @@ export default function LiveDiscoveryTab({
                                     animate={{ opacity: 1, scale: 1 }}
                                     className="max-w-sm space-y-8"
                                 >
-                                    <div className="w-20 h-20 bg-orange-500 rounded-3xl flex items-center justify-center mx-auto rotate-3">
+                                    <div className={`w-20 h-20 ${needsCheckout ? 'bg-blue-500' : 'bg-orange-500'} rounded-3xl flex items-center justify-center mx-auto rotate-3`}>
                                         <Lock size={32} className="text-black" />
                                     </div>
                                     <div className="space-y-3">
-                                        <h3 className="text-2xl font-black leading-tight text-text-primary">Trial Access Ended</h3>
+                                        <h3 className="text-2xl font-black leading-tight text-text-primary">
+                                            {needsCheckout ? 'Activation Required' : 'Trial Access Ended'}
+                                        </h3>
                                         <p className="text-text-secondary text-sm leading-relaxed font-medium">
-                                            Upgrade to Growth to unlock unlimited access to high-intent leads.
+                                            {needsCheckout 
+                                                ? 'Start your 7-day free trial to unlock the dashboard and begin monitoring.'
+                                                : 'Upgrade to Growth to unlock unlimited access to high-intent leads.'}
                                         </p>
                                     </div>
                                     <div className="space-y-3">
@@ -302,18 +306,20 @@ export default function LiveDiscoveryTab({
                                             disabled={isUpgrading}
                                             className="w-full py-5 bg-[#ff914d] hover:bg-[#ff914d]/90 text-black font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
-                                            {isUpgrading ? <LoadingIcon className="w-5 h-5" /> : <>Get Growth Access — $29/mo</>}
+                                            {isUpgrading ? <LoadingIcon className="w-5 h-5" /> : (needsCheckout ? <>Start 7-Day Free Trial (Growth)</> : <>Get Growth Access — ${PLANS.GROWTH.price}/mo</>)}
                                         </button>
                                         <button 
                                             onClick={() => handleUpgrade('starter')}
                                             disabled={isUpgrading}
                                             className="w-full py-5 bg-white/10 hover:bg-white/20 text-text-primary font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
-                                            {isUpgrading ? <LoadingIcon className="w-5 h-5" /> : <>Get Starter Access — $19/mo</>}
+                                            {isUpgrading ? <LoadingIcon className="w-5 h-5" /> : (needsCheckout ? <>Start 7-Day Free Trial (Starter)</> : <>Get Starter Access — ${PLANS.STARTER.price}/mo</>)}
                                         </button>
+                                        {!needsCheckout && (
                                          <p className="text-[10px] text-text-secondary font-bold uppercase tracking-widest">
                                             Trial Ended {isMounted && trialEndsAt ? trialEndsAt?.toLocaleDateString() : '...'}
                                         </p>
+                                        )}
                                     </div>
                                 </motion.div>
                             </div>

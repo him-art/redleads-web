@@ -6,6 +6,7 @@ interface WinBackEmailProps {
   topSubreddit: string;
   productName?: string;
   daysSinceExpiry?: number;
+  unsubscribeUrl?: string;
 }
 
 export default function WinBackEmail({
@@ -14,6 +15,7 @@ export default function WinBackEmail({
   topSubreddit,
   productName = 'your product',
   daysSinceExpiry = 3,
+  unsubscribeUrl
 }: WinBackEmailProps) {
   const firstName = fullName ? fullName.split(' ')[0] : 'there';
   const siteUrl = 'https://redleads.app';
@@ -154,7 +156,7 @@ export default function WinBackEmail({
           </div>
 
           <p style={{ textAlign: 'center', fontSize: '12px', color: '#555555', margin: '0' }}>
-            Plans start at $19/mo . Cancel anytime
+            Plans start at $29/mo . Cancel anytime
           </p>
         </div>
 
@@ -196,6 +198,14 @@ export default function WinBackEmail({
           <p style={{ fontSize: '10px', color: '#333333', margin: '0' }}>
             Built for growth by <a href="https://x.com/timjayas" style={{ color: '#555555', textDecoration: 'none' }}>Tim Jayas</a>
           </p>
+          {unsubscribeUrl && (
+            <p style={{ fontSize: '10px', color: '#444444', margin: '12px 0 0 0' }}>
+              No longer want to receive these emails?{' '}
+              <a href={unsubscribeUrl} style={{ color: '#666666', textDecoration: 'underline' }}>
+                Unsubscribe
+              </a>
+            </p>
+          )}
         </div>
       </div>
     </div>

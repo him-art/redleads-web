@@ -40,6 +40,7 @@ interface DashboardData {
         isInTrial: boolean;
         daysRemaining: number;
         trialEndsAt: Date | null;
+        needsCheckout: boolean;
     };
     planDetails: any;
     profile: any;

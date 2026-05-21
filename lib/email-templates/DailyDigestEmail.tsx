@@ -13,6 +13,7 @@ interface DailyDigestEmailProps {
   leads: Lead[];
   isTrialUser?: boolean;
   trialDaysLeft?: number | null;
+  unsubscribeUrl?: string;
 }
 
 const EXPERT_TIPS = [
@@ -24,7 +25,7 @@ const EXPERT_TIPS = [
   "Ask a follow-up question in your reply to encourage a conversation and build trust."
 ];
 
-export default function DailyDigestEmail({ fullName, leads, isTrialUser, trialDaysLeft }: DailyDigestEmailProps) {
+export default function DailyDigestEmail({ fullName, leads, isTrialUser, trialDaysLeft, unsubscribeUrl }: DailyDigestEmailProps) {
   const topLeads = leads.slice(0, 10); // Show up to 10
   const firstName = fullName ? fullName.split(' ')[0] : 'there';
   const siteUrl = 'https://redleads.app'; // Fixed to production
@@ -62,7 +63,7 @@ export default function DailyDigestEmail({ fullName, leads, isTrialUser, trialDa
       accent: '#eab308',
       icon: '⏳',
       headline: '3 days left on your trial.',
-      body: 'Your free trial ends soon. Upgrade to Starter for $19/mo and keep your lead machine running.',
+      body: 'Your free trial ends soon. Upgrade to Starter for $29/mo and keep your lead machine running.',
       cta: 'Upgrade My Plan',
     };
   })() : null;
@@ -309,6 +310,14 @@ export default function DailyDigestEmail({ fullName, leads, isTrialUser, trialDa
           <p style={{ fontSize: '10px', color: '#333333', margin: '0' }}>
             Built for growth focus by <a href="https://x.com/timjayas" style={{ color: '#555555', textDecoration: 'none' }}>Tim Jayas</a>
           </p>
+          {unsubscribeUrl && (
+            <p style={{ fontSize: '10px', color: '#444444', margin: '12px 0 0 0' }}>
+              No longer want to receive these emails?{' '}
+              <a href={unsubscribeUrl} style={{ color: '#666666', textDecoration: 'underline' }}>
+                Unsubscribe
+              </a>
+            </p>
+          )}
         </div>
       </div>
       

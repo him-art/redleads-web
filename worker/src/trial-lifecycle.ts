@@ -37,9 +37,9 @@ const STAGE_WINDOWS: Record<string, { from: number; to: number; subject: string 
     // Day 2 skipped to give users space
     day3: { from: 48,  to: 72,  subject: 'The "Helping Hook" (How to win Reddit deals without selling) ⏱️' },
     // Day 4 skipped
-    // day5 removed: replaced by Daily Digest countdown banner (see DailyDigestEmail.tsx)
-    // day6 removed: replaced by Daily Digest countdown banner (see DailyDigestEmail.tsx)
-    day7: { from: 144, to: 200, subject: 'Final 24h: Should I keep your scanner running? 🛑' },
+    day5: { from: 96,  to: 120, subject: 'RedLeads: Up ahead: Your trial rolls over in 48 hours 🗓️' },
+    // Day 6 skipped
+    day7: { from: 144, to: 168, subject: 'Your lead machine is now fully live! 🚀' },
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -86,8 +86,8 @@ async function runTrialLifecycle() {
     try {
         const { data: allProfiles, error: profileError } = await supabase
             .from('profiles')
-            .select('id, email, subscription_tier, created_at, trial_ends_at, user_metadata, description, website_url')
-            .in('subscription_tier', ['free', 'trial']);
+            .select('id, email, subscription_tier, created_at, trial_ends_at, user_metadata, description, website_url, unsubscribed')
+            .or(`subscription_tier.in.(free,trial),and(subscription_tier.in.(starter,growth),trial_ends_at.gt.${new Date().toISOString()})`);
 
         if (profileError) {
             console.error('[Lifecycle] Failed to fetch profiles:', profileError.message);
@@ -105,7 +105,13 @@ async function runTrialLifecycle() {
         const now = new Date();
 
         for (const profile of allProfiles) {
-            const { id, email, created_at, trial_ends_at, user_metadata, description } = profile;
+            const { id, email, created_at, trial_ends_at, user_metadata, description, unsubscribed } = profile;
+            
+            // Skip unsubscribed users
+            if (unsubscribed) {
+                console.log(`[Lifecycle] ⏩ Skipping ${email} (unsubscribed)`);
+                continue;
+            }
             
             // If they haven't finished onboarding, their trial hasn't started, so we skip them.
             if (!email || !created_at || !trial_ends_at) continue;
@@ -178,6 +184,7 @@ async function runTrialLifecycle() {
                         to: email,
                         from: EMAIL_FROM,
                         subject: subject,
+                        includeUnsubscribe: true,
                         react: TrialLifecycleEmail({
                             fullName: (profile.user_metadata as any)?.full_name || email.split('@')[0],
                             stage: targetStage,

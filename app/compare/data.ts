@@ -45,7 +45,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'Free Trial', redleads: '7 Days Free', competitor: false },
     ],
     pricing: {
-      redleads: '7-Day Free Trial, then $19/mo',
+      redleads: '7-Day Free Trial, then $29/mo',
       competitor: 'Starts at $29/mo (no free tier)',
     },
     pros: {
@@ -88,10 +88,10 @@ export const comparisons: ComparisonData[] = [
       { name: 'Spam & Noise Filtering', redleads: 'Advanced AI', competitor: 'None' },
       { name: 'Lead CRM Dashboard', redleads: true, competitor: false },
       { name: 'Hacker News Support', redleads: false, competitor: true },
-      { name: 'Price', redleads: '7-Day Trial, then $19/mo', competitor: 'Forever Free' },
+      { name: 'Price', redleads: '7-Day Trial, then $29/mo', competitor: 'Forever Free' },
     ],
     pricing: {
-      redleads: '7-Day Free Trial, then $19/mo',
+      redleads: '7-Day Free Trial, then $29/mo',
       competitor: 'Free forever',
     },
     pros: {
@@ -109,7 +109,7 @@ export const comparisons: ComparisonData[] = [
     },
     cons: {
       redleads: [
-        'Requires a paid $19/mo subscription after trial',
+        'Requires a paid $29/mo subscription after trial',
         'Does not currently monitor Hacker News',
       ],
       competitor: [
@@ -118,7 +118,7 @@ export const comparisons: ComparisonData[] = [
         'Forces you to manually read 100s of emails daily',
       ],
     },
-    verdict: 'F5Bot is great if you have zero budget and endless free time. But if you value your time, **RedLeads** acts as an automated SDR—filtering out 95% of the noise and only serving you highly qualified, ready-to-close leads. The time saved easily justifies the $19/mo investment.',
+    verdict: 'F5Bot is great if you have zero budget and endless free time. But if you value your time, **RedLeads** acts as an automated SDR—filtering out 95% of the noise and only serving you highly qualified, ready-to-close leads. The time saved easily justifies the $29/mo investment.',
   },
   {
     slug: 'redleads-vs-syften',
@@ -138,7 +138,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'Team Features', redleads: false, competitor: true },
     ],
     pricing: {
-      redleads: 'Free trial, then $14/month',
+      redleads: 'Free trial, then $29/month',
       competitor: 'Starts at $19/month',
     },
     pros: {
@@ -186,7 +186,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'Multi-Platform', redleads: 'Reddit Only', competitor: 'Multiple' },
     ],
     pricing: {
-      redleads: 'Free trial, then $14/month',
+      redleads: 'Free trial, then $29/month',
       competitor: 'Custom pricing',
     },
     pros: {
@@ -233,7 +233,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'Authentic Engagement', redleads: true, competitor: false },
     ],
     pricing: {
-      redleads: 'Free trial, then $14/month',
+      redleads: 'Free trial, then $29/month',
       competitor: 'Starts at $29/month',
     },
     pros: {
@@ -277,7 +277,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'Warm Buyer Detection', redleads: true, competitor: 'Basic' },
       { name: 'Human-in-the-Loop', redleads: true, competitor: false },
     ],
-    pricing: { redleads: '$14/mo', competitor: 'Pay-per-comment model' },
+    pricing: { redleads: '$29/mo', competitor: 'Pay-per-comment model' },
     pros: {
       redleads: ['Higher lead quality', 'Better account safety', 'Deeper context'],
       competitor: ['Hands-off automation', 'Scalable volume', 'Multiple accounts'],
@@ -301,7 +301,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'Dashboard UX', redleads: 'Premium', competitor: 'Standard' },
       { name: 'Buyer Intent', redleads: true, competitor: true },
     ],
-    pricing: { redleads: '$14/mo', competitor: 'Custom pricing' },
+    pricing: { redleads: '$29/mo', competitor: 'Custom pricing' },
     pros: {
       redleads: ['Modern UI', 'Faster lead delivery', 'Fixed pricing'],
       competitor: ['Deep filtering', 'Established brand', 'Good subreddit discovery'],
@@ -325,7 +325,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'SEO/Google Tracking', redleads: 'Basic', competitor: 'Advanced' },
       { name: 'Browser Extension', redleads: false, competitor: true },
     ],
-    pricing: { redleads: '$14/mo', competitor: '$19/mo' },
+    pricing: { redleads: '$29/mo', competitor: '$19/mo' },
     pros: {
       redleads: ['Better lead identification', 'Higher intent data', 'Modern dark theme'],
       competitor: ['Deep CRM features', 'SEO-first approach', 'Excellent browser integration'],
@@ -349,7 +349,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'Multi-Platform', redleads: false, competitor: true },
       { name: 'Enterprise Analytics', redleads: false, competitor: true },
     ],
-    pricing: { redleads: '$14/mo', competitor: 'Starts at $99/mo' },
+    pricing: { redleads: '$29/mo', competitor: 'Starts at $99/mo' },
     pros: {
       redleads: ['10x cheaper for founders', 'Deeper Reddit data', 'Lead-focused'],
       competitor: ['Monitors EVERYTHING', 'Sentiment analysis', 'Enterprise grade'],
@@ -373,7 +373,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'Scheduling', redleads: false, competitor: true },
       { name: 'Team Collaboration', redleads: 'Basic', competitor: 'Enterprise' },
     ],
-    pricing: { redleads: '$14/mo', competitor: '$249/user/mo' },
+    pricing: { redleads: '$29/mo', competitor: '$249/user/mo' },
     pros: {
       redleads: ['Focus on ROI/Sales', 'Fraction of the cost', 'High intent alerts'],
       competitor: ['All-in-one manager', 'Client reporting', 'Best-in-class UI'],
@@ -397,7 +397,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'Real-Time Alerts', redleads: true, competitor: true },
       { name: 'Lead Extraction', redleads: true, competitor: 'Basic' },
     ],
-    pricing: { redleads: '$14/mo', competitor: '$25/mo' },
+    pricing: { redleads: '$29/mo', competitor: '$25/mo' },
     pros: {
       redleads: ['Superior intent scoring', 'Clean modern UX', 'Founder focused'],
       competitor: ['Excellent SEO focus', 'Cheap monitoring', 'Good historical data'],
@@ -421,7 +421,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'Lead Enrichment', redleads: 'Standard', competitor: 'Advanced' },
       { name: 'Buyer Intent', redleads: true, competitor: 'Basic' },
     ],
-    pricing: { redleads: '$14/mo', competitor: 'Contact sales' },
+    pricing: { redleads: '$29/mo', competitor: 'Contact sales' },
     pros: {
       redleads: ['Transparent pricing', 'Better intent metrics', 'Easy setup'],
       competitor: ['Deep enterprise features', 'Enriched contact data', 'Large scale'],
@@ -445,7 +445,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'AI Lead Discovery', redleads: true, competitor: false },
       { name: 'Intent Scoring', redleads: true, competitor: false },
     ],
-    pricing: { redleads: '$14/mo', competitor: '$15/mo' },
+    pricing: { redleads: '$29/mo', competitor: '$15/mo' },
     pros: {
       redleads: ['Finds people to talk to', 'Identifies buyers', 'High ROI interaction'],
       competitor: ['Hands-off posting', 'Best time to post data', 'Automated bulk content'],
@@ -469,7 +469,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'AI Lead Scoring', redleads: true, competitor: false },
       { name: 'Real-Time Alerts', redleads: true, competitor: 'Basic' },
     ],
-    pricing: { redleads: '$14/mo', competitor: '$49/mo' },
+    pricing: { redleads: '$29/mo', competitor: '$49/mo' },
     pros: {
       redleads: ['Actionable daily leads', 'Lower price', 'Clean UX'],
       competitor: ['Deep data mining', 'Good for large agencies', 'Historical subreddit data'],
@@ -493,7 +493,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'Spam Filtering', redleads: 'Advanced', competitor: 'Standard' },
       { name: 'Multi-Channel', redleads: false, competitor: true },
     ],
-    pricing: { redleads: '$14/mo', competitor: 'Starts at $41/mo' },
+    pricing: { redleads: '$29/mo', competitor: 'Starts at $41/mo' },
     pros: {
       redleads: ['Built for Reddit depth', 'Identification of buyers', 'Modern interface'],
       competitor: ['Broad coverage', 'Team Slack alerts', 'Established player'],
@@ -517,7 +517,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'Buyer Intent Scoring', redleads: true, competitor: false },
       { name: 'Account Anti-Ban Protection', redleads: true, competitor: 'Manual Only' },
     ],
-    pricing: { redleads: '$14/mo', competitor: '$29/mo' },
+    pricing: { redleads: '$29/mo', competitor: '$29/mo' },
     pros: {
       redleads: ['Finds the leads FOR you automatically', 'Explicit intent detection', 'Cheaper for founders'],
       competitor: ['Promotes manual "build in public" authenticity', 'Simple onboarding'],
@@ -540,7 +540,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'Google SERP Tracking', redleads: 'Standard', competitor: 'Advanced' },
       { name: 'Lead Dashboard', redleads: 'Premium', competitor: 'Standard' },
     ],
-    pricing: { redleads: '$14/mo', competitor: '$19/mo' },
+    pricing: { redleads: '$29/mo', competitor: '$19/mo' },
     pros: {
       redleads: ['100% focused on finding ready-to-buy users', 'Cleaner UX for fast replies'],
       competitor: ['Finds Reddit threads with high Google traffic', 'Good for programmatic SEO strategy'],
@@ -593,7 +593,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'Email Alerts', redleads: true, competitor: true },
     ],
     pricing: {
-      redleads: 'Starts at $14/mo',
+      redleads: 'Starts at $29/mo',
       competitor: 'Free',
     },
     pros: {

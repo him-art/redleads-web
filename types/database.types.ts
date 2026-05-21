@@ -86,6 +86,7 @@ export type Database = {
           subscription_tier: string | null
           trial_ends_at: string | null
           website_url: string | null
+          unsubscribed: boolean | null
         }
         Insert: {
           beta_joined_at?: string | null
@@ -109,6 +110,7 @@ export type Database = {
           subscription_tier?: string | null
           trial_ends_at?: string | null
           website_url?: string | null
+          unsubscribed?: boolean | null
         }
         Update: {
           beta_joined_at?: string | null
@@ -132,6 +134,7 @@ export type Database = {
           subscription_tier?: string | null
           trial_ends_at?: string | null
           website_url?: string | null
+          unsubscribed?: boolean | null
         }
         Relationships: []
       }

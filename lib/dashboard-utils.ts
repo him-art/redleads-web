@@ -5,6 +5,7 @@ export interface TrialStatus {
     isInTrial: boolean;
     daysRemaining: number;
     trialEndsAt: Date | null;
+    needsCheckout: boolean;
 }
 
 /**
@@ -18,7 +19,7 @@ export function isSubscribedPlan(profile: any): boolean {
 export function calculateTrialStatus(profile: any): TrialStatus {
     const subscribed = isSubscribedPlan(profile);
     if (subscribed) {
-        return { isActuallyExpired: false, isInTrial: false, daysRemaining: 0, trialEndsAt: null };
+        return { isActuallyExpired: false, isInTrial: false, daysRemaining: 0, trialEndsAt: null, needsCheckout: false };
     }
 
     const trialEndsAtString = profile?.trial_ends_at || null;
@@ -32,21 +33,28 @@ export function calculateTrialStatus(profile: any): TrialStatus {
         daysRemaining = Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
     }
 
+    // Cutoff logic: users created after this date MUST have completed checkout (have a trial date or subscription)
+    // If they don't, they are in a "limbo" state and need to check out to start their trial.
+    const profileCreatedAt = profile?.created_at ? new Date(profile.created_at) : new Date(0);
+    const ENFORCEMENT_DATE = new Date('2026-05-20T00:00:00Z');
+    
+    // A user needs checkout if they were created after enforcement date, have no subscription, and have no trialEndsAt
+    const needsCheckout = !subscribed && profileCreatedAt > ENFORCEMENT_DATE && !trialEndsAt;
+    
     const trialExpired = trialEndsAt ? (trialEndsAt.getTime() <= now.getTime()) : false;
     
-    // If trial_ends_at is missing, we assume it's a new user who hasn't finished onboarding.
-    // They are NOT expired yet.
-    const isActuallyExpired = subscribed ? false : (trialExpired || (!!trialEndsAt && daysRemaining <= 0));
+    // They are "expired" (locked out) if their trial is over OR if they need to check out.
+    const isActuallyExpired = subscribed ? false : (trialExpired || (!!trialEndsAt && daysRemaining <= 0) || needsCheckout);
     
-    // They are in trial if it's not expired and they have a trial date set.
-    // If no trial date is set but tier is 'trial', we don't say they are 'in trial' yet (onboarding will set it)
-    const isInTrial = !isActuallyExpired && daysRemaining > 0;
+    // They are in trial if it's not expired, they have a trial date set, and don't need checkout
+    const isInTrial = !isActuallyExpired && daysRemaining > 0 && !needsCheckout;
 
     return {
         isActuallyExpired,
         isInTrial,
         daysRemaining,
-        trialEndsAt
+        trialEndsAt,
+        needsCheckout
     };
 }
 

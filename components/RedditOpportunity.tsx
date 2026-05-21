@@ -153,20 +153,7 @@ export default function RedditOpportunity() {
                 Start Finding Users <MaterialIcon name="arrow_right" size={20} />
             </a>
             
-            <div className="mt-6 flex flex-row justify-center items-center gap-6 md:gap-12 text-gray-500 text-[10px] md:text-xs font-bold uppercase tracking-[0.15em]">
-                <div className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full border border-gray-600 flex items-center justify-center">
-                        <MaterialIcon name="check" size={10} className="text-gray-400" />
-                    </div>
-                    <span>No card required</span>
-                </div>
-                <div className="flex items-center gap-3">
-                     <div className="w-5 h-5 rounded-full border border-gray-600 flex items-center justify-center">
-                        <MaterialIcon name="check" size={10} className="text-gray-400" />
-                    </div>
-                    <span>7-day free trial</span>
-                </div>
-            </div>
+            
         </div>
 
       </div>

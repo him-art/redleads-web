@@ -6,6 +6,7 @@ interface TrialLifecycleEmailProps {
   productName?: string;
   leadCount?: number;
   topSubreddit?: string;
+  unsubscribeUrl?: string;
 }
 
 export default function TrialLifecycleEmail({ 
@@ -13,7 +14,8 @@ export default function TrialLifecycleEmail({
   stage, 
   productName = 'your product', 
   leadCount = 12, 
-  topSubreddit = 'SaaS' 
+  topSubreddit = 'SaaS',
+  unsubscribeUrl
 }: TrialLifecycleEmailProps) {
   const firstName = fullName ? fullName.split(' ')[0] : 'there';
   const siteUrl = 'https://redleads.app';
@@ -91,20 +93,19 @@ export default function TrialLifecycleEmail({
       ctaUrl: dashboardUrl,
     },
     day5: {
-      preheader: 'One reply. One customer. $1,200 in revenue.',
-      tag: 'ROI Case Study 📈',
-      tagColor: '#0ea5e9',
-      title: 'The ROI of a single reply',
+      preheader: 'Transparency first: Your trial rolls over in 48 hours.',
+      tag: 'Billing Reminder 🗓️',
+      tagColor: '#f59e0b',
+      title: 'Your trial rolls over in 48 hours',
       body: (
         <>
           <p>Hi {firstName},</p>
-          <p>We just passed the 5-day mark. I wanted to share why RedLeads users usually stick around for years after their trial.</p>
-          <p>One of our users recently shared that they spent 30 seconds using <strong>AI Reply</strong> on a lead we found in r/SaaS. That one reply led to a demo, which led to a <strong>$1,200/year contract</strong>.</p>
-          <p>RedLeads costs $19/mo. If it finds you just <strong>one customer per year</strong>, it has already paid for itself 5x over.</p>
-          <p>You have <strong>{leadCount} leads</strong> waiting in your dashboard. Which one is your next customer?</p>
+          <p>Transparency is one of our core values at RedLeads, so I wanted to send a quick reminder that your 7-day free trial will automatically roll over into a paid subscription in exactly 48 hours.</p>
+          <p>Our scanner has been busy finding <strong>{leadCount} leads</strong> for <strong>{productName}</strong>. If you've been finding value and want to keep your lead machine running 24/7, you don't need to do a thing!</p>
+          <p>However, if RedLeads hasn't brought you potential customers yet, you can easily cancel in 1 click from your dashboard billing tab. We only want you paying if we bring you ROI.</p>
         </>
       ),
-      cta: 'Find My Next Customer →',
+      cta: 'View My Dashboard →',
       ctaUrl: dashboardUrl,
     },
     day6: {
@@ -124,20 +125,21 @@ export default function TrialLifecycleEmail({
       ctaUrl: dashboardUrl,
     },
     day7: {
-      preheader: 'Final 24 hours. Your lead stream is about to stop.',
-      tag: 'Personal Note ✉️',
-      tagColor: '#ef4444',
-      title: 'Should I keep your scanner running?',
+      preheader: 'Your trial is complete and your lead machine is fully active.',
+      tag: 'Fully Active 🚀',
+      tagColor: '#10b981',
+      title: 'Your lead machine is now fully live!',
       body: (
         <>
           <p>Hi {firstName},</p>
-          <p>Your 7-day trial ends in exactly 24 hours. Tomorrow morning, your dashboard goes dark and we'll stop monitoring Reddit for <strong>{productName}</strong>.</p>
-          <p>I'd love to keep it running for you. Upgrading to a Starter plan is just $19/mo. That is less than the cost of a single lunch, and it keeps your lead machine running 24/7.</p>
-          <p><strong>Quick question:</strong> If you haven't upgraded yet, what's been the biggest hurdle? Hit reply and let me know. I read every email.</p>
+          <p>Your 7-day trial is officially complete, and your RedLeads subscription is now fully active. We're thrilled to have you on board!</p>
+          <p>Our scanner will continue monitoring Reddit 24/7 for <strong>{productName}</strong>. This means you will never miss a high-intent conversation in r/{topSubreddit} or anywhere else.</p>
+          <p>To maximize your ROI, I recommend logging in today and expanding your tracked keywords. The more specific your keywords, the better the leads we find.</p>
+          <p>If you have any questions or need help setting up advanced tracking, just hit reply. I'm here to help.</p>
         </>
       ),
-      cta: 'Keep My Access Live →',
-      ctaUrl: pricingUrl,
+      cta: 'Expand My Keywords →',
+      ctaUrl: dashboardUrl,
     },
   };
 
@@ -233,6 +235,14 @@ export default function TrialLifecycleEmail({
           <p style={{ fontSize: '10px', color: '#333333', margin: '0' }}>
             Built for growth by <a href="https://x.com/timjayas" style={{ color: '#555555', textDecoration: 'none' }}>Tim Jayas</a>
           </p>
+          {unsubscribeUrl && (
+            <p style={{ fontSize: '10px', color: '#444444', margin: '12px 0 0 0' }}>
+              No longer want to receive these emails?{' '}
+              <a href={unsubscribeUrl} style={{ color: '#666666', textDecoration: 'underline' }}>
+                Unsubscribe
+              </a>
+            </p>
+          )}
         </div>
       </div>
     </div>

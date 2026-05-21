@@ -13,11 +13,14 @@ function getResend() {
     return resendInstance;
 }
 
+import { getUnsubscribeUrl, getOneClickUrl } from './unsubscribe';
+
 interface SendEmailOptions {
     to: string | string[];
     subject: string;
     react: React.ReactElement;
     from?: string;
+    includeUnsubscribe?: boolean;
 }
 
 /**
@@ -28,25 +31,46 @@ export async function sendEmail({
     to, 
     subject, 
     react, 
-    from = process.env.EMAIL_FROM || 'RedLeads <onboarding@redleads.app>' 
+    from = process.env.EMAIL_FROM || 'RedLeads <onboarding@redleads.app>',
+    includeUnsubscribe = false
 }: SendEmailOptions, supabaseOverride?: any) {
     try {
+        let element = react;
+        let unsubscribeUrl = '';
+        let oneClickUrl = '';
+        const toEmail = Array.isArray(to) ? to[0] : to;
+
+        if (includeUnsubscribe && toEmail) {
+            unsubscribeUrl = getUnsubscribeUrl(toEmail);
+            oneClickUrl = getOneClickUrl(toEmail);
+            element = React.cloneElement(react as React.ReactElement<any>, { unsubscribeUrl });
+        }
+
         // Render to static HTML for maximal compatibility with Resend
         let html: string;
         try {
             const { renderToStaticMarkup } = await import('react-dom/server');
-            html = renderToStaticMarkup(react);
+            html = renderToStaticMarkup(element);
         } catch (renderErr: any) {
             console.error('[Email Render Error]:', renderErr.message);
             throw new Error(`Failed to render email: ${renderErr.message}`);
         }
 
-        const { data, error } = await getResend().emails.send({
+        const emailPayload: any = {
             from,
             to,
             subject,
             html,
-        });
+        };
+
+        if (includeUnsubscribe && unsubscribeUrl && oneClickUrl) {
+            emailPayload.headers = {
+                'List-Unsubscribe': `<${oneClickUrl}>`,
+                'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+            };
+        }
+
+        const { data, error } = await getResend().emails.send(emailPayload);
 
         if (error) {
             console.error('[Resend Error]:', error);
