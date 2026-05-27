@@ -7,11 +7,94 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: 'Reddit Marketing for SaaS Founders | RedLeads',
   description: 'Scale your SaaS growth with automated Reddit lead generation. Find your first 100 users and beyond with AI intent scoring.',
+  alternates: {
+    canonical: '/solutions/saas',
+  },
+  openGraph: {
+    title: 'Reddit Marketing for SaaS Founders | RedLeads',
+    description: 'Scale your SaaS growth with automated Reddit lead generation. Find your first 100 users and beyond with AI intent scoring.',
+    url: 'https://www.redleads.app/solutions/saas',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Reddit Marketing for SaaS Founders | RedLeads',
+    description: 'Scale your SaaS growth with automated Reddit lead generation. Find your first 100 users and beyond with AI intent scoring.',
+  },
 };
 
 export default function SaaSPage() {
   return (
     <main className="min-h-screen bg-[#1a1a1a]">
+      {/* Dynamic SEO JSON-LD Graph for AEO and Google Rich Snippets */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "WebPage",
+              "@id": "https://www.redleads.app/solutions/saas/#webpage",
+              "url": "https://www.redleads.app/solutions/saas",
+              "name": "Reddit Marketing for SaaS Founders | RedLeads",
+              "description": "Scale your SaaS growth with automated Reddit lead generation. Find your first 100 users and beyond with AI intent scoring.",
+              "breadcrumb": {
+                "@id": "https://www.redleads.app/solutions/saas/#breadcrumb"
+              },
+              "isPartOf": {
+                "@id": "https://www.redleads.app/#website"
+              }
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "@id": "https://www.redleads.app/solutions/saas/#breadcrumb",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://www.redleads.app"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Directory",
+                  "item": "https://www.redleads.app/solutions/directory"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "SaaS Growth Strategy",
+                  "item": "https://www.redleads.app/solutions/saas"
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "How do I find my first 100 users on Reddit?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Look for people describing the specific problem your SaaS solves and offer a free account for feedback. This low-friction entry point converts much better than direct sales."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Can I use Reddit for SaaS validation?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, it's the best place to find 'hair-on-fire' problems before you write a single line of code. Monitor subreddits related to your industry to see what people are complaining about."
+                  }
+                }
+              ]
+            }
+          ])
+        }}
+      />
       <Navbar />
       
       {/* Hero Section */}

@@ -229,7 +229,7 @@ export default function BillingTab() {
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                         <div className="absolute top-0 right-0 p-8">
                             <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all duration-500 ${isSubscribed || isAdmin ? (isLifetime ? 'bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'bg-primary/10 text-primary border-primary/20 shadow-void') : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
-                                {isMounted ? (isSubscribed || isAdmin ? (isLifetime ? 'Lifetime Access' : 'Active Subscription') : (isInTrial ? `${daysRemaining} Days Left` : (needsCheckout ? 'Activation Required' : 'Trial Expired'))) : '...'}
+                                {isMounted ? (isLifetime ? 'Lifetime Access' : isAdmin ? 'Active Subscription' : isInTrial ? (isSubscribed ? `Trial: ${daysRemaining} Days Left` : `${daysRemaining} Days Left`) : isSubscribed ? 'Active Subscription' : needsCheckout ? 'Activation Required' : 'Trial Expired') : '...'}
                             </div>
                         </div>
 
@@ -243,7 +243,7 @@ export default function BillingTab() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {[
                                 { label: 'Keywords', value: isLifetime ? '20 Keywords' : isGrowth ? '20 Keywords' : isStarter ? '10 Keywords' : 'Trial Plan', icon: <Search size={14} /> },
-                                { label: 'Power Searches', value: isLifetime ? '5/Day' : isGrowth ? '5/Day' : isStarter ? '2/Day' : 'Trial Plan', icon: <Compass size={14} /> },
+                                { label: 'Power Searches', value: isLifetime ? '10/Day' : isGrowth ? '10/Day' : isStarter ? '5/Day' : 'Trial Plan', icon: <Compass size={14} /> },
                                 { label: 'AI Outreach', value: isLifetime ? '500 Drafts / Month' : isGrowth ? '500 Drafts / Month' : isStarter ? '100 Drafts / Month' : '5 Drafts', icon: <Bot size={14} /> },
                                 { label: 'Support', value: isLifetime ? 'Priority Support' : 'Standard Support', icon: <CheckCircle2 size={14} /> }
                             ].map((stat) => (
@@ -312,8 +312,8 @@ export default function BillingTab() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {[
-                        { id: 'starter', name: PLANS.STARTER.name, price: billingCycle === 'annual' ? PLANS.STARTER.annualPrice : PLANS.STARTER.price, desc: '10 keywords, 2 power searches & 100 AI reply drafts per month', primary: false, active: planDetails.id === 'starter' },
-                        { id: 'growth', name: PLANS.GROWTH.name, price: billingCycle === 'annual' ? PLANS.GROWTH.annualPrice : PLANS.GROWTH.price, desc: '20 keywords, 5 power searches & 500 AI reply drafts per month', primary: true, active: planDetails.id === 'growth' }
+                        { id: 'starter', name: PLANS.STARTER.name, price: billingCycle === 'annual' ? PLANS.STARTER.annualPrice : PLANS.STARTER.price, desc: 'daily 5 power searches, 100 AI reply drafts per month, daily keyword alerts', primary: false, active: planDetails.id === 'starter' },
+                        { id: 'growth', name: PLANS.GROWTH.name, price: billingCycle === 'annual' ? PLANS.GROWTH.annualPrice : PLANS.GROWTH.price, desc: ' daily 10 power searches, 500 AI reply drafts per month, daily keyword alerts', primary: true, active: planDetails.id === 'growth' }
                     ].map((plan) => (
                     <div key={plan.id} className="p-0.5 surface-1 rounded-[2rem] transition-all duration-300">
                         <div className={`p-8 sm:p-10 rounded-[1.8rem] border flex flex-col h-full transition-all relative overflow-hidden ${plan.active ? 'border-primary ring-2 ring-primary/10 bg-void' : 'bg-void border-white/5'}`}>
@@ -448,9 +448,10 @@ export default function BillingTab() {
                                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                                         <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest text-center mb-2">Growth Features +</p>
                                         {[
-                                            '20 Tracked Keywords',
-                                            '5 Power Searches / Day',
+                                            '10 Power Searches / Day',
                                             '500 AI Drafts / Month',
+                                            '20 Tracked Keywords',
+                                            'Daily keyword alerts',
                                             'Priority Beta Access'
                                         ].map((feat) => (
                                             <div key={feat} className="flex items-center gap-3">

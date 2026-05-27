@@ -7,11 +7,94 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: 'Reddit Lead Generation for Agencies | RedLeads',
   description: 'Scale your agency by finding high-intent clients on Reddit. Discover businesses and founders actively looking for your services.',
+  alternates: {
+    canonical: '/solutions/agencies',
+  },
+  openGraph: {
+    title: 'Reddit Lead Generation for Agencies | RedLeads',
+    description: 'Scale your agency by finding high-intent clients on Reddit. Discover businesses and founders actively looking for your services.',
+    url: 'https://www.redleads.app/solutions/agencies',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Reddit Lead Generation for Agencies | RedLeads',
+    description: 'Scale your agency by finding high-intent clients on Reddit. Discover businesses and founders actively looking for your services.',
+  },
 };
 
 export default function AgenciesPage() {
   return (
     <main className="min-h-screen bg-[#1a1a1a]">
+      {/* Dynamic SEO JSON-LD Graph for AEO and Google Rich Snippets */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "WebPage",
+              "@id": "https://www.redleads.app/solutions/agencies/#webpage",
+              "url": "https://www.redleads.app/solutions/agencies",
+              "name": "Reddit Lead Generation for Agencies | RedLeads",
+              "description": "Scale your agency by finding high-intent clients on Reddit. Discover businesses and founders actively looking for your services.",
+              "breadcrumb": {
+                "@id": "https://www.redleads.app/solutions/agencies/#breadcrumb"
+              },
+              "isPartOf": {
+                "@id": "https://www.redleads.app/#website"
+              }
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "@id": "https://www.redleads.app/solutions/agencies/#breadcrumb",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://www.redleads.app"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Directory",
+                  "item": "https://www.redleads.app/solutions/directory"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Agency Growth Strategy",
+                  "item": "https://www.redleads.app/solutions/agencies"
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "How do agencies get leads from Reddit?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "By monitoring subreddits where business owners ask for technical recommendations and providing expert answers first. This establishes authority before the pitch."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the best way to approach a potential agency client on Reddit?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Audit their problem publicly if possible. Give them 3-4 actionable tips and then mention that your agency specializes in solving that exact issue at scale."
+                  }
+                }
+              ]
+            }
+          ])
+        }}
+      />
       <Navbar />
       
       {/* Hero Section */}

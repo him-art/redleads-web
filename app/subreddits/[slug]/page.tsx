@@ -14,10 +14,19 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     title: hub.title,
     description: hub.description,
     keywords: hub.keywords,
+    alternates: {
+      canonical: `/subreddits/${hub.slug}`,
+    },
     openGraph: {
       title: hub.title,
       description: hub.description,
-    }
+      url: `https://www.redleads.app/subreddits/${hub.slug}`,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: hub.title,
+      description: hub.description,
+    },
   };
 }
 

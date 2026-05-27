@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import SocialProofTicker from './SocialProofTicker';
+import { ShieldCheck, Heart } from 'lucide-react';
 import { FOUNDER_COUNT } from '@/data/stats';
 
 interface Testimonial {
@@ -243,64 +243,125 @@ export default function FounderNote() {
   return (
     <section className="py-24 bg-[#1a1a1a] overflow-hidden border-t border-white/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Split Founder Note Layout */}
-        <div className="max-w-4xl mx-auto mb-24">
-        <div className="flex flex-col md:flex-row gap-12 md:gap-20 items-start">
-            {/* Profile Column */}
-            <div className="flex-shrink-0 flex flex-col items-center gap-4">
-              <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-2xl overflow-hidden border border-white/10 shadow-none">
-                <Image 
-                  src="/founder.webp" 
-                  alt="Tim Jayas" 
-                  fill 
-                  sizes="(max-width: 768px) 160px, 192px"
-                  className="object-cover"
-                />
-              </div>
-              <div className="flex items-center gap-2 opacity-60">
-                  <span className="font-handwriting text-gray-400 text-xs italic -rotate-3">This is me</span>
-                  <span className="text-xl">👋</span>
-              </div>
-            </div>
-
-            {/* Content Column */}
-            <div className="flex-1 text-left">
-              <div className="mb-6">
-                  <span className="text-orange-500 font-bold tracking-[0.05em] text-[10px] uppercase">FROM THE FOUNDER</span>
-              </div>
+        
+        {/* Giant Parent Glassmorphic Card (NO GLOW EFFECTS) */}
+        <div className="max-w-6xl mx-auto mb-28 relative group/card">
+          
+          <div className="bg-gradient-to-br from-[#1c1c21] via-[#121215] to-[#09090b] border border-white/10 rounded-[3rem] p-8 md:p-14 shadow-2xl relative overflow-hidden">
+            
+            {/* Geometric Vector Lines Grid Pattern */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none opacity-50" />
+            
+            {/* Grid Layout inside Parent Card */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center relative z-10">
               
-              <h2 className="text-3xl md:text-[2.75rem] font-bold text-white leading-tight tracking-tight mb-8">
-                Built by a founder tired of missing <span className="text-orange-500 font-serif-italic">Reddit opportunities</span>
-              </h2>
-              
-              <div className="space-y-6 text-gray-400 text-sm md:text-[15px] leading-relaxed max-w-2xl">
-                <p>
-                  I've launched multiple SaaS products and know how valuable Reddit can be for finding early customers. But manually searching through subreddits every day? That's exhausting.
-                </p>
-                <p>
-                  I wanted a tool that would monitor Reddit for me, score posts with AI, and deliver the best opportunities to my inbox each morning. So I built RedLeads.
-                </p>
-                <p className="text-white font-bold">
-                  Now I wake up to a curated list of Reddit opportunities, instead of spending hours searching. I hope it helps you too.
-                </p>
-                <p className="text-gray-400">
-                  <span className="text-orange-500 font-bold">Important:</span> I built this to be a discovery engine, not a spam bot. Please follow our <Link href="/protocol" className="text-white underline hover:text-orange-500 transition-colors">Reddit Success Protocol</Link> to ensure you engage authentically and safely.
-                </p>
+              {/* Left Column: Punchy Growth Strategist Hook (7/12 columns) */}
+              <div className="lg:col-span-7 flex flex-col justify-between text-left h-full">
+                <div>
+                  <div className="mb-6 flex items-center gap-2.5">
+                    <span className="text-orange-500 font-bold tracking-[0.25em] text-[10px] uppercase bg-orange-500/10 border border-orange-500/20 px-3.5 py-1.5 rounded-lg select-none">
+                      GROWTH NOTE
+                    </span>
+                  </div>
+                  
+                  <h2 className="text-3xl md:text-[2.65rem] font-bold text-white leading-[1.1] tracking-tight mb-8">
+                    The highest-converting organic channel for B2B startups is{' '}
+                    <span className="relative inline-block text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-400 font-extrabold">
+                      Reddit.
+                      <span className="absolute -bottom-1.5 left-0 w-full h-[2px] bg-gradient-to-r from-orange-500/40 to-transparent rounded-full" />
+                    </span>
+                  </h2>
+                  
+                  <div className="space-y-5 text-gray-400 text-sm md:text-[15px] leading-relaxed font-medium">
+                    <p>
+                      Every single day, thousands of people type their immediate business pain points directly into Reddit. They aren't looking for corporate paid ads or aggressive cold outreach—they want trusted, contextual recommendations.
+                    </p>
+                    <p>
+                      If you show up inside those active threads and add upfront value, you win the customer. But monitoring subreddits 24/7 and manually filtering out chatter takes lots of time and effort.
+                    </p>
+                    <p>
+                      That’s why I engineered RedLeads.app. It drops an autonomous AI engine onto Reddit to find posts in real-time with single-click filters using AI and timeframes, sends keyword alerts to your inbox, and much more. Everything I wish I had when I first started.
+                    </p>
+                    
+                    <div className="flex items-center gap-2 text-white font-bold bg-white/[0.02] border border-white/5 py-3.5 px-4.5 rounded-2xl max-w-fit">
+                      <Heart size={14} className="text-orange-500 fill-current" />
+                      <span>Now, instead of hunting for leads, they find me. I hope it helps you win your next 100 customers.</span>
+                    </div>
+
+                    <p className="text-gray-500 text-xs leading-normal pt-2">
+                      <span className="text-orange-500 font-bold">Important:</span> Authenticity drives conversion. RedLeads is designed strictly for intent discovery, not spam-bots. Follow our <Link href="/protocol" className="text-white hover:text-orange-500 underline transition-colors">Reddit Success Protocol</Link> to build long-term trust.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Signature */}
+                <div className="mt-10 pt-6 border-t border-white/5 flex flex-col gap-1">
+                  <p className="text-white font-serif-italic italic text-2.5xl opacity-95 tracking-wide">- Tim Jayas</p>
+                  <p className="text-[10px] text-gray-500 tracking-widest font-black uppercase select-none">FOUNDER & GROWTH STRATEGIST</p>
+                </div>
               </div>
 
-              {/* Separator Line */}
-              <div className="w-full h-[1px] bg-white/10 mt-10 mb-6" />
+              {/* Right Column: Founder spotlight card (5/12 columns) */}
+              <div className="lg:col-span-5 flex items-stretch">
+                <div className="bg-white/[0.02] border border-white/5 rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center relative overflow-hidden w-full h-full shadow-inner">
+                  
+                  {/* Subtle Grid inside spotlight card */}
+                  <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff01_1px,transparent_1px),linear-gradient(to_bottom,#ffffff01_1px,transparent_1px)] bg-[size:2rem_2rem] opacity-25 pointer-events-none" />
+                  
+                  {/* Portrait with Crisp Frame (NO GLOW) */}
+                  <div className="relative group/portrait mb-6">
+                    <div className="relative w-36 h-36 md:w-44 md:h-44 rounded-3xl overflow-hidden border-2 border-white/10 shadow-2xl bg-black">
+                      <Image 
+                        src="/founder.webp" 
+                        alt="Tim Jayas" 
+                        fill 
+                        sizes="(max-width: 768px) 144px, 176px"
+                        className="object-cover transition-transform duration-500 group-hover/portrait:scale-105"
+                      />
+                    </div>
 
-              <div>
-                <p className="text-white font-serif-italic italic text-xl opacity-90">- Tim Jayas</p>
+                    {/* Verified Maker floating Badge */}
+                    <div className="absolute -bottom-2 -right-2 bg-gradient-to-r from-orange-500 to-amber-500 border border-white/10 px-3 py-1 rounded-xl text-[9px] font-black uppercase text-white tracking-widest shadow-md flex items-center gap-1 select-none">
+                      <ShieldCheck size={10} className="text-white fill-current" />
+                       FOUNDER
+                    </div>
+                  </div>
+
+                  {/* Profile Credentials */}
+                  <div className="space-y-1 mb-6">
+                    <h4 className="text-xl font-bold text-white tracking-tight">Tim Jayas</h4>
+                    <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">SaaS Growth Strategist</p>
+                  </div>
+
+                  {/* Direct Link to X Profile */}
+                  <div className="w-full px-2">
+                    <a 
+                      href="https://x.com/TimJayas" 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-white/5 hover:bg-white/10 text-white text-xs font-bold uppercase tracking-widest transition-all border border-white/10 hover:border-white/20 active:scale-95 shadow-none"
+                    >
+                      <svg className="w-4 h-4 fill-current shrink-0 text-gray-400 group-hover:text-white" viewBox="0 0 24 24">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                      </svg>
+                      Connect with me on X
+                    </a>
+                  </div>
+
+                  {/* Cursive greeting invitation */}
+                  <div className="flex items-center gap-2 opacity-50 mt-8 select-none text-[11px] font-handwriting italic text-gray-400">
+                    <span>Let's talk organic scaling</span>
+                    <span className="text-sm">🚀</span>
+                  </div>
+
+                </div>
               </div>
-
 
             </div>
           </div>
         </div>
 
-        {/* User Testimonials */}
+        {/* User Testimonials Section */}
         <div className="pt-24 border-t border-white/5">
           
           <div className="text-center mb-14 md:mb-20">
@@ -318,6 +379,7 @@ export default function FounderNote() {
             <TestimonialTickerRow testimonials={row2} direction="right" />
           </div>
         </div>
+
       </div>
     </section>
   );

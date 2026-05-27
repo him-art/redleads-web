@@ -32,6 +32,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
+  manifest: '/site.webmanifest',
   icons: {
     icon: '/favicon.png',
     apple: '/apple-touch-icon.png',

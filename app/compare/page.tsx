@@ -9,10 +9,18 @@ export const metadata: Metadata = {
   title: 'Compare RedLeads | Reddit Marketing Tool Comparisons',
   description: 'Compare RedLeads with GummySearch, F5Bot, Syften, BillyBuzz, and ReplyGuy. See which Reddit marketing tool is best for lead generation.',
   keywords: ['GummySearch alternative', 'F5Bot alternative', 'Syften alternative', 'Reddit tool comparison'],
+  alternates: {
+    canonical: '/compare',
+  },
   openGraph: {
     title: 'Compare RedLeads | Reddit Marketing Tool Comparisons',
     description: 'See how RedLeads compares to other Reddit marketing tools.',
-    url: 'https://redleads.app/compare',
+    url: 'https://www.redleads.app/compare',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Compare RedLeads | Reddit Marketing Tool Comparisons',
+    description: 'Compare RedLeads with GummySearch, F5Bot, Syften, and other top-tier social listening and intent tools.',
   },
 };
 

@@ -4,16 +4,67 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MaterialIcon from '@/components/ui/MaterialIcon';
 import { solutions } from '../data';
-import masterSubreddits from '@/data/pseo-subreddits.json';
 
 export const metadata: Metadata = {
   title: 'Reddit Growth Strategy Directory | RedLeads Index',
-  description: 'A complete directory of Reddit growth strategies for every industry and community.',
+  description: 'A complete directory of Reddit growth strategies for every industry and community. Expert guides for SaaS, agencies, sales teams, and more.',
+  alternates: {
+    canonical: '/solutions/directory',
+  },
+  openGraph: {
+    title: 'Reddit Growth Strategy Directory | RedLeads Index',
+    description: 'A complete directory of Reddit growth strategies for every industry and community.',
+    url: 'https://www.redleads.app/solutions/directory',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Reddit Growth Strategy Directory | RedLeads Index',
+    description: 'A complete directory of Reddit growth strategies for every industry and community.',
+  },
 };
 
 export default function PseoDirectoryPage() {
   return (
     <main className="min-h-screen bg-[#1a1a1a]">
+      {/* JSON-LD Schema: BreadcrumbList + CollectionPage */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "CollectionPage",
+              "@id": "https://www.redleads.app/solutions/directory/#webpage",
+              "url": "https://www.redleads.app/solutions/directory",
+              "name": "Reddit Growth Strategy Directory | RedLeads Index",
+              "description": "A complete directory of Reddit growth strategies for every industry and community.",
+              "isPartOf": {
+                "@id": "https://www.redleads.app/#website"
+              }
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "@id": "https://www.redleads.app/solutions/directory/#breadcrumb",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://www.redleads.app"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Growth Strategy Directory",
+                  "item": "https://www.redleads.app/solutions/directory"
+                }
+              ]
+            }
+          ])
+        }}
+      />
       <Navbar />
       
       <section className="container mx-auto px-4 pt-40 pb-24">
@@ -25,7 +76,7 @@ export default function PseoDirectoryPage() {
             Growth <br /> <span className="text-orange-500 font-serif-italic">Directory</span>
           </h1>
           <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            Browse our comprehensive guides on how to find leads and grow your business across the most influential subreddits.
+            Browse our comprehensive guides on how to find leads and grow your business across every industry vertical.
           </p>
 
           <div className="mt-12 flex flex-wrap justify-center gap-3">
@@ -52,25 +103,26 @@ export default function PseoDirectoryPage() {
                   <h2 className="text-4xl font-black text-white mb-2 leading-none uppercase tracking-tighter">
                      {solution.hero.title} <span className="text-orange-500">&middot;</span>
                   </h2>
-                  <p className="text-slate-500 font-medium">Actionable guides for {solution.hero.badgeText} across niche communities.</p>
+                  <p className="text-slate-500 font-medium">Expert growth strategies for {solution.hero.badgeText}.</p>
                 </div>
               </div>
               
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                {masterSubreddits.map((subreddit) => {
-                  const subSlug = subreddit.toLowerCase().replace(/r\//, '').replace(/\//g, '');
-                  const subTitle = subreddit.startsWith('r/') ? subreddit : `r/${subreddit}`;
-                  return (
-                    <Link 
-                      key={subSlug}
-                      href={`/solutions/${solution.slug}/${subSlug}`}
-                      className="group p-5 bg-[#141414] border border-white/5 rounded-2xl hover:border-orange-500/30 transition-all hover:-translate-y-1"
-                    >
-                      <div className="text-[9px] font-black text-slate-600 uppercase tracking-widest mb-2 group-hover:text-orange-500/50">{solution.slug} Strategy</div>
-                      <div className="text-sm font-black text-white group-hover:text-orange-500">{subTitle}</div>
-                    </Link>
-                  );
-                })}
+              {/* Link to the dedicated solution page */}
+              <div className="p-8 bg-[#141414] border border-white/5 rounded-3xl hover:border-orange-500/30 transition-all">
+                <Link 
+                  href={`/solutions/${solution.slug}`}
+                  className="flex items-center justify-between group"
+                >
+                  <div>
+                    <h3 className="text-2xl font-black text-white mb-2 group-hover:text-orange-500 transition-colors">
+                      {solution.hero.title} <span className="text-orange-500 font-serif-italic">{solution.hero.titleHighlight}</span>
+                    </h3>
+                    <p className="text-slate-400 text-sm max-w-xl">{solution.metaDescription}</p>
+                  </div>
+                  <div className="shrink-0 ml-6">
+                    <MaterialIcon name="arrow_forward" size={24} className="text-slate-500 group-hover:text-orange-500 transition-colors" />
+                  </div>
+                </Link>
               </div>
             </div>
           ))}

@@ -5,8 +5,6 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MaterialIcon from '@/components/ui/MaterialIcon';
 import { getAllSolutions, getSolutionBySlug } from '../data';
-import masterSubreddits from '@/data/pseo-subreddits.json';
-import { FOUNDER_COUNT } from '@/data/stats';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -268,31 +266,33 @@ export default async function SolutionPage({ params }: Props) {
         </div>
       </section>
 
-      {/* Related Community Strategies */}
+      {/* Related Growth Strategies */}
       <section className="container mx-auto px-4 py-32 border-t border-white/5">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-black text-white mb-12 tracking-tighter text-center">
-            Explore <span className="text-orange-500 font-serif-italic">Community Strategies</span>
+            More <span className="text-orange-500 font-serif-italic">Growth Strategies</span>
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {masterSubreddits.slice(0, 48).map((subreddit) => {
-              const subSlug = subreddit.toLowerCase().replace(/r\//, '').replace(/\//g, '');
-              const subTitle = subreddit.startsWith('r/') ? subreddit : `r/${subreddit}`;
-              return (
-                <Link 
-                  key={subSlug}
-                  href={`/solutions/${slug}/${subSlug}`}
-                  className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:border-orange-500/50 transition-colors group text-center flex flex-col items-center justify-center"
-                >
-                  <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 group-hover:text-orange-500 text-center">{solution.hero.title}</div>
-                  <div className="text-sm font-black text-white text-center break-all">{subTitle}</div>
-                </Link>
-              );
-            })}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {getAllSolutions().filter(s => s.slug !== slug).map((s) => (
+              <Link
+                key={s.slug}
+                href={`/solutions/${s.slug}`}
+                className="p-6 bg-white/5 border border-white/10 rounded-2xl hover:border-orange-500/40 transition-all group"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 rounded-xl bg-orange-500/10 flex items-center justify-center">
+                    <MaterialIcon name={s.hero.badgeIcon} size={16} className="text-orange-500" />
+                  </div>
+                  <span className="text-orange-500 text-[10px] font-black uppercase tracking-widest">{s.hero.badgeText}</span>
+                </div>
+                <h3 className="text-lg font-black text-white mb-2 group-hover:text-orange-500 transition-colors">{s.hero.title} {s.hero.titleHighlight}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">{s.metaDescription}</p>
+              </Link>
+            ))}
           </div>
           <div className="text-center mt-12">
             <Link href="/solutions/directory" className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 text-white font-black text-xs uppercase tracking-widest rounded-xl hover:bg-white/20 transition-colors">
-              View All {FOUNDER_COUNT} Strategies <MaterialIcon name="arrow_right" size={16} />
+              View Full Directory <MaterialIcon name="arrow_right" size={16} />
             </Link>
           </div>
         </div>

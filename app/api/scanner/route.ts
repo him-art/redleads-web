@@ -70,10 +70,10 @@ export async function POST(req: Request) {
             
             // Usage Guardrails (SaaS 2.0)
             const dailyLimit = profile?.scan_allowance || (
-                profile?.subscription_tier === 'lifetime' ? 5 : 
-                profile?.subscription_tier === 'growth' ? 5 : 
-                profile?.subscription_tier === 'starter' ? 2 : 
-                2 // Trial default
+                profile?.subscription_tier === 'lifetime' ? 10 : 
+                profile?.subscription_tier === 'growth' ? 10 : 
+                profile?.subscription_tier === 'starter' ? 5 : 
+                5 // Trial default
             );
 
             // Effective count resets if it's a new day

@@ -11,7 +11,7 @@ export const PLANS = {
         annualPrice: 249, // Aggressive discount for immediate annual cashflow
         keywordLimit: 10,
         subredditLimit: 5,
-        powerSearchLimit: 2,
+        powerSearchLimit: 5,
         aiReplyLimit: 100,
     },
     GROWTH: {
@@ -21,7 +21,7 @@ export const PLANS = {
         annualPrice: 349, // Aggressive discount for immediate annual cashflow
         keywordLimit: 20,
         subredditLimit: 15, // New field
-        powerSearchLimit: 5,
+        powerSearchLimit: 10,
         aiReplyLimit: 500,
     },
     LIFETIME: {
@@ -29,7 +29,7 @@ export const PLANS = {
         name: 'Lifetime Plan',
         keywordLimit: 20,
         subredditLimit: 15, // New field
-        powerSearchLimit: 5,
+        powerSearchLimit: 10,
         aiReplyLimit: 500,
     }
 } as const;

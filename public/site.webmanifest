@@ -1,0 +1,18 @@
+{
+  "name": "RedLeads | #1 AI-First Reddit Marketing & Lead Gen Engine",
+  "short_name": "RedLeads",
+  "description": "Stop tracking keywords, start scanning intent. RedLeads is the AI-First intelligence engine that finds high-value Reddit conversations and turns them into customers automatically.",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#1a1a1a",
+  "background_color": "#1a1a1a",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait"
+}

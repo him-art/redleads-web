@@ -208,6 +208,25 @@ export async function POST(req: Request) {
                     break;
                 }
 
+                // --- Payment failure (card declined, 3DS failed, etc.) ---
+                case 'payment.failed': {
+                    const errorCode = data?.error_code || 'UNKNOWN';
+                    const errorMessage = data?.error_message || 'No details provided';
+                    const paymentId = data?.payment_id || 'unknown';
+                    const cardLast4 = data?.card_last_four || '****';
+
+                    console.warn(
+                        `[Dodo Webhook] Payment failed for user ${userId}: ` +
+                        `${errorCode} — ${errorMessage} ` +
+                        `(payment: ${paymentId}, card: ****${cardLast4})`
+                    );
+
+                    await updateLog('payment_failed', `${errorCode}: ${errorMessage} (card ****${cardLast4})`);
+                    // Note: no profile downgrade here — subscription.failed / subscription.updated
+                    // events handle tier changes. This case is purely for diagnostics.
+                    break;
+                }
+
                 // --- Cancellation / failure events ---
                 case 'subscription.cancelled':
                 case 'subscription.failed':

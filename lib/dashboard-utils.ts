@@ -18,12 +18,7 @@ export function isSubscribedPlan(profile: any): boolean {
 
 export function calculateTrialStatus(profile: any): TrialStatus {
     const subscribed = isSubscribedPlan(profile);
-    if (subscribed) {
-        return { isActuallyExpired: false, isInTrial: false, daysRemaining: 0, trialEndsAt: null, needsCheckout: false };
-    }
-
     const trialEndsAtString = profile?.trial_ends_at || null;
-
     const trialEndsAt = trialEndsAtString ? new Date(trialEndsAtString) : null;
     const now = new Date();
     
@@ -33,6 +28,11 @@ export function calculateTrialStatus(profile: any): TrialStatus {
         daysRemaining = Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
     }
 
+    const trialExpired = trialEndsAt ? (trialEndsAt.getTime() <= now.getTime()) : false;
+
+    // A user is in a trial if they have an active trial end date in the future
+    const isInTrial = !trialExpired && daysRemaining > 0;
+
     // Cutoff logic: users created after this date MUST have completed checkout (have a trial date or subscription)
     // If they don't, they are in a "limbo" state and need to check out to start their trial.
     const profileCreatedAt = profile?.created_at ? new Date(profile.created_at) : new Date(0);
@@ -41,13 +41,8 @@ export function calculateTrialStatus(profile: any): TrialStatus {
     // A user needs checkout if they were created after enforcement date, have no subscription, and have no trialEndsAt
     const needsCheckout = !subscribed && profileCreatedAt > ENFORCEMENT_DATE && !trialEndsAt;
     
-    const trialExpired = trialEndsAt ? (trialEndsAt.getTime() <= now.getTime()) : false;
-    
-    // They are "expired" (locked out) if their trial is over OR if they need to check out.
+    // They are "expired" (locked out) if they are not subscribed AND (their trial is over OR they need to check out).
     const isActuallyExpired = subscribed ? false : (trialExpired || (!!trialEndsAt && daysRemaining <= 0) || needsCheckout);
-    
-    // They are in trial if it's not expired, they have a trial date set, and don't need checkout
-    const isInTrial = !isActuallyExpired && daysRemaining > 0 && !needsCheckout;
 
     return {
         isActuallyExpired,
@@ -68,6 +63,10 @@ export function getPlanDetails(profile: any) {
     const isAdmin = profile?.is_admin === true;
     const isSubscribed = isSubscribedPlan(profile);
 
+    // Differentiate active paid sub from subscription trial
+    const trialStatus = calculateTrialStatus(profile);
+    const isInTrial = trialStatus.isInTrial;
+
     const baseDetails = {
         isAdmin,
         isStarter: isSubscribed,
@@ -83,9 +82,9 @@ export function getPlanDetails(profile: any) {
         case 'lifetime':
             return { ...PLANS.LIFETIME, ...baseDetails, id: 'lifetime', name: 'Lifetime Plan', isFullAccess: true };
         case 'growth':
-            return { ...PLANS.GROWTH, ...baseDetails, id: 'growth', name: 'Growth Plan', isFullAccess: true };
+            return { ...PLANS.GROWTH, ...baseDetails, id: 'growth', name: isInTrial ? 'Growth Trial' : 'Growth Plan', isFullAccess: true };
         case 'starter':
-            return { ...PLANS.STARTER, ...baseDetails, id: 'starter', name: 'Starter Plan', isFullAccess: false };
+            return { ...PLANS.STARTER, ...baseDetails, id: 'starter', name: isInTrial ? 'Starter Trial' : 'Starter Plan', isFullAccess: false };
         default:
             return { ...PLANS.STARTER, ...baseDetails, id: 'trial', name: 'Free Trial', isFullAccess: false };
     }
