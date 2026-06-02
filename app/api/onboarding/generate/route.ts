@@ -104,13 +104,10 @@ export async function POST(req: Request) {
             - **NO PHRASES. NO HYPHENS.**
             - **Examples: "marketing", "leads", "sales", "outreach", "cold", "automation".**
             
-            3. Generate 8-10 "Target Subreddits" where the target audience for this product hangs out.
-            
             Return JSON:
             {
                 "description": "...",
-                "keywords": ["...", "..."],
-                "subreddits": ["...", "..."]
+                "keywords": ["...", "..."]
             }
         `;
 
@@ -159,7 +156,7 @@ export async function POST(req: Request) {
         return NextResponse.json({
             description: result.description || metaDescription || title || `A solution for ${url}`,
             keywords: finalKeywords,
-            subreddits: result.subreddits || []
+            subreddits: []
         });
 
     } catch (error: any) {

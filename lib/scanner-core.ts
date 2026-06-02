@@ -12,21 +12,20 @@ export interface ScannerOptions {
     AIApiKey?: string;
     tavilyApiKey?: string;
     keywords?: string[];
-    subreddits?: string[];
     description?: string;
     timeRange?: '24h' | '7d' | '30d';
 }
 
 
 export async function performScan(url: string, options: ScannerOptions): Promise<ScannerResult> {
-    const { tavilyApiKey, keywords, subreddits, description, timeRange } = options;
+    const { tavilyApiKey, keywords, description, timeRange } = options;
 
     const normalizedUrl = url.toLowerCase().trim().replace(/^https?:\/\//, '').replace(/\/$/, '');
 
     console.log(`[ScannerLib] Analyzing site: ${url} with timeRange: ${timeRange}`);
 
     let searchQueries: string[] = [];
-    const siteContextString = `URL: ${url}\nDescription: ${description || 'Not provided'}\nKeywords: ${keywords?.join(', ') || 'Not provided'}\nSubreddits: ${subreddits?.join(', ') || 'General Reddit'}`;
+    const siteContextString = `URL: ${url}\nDescription: ${description || 'Not provided'}\nKeywords: ${keywords?.join(', ') || 'Not provided'}`;
 
     // A. STEP A: Let AI Generate a High-Precision Mega-Query
     try {
