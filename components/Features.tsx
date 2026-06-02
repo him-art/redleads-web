@@ -477,8 +477,6 @@ const Features = () => {
             >
                 Start Finding Customers <ArrowRight size={20} />
             </a>
-            
-            
         </div>
 
       </div>

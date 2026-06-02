@@ -55,8 +55,8 @@ async function runDailyDigest() {
         if (p.unsubscribed) return false;
         const tier = (p.subscription_tier || '').toLowerCase();
         
-        // Paid users always get the digest
-        const isPaid = tier === 'starter' || tier === 'growth' || tier === 'lifetime';
+        // Paid users always get the digest (Starter excluded)
+        const isPaid = tier === 'growth' || tier === 'lifetime';
         if (isPaid) return true;
 
         // For non-paid users (free/trial), check if they are currently in an active trial.

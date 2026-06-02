@@ -47,9 +47,9 @@ const HowItWorks = () => {
                 </div>
 
                 <div className="mt-auto">
-                  <h3 className="text-2xl font-black text-white mb-4 tracking-tight leading-snug">Define Your Target</h3>
+                  <h3 className="text-2xl font-black text-white mb-4 tracking-tight leading-snug">Enter Your SaaS Niche</h3>
                   <p className="text-gray-500 text-[13px] font-medium leading-relaxed tracking-wide">
-                    Enter your website and target audience. RedLeads automatically maps out highly relevant subreddits and potential customer keywords.
+                    Drop in your URL. RedLeads scans your value proposition to map out the exact keyword triggers and subreddits AI crawlers scan to discover solutions.
                   </p>
                 </div>
               </div>
@@ -75,9 +75,9 @@ const HowItWorks = () => {
                 </div>
 
                 <div className="mt-auto">
-                  <h3 className="text-2xl font-black text-white mb-4 tracking-tight leading-snug">AI Identifies Leads</h3>
+                  <h3 className="text-2xl font-black text-white mb-4 tracking-tight leading-snug">Score Buyer Intent</h3>
                   <p className="text-gray-500 text-[13px] font-medium leading-relaxed tracking-wide">
-                    Our advanced AI monitors 24/7 to find high-intent conversations, surface pain points, and score every lead based on buying signals.
+                    Our engine monitors Reddit 24/7, scoring community posts for active buying intent and identifying the high-value discussions that train LLM search databases.
                   </p>
                 </div>
               </div>
@@ -103,9 +103,9 @@ const HowItWorks = () => {
                 </div>
 
                 <div className="mt-auto">
-                  <h3 className="text-2xl font-black text-white mb-4 tracking-tight leading-snug">Reply &amp; Convert</h3>
+                  <h3 className="text-2xl font-black text-white mb-4 tracking-tight leading-snug">Own the Recommendations</h3>
                   <p className="text-gray-500 text-[13px] font-medium leading-relaxed tracking-wide">
-                    Use AI-drafted replies tailored to each thread. Founders using this method report closing customers in their first week.
+                    Leverage safe, helpful AI-drafted replies that resolve pain points. Acquire direct signups while securing your spot as the primary recommendation when ChatGPT answers user queries.
                   </p>
                 </div>
               </div>

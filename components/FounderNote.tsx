@@ -280,7 +280,7 @@ export default function FounderNote() {
                       If you show up inside those active threads and add upfront value, you win the customer. But monitoring subreddits 24/7 and manually filtering out chatter takes lots of time and effort.
                     </p>
                     <p>
-                      That’s why I engineered RedLeads.app. It drops an autonomous AI engine onto Reddit to find posts in real-time with single-click filters using AI and timeframes, sends keyword alerts to your inbox, and much more. Everything I wish I had when I first started.
+                      That’s why I engineered RedLeads.app. It drops an autonomous AI engine onto Reddit to find posts in real-time with single-click filters using AI and timeframes, sends email alerts to your inbox, and much more. Everything I wish I had when I first started.
                     </p>
                     
                     <div className="flex items-center gap-2 text-white font-bold bg-white/[0.02] border border-white/5 py-3.5 px-4.5 rounded-2xl max-w-fit">

@@ -312,8 +312,8 @@ export default function BillingTab() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {[
-                        { id: 'starter', name: PLANS.STARTER.name, price: billingCycle === 'annual' ? PLANS.STARTER.annualPrice : PLANS.STARTER.price, desc: 'daily 5 power searches, 100 AI reply drafts per month, daily keyword alerts', primary: false, active: planDetails.id === 'starter' },
-                        { id: 'growth', name: PLANS.GROWTH.name, price: billingCycle === 'annual' ? PLANS.GROWTH.annualPrice : PLANS.GROWTH.price, desc: ' daily 10 power searches, 500 AI reply drafts per month, daily keyword alerts', primary: true, active: planDetails.id === 'growth' }
+                        { id: 'starter', name: PLANS.STARTER.name, price: billingCycle === 'annual' ? PLANS.STARTER.annualPrice : PLANS.STARTER.price, desc: 'daily 5 power searches, 100 AI reply drafts per month', primary: false, active: planDetails.id === 'starter' },
+                        { id: 'growth', name: PLANS.GROWTH.name, price: billingCycle === 'annual' ? PLANS.GROWTH.annualPrice : PLANS.GROWTH.price, desc: ' daily 10 power searches, 500 AI reply drafts per month, daily email alerts', primary: true, active: planDetails.id === 'growth' }
                     ].map((plan) => (
                     <div key={plan.id} className="p-0.5 surface-1 rounded-[2rem] transition-all duration-300">
                         <div className={`p-8 sm:p-10 rounded-[1.8rem] border flex flex-col h-full transition-all relative overflow-hidden ${plan.active ? 'border-primary ring-2 ring-primary/10 bg-void' : 'bg-void border-white/5'}`}>
@@ -451,7 +451,7 @@ export default function BillingTab() {
                                             '10 Power Searches / Day',
                                             '500 AI Drafts / Month',
                                             '20 Tracked Keywords',
-                                            'Daily keyword alerts',
+                                            'Daily Email alerts',
                                             'Priority Beta Access'
                                         ].map((feat) => (
                                             <div key={feat} className="flex items-center gap-3">

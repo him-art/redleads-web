@@ -106,17 +106,14 @@ const Pricing = () => {
             description: 'For solo founders finding their first Reddit customers',
             features: {
                 inbound: [
-                    { name: '10 tracked keywords', icon: <MaterialIcon name="search" size={14} /> },
-                    { name: 'Live Reddit monitoring', icon: <MaterialIcon name="bolt" size={14} /> },
-                    { name: 'Email keyowrds alerts /day', icon: <MaterialIcon name="mail" size={14} /> },
                     { name: '5 Deep AI Reddit Search /day', icon: <MaterialIcon name="public" size={14} /> },
-                    { name: 'Monitor + 5 custom subreddits', icon: <MaterialIcon name="forum" size={14} /> },
+                    { name: 'Live Reddit monitoring', icon: <MaterialIcon name="bolt" size={14} /> },
+                    { name: '10 tracked keywords', icon: <MaterialIcon name="search" size={14} /> },
                     { name: 'Daily SEO opportunities', icon: <MaterialIcon name="monitoring" size={14} /> }
                     
                 ],
                 engage: [
                     { name: '100 AI Replies /mo', icon: <MaterialIcon name="smart_toy" size={14} /> },
-                    { name: 'Anti-Ban Safety Engine', icon: <MaterialIcon name="verified_user" size={14} className="text-green-500" /> }
                 ]
             }
         },
@@ -129,16 +126,14 @@ const Pricing = () => {
             badge: 'BEST VALUE',
             features: {
                 inbound: [
-                    { name: '20 tracked keywords', icon: <MaterialIcon name="search" size={14} /> },
-                    { name: 'Live Reddit monitoring', icon: <MaterialIcon name="bolt" size={14} /> },
-                    { name: 'Email keyowrds alerts /day', icon: <MaterialIcon name="mail" size={14} /> },
                     { name: '10 Deep AI Reddit Search /day', icon: <MaterialIcon name="public" size={14} /> },
-                    { name: 'Monitor + 15 custom subreddits', icon: <MaterialIcon name="forum" size={14} /> },
+                    { name: 'Live Reddit monitoring', icon: <MaterialIcon name="bolt" size={14} /> },
+                    { name: 'Daily Email alerts', icon: <MaterialIcon name="mail" size={14} /> },
+                    { name: '20 tracked keywords', icon: <MaterialIcon name="search" size={14} /> },
                     { name: 'Daily SEO opportunities', icon: <MaterialIcon name="monitoring" size={14} /> }
                 ],
                 engage: [
-                    { name: '500 AI Replies /mo', icon: <MaterialIcon name="smart_toy" size={14} /> },
-                    { name: 'Anti-Ban Safety Engine', icon: <MaterialIcon name="verified_user" size={14} className="text-green-500" /> }
+                    { name: '500 AI Replies /mo', icon: <MaterialIcon name="smart_toy" size={14} /> }
                 ]
             }
         }
@@ -318,11 +313,7 @@ const Pricing = () => {
                                 </div>
                             </div>
 
-                            <div className="mt-auto">
-                                <p className="text-center text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 transition-colors">
-                                    CANCEL ANYTIME
-                                </p>
-                            </div>
+                            
                             </div>
                         </div>
                     ))}
@@ -405,11 +396,7 @@ const Pricing = () => {
                                 </ul>
                             </div>
 
-                            <div className="mt-auto">
-                                <p className="text-center text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
-                                    LIMITED TIME OFFER
-                                </p>
-                            </div>
+                           
 
                         </div>
                     </div>

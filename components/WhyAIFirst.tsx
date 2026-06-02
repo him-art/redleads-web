@@ -2,22 +2,22 @@ import { Brain, Zap, Shield, Target, MousePointer2, Clock } from 'lucide-react';
 
 const reasons = [
   {
-    title: "Intent vs. Keywords",
-    description: "Legacy tools ping you for every keyword mention. RedLeads.app understands the *intent* behind the post, filtering out the noise and only surfacing ready-to-buy prospects.",
+    title: "AI Search Visibility (GEO)",
+    description: "ChatGPT and Perplexity pull recommendations from Reddit conversations. RedLeads ensures your B2B SaaS is highlighted in the active, high-authority threads AI crawlers scrape.",
     icon: Brain,
     color: "text-orange-500",
     bg: "bg-orange-500/10"
   },
   {
-    title: "Context-Aware Agent Hooks",
-    description: "Stop sending copy-paste messages. Our AI drafts personalized replies that match the specific context of the Reddit thread, ensuring your outreach feels authentic and helpful.",
+    title: "Intent Scoring vs. Noise",
+    description: "Legacy tools spam you with noisy keyword matches. Our custom LLMs score threads specifically for buyer intent, alerting you only when someone is ready to buy what you sell.",
     icon: Zap,
     color: "text-blue-500",
     bg: "bg-blue-500/10"
   },
   {
-    title: "Account Health First",
-    description: "Avoid 'shadowbans' and flags. RedLeads simulates human-like behavior and suggests engagement patterns that keep your Reddit account safe while you scale.",
+    title: "Context-Aware Replies",
+    description: "Ditch generic link spam that gets you banned. RedLeads drafts organic, reputation-building comments that establish trust and stay up permanently to feed the AI index loop.",
     icon: Shield,
     color: "text-green-500",
     bg: "bg-green-500/10"
@@ -25,10 +25,10 @@ const reasons = [
 ];
 
 const comparisonData = [
-  { label: "Filtering", legacy: "Keyword Based", ai: "Intent Based" },
-  { label: "Drafting", legacy: "Templates", ai: "Dynamic Context" },
-  { label: "Speed", legacy: "Batch/Delayed", ai: "Real-time Intel" },
-  { label: "Account Safety", legacy: "None", ai: "Humanized Simulation" }
+  { label: "AI Search Indexing (GEO)", legacy: "None", ai: "Secures ChatGPT Citations" },
+  { label: "Lead Scoring", legacy: "Basic Keyword Match", ai: "Deep Intent Parsing" },
+  { label: "Outreach Quality", legacy: "Generic Link Spam (Banned)", ai: "Helpful, Value-First Drafts" },
+  { label: "Monitoring Speed", legacy: "Manual/Delayed", ai: "Real-Time 24/7 Scanning" }
 ];
 
 export default function WhyAIFirst() {
