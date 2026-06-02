@@ -49,7 +49,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
          <FloatingBubble className="top-[40%] right-[7%] xl:right-[10%]" delay={1.2} scale={0.75} duration={3.3} floatDelay={0.2} />
          </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-0 md:pt-27 md:pb-0 flex flex-col items-center text-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-35 pb-0 sm:pt-38 md:pt-36 md:pb-0 flex flex-col items-center text-center">
       
 
         <h1 

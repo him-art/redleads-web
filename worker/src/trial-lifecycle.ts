@@ -18,8 +18,13 @@
 // Step 1: Load environment FIRST — these have no env-var dependencies at require-time
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
 
-dotenv.config({ path: '.env.local' });
+const envPath = path.resolve(process.cwd(), '.env.local');
+if (fs.existsSync(envPath)) {
+    dotenv.config({ path: envPath, override: false });
+}
 
 // Step 2: NOW require our library modules that depend on env vars
 // eslint-disable-next-line @typescript-eslint/no-var-requires

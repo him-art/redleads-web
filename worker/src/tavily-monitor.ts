@@ -12,8 +12,14 @@
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 import { ai as AI } from '../../lib/ai';
+import path from 'path';
+import fs from 'fs';
 
-dotenv.config({ path: '.env.local' });
+// Load .env.local synchronously (safe for both local dev and CI)
+const envPath = path.resolve(process.cwd(), '.env.local');
+if (fs.existsSync(envPath)) {
+    dotenv.config({ path: envPath, override: false });
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CONFIGURATION
@@ -24,7 +30,12 @@ const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const TAVILY_API_KEY = process.env.TAVILY_API_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY || !TAVILY_API_KEY) {
-    console.error('[TavilyMonitor] ❌ CRITICAL: Missing Supabase or Tavily configuration.');
+    const missing = [
+        !SUPABASE_URL && 'NEXT_PUBLIC_SUPABASE_URL',
+        !SUPABASE_SERVICE_KEY && 'SUPABASE_SERVICE_ROLE_KEY',
+        !TAVILY_API_KEY && 'TAVILY_API_KEY'
+    ].filter(Boolean).join(', ');
+    console.error(`[TavilyMonitor] ❌ CRITICAL: Missing env vars: ${missing}`);
     process.exit(1);
 }
 

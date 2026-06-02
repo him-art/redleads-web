@@ -11,12 +11,16 @@
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 
 // Fix for import paths when running with ts-node
 const emailLibPath = path.join(__dirname, '../../lib/email');
 const emailTemplatePath = path.join(__dirname, '../../lib/email-templates/DailyDigestEmail');
 
-dotenv.config({ path: '.env.local' });
+const envPath = path.resolve(process.cwd(), '.env.local');
+if (fs.existsSync(envPath)) {
+    dotenv.config({ path: envPath, override: false });
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CONFIGURATION
