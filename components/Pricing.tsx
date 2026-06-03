@@ -188,7 +188,7 @@ const Pricing = () => {
                 <div className="mb-8 flex justify-center">
                     <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-orange-500/10 border border-orange-500/20 rounded-full">
                         <span className="text-[11px] font-black uppercase tracking-[0.2em] text-orange-400">
-                            ⚡ <span className="text-white">7-days free trial</span>
+                            ⚡ <span className="text-white">7-day money-back guarantee — 100% risk-free</span>
                         </span>
                     </div>
                 </div>
@@ -262,8 +262,12 @@ const Pricing = () => {
                                         suppressHydrationWarning
                                         className="w-full py-6 rounded-2xl bg-white text-black font-black text-xs uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95 shadow-none"
                                     >
-                                        {isLoading === plan.name ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <>Start finding users <MaterialIcon name="arrow_right" size={16} /></>}
+                                        {isLoading === plan.name ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <>Get {plan.name} Access <MaterialIcon name="arrow_right" size={16} /></>}
                                     </button>
+                                    <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest text-center mt-3 flex items-center justify-center gap-1.5">
+                                        <MaterialIcon name="lock" size={10} className="text-gray-600" />
+                                        Cancel in 1-click • Refund request via Redleads.app@gmail.com
+                                    </p>
                                 </div>
                             </div>
 
@@ -352,6 +356,10 @@ const Pricing = () => {
                                     >
                                         {isLoading === 'Lifetime' ? <div className="w-4 h-4 border-2 border-white/30 border-t-black rounded-full animate-spin" /> : <>Get Lifetime Access <MaterialIcon name="arrow_right" size={16} /></>}
                                     </button>
+                                    <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest text-center mt-3 flex items-center justify-center gap-1.5">
+                                        <MaterialIcon name="lock" size={10} className="text-gray-600" />
+                                        7-Day Guarantee • Refund request via Redleads.app@gmail.com
+                                    </p>
                                 </div>
                             </div>
 

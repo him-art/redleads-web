@@ -72,7 +72,7 @@ export default function TrialLifecycleEmail({
           <p>Hi {firstName},</p>
           <p>Most founders fail on Reddit because they sound like a salesperson. Here is the secret: <strong>Provide 90% value, 10% link.</strong></p>
           <p>I call this the <strong>Helping Hook</strong>. Instead of saying "buy my tool," try: <i>"I actually dealt with this exact issue last month. What worked for me was X. I actually built a small tool to automate this if you want to check it out."</i></p>
-          <p>Our **AI Reply** is trained on this exact framework. You have <strong>4 days left</strong> in your trial, so go use it to turn one of your leads into a conversation today.</p>
+          <p>Our **AI Reply** is trained on this exact framework. Try it out on your dashboard today to turn one of your leads into a conversation.</p>
         </>
       ),
       cta: 'Try the Helping Hook →',
@@ -93,20 +93,20 @@ export default function TrialLifecycleEmail({
       ctaUrl: dashboardUrl,
     },
     day5: {
-      preheader: 'Transparency first: Your trial rolls over in 48 hours.',
-      tag: 'Billing Reminder 🗓️',
+      preheader: 'Keep your lead scanner running.',
+      tag: 'Upgrade Reminder 🗓️',
       tagColor: '#f59e0b',
-      title: 'Your trial rolls over in 48 hours',
+      title: 'Your preview ends in 48 hours',
       body: (
         <>
           <p>Hi {firstName},</p>
-          <p>Transparency is one of our core values at RedLeads, so I wanted to send a quick reminder that your 7-day free trial will automatically roll over into a paid subscription in exactly 48 hours.</p>
-          <p>Our scanner has been busy finding <strong>{leadCount} leads</strong> for <strong>{productName}</strong>. If you've been finding value and want to keep your lead machine running 24/7, you don't need to do a thing!</p>
-          <p>However, if RedLeads hasn't brought you potential customers yet, you can easily cancel in 1 click from your dashboard billing tab. We only want you paying if we bring you ROI.</p>
+          <p>Transparency is one of our core values at RedLeads, so I wanted to send a quick reminder that your 7-day preview access will expire in exactly 48 hours.</p>
+          <p>Our scanner has been busy finding <strong>{leadCount} leads</strong> for <strong>{productName}</strong>. If you've been finding value and want to keep your lead machine running 24/7, upgrade to a paid plan today!</p>
+          <p>If you don't upgrade, your scanner will stop monitoring Reddit. We only want you paying if we bring you ROI.</p>
         </>
       ),
-      cta: 'View My Dashboard →',
-      ctaUrl: dashboardUrl,
+      cta: 'Upgrade My Plan →',
+      ctaUrl: pricingUrl,
     },
     day6: {
       preheader: `High-intent buy signals detected in r/${topSubreddit}.`,
@@ -117,7 +117,7 @@ export default function TrialLifecycleEmail({
         <>
           <p>Hi {firstName},</p>
           <p>Our scanner just flagged <strong>{leadCount} posts</strong> that are "High Intent." These aren't casual chats. These are people explicitly asking for a recommendation for a solution like <strong>{productName}</strong>.</p>
-          <p>Your trial ends tomorrow. Once it expires, your dashboard access will lock and these leads will go to your competitors instead.</p>
+          <p>Your preview access ends tomorrow. Once it expires, your dashboard access will lock and these leads will go to your competitors instead.</p>
           <p>Don't leave easy revenue on the table. Reply to these final leads today.</p>
         </>
       ),
@@ -125,14 +125,14 @@ export default function TrialLifecycleEmail({
       ctaUrl: dashboardUrl,
     },
     day7: {
-      preheader: 'Your trial is complete and your lead machine is fully active.',
+      preheader: 'Your lead machine is fully active.',
       tag: 'Fully Active 🚀',
       tagColor: '#10b981',
       title: 'Your lead machine is now fully live!',
       body: (
         <>
           <p>Hi {firstName},</p>
-          <p>Your 7-day trial is officially complete, and your RedLeads subscription is now fully active. We're thrilled to have you on board!</p>
+          <p>Your RedLeads subscription is now fully active. We're thrilled to have you on board!</p>
           <p>Our scanner will continue monitoring Reddit 24/7 for <strong>{productName}</strong>. This means you will never miss a high-intent conversation in r/{topSubreddit} or anywhere else.</p>
           <p>To maximize your ROI, I recommend logging in today and expanding your tracked keywords. The more specific your keywords, the better the leads we find.</p>
           <p>If you have any questions or need help setting up advanced tracking, just hit reply. I'm here to help.</p>

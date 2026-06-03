@@ -124,7 +124,7 @@ export const solutions: SolutionData[] = [
     ],
     footerCta: {
       title: 'Build a growth engine that never sleeps.',
-      buttonText: 'START YOUR FREE TRIAL'
+      buttonText: 'GET STARTED NOW'
     }
   },
   {

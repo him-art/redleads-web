@@ -211,7 +211,7 @@ export default function SaaSPage() {
             href="/login"
             className="inline-flex items-center gap-3 text-orange-500 font-bold hover:gap-5 transition-all"
           >
-            START YOUR FREE TRIAL <MaterialIcon name="arrow_right" size={20} />
+            GET STARTED NOW <MaterialIcon name="arrow_right" size={20} />
           </Link>
         </div>
       </section>

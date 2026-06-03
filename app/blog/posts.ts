@@ -243,9 +243,9 @@ Most tools just look for keywords. **RedLeads** understands *meaning*. It uses A
 - If they say "I'm tired of handling SEO myself," RedLeads flags it as **High Priority**.
 
 **Best Feature:** AI Lead Scoring (Hot/Warm/Cold)
-**Price:** Free trial available
+**Price:** 7-day money-back guarantee
 
-[Try RedLeads Free →](/login?next=/dashboard)
+[Get Started with RedLeads →](/login?next=/dashboard)
 
 ---
 
@@ -1742,7 +1742,7 @@ RedLeads goes beyond what GummySearch offered by adding **AI-powered purchase in
 - Deep AI Search that understands context, not just keywords
 - Built-in Niche Explorer and Opportunity Finder tools
 
-**Pricing:** Starting at $29/month with a 7-day trial.
+**Pricing:** Starting at $29/month with a 7-day money-back guarantee.
 **Best for:** SaaS founders who want to convert Reddit conversations into paying customers, not just observe them.
 
 ### 2. F5Bot (Best Free Option)
@@ -2345,7 +2345,7 @@ This is the most powerful acquisition hack for indie hackers:
 **Why this converts:**
 - People who roast your UX are now emotionally invested in your product
 - They will check back to see if you implemented their feedback
-- 30-40% of roasters convert to free trial signups
+- 30-40% of roasters convert to active customers
 
 ## Phase 3: Systematic Acquisition (Week 5-8)
 
@@ -2422,7 +2422,7 @@ Most indie hackers skip Phase 1 and jump straight to Phase 3. They start monitor
       icon: 'travel_explore',
     },
     proTips: [
-      'The "UX Roast" technique converts 30-40% of participants into free trial signups because the act of critiquing creates emotional investment in seeing the product improve.',
+      'The "UX Roast" technique converts 30-40% of participants into active customers because the act of critiquing creates emotional investment in seeing the product improve.',
       'Skip the temptation to jump to automated monitoring before validating demand. Two weeks of manual validation saves months of building for a market that doesn\'t exist.',
     ],
     insights: {

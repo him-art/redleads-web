@@ -40,8 +40,8 @@ const faqs = [
     answer: "Very. We use advanced LLMs trained to distinguish between someone just 'venting' and someone 'actively looking for a solution.' You'll only spend time on the leads that actually have a high chance of converting."
   },
   {
-    question: "What happens after the 7-day free trial?",
-    answer: "You'll have full access to all features for 7 days. Use it to find your first few customers. If it doesn't pay for itself by day three, you can cancel with one click in your settings and you won't be charged a cent."
+    question: "What if RedLeads isn't right for me?",
+    answer: "We offer a 7-day money-back guarantee on all subscription plans. If RedLeads does not help you find warm, high-intent customers from Reddit within your first week, simply email us at Redleads.app@gmail.com and we will issue a full refund immediately — no questions asked."
   },
   {
     question: "Can I really cancel with one click?",

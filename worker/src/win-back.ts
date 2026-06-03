@@ -142,11 +142,11 @@ async function runWinBack() {
             const result = await sendEmail({
                 to: email,
                 from: EMAIL_FROM,
-                subject: `We unlocked your RedLeads account for 7 more days 👀`,
+                subject: `Get 40% off RedLeads + 7-Day Money-Back Guarantee 🎁`,
                 includeUnsubscribe: true,
                 react: WinBackEmail({
                     fullName,
-                    leadCount,
+                    LEADCOUNT: leadCount,
                     topSubreddit,
                     productName,
                     daysSinceExpiry,
@@ -154,14 +154,12 @@ async function runWinBack() {
             }, supabase);
 
             if (result?.success) {
-                // 5. Mark win_back_sent = true and EXTEND trial by 7 days
+                // 5. Mark win_back_sent = true (do not extend trial under paid-first model)
                 const existingMeta = (user_metadata as any) || {};
-                const newTrialEndsAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString();
                 
                 await supabase
                     .from('profiles')
                     .update({
-                        trial_ends_at: newTrialEndsAt,
                         user_metadata: {
                             ...existingMeta,
                             win_back_sent: true,

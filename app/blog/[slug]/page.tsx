@@ -382,7 +382,7 @@ export default async function BlogPostPage({ params }: Props) {
               href="/"
               className="inline-flex items-center gap-2 px-8 py-4 bg-orange-500 text-white font-black text-xs uppercase tracking-widest rounded-xl hover:bg-orange-600 transition-colors"
             >
-              Start Free Trial <MaterialIcon name="arrow_right" size={14} />
+              Get Started Now <MaterialIcon name="arrow_right" size={14} />
             </Link>
           </div>
         </div>

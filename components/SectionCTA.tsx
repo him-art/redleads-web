@@ -32,14 +32,17 @@ export default function SectionCTA({
           <span className="block text-orange-500 font-serif-italic sm:whitespace-nowrap">paying customers?</span>
         </h2>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center">
+          <div className="flex flex-col items-center justify-center">
             <Link 
               href={user ? "/dashboard" : "/login?next=/dashboard"}
               className="px-10 py-5 bg-orange-500 text-white rounded-[2rem] text-sm font-black uppercase tracking-widest border border-orange-500/20 hover:bg-[#ff4d29] active:scale-95 transition-all flex items-center justify-center gap-2 group text-center min-w-[220px]"
             >
-              Start Free Trial
+              Get Started Now
               <span className="text-[10px] px-2 py-0.5 bg-white/10 text-white rounded-full border border-white/20 group-hover:bg-white/20 transition-colors">PRO</span>
             </Link>
+            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest text-center mt-4">
+              7-day money-back guarantee • Email support at Redleads.app@gmail.com
+            </p>
           </div>
         </div>
       </div>

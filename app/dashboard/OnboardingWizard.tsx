@@ -482,7 +482,7 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
                             <div className="text-center space-y-2">
 
                                 <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-text-primary">
-                                    Select your plan to start your 7-day free trial
+                                    Choose your subscription plan
                                 </h2>
 
                             </div>
@@ -508,7 +508,7 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
                                         disabled={!!checkoutLoading}
                                         className="w-full py-4 rounded-xl bg-white/5 border border-white/10 text-text-primary font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all disabled:opacity-50 flex items-center justify-center"
                                     >
-                                        {checkoutLoading === 'starter' ? <LoadingIcon className="w-4 h-4" /> : 'Start 7-Day Free Trial'}
+                                        {checkoutLoading === 'starter' ? <LoadingIcon className="w-4 h-4" /> : 'Activate Starter'}
                                     </button>
                                 </div>
 
@@ -535,7 +535,7 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
                                         disabled={!!checkoutLoading}
                                         className="w-full py-4 rounded-xl bg-orange-500 text-black font-black text-[10px] uppercase tracking-widest hover:bg-orange-400 transition-all disabled:opacity-50 shadow-[0_0_20px_rgba(249,115,22,0.2)] flex items-center justify-center"
                                     >
-                                        {checkoutLoading === 'growth' ? <LoadingIcon className="w-4 h-4" /> : 'Start 7-Day Free Trial'}
+                                        {checkoutLoading === 'growth' ? <LoadingIcon className="w-4 h-4" /> : 'Activate Growth'}
                                     </button>
                                 </div>
 
@@ -577,8 +577,8 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
 
                             <div className="flex flex-col items-center space-y-4 pt-6">
                                 <p className="text-[10px] font-bold text-text-secondary/60 uppercase tracking-[0.2em] flex items-center justify-center gap-1.5 bg-white/5 px-6 py-3 rounded-full border border-white/10">
-                                    <Shield size={12} className="text-orange-500" />
-                                    No charge today. Cancel anytime in 1-click. Secure Dodo Checkout.
+                                    <Shield size={12} className="text-orange-500 animate-pulse" />
+                                    7-day money-back guarantee. Contact Redleads.app@gmail.com for refunds.
                                 </p>
                             </div>
                         </motion.div>

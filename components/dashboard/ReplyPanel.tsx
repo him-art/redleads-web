@@ -46,7 +46,7 @@ const PITCH_OPTIONS = [
     { id: 'Pure Value (No Pitch)', title: 'Pure Value', desc: 'No product mention', icon: HeartHandshake }
 ];
 
-const SMART_CHIPS = ['Mention free trial', 'Ask a question', 'Keep it short'];
+const SMART_CHIPS = ['Mention refund guarantee', 'Ask a question', 'Keep it short'];
 
 // --- UI Components ---
 const BentoCard = ({ icon: Icon, title, description, isSelected, onClick }: any) => (
@@ -352,7 +352,7 @@ export default function ReplyPanel({ lead, productContext, onClose, isSidebar = 
                                             <textarea
                                                 value={customRules}
                                                 onChange={(e) => setCustomRules(e.target.value)}
-                                                placeholder="e.g. Include our 14-day free trial."
+                                                placeholder="e.g. Mention 7-day money-back guarantee."
                                                 rows={2}
                                                 className="w-full bg-transparent border border-white/5 rounded-[0.9rem] px-4 py-3 text-xs font-bold text-text-primary focus:border-ai/40 outline-none resize-none placeholder:text-text-secondary/30 transition-colors"
                                             />

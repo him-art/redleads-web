@@ -30,7 +30,7 @@ export default function ReppitComparison() {
               Try the Better AI Engine
             </Link>
             <div className="text-slate-500 text-[10px] font-black uppercase tracking-widest">
-              Zero-friction trial available
+              7-day money-back guarantee
             </div>
           </div>
         </div>
@@ -132,7 +132,7 @@ export default function ReppitComparison() {
             Stop scoring. Start scaling.
           </h2>
           <Link href="/dashboard" className="inline-flex items-center gap-3 px-12 py-5 bg-white text-black rounded-2xl font-black uppercase text-sm tracking-widest hover:bg-slate-100 transition-all shadow-2xl">
-            Get Started Free <ArrowRight className="w-5 h-5" />
+            Get Started Now <ArrowRight className="w-5 h-5" />
           </Link>
         </div>
       </section>

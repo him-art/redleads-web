@@ -113,12 +113,13 @@ export async function POST(req: Request) {
             }
         }
 
-        // 5. Update Profile
+        // 5. Update Profile — mark as canceled, clear subscription fields
         await supabase
             .from('profiles')
             .update({ 
-                subscription_tier: 'trial',
-                dodo_subscription_id: null 
+                subscription_tier: 'canceled',
+                dodo_subscription_id: null,
+                trial_ends_at: null,
             })
             .eq('id', user.id);
 

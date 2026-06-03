@@ -82,11 +82,11 @@ export function getPlanDetails(profile: any) {
         case 'lifetime':
             return { ...PLANS.LIFETIME, ...baseDetails, id: 'lifetime', name: 'Lifetime Plan', isFullAccess: true };
         case 'growth':
-            return { ...PLANS.GROWTH, ...baseDetails, id: 'growth', name: isInTrial ? 'Growth Trial' : 'Growth Plan', isFullAccess: true };
+            return { ...PLANS.GROWTH, ...baseDetails, id: 'growth', name: 'Growth Plan', isFullAccess: true };
         case 'starter':
-            return { ...PLANS.STARTER, ...baseDetails, id: 'starter', name: isInTrial ? 'Starter Trial' : 'Starter Plan', isFullAccess: false };
+            return { ...PLANS.STARTER, ...baseDetails, id: 'starter', name: 'Starter Plan', isFullAccess: false };
         default:
-            return { ...PLANS.STARTER, ...baseDetails, id: 'trial', name: 'Free Trial', isFullAccess: false };
+            return { ...PLANS.STARTER, ...baseDetails, id: 'trial', name: 'Preview Account', isFullAccess: false };
     }
 }
 

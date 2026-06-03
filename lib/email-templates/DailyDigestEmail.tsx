@@ -52,7 +52,7 @@ export default function DailyDigestEmail({ fullName, leads, isTrialUser, trialDa
         border: 'rgba(249,115,22,0.25)',
         accent: '#f97316',
         icon: '⚠️',
-        headline: '2 days left on your trial.',
+        headline: '2 days left on your preview.',
         body: 'Your scanner shuts down in 48 hours. Upgrade to keep your leads coming in.',
         cta: 'Keep My Scanner Running',
       };
@@ -62,8 +62,8 @@ export default function DailyDigestEmail({ fullName, leads, isTrialUser, trialDa
       border: 'rgba(234,179,8,0.2)',
       accent: '#eab308',
       icon: '⏳',
-      headline: '3 days left on your trial.',
-      body: 'Your free trial ends soon. Upgrade to Starter for $29/mo and keep your lead machine running.',
+      headline: '3 days left on your preview.',
+      body: 'Your preview ends soon. Upgrade to Starter for $29/mo and keep your lead machine running.',
       cta: 'Upgrade My Plan',
     };
   })() : null;

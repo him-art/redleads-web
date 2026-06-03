@@ -40,7 +40,7 @@ export async function POST(req: Request) {
 
             if (!user) {
                 return NextResponse.json({ 
-                    error: 'Authentication required. Please sign in to start your free trial.', 
+                    error: 'Authentication required. Please sign in to access the scanner.', 
                     code: 'AUTH_REQUIRED' 
                 }, { status: 401 });
             }
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
 
             if (!(isPaid || isInTrial)) {
                 return NextResponse.json({ 
-                    error: 'Your trial has ended. Please upgrade to a paid plan to continue automated scanning.', 
+                    error: 'Subscription required. Please upgrade to a paid plan to continue automated scanning.', 
                     code: 'PAYWALL_REQUIRED' 
                 }, { status: 403 });
             }
@@ -82,7 +82,7 @@ export async function POST(req: Request) {
             if (effectiveCount >= dailyLimit) {
                 const msg = isPaid 
                     ? `Daily scan limit (${dailyLimit}) reached. Upgrade to increase your limit or check back tomorrow!` 
-                    : `You have used your ${dailyLimit} daily trial scans. Upgrade for fresh scans every day!`;
+                    : `You have used your ${dailyLimit} daily scans. Upgrade for fresh scans every day!`;
                 return NextResponse.json({ error: msg, code: 'DAILY_LIMIT_REACHED' }, { status: 403 });
             }
 

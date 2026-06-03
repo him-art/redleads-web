@@ -151,15 +151,16 @@ export default function BillingTab() {
                         <CheckCircle2 size={40} className="text-green-500" />
                     </div>
                     <h3 className="text-3xl font-black mb-4 text-text-primary">Subscription Cancelled</h3>
-                    {isWithinGuarantee ? (
+                    <p className="text-text-secondary mb-8">
+                        Your subscription has been stopped. You will not be charged again.
+                    </p>
+                    {isWithinGuarantee && (
                         <div className="bg-white/5 rounded-2xl p-6 mb-8 text-left">
-                            <p className="text-text-primary font-bold mb-2">💰 Refund Initiated</p>
+                            <p className="text-text-primary font-bold mb-2">💰 Request a Refund</p>
                             <p className="text-text-secondary text-sm leading-relaxed">
-                                Your full refund has been successfully initiated. You should see the amount reflected in your account within 2–4 product days.
+                                Since you are within our 7-day guarantee period, you are eligible for a full refund. To request it, simply contact us or request a refund via email at <a href="mailto:Redleads.app@gmail.com" className="text-primary hover:underline">Redleads.app@gmail.com</a>.
                             </p>
                         </div>
-                    ) : (
-                        <p className="text-text-secondary mb-8">Your subscription has been stopped. You will not be charged again.</p>
                     )}
                     <button onClick={handleManageSubscription} className="w-full py-4 bg-white text-black font-black rounded-xl hover:bg-gray-200 transition-all text-xs uppercase tracking-widest">Finalize in Portal</button>
                 </div>
@@ -229,21 +230,21 @@ export default function BillingTab() {
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                         <div className="absolute top-0 right-0 p-8">
                             <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all duration-500 ${isSubscribed || isAdmin ? (isLifetime ? 'bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'bg-primary/10 text-primary border-primary/20 shadow-void') : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
-                                {isMounted ? (isLifetime ? 'Lifetime Access' : isAdmin ? 'Active Subscription' : isInTrial ? (isSubscribed ? `Trial: ${daysRemaining} Days Left` : `${daysRemaining} Days Left`) : isSubscribed ? 'Active Subscription' : needsCheckout ? 'Activation Required' : 'Trial Expired') : '...'}
+                                {isMounted ? (isLifetime ? 'Lifetime Access' : isAdmin ? 'Active Subscription' : isInTrial ? (isSubscribed ? `Preview: ${daysRemaining} Days Left` : `${daysRemaining} Days Left`) : isSubscribed ? 'Active Subscription' : needsCheckout ? 'Activation Required' : 'Preview Expired') : '...'}
                             </div>
                         </div>
 
                         <div className="mb-12">
                             <p className="text-[10px] font-black text-text-secondary uppercase tracking-[0.4em] mb-4">Membership Status</p>
-                            <h3 className="text-4xl sm:text-5xl font-black text-text-primary tracking-tight">
+                            <h3 className="text-4xl sm:text-5xl font-black text-[#ffffff] tracking-tight">
                                 {planDetails.name}
                             </h3>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {[
-                                { label: 'Keywords', value: isLifetime ? '20 Keywords' : isGrowth ? '20 Keywords' : isStarter ? '10 Keywords' : 'Trial Plan', icon: <Search size={14} /> },
-                                { label: 'Power Searches', value: isLifetime ? '10/Day' : isGrowth ? '10/Day' : isStarter ? '5/Day' : 'Trial Plan', icon: <Compass size={14} /> },
+                                { label: 'Keywords', value: isLifetime ? '20 Keywords' : isGrowth ? '20 Keywords' : isStarter ? '10 Keywords' : 'Preview Plan', icon: <Search size={14} /> },
+                                { label: 'Power Searches', value: isLifetime ? '10/Day' : isGrowth ? '10/Day' : isStarter ? '5/Day' : 'Preview Plan', icon: <Compass size={14} /> },
                                 { label: 'AI Outreach', value: isLifetime ? '500 Drafts / Month' : isGrowth ? '500 Drafts / Month' : isStarter ? '100 Drafts / Month' : '5 Drafts', icon: <Bot size={14} /> },
                                 { label: 'Support', value: isLifetime ? 'Priority Support' : 'Standard Support', icon: <CheckCircle2 size={14} /> }
                             ].map((stat) => (

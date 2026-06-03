@@ -292,11 +292,11 @@ export default function LiveDiscoveryTab({
                                     </div>
                                     <div className="space-y-3">
                                         <h3 className="text-2xl font-black leading-tight text-text-primary">
-                                            {needsCheckout ? 'Activation Required' : 'Trial Access Ended'}
+                                            {needsCheckout ? 'Activation Required' : 'Subscription Ended'}
                                         </h3>
                                         <p className="text-text-secondary text-sm leading-relaxed font-medium">
                                             {needsCheckout 
-                                                ? 'Start your 7-day free trial to unlock the dashboard and begin monitoring.'
+                                                ? 'Choose a plan to unlock the dashboard and begin monitoring.'
                                                 : 'Upgrade to Growth to unlock unlimited access to high-intent leads.'}
                                         </p>
                                     </div>
@@ -306,18 +306,18 @@ export default function LiveDiscoveryTab({
                                             disabled={isUpgrading}
                                             className="w-full py-5 bg-[#ff914d] hover:bg-[#ff914d]/90 text-black font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
-                                            {isUpgrading ? <LoadingIcon className="w-5 h-5" /> : (needsCheckout ? <>Start 7-Day Free Trial (Growth)</> : <>Get Growth Access — ${PLANS.GROWTH.price}/mo</>)}
+                                            {isUpgrading ? <LoadingIcon className="w-5 h-5" /> : <>Get Growth Access — ${PLANS.GROWTH.price}/mo</>}
                                         </button>
                                         <button 
                                             onClick={() => handleUpgrade('starter')}
                                             disabled={isUpgrading}
                                             className="w-full py-5 bg-white/10 hover:bg-white/20 text-text-primary font-black uppercase text-xs rounded-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
-                                            {isUpgrading ? <LoadingIcon className="w-5 h-5" /> : (needsCheckout ? <>Start 7-Day Free Trial (Starter)</> : <>Get Starter Access — ${PLANS.STARTER.price}/mo</>)}
+                                            {isUpgrading ? <LoadingIcon className="w-5 h-5" /> : <>Get Starter Access — ${PLANS.STARTER.price}/mo</>}
                                         </button>
                                         {!needsCheckout && (
                                          <p className="text-[10px] text-text-secondary font-bold uppercase tracking-widest">
-                                            Trial Ended {isMounted && trialEndsAt ? trialEndsAt?.toLocaleDateString() : '...'}
+                                            Subscription Ended {isMounted && trialEndsAt ? trialEndsAt?.toLocaleDateString() : '...'}
                                         </p>
                                         )}
                                     </div>

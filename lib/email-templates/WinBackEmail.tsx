@@ -2,7 +2,7 @@ import * as React from 'react';
 
 interface WinBackEmailProps {
   fullName: string;
-  leadCount: number;
+  LEADCOUNT: number;
   topSubreddit: string;
   productName?: string;
   daysSinceExpiry?: number;
@@ -11,7 +11,7 @@ interface WinBackEmailProps {
 
 export default function WinBackEmail({
   fullName,
-  leadCount,
+  LEADCOUNT,
   topSubreddit,
   productName = 'your product',
   daysSinceExpiry = 3,
@@ -20,7 +20,7 @@ export default function WinBackEmail({
   const firstName = fullName ? fullName.split(' ')[0] : 'there';
   const siteUrl = 'https://redleads.app';
   const logoUrl = `${siteUrl}/redleads-logo-white.png`;
-  const ctaUrl = `${siteUrl}/pricing?utm_source=winback&utm_medium=email&utm_campaign=expired_trial`;
+  const ctaUrl = `${siteUrl}/pricing?utm_source=winback&utm_medium=email&utm_campaign=expired_preview`;
 
   return (
     <html lang="en" style={{ colorScheme: 'dark' }}>
@@ -52,7 +52,7 @@ export default function WinBackEmail({
         }}>
           {/* Preheader */}
           <div style={{ display: 'none', maxWidth: 0, maxHeight: 0, overflow: 'hidden', opacity: 0 }}>
-            We extended your trial by 7 days to let you claim your {leadCount} leads.
+            Claim 40% off to unlock your {LEADCOUNT} leads.
           </div>
 
           <div className="email-container" style={{
@@ -72,11 +72,11 @@ export default function WinBackEmail({
             fontWeight: '900',
             textTransform: 'uppercase',
             letterSpacing: '2px',
-            color: '#10b981',
+            color: '#f25e36',
             display: 'block',
             marginBottom: '12px'
           }}>
-            Account Unlocked
+            Exclusive Offer
           </span>
           <h1 style={{
             fontSize: '26px',
@@ -86,7 +86,7 @@ export default function WinBackEmail({
             color: '#ffffff',
             lineHeight: '1.2'
           }}>
-            We extended your free trial<br />by 7 more days
+            Get 40% off your first month<br />with code LEADCOUNT
           </h1>
         </div>
 
@@ -105,10 +105,10 @@ export default function WinBackEmail({
             textAlign: 'center'
           }}>
             <p style={{ margin: '0 0 8px 0', fontSize: '13px', color: '#888888', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>
-              Leads collected since your trial ended
+              Leads collected since your preview ended
             </p>
             <p style={{ margin: '0', fontSize: '48px', fontWeight: '900', color: '#f25e36', letterSpacing: '-2px' }}>
-              {leadCount}
+              {LEADCOUNT}
             </p>
             <p style={{ margin: '8px 0 0 0', fontSize: '13px', color: '#888888', fontWeight: '600' }}>
               Top source: <strong style={{ color: '#ffffff' }}>r/{topSubreddit}</strong>
@@ -124,16 +124,16 @@ export default function WinBackEmail({
           }}>
             <p>Hey {firstName},</p>
             <p>
-              Your RedLeads trial ended {daysSinceExpiry} day{daysSinceExpiry !== 1 ? 's' : ''} ago, but we kept scanning for you.
+              Your RedLeads preview ended {daysSinceExpiry} day{daysSinceExpiry !== 1 ? 's' : ''} ago, but we kept scanning for you.
             </p>
             <p>
-              In that time, <strong style={{ color: '#ffffff' }}>{leadCount}+ people posted in r/{topSubreddit}</strong> asking questions that {productName} can answer.
+              In that time, <strong style={{ color: '#ffffff' }}>{LEADCOUNT}+ people posted in r/{topSubreddit}</strong> asking questions that {productName} can answer.
             </p>
             <p>
-              We want you to be able to reply to them. So we just <strong style={{ color: '#10b981' }}>unlocked your account for 7 more days</strong>, completely free.
+              We want you to be able to reply to them. Claim an exclusive <strong style={{ color: '#f25e36' }}>40% discount</strong> on any paid plan with coupon code <strong style={{ color: '#ffffff' }}>LEADCOUNT</strong> at checkout.
             </p>
             <p>
-              Log in now to see your fresh leads and use AI Reply before your competitors do.
+              Plus, you are fully protected by our <strong style={{ color: '#10b981' }}>7-day money-back guarantee</strong>. If RedLeads doesn't bring you customers in your first week, just email us for a full, hassle-free refund.
             </p>
           </div>
 
@@ -141,7 +141,7 @@ export default function WinBackEmail({
           <div style={{ textAlign: 'center', marginBottom: '24px' }}>
             <a href={ctaUrl} style={{
               display: 'inline-block',
-              backgroundColor: '#10b981',
+              backgroundColor: '#f25e36',
               color: '#ffffff',
               padding: '18px 48px',
               borderRadius: '12px',
@@ -149,14 +149,14 @@ export default function WinBackEmail({
               textDecoration: 'none',
               fontSize: '15px',
               letterSpacing: '0.5px',
-              boxShadow: '0 10px 20px rgba(16, 185, 129, 0.25)'
+              boxShadow: '0 10px 20px rgba(242, 94, 54, 0.25)'
             }}>
-              Claim My 7-Day Extension →
+              Claim My 40% Discount →
             </a>
           </div>
 
           <p style={{ textAlign: 'center', fontSize: '12px', color: '#555555', margin: '0' }}>
-            Plans start at $29/mo . Cancel anytime
+            Includes 7-day money-back guarantee • Cancel anytime
           </p>
         </div>
 

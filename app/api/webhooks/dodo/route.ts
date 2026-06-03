@@ -168,14 +168,18 @@ export async function POST(req: Request) {
                     const newPlan = data?.metadata?.plan;
                     const newStatus = data?.status;
 
-                    // 1. If the status is any "inactive" state, prioritize downgrading to trial
+                    // 1. If the status is any "inactive" state, mark user as canceled (not trial)
                     if (['cancelled', 'failed', 'expired', 'deactivated'].includes(newStatus)) {
                         await supabase
                             .from('profiles')
-                            .update({ subscription_tier: 'trial' })
+                            .update({
+                                subscription_tier: 'canceled',
+                                dodo_subscription_id: null,
+                                trial_ends_at: null,
+                            })
                             .eq('id', userId);
                         
-                        await updateLog('downgraded', `Downgraded via updated event (status: ${newStatus})`);
+                        await updateLog('downgraded', `Marked canceled via updated event (status: ${newStatus})`);
                     }
                     // 2. Otherwise, if the plan changed (e.g. Starter → Growth upgrade)
                     else if (newPlan) {
@@ -234,10 +238,14 @@ export async function POST(req: Request) {
                 case 'subscription.deactivated':
                     await supabase
                         .from('profiles')
-                        .update({ subscription_tier: 'trial' })
+                        .update({
+                            subscription_tier: 'canceled',
+                            dodo_subscription_id: null,
+                            trial_ends_at: null,
+                        })
                         .eq('id', userId);
                     
-                    await updateLog('downgraded', `Downgraded from ${eventType}`);
+                    await updateLog('downgraded', `Marked canceled from ${eventType}`);
                     break;
 
                 default:

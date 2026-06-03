@@ -94,7 +94,7 @@ export default function UnsubscribeClient() {
                 <p className="font-semibold text-gray-300">By unsubscribing you will no longer receive:</p>
                 <ul className="list-disc pl-4 space-y-1">
                   <li>Daily Intelligence Digests (leads matched to your product)</li>
-                  <li>Trial & lifecycle milestones</li>
+                  <li>Onboarding & lifecycle milestones</li>
                   <li>Special offers and dashboard updates</li>
                 </ul>
               </div>

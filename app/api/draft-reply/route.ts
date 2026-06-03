@@ -41,8 +41,8 @@ export async function POST(req: Request) {
             
             if (!trialEndsAt || trialEndsAt < new Date()) {
                 return NextResponse.json({ 
-                    error: 'Trial expired or not started', 
-                    message: 'Your 7-day free trial has ended or not yet started. Please complete setup or upgrade to a paid plan.',
+                    error: 'Access expired or not started', 
+                    message: 'Your access has expired. Please upgrade to a paid plan to continue generating replies.',
                     code: 'PAYWALL_REQUIRED'
                 }, { status: 403 });
             }
@@ -76,7 +76,7 @@ export async function POST(req: Request) {
         if (genCount >= limit) {
             return NextResponse.json({ 
                 error: 'Limit reached', 
-                message: `You have reached your monthly limit of ${limit} generated replies for the ${currentTierKey === 'trial' ? 'Trial' : currentTierKey.charAt(0).toUpperCase() + currentTierKey.slice(1)} plan.` 
+                message: `You have reached your limit of ${limit} generated replies. Upgrade to a paid plan to continue.` 
             }, { status: 403 });
         }
 

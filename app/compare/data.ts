@@ -42,10 +42,10 @@ export const comparisons: ComparisonData[] = [
       { name: 'Audience Research & Ideation', redleads: 'Basic', competitor: 'Advanced' },
       { name: 'Pain Point Discovery', redleads: 'Basic', competitor: 'Advanced' },
       { name: 'Automated Lead CRM', redleads: true, competitor: false },
-      { name: 'Free Trial', redleads: '7 Days Free', competitor: false },
+      { name: 'Guarantee', redleads: '7-Day Refund', competitor: false },
     ],
     pricing: {
-      redleads: '7-Day Free Trial, then $29/mo',
+      redleads: '7-Day Guarantee, $29/mo',
       competitor: 'Starts at $29/mo (no free tier)',
     },
     pros: {
@@ -53,7 +53,7 @@ export const comparisons: ComparisonData[] = [
         'AI immediately identifies high-intent buyers',
         'Custom Subreddit tracking finds hyper-niche leads',
         'Built exclusively for B2B customer acquisition',
-        '1/3rd the cost with a full 7-day free trial',
+        '1/3rd the cost with a 7-day money-back guarantee',
       ],
       competitor: [
         'Industry standard for broad audience research',
@@ -69,7 +69,7 @@ export const comparisons: ComparisonData[] = [
       competitor: [
         'Lacks AI scoring for immediate buying signals',
         'Forces you to manually hunt through research data',
-        'No free trial available',
+        'No refund policy available',
       ],
     },
     verdict: 'If you are validating a startup idea and need **Audience Research**, choose GummySearch. If you already have a product and need to **Find Paying Customers Today**, choose RedLeads. Our AI Intent Engine is designed to completely automate your Reddit sales pipeline.',
@@ -88,10 +88,10 @@ export const comparisons: ComparisonData[] = [
       { name: 'Spam & Noise Filtering', redleads: 'Advanced AI', competitor: 'None' },
       { name: 'Lead CRM Dashboard', redleads: true, competitor: false },
       { name: 'Hacker News Support', redleads: false, competitor: true },
-      { name: 'Price', redleads: '7-Day Trial, then $29/mo', competitor: 'Forever Free' },
+      { name: 'Price', redleads: '7-Day Guarantee, $29/mo', competitor: 'Forever Free' },
     ],
     pricing: {
-      redleads: '7-Day Free Trial, then $29/mo',
+      redleads: '7-Day Guarantee, $29/mo',
       competitor: 'Free forever',
     },
     pros: {
@@ -109,7 +109,7 @@ export const comparisons: ComparisonData[] = [
     },
     cons: {
       redleads: [
-        'Requires a paid $29/mo subscription after trial',
+        'Requires a paid $29/mo subscription',
         'Does not currently monitor Hacker News',
       ],
       competitor: [
@@ -138,7 +138,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'Team Features', redleads: false, competitor: true },
     ],
     pricing: {
-      redleads: 'Free trial, then $29/month',
+      redleads: '7-day guarantee, $29/month',
       competitor: 'Starts at $19/month',
     },
     pros: {
@@ -186,7 +186,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'Multi-Platform', redleads: 'Reddit Only', competitor: 'Multiple' },
     ],
     pricing: {
-      redleads: 'Free trial, then $29/month',
+      redleads: '7-day guarantee, $29/month',
       competitor: 'Custom pricing',
     },
     pros: {
@@ -233,7 +233,7 @@ export const comparisons: ComparisonData[] = [
       { name: 'Authentic Engagement', redleads: true, competitor: false },
     ],
     pricing: {
-      redleads: 'Free trial, then $29/month',
+      redleads: '7-day guarantee, $29/month',
       competitor: 'Starts at $29/month',
     },
     pros: {

@@ -57,11 +57,11 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                     </div>
 
                     <h2 className="text-3xl font-black text-white mb-2 tracking-tight">
-                        Your trial has ended
+                        Unlock Full Dashboard Access
                     </h2>
                     
-                    <p className="text-gray-500 text-sm font-medium mb-10 max-w-sm mx-auto leading-relaxed uppercase tracking-widest">
-                        Upgrade to keep finding high-intent leads 24/7.
+                    <p className="text-gray-500 text-sm font-medium mb-10 max-w-md mx-auto leading-relaxed uppercase tracking-widest">
+                        Risk-free with our 7-day money-back guarantee. Contact Redleads.app@gmail.com for refunds.
                     </p>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
@@ -86,7 +86,7 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                                 suppressHydrationWarning
                                 className="w-full py-4 rounded-xl bg-white/5 border border-white/10 text-white font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all disabled:opacity-50"
                             >
-                                {isLoading === 'starter' ? <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" /> : 'Select'}
+                                {isLoading === 'starter' ? <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" /> : 'Unlock Starter'}
                             </button>
                         </div>
 
@@ -111,7 +111,7 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                                 suppressHydrationWarning
                                 className="w-full py-4 rounded-xl bg-[#ff914d] text-black font-black text-[10px] uppercase tracking-widest hover:bg-[#ff914d]/90 transition-all disabled:opacity-50 shadow-lg"
                             >
-                                {isLoading === 'growth' ? <div className="w-3 h-3 border-2 border-black/30 border-t-black rounded-full animate-spin mx-auto" /> : 'Go Pro'}
+                                {isLoading === 'growth' ? <div className="w-3 h-3 border-2 border-black/30 border-t-black rounded-full animate-spin mx-auto" /> : 'Unlock Growth'}
                             </button>
                         </div>
 
@@ -141,13 +141,13 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                                 suppressHydrationWarning
                                 className="w-full py-4 rounded-xl bg-black text-white font-black text-[9px] uppercase tracking-widest hover:bg-orange-600 transition-all disabled:opacity-50"
                             >
-                                {isLoading === 'lifetime' ? <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" /> : 'Claim Seat'}
+                                {isLoading === 'lifetime' ? <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" /> : 'Unlock Lifetime'}
                             </button>
                         </div>
                     </div>
 
                     <p className="mt-8 text-[9px] font-bold text-gray-700 uppercase tracking-[0.2em]">
-                        Cancel Anytime in 1-Click • LIMITED TIME OFFER • Secure Dodo Checkout
+                        Cancel Anytime in 1-Click • 7-Day Money-Back Guarantee • Secure Dodo Checkout
                     </p>
                 </div>
             </div>

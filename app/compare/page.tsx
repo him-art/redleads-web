@@ -118,7 +118,7 @@ export default function ComparePage() {
                       </div>
                     </div>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-slate-400">Free Trial</span>
+                      <span className="text-slate-400">Refund Guarantee</span>
                       <div className="flex items-center gap-4">
                         <MaterialIcon name="check_circle" size={16} className="text-green-500" />
                         {comparison.pricing.competitor.toLowerCase().includes('free') ? (
@@ -155,7 +155,7 @@ export default function ComparePage() {
               href="/"
               className="inline-flex items-center gap-2 px-8 py-4 bg-orange-500 text-white font-black text-xs uppercase tracking-widest rounded-xl hover:bg-orange-600 transition-colors"
             >
-              Start Free Trial <MaterialIcon name="arrow_right" size={14} />
+              Get Started Now <MaterialIcon name="arrow_right" size={14} />
             </Link>
           </div>
         </div>

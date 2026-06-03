@@ -274,7 +274,7 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                                                 <span>🔒</span>
                                                 <span>Activation Required — Complete your checkout</span>
                                             </div>
-                                            <p className="text-[11px] text-blue-400/80 font-medium pl-6">Your 7-day free trial is ready. Start your trial to unlock the dashboard.</p>
+                                            <p className="text-[11px] text-blue-400/80 font-medium pl-6">Select a plan below to unlock your dashboard and start finding customers.</p>
                                         </div>
                                         <button 
                                             onClick={() => setActiveTab('billing')}
@@ -291,7 +291,7 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
                                         <div className="flex flex-col gap-0.5">
                                             <div className="flex items-center gap-2 font-black text-red-400 text-sm tracking-tight">
                                                 <span>⏰</span>
-                                                <span>Your trial ended — your leads are still being collected</span>
+                                                <span>Subscription ended — your leads are still being collected</span>
                                             </div>
                                             <p className="text-[11px] text-red-400/60 font-medium pl-6">Upgrade in 60 seconds to unlock all your leads and keep monitoring.</p>
                                         </div>

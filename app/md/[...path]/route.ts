@@ -38,7 +38,7 @@ const handler = createDualmarkRouteHandler({
         '',
         '## Pricing',
         '',
-        '- **Free Trial**: 7-day free trial',
+        '- **Refund Guarantee**: 7-day money-back guarantee',
         '- **Starter**: $29/mo — For solo founders',
         '- **Growth**: $39/mo — For growing teams',
         '- **Lifetime Deal**: One-time payment, forever access',

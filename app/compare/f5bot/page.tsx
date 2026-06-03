@@ -108,7 +108,7 @@ export default function F5BotComparison() {
             Ready to upgrade your Reddit growth?
           </h2>
           <Link href="/dashboard" className="inline-flex items-center gap-3 px-12 py-5 bg-white text-black rounded-2xl font-black uppercase text-sm tracking-widest hover:bg-slate-100 transition-all shadow-2xl">
-            Claim Your 7-Day Free Trial <ArrowRight className="w-5 h-5" />
+            Unlock Dashboard Access <ArrowRight className="w-5 h-5" />
           </Link>
         </div>
       </section>

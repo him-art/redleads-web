@@ -155,7 +155,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
           <div className="mt-6 flex items-center justify-center gap-6 opacity-60">
              
              <div className="flex items-center gap-2 text-xs text-slate-400 uppercase tracking-wider font-medium">
-                <CheckCircle2 size={12} /> 7-Day Trial
+                <CheckCircle2 size={12} /> 7-Day Guarantee
              </div>
              <div className="flex items-center gap-2 text-xs text-slate-400 uppercase tracking-wider font-medium">
                 <CheckCircle2 size={12} /> For Founders
