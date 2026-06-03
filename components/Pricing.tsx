@@ -184,14 +184,6 @@ const Pricing = () => {
                         </div>
                     </div>
                 </div>
-                {/* Urgency Banner */}
-                <div className="mb-8 flex justify-center">
-                    <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-orange-500/10 border border-orange-500/20 rounded-full">
-                        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-orange-400">
-                            ⚡ <span className="text-white">7-day money-back guarantee — 100% risk-free</span>
-                        </span>
-                    </div>
-                </div>
 
                 {/* Pricing Cards */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
@@ -407,6 +399,15 @@ const Pricing = () => {
                            
 
                         </div>
+                    </div>
+                </div>
+
+                {/* Urgency Banner */}
+                <div className="mt-8 flex justify-center">
+                    <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-orange-500/10 border border-orange-500/20 rounded-full">
+                        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-orange-400">
+                            ⚡ <span className="text-white">We guarantee relevant leads or your money back within 7 days</span>
+                        </span>
                     </div>
                 </div>
 
