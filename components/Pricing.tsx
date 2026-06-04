@@ -108,6 +108,7 @@ const Pricing = () => {
                 inbound: [
                     { name: '5 Deep AI Reddit Search /day', icon: <MaterialIcon name="public" size={14} /> },
                     { name: 'Live Reddit monitoring', icon: <MaterialIcon name="bolt" size={14} /> },
+                    { name: 'Daily Email alerts', icon: <MaterialIcon name="mail" size={14} /> },
                     { name: '10 tracked keywords', icon: <MaterialIcon name="search" size={14} /> },
                     { name: 'Daily SEO opportunities', icon: <MaterialIcon name="monitoring" size={14} /> }
                     

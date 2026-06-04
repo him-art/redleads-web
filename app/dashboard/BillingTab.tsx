@@ -313,7 +313,7 @@ export default function BillingTab() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {[
-                        { id: 'starter', name: PLANS.STARTER.name, price: billingCycle === 'annual' ? PLANS.STARTER.annualPrice : PLANS.STARTER.price, desc: 'daily 5 power searches, 100 AI reply drafts per month', primary: false, active: planDetails.id === 'starter' },
+                        { id: 'starter', name: PLANS.STARTER.name, price: billingCycle === 'annual' ? PLANS.STARTER.annualPrice : PLANS.STARTER.price, desc: 'daily 5 power searches, 100 AI reply drafts per month, daily email alerts', primary: false, active: planDetails.id === 'starter' },
                         { id: 'growth', name: PLANS.GROWTH.name, price: billingCycle === 'annual' ? PLANS.GROWTH.annualPrice : PLANS.GROWTH.price, desc: ' daily 10 power searches, 500 AI reply drafts per month, daily email alerts', primary: true, active: planDetails.id === 'growth' }
                     ].map((plan) => (
                     <div key={plan.id} className="p-0.5 surface-1 rounded-[2rem] transition-all duration-300">

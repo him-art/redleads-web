@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "worker:digest": "npx ts-node --transpile-only --project worker/tsconfig.json worker/src/daily-digest.ts",
-    "worker:lifecycle": "npx ts-node --transpile-only --project worker/tsconfig.json worker/src/trial-lifecycle.ts",
+
     "worker:cleanup": "npx ts-node --transpile-only --project worker/tsconfig.json worker/src/cleanup.ts",
     "worker:tavily-monitor": "npx ts-node --transpile-only --project worker/tsconfig.json worker/src/tavily-monitor.ts",
     "lint": "eslint"
