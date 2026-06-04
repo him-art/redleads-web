@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { sendEmail } from '@/lib/email';
-import TrialLifecycleEmail from '@/lib/email-templates/TrialLifecycleEmails';
+
 import * as React from 'react';
 
 // This is the bouncer for the webhook.
@@ -28,22 +28,6 @@ export async function POST(req: Request) {
 
         if (table === 'profiles') {
             const { email, full_name, website_url } = record;
-
-            // 1. Welcome & Activation Email (on INSERT or UPDATE)
-            // We consolidate this to using Day 1 of the Lifecycle
-            if ((type === 'INSERT' || (type === 'UPDATE' && record.trial_ends_at && !old_record.trial_ends_at)) && email) {
-                console.log(`[Supabase Webhook] Sending Welcome/Activation Email to ${email}`);
-                await sendEmail({
-                    to: email,
-                    subject: 'Your first Reddit leads are ready 👀',
-                    react: React.createElement(TrialLifecycleEmail, { 
-                        fullName: full_name || email.split('@')[0],
-                        stage: 'day1',
-                        productName: website_url?.replace(/^https?:\/\//, '') || 'your website',
-                        leadCount: 12 // Default starting placeholder
-                    })
-                });
-            }
         }
 
         return NextResponse.json({ success: true });
