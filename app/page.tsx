@@ -9,11 +9,8 @@ export const metadata: Metadata = {
 
 
 // Lazy-load all below-the-fold sections to reduce initial JS bundle and improve LCP/INP
-const CreatorProof = dynamic(() => import("@/components/CreatorProof"));
-const RedditOpportunity = dynamic(() => import("@/components/RedditOpportunity"));
-const Comparison = dynamic(() => import("@/components/Comparison"));
-const HowItWorks = dynamic(() => import("@/components/HowItWorks"));
 const GeoLoopVisual = dynamic(() => import("@/components/GeoLoopVisual"));
+const Comparison = dynamic(() => import("@/components/Comparison"));
 const Features = dynamic(() => import("@/components/Features"));
 const FounderNote = dynamic(() => import("@/components/FounderNote"));
 const Pricing = dynamic(() => import("@/components/Pricing"));
@@ -28,13 +25,8 @@ export default function Home() {
       <div className="relative">
         <Navbar />
         <Hero />
-        {/* <SocialProof /> */}
-        <CreatorProof />
-        <HowItWorks />
+        
         <GeoLoopVisual />
-
-
-        <RedditOpportunity />
         <Comparison />
         <Features />
 

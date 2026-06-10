@@ -58,7 +58,7 @@ export default function GeoLoopVisual() {
         {/* Section Header */}
         <div className="text-center mb-16 px-4">
           <h2 className="text-4xl sm:text-[4.5rem] font-black text-white leading-[1.1] tracking-tighter">
-            <span className="block">How RedLeads Puts You</span>
+            <span className="block">How It Works: Put Your SaaS</span>
             <span className="block text-orange-500 font-serif-italic">Inside ChatGPT&apos;s Brain.</span>
           </h2>
           <p className="mt-6 text-gray-500 text-base font-medium">

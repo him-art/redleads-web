@@ -32,8 +32,8 @@ const features = [
   {
     id: 'seo',
     icon: Search,
-    title: "SEO Opportunities",
-    description: "Find Reddit posts ranked on Google's first page — reply once, get traffic and customers for months.",
+    title: "AI & SEO Indexing",
+    description: "Find high-ranking Reddit posts that are actively cited by AI answer engines like ChatGPT and Perplexity.",
     color: "text-purple-500",
     bg: "bg-purple-500/10"
   },

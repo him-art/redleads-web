@@ -82,7 +82,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
         <p 
           className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-8 leading-relaxed font-medium"
         >
-          Reddit trains ChatGPT. RedLeads watches Reddit 24/7 and keeps you in the high-intent conversations AI crawlers trust to recommend what you sell.
+          Reddit trains ChatGPT. We monitor Reddit 24/7 to insert your SaaS into the exact conversations that <strong className="text-white">AI answer engines trust and cite.</strong>
         </p>
 
 

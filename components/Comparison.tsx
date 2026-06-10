@@ -37,13 +37,11 @@ const Comparison = () => {
                     </div>
 
                     <ul className="space-y-5 mb-12 flex-1">
-                        <ManualItem text="Do keyword research manually (1-2 hours)" />
-                        <ManualItem text="Go through hundreds of Google search results (2-3 hours)" />
-                        <ManualItem text="Find high-ranking Reddit posts manually (1-2 hours)" />
-                        <ManualItem text="Pay for expensive SEO tools ($120+/month minimum)" />
-                        <ManualItem text="Read through hundreds of potentially irrelevant posts (2-3 hours)" />
-                        <ManualItem text="Craft authentic replies manually (1-2 hours)" />
-                        <ManualItem text="Miss time-sensitive new opportunities (daily)" />
+                        <ManualItem text="Spend 3+ hours manually searching for leads" />
+                        <ManualItem text="Guess what AI crawlers are actually reading" />
+                        <ManualItem text="Waste time scrolling through dead threads" />
+                        <ManualItem text="Pay for expensive, bloated SEO tools" />
+                        <ManualItem text="Miss time-sensitive competitor mentions" />
                     </ul>
 
                     <div className="mt-auto bg-red-500/5 border border-red-500/10 rounded-2xl p-6 flex items-center justify-center gap-3 text-red-500/70">
@@ -78,16 +76,16 @@ const Comparison = () => {
 
                     <ul className="relative z-10 space-y-8 mb-12 flex-1">
                         <BenefitItem 
-                            title="Setup in 2 minutes, leads arrive same day"
-                            description="Simply add your website &amp; description. RedLeads.app automatically finds the most relevant keywords for your business and niche."
+                            title="20 mins a day → get targeted leads"
+                            description="AI tracks the exact Reddit conversations that match your niche and scores them for buying intent."
                         />
                         <BenefitItem 
-                            title="Get high-ranking Reddit opportunities"
-                            description="AI tracks search engine indexed Reddit posts and brand mentions inside Reddit comments to surface highly-ranking Reddit posts to engage with."
+                            title="Target AI-indexed threads"
+                            description="We find the high-ranking Reddit posts that ChatGPT and Perplexity actively cite."
                         />
                         <BenefitItem 
-                            title="20 min/day → close your first Reddit customer"
-                            description="Review curated opportunities and engage authentically. Highly effective marketing with minimal time investment."
+                            title="Automated intent scoring"
+                            description="Skip the noise. Only engage with users who are actively asking for a solution like yours."
                         />
                     </ul>
 
