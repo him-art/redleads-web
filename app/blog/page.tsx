@@ -26,6 +26,39 @@ export default function BlogPage() {
     <main className="min-h-screen bg-[#1a1a1a]">
       <Navbar />
       
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "CollectionPage",
+                "@id": "https://www.redleads.app/blog/#webpage",
+                "url": "https://www.redleads.app/blog",
+                "name": "Reddit Marketing Blog | Growth Strategies & Tools",
+                "isPartOf": { "@id": "https://www.redleads.app/#website" },
+                "description": "Expert guides on Reddit marketing, lead generation, and growth hacking."
+              },
+              {
+                "@type": "Blog",
+                "@id": "https://www.redleads.app/blog/#blog",
+                "mainEntityOfPage": { "@id": "https://www.redleads.app/blog/#webpage" },
+                "publisher": { "@id": "https://www.redleads.app/#organization" },
+                "blogPost": posts.map(post => ({
+                  "@type": "BlogPosting",
+                  "headline": post.title,
+                  "url": `https://www.redleads.app/blog/${post.slug}`,
+                  "datePublished": post.date,
+                  "dateModified": post.lastModified || post.date,
+                  "author": { "@id": "https://www.redleads.app/#founder" }
+                }))
+              }
+            ]
+          })
+        }}
+      />
+      
       <section className="container mx-auto px-4 pt-32 pb-24">
         <div className="max-w-6xl mx-auto">
           {/* Header */}

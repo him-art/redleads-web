@@ -28,7 +28,7 @@ const ebGaramond = EB_Garamond({
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.redleads.app'),
   title: "RedLeads | #1 AI-First Reddit Marketing & Lead Gen Engine",
-  description: "Stop tracking keywords, start scanning intent. RedLeads is the AI-First intelligence engine that finds high-value Reddit conversations and turns them into customers automatically.",
+  description: "Stop tracking keywords, start scanning intent. RedLeads is the AI-first intelligence engine that turns high-value Reddit conversations into customers.",
   alternates: {
     canonical: '/',
   },

@@ -10,6 +10,9 @@ import Link from 'next/link';
 export const metadata: Metadata = {
     title: 'Free Reddit Opportunity Finder (2026) | Find Leads Instantly | RedLeads',
     description: 'Free Reddit opportunity finder. Enter your website URL and instantly find high-intent leads on Reddit. See who needs your solution right now. No login required.',
+    alternates: {
+        canonical: 'https://www.redleads.app/tools/reddit-opportunity-finder',
+    },
 };
 
 const jsonLd = {

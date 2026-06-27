@@ -4,7 +4,7 @@ import { dodo } from '@/lib/dodo';
 import { z } from 'zod';
 
 const checkoutSchema = z.object({
-    plan: z.enum(['starter', 'growth', 'lifetime']).optional(),
+    plan: z.enum(['starter', 'growth', 'lifetime', 'one_time']).optional(),
     interval: z.enum(['monthly', 'annual']).optional(),
 });
 
@@ -46,7 +46,7 @@ export async function POST(req: Request) {
         }
 
         // 3.5 Check Lifetime Slots if applicable
-        if (plan === 'lifetime') {
+        if (plan === 'lifetime' || plan === 'one_time') {
             const { data: slots } = await supabase
                 .from('total_users')
                 .select('user_count, total_slots')
@@ -55,7 +55,7 @@ export async function POST(req: Request) {
             const maxSlots = Math.max(slots?.total_slots || 500, 500);
             if (slots && slots.user_count >= maxSlots) {
                 return NextResponse.json({ 
-                    error: 'Lifetime slots are sold out! Please select a monthly plan.',
+                    error: 'One-Time slots are sold out! Please select a monthly plan.',
                 }, { status: 410 });
             }
         }
@@ -76,6 +76,9 @@ export async function POST(req: Request) {
                 break;
             case 'lifetime':
                 productId = process.env.DODO_PRODUCT_ID_LTD;
+                break;
+            case 'one_time':
+                productId = process.env.DODO_PRODUCT_ID_OTP;
                 break;
         }
         
@@ -104,11 +107,7 @@ export async function POST(req: Request) {
                     quantity: 1,
                 }
             ],
-            ...(plan === 'starter' || plan === 'growth' ? {
-                subscription_data: {
-                    trial_period_days: 7
-                }
-            } : {}),
+
             return_url: `${siteUrl}/dashboard?payment=success&plan=${plan}`,
             metadata: {
                 user_id: user.id,

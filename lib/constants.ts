@@ -26,10 +26,18 @@ export const PLANS = {
     },
     LIFETIME: {
         id: 'lifetime',
-        name: 'Lifetime Plan',
+        name: 'Lifetime Plan (Legacy)',
         keywordLimit: 20,
         subredditLimit: 15, // New field
         powerSearchLimit: 10,
         aiReplyLimit: 500,
+    },
+    ONE_TIME: {
+        id: 'one_time',
+        name: 'One-Time Payment',
+        keywordLimit: 10,
+        subredditLimit: 5,
+        powerSearchLimit: 5,
+        aiReplyLimit: 100,
     }
 } as const;

@@ -4,9 +4,10 @@ import { dodo } from '@/lib/dodo';
 import { cookies } from 'next/headers';
 
 const PLAN_PRODUCT_MAP: Record<string, (interval: string) => string | undefined> = {
-    starter: (i) => i === 'annual' ? process.env.DODO_PRODUCT_ID_STARTER_ANNUAL : process.env.DODO_PRODUCT_ID_STARTER,
-    growth:  (i) => i === 'annual' ? process.env.DODO_PRODUCT_ID_GROWTH_ANNUAL  : process.env.DODO_PRODUCT_ID_GROWTH,
+    starter:  (i) => i === 'annual' ? process.env.DODO_PRODUCT_ID_STARTER_ANNUAL : process.env.DODO_PRODUCT_ID_STARTER,
+    growth:   (i) => i === 'annual' ? process.env.DODO_PRODUCT_ID_GROWTH_ANNUAL  : process.env.DODO_PRODUCT_ID_GROWTH,
     lifetime: ()  => process.env.DODO_PRODUCT_ID_LTD,
+    one_time: ()  => process.env.DODO_PRODUCT_ID_OTP,
 };
 
 /**
@@ -74,11 +75,7 @@ export async function GET(req: NextRequest) {
                 name: profile?.email?.split('@')[0] || 'Customer',
             },
             product_cart: [{ product_id: productId, quantity: 1 }],
-            ...(plan === 'starter' || plan === 'growth' ? {
-                subscription_data: {
-                    trial_period_days: 7
-                }
-            } : {}),
+
             return_url: `${siteUrl}/dashboard?payment=success&plan=${plan}`,
             metadata: { user_id: user.id, plan },
         });

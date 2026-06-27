@@ -54,6 +54,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
 
         <h1 
           className="max-w-[100vw] xl:max-w-none mx-auto text-[1.5rem] sm:text-[2.25rem] md:text-[4.5rem] lg:text-[6rem] font-black text-[#f5f5f5] mb-8 leading-[1.1] px-4 font-sans tracking-tight"
+          aria-label="Turn Reddit users into customers with our AI-powered Reddit marketing and lead generation tool"
         >
           <div className="flex flex-wrap items-center justify-center gap-x-3 md:gap-x-5">
             <span>Turn</span>
@@ -61,7 +62,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
               <div className="relative w-7 h-7 md:w-14 md:h-14 flex-shrink-0">
                 <Image 
                   src="/reddit-new-logo.webp" 
-                  alt="Reddit" 
+                  alt="Reddit Marketing Automation" 
                   fill
                   priority
                   sizes="56px"
@@ -93,7 +94,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
             <div className="flex items-center -space-x-2.5">
               {['/alex.webp', '/umair.webp', '/konny.webp', '/marc.webp', '/alber_new.webp', '/sachanh.webp'].map((src, i) => (
                 <div key={i} className="w-8 h-8 rounded-full border-2 border-black overflow-hidden relative flex-shrink-0">
-                  <Image src={src} alt="User" fill sizes="32px" priority={i < 3} className="object-cover" />
+                  <Image src={src} alt="SaaS Founder using RedLeads" fill sizes="32px" priority={i < 3} className="object-cover" />
                 </div>
               ))}
             </div>

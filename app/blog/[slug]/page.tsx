@@ -37,19 +37,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: post.description,
     keywords: post.keywords,
     alternates: {
-      canonical: `/blog/${slug}`,
+      canonical: `https://www.redleads.app/blog/${slug}`,
     },
     openGraph: {
       title: post.title,
       description: post.description,
       type: 'article',
       publishedTime: post.date,
+      modifiedTime: post.lastModified || post.date,
       authors: ['RedLeads'],
+      url: `https://www.redleads.app/blog/${slug}`,
+      siteName: 'RedLeads Blog',
+      images: [
+        {
+          url: 'https://www.redleads.app/og-image.webp',
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description: post.description,
+      images: ['https://www.redleads.app/og-image.webp'],
     },
   };
 }

@@ -5,7 +5,7 @@ import { Lock, Search, Bot, Crown, Zap, Sparkles } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 interface PaywallModalProps {
-    onCheckout: (plan: 'starter' | 'growth' | 'lifetime') => Promise<void>;
+    onCheckout: (plan: 'starter' | 'growth' | 'lifetime' | 'one_time') => Promise<void>;
 }
 
 export default function PaywallModal({ onCheckout }: PaywallModalProps) {
@@ -36,7 +36,7 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
         fetchSlots();
     }, []);
 
-    const handleClick = async (plan: 'starter' | 'growth' | 'lifetime') => {
+    const handleClick = async (plan: 'starter' | 'growth' | 'lifetime' | 'one_time') => {
         setIsLoading(plan);
         try {
             await onCheckout(plan);
@@ -120,28 +120,28 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                             <div className="absolute top-4 right-4 flex items-center gap-1.5 text-[8px] font-black uppercase tracking-widest text-black/40 bg-black/5 px-2 py-1 rounded-full border border-black/5">
                                 <Crown size={8} /> {slots ? `${slots.total - slots.sold}/${slots.total}` : '...'} Seats Left
                             </div>
-                            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-black mb-2">Life Time</h3>
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-black mb-2">One-Time Payment</h3>
                             <div className="flex items-baseline gap-2 mb-6">
                                 <span className="text-2xl font-black text-black">
-                                    ${slots ? (slots.sold < 260 ? 199 : 259 + Math.floor((slots.sold - 260) / 40) * 40) : "..."}
+                                    $199
                                 </span>
-                                <span className="text-[8px] text-gray-600 font-black uppercase ml-1 tracking-tighter">Founding</span>
+                                <span className="text-[8px] text-gray-600 font-black uppercase ml-1 tracking-tighter">One-time</span>
                             </div>
                             <ul className="space-y-3 mb-8 flex-grow">
                                 <li className="text-[9px] font-black text-black uppercase tracking-widest flex items-center gap-2">
-                                    <Zap size={10} className="text-orange-600" /> Unlimited Discovery
+                                    <Zap size={10} className="text-orange-600" /> No recurring fees
                                 </li>
                                 <li className="text-[9px] font-black text-black uppercase tracking-widest flex items-center gap-2">
-                                    <Sparkles size={10} className="text-orange-600" /> Future Pro updates
+                                    <Sparkles size={10} className="text-orange-600" /> Future Starter updates
                                 </li>
                             </ul>
                             <button
-                                onClick={() => handleClick('lifetime')}
+                                onClick={() => handleClick('one_time')}
                                 disabled={!!isLoading || (slots ? slots.sold >= slots.total : false)}
                                 suppressHydrationWarning
                                 className="w-full py-4 rounded-xl bg-black text-white font-black text-[9px] uppercase tracking-widest hover:bg-orange-600 transition-all disabled:opacity-50"
                             >
-                                {isLoading === 'lifetime' ? <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" /> : 'Unlock Lifetime'}
+                                {isLoading === 'one_time' ? <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" /> : 'Get Lifetime Access'}
                             </button>
                         </div>
                     </div>

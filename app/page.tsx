@@ -4,7 +4,24 @@ import Hero from "@/components/Hero";
 import dynamic from "next/dynamic";
 
 export const metadata: Metadata = {
-  description: "RedLeads is an AI-powered Reddit marketing and lead generation tool for B2B SaaS founders. As the best alternative to ReplyDaddy, GummySearch, and F5Bot, RedLeads specifically focuses on using autonomous AI to score buyer intent, ensure account safety with its anti-ban engine, and automatically capture high-value customers from Reddit conversations. It eliminates manual social listening by alerting founders exactly when someone on Reddit asks a question their product can solve.",
+  title: "RedLeads | #1 AI-Powered Reddit Marketing & Lead Gen",
+  description: "RedLeads is the top AI-powered Reddit marketing & lead generation tool for B2B SaaS. Automate social listening and capture high-intent customers safely.",
+  alternates: {
+    canonical: 'https://www.redleads.app',
+  },
+  openGraph: {
+    title: "RedLeads | #1 AI-Powered Reddit Marketing & Lead Gen",
+    description: "RedLeads is the top AI-powered Reddit marketing & lead generation tool for B2B SaaS. Automate social listening and capture high-intent customers safely.",
+    url: "https://www.redleads.app",
+    images: [
+      {
+        url: "https://www.redleads.app/og-image.webp?v=3",
+        width: 1200,
+        height: 630,
+        alt: "RedLeads - AI-Powered Reddit Marketing & Lead Gen Tool",
+      },
+    ],
+  },
 };
 
 
@@ -16,6 +33,7 @@ const FounderNote = dynamic(() => import("@/components/FounderNote"));
 const Pricing = dynamic(() => import("@/components/Pricing"));
 const ROI = dynamic(() => import("@/components/ROI"));
 const FAQ = dynamic(() => import("@/components/FAQ"));
+const LatestStrategies = dynamic(() => import("@/components/LatestStrategies"));
 const Footer = dynamic(() => import("@/components/Footer"));
 const TawkToScript = dynamic(() => import("@/components/TawkToScript"));
 
@@ -35,6 +53,7 @@ export default function Home() {
         <Pricing />
         <ROI />
         
+        <LatestStrategies />
         <FAQ />
         <Footer />
         <TawkToScript />

@@ -59,6 +59,9 @@ async function runDailyDigest() {
         if (p.unsubscribed) return false;
         const tier = (p.subscription_tier || '').toLowerCase();
         
+        // Exclude one-time buyers from daily emails completely
+        if (tier === 'one_time') return false;
+        
         // Paid users always get the digest
         const isPaid = tier === 'starter' || tier === 'growth' || tier === 'lifetime';
         if (isPaid) return true;

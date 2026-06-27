@@ -11,12 +11,9 @@ const Pricing = () => {
     const [slots, setSlots] = useState<{ sold: number; total: number } | null>(null);
     const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
 
-    // New Dynamic Pricing Logic ($40 every 40 users after 260)
+    // Legacy slots state kept for database/UI metrics if needed
     const currentUsers = slots?.sold || 0; 
-    const currentPrice = currentUsers < 260 ? 199 : 259 + Math.floor((currentUsers - 260) / 40) * 40;
-    const nextPrice = currentPrice === 199 ? 259 : currentPrice + 40;
-    const nextCheckpoint = currentUsers < 260 ? 260 : 260 + (Math.floor((currentUsers - 260) / 40) + 1) * 40;
-    const spotsLeft = nextCheckpoint - currentUsers;
+    const currentPrice = 199;
 
     useEffect(() => {
         const fetchSlots = async () => {
@@ -43,8 +40,8 @@ const Pricing = () => {
         setIsLoading(plan);
         try {
             // Map our UI plans to the backend plan keys
-            const planKey = plan === 'Starter' ? 'starter' : plan === 'Growth' ? 'growth' : 'lifetime';
-            const interval = overrideInterval ?? (planKey === 'lifetime' ? 'monthly' : billingCycle);
+            const planKey = plan === 'Starter' ? 'starter' : plan === 'Growth' ? 'growth' : 'one_time';
+            const interval = overrideInterval ?? (planKey === 'one_time' ? 'monthly' : billingCycle);
             
             const res = await fetch('/api/payments/create-checkout', {
                 method: 'POST',
@@ -58,7 +55,7 @@ const Pricing = () => {
                 window.location.href = data.checkout_url;
             } else if (res.status === 401) {
                 // Set a short-lived checkout intent cookie (server-readable for fast-track)
-                const cookieVal = `${planKey}:${planKey === 'lifetime' ? 'monthly' : billingCycle}`;
+                const cookieVal = `${planKey}:${planKey === 'one_time' ? 'monthly' : billingCycle}`;
                 document.cookie = `rl_checkout_intent=${cookieVal}; path=/; max-age=600; SameSite=Lax`;
                 window.location.href = `/login?next=/`;
             } else {
@@ -90,7 +87,7 @@ const Pricing = () => {
                 const lowerPlan = pendingPlan.toLowerCase();
                 const planName = lowerPlan === 'starter' ? 'Starter'
                                : lowerPlan === 'growth' ? 'Growth'
-                               : 'Lifetime';
+                               : 'One-Time';
 
                 // Small delay to let the session hydrate before triggering checkout
                 setTimeout(() => handleCheckout(planName, pendingInterval ?? undefined), 500);
@@ -122,7 +119,7 @@ const Pricing = () => {
             name: 'Growth',
             price: PLANS.GROWTH.price,
             annualPrice: PLANS.GROWTH.annualPrice,
-            description: 'For founders serious about marketing on Reddit',
+            description: 'For founders serious about find users on Reddit',
             highlight: true,
             badge: 'BEST VALUE',
             features: {
@@ -257,10 +254,7 @@ const Pricing = () => {
                                     >
                                         {isLoading === plan.name ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <>Get {plan.name} Access <MaterialIcon name="arrow_right" size={16} /></>}
                                     </button>
-                                    <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest text-center mt-3 flex items-center justify-center gap-1.5">
-                                        <MaterialIcon name="lock" size={10} className="text-gray-600" />
-                                        Cancel in 1-click • Refund request via Redleads.app@gmail.com
-                                    </p>
+
                                 </div>
                             </div>
 
@@ -315,85 +309,75 @@ const Pricing = () => {
                         </div>
                     ))}
 
-                    {/* Lifetime Plan (Obsidian Style) */}
-                    <div className="p-2 bg-white/5 border border-red-500/10 rounded-[2.5rem] relative">
-                        <div className="absolute -top-3 right-8 bg-yellow-500 text-black px-6 py-2 rounded-2xl flex items-center gap-3 z-30 shadow-none border-none">
+                    {/* Lifetime Plan (Premium White Style) */}
+                    <div className="p-2 bg-white/10 border border-white/20 rounded-[2.5rem] relative">
+                        <div className="absolute -top-3 right-8 bg-black text-white px-6 py-2 rounded-2xl flex items-center gap-3 z-30 shadow-none border-none">
                             <span className="text-xs font-black uppercase tracking-[0.3em] flex items-center gap-3">
-                                <MaterialIcon name="workspace_premium" size={14} className="text-black" />
+                                <MaterialIcon name="workspace_premium" size={14} className="text-orange-500" />
                                 Limited Time Offer
                             </span>
                         </div>
-                        <div className="relative h-full p-8 md:p-12 bg-gradient-to-br from-[#0c0c0c] to-black border-2 border-red-500/50 rounded-[2rem] group flex flex-col overflow-hidden">
-                            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                        <div className="relative h-full p-8 md:p-12 bg-white border-2 border-white rounded-[2rem] group flex flex-col overflow-hidden">
+                            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-black/10 to-transparent" />
                             {/* Sold Out Overlay Removed */}
                             
                             
 
                             <div className="mb-10 relative min-h-[300px] flex flex-col">
-                                <h3 className="text-2xl font-black text-white flex items-center gap-2 mb-6">
-                                    Lifetime Plan
+                                <h3 className="text-2xl font-black text-black flex items-center gap-2 mb-6">
+                                    One-Time Payment
                                 </h3>
                                 
                                 <div className="flex items-baseline gap-2 mb-4 h-16">
-                                    <span className="text-6xl font-black text-white tracking-tighter">${currentPrice}</span>
-                                    <span className="text-sm font-bold text-gray-600 uppercase tracking-widest ml-1">One-time</span>
+                                    <span className="text-6xl font-black text-black tracking-tighter">${currentPrice}</span>
+                                    <span className="text-sm font-bold text-gray-500 uppercase tracking-widest ml-1">One-time</span>
                                 </div>
-                                <div className="h-6" />                                <p className="text-xs font-bold text-gray-500 leading-relaxed max-w-[240px] uppercase tracking-wider mb-8">Full lifetime access and all future features included.</p>
+                                <div className="h-6" />                                <p className="text-xs font-bold text-gray-600 leading-relaxed max-w-[240px] uppercase tracking-wider mb-8">Pay once and enjoy lifetime access to Starter plan limits, forever.</p>
 
                                 <div className="mt-auto">
                                     <button
-                                        onClick={() => handleCheckout('Lifetime')}
+                                        onClick={() => handleCheckout('One-Time')}
                                         disabled={!!isLoading}
                                         suppressHydrationWarning
-                                        className="w-full py-6 rounded-2xl bg-white text-black font-black text-xs uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95 shadow-none"
+                                        className="w-full py-6 rounded-2xl bg-black text-white font-black text-xs uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95 shadow-none"
                                     >
-                                        {isLoading === 'Lifetime' ? <div className="w-4 h-4 border-2 border-white/30 border-t-black rounded-full animate-spin" /> : <>Get Lifetime Access <MaterialIcon name="arrow_right" size={16} /></>}
+                                        {isLoading === 'One-Time' ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <>Get Lifetime Access <MaterialIcon name="arrow_right" size={16} /></>}
                                     </button>
-                                    <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest text-center mt-3 flex items-center justify-center gap-1.5">
-                                        <MaterialIcon name="lock" size={10} className="text-gray-600" />
-                                        7-Day Guarantee • Refund request via Redleads.app@gmail.com
-                                    </p>
+
                                 </div>
                             </div>
 
 
                             <div className="flex-grow mb-14">
-                                {/* Everything in Growth callout */}
-                                <div className="p-5 rounded-2xl bg-white/5 border border-white/20 mb-8 shadow-none">
-                                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white flex items-center gap-2">
-                                        <MaterialIcon name="check" size={14} /> Everything in Growth
+                                {/* Everything in Starter callout */}
+                                <div className="p-5 rounded-2xl bg-black/5 border border-black/10 mb-8 shadow-none">
+                                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-black flex items-center gap-2">
+                                        <MaterialIcon name="check" size={14} className="text-orange-500" /> All Starter features (Except Daily Emails)
                                     </p>
                                 </div>
 
                                 <div className="flex items-center gap-2 mb-6">
-                                    <MaterialIcon name="workspace_premium" size={14} className="text-gray-600" />
+                                    <MaterialIcon name="workspace_premium" size={14} className="text-gray-400" />
                                     <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">PLUS</span>
-                                    <div className="h-[1px] bg-white/5 flex-grow ml-2" />
+                                    <div className="h-[1px] bg-black/5 flex-grow ml-2" />
                                 </div>
                                 <ul className="space-y-5">
                                     {[
-                                        { name: 'All future features included', icon: <MaterialIcon name="workspace_premium" size={14} /> },
-                                        { name: '24/7 personal support', icon: <MaterialIcon name="smart_toy" size={14} /> },
-                                        { name: 'Life time access', icon: <MaterialIcon name="workspace_premium" size={14} /> }
+                                        { name: 'Future Starter plan updates', icon: <MaterialIcon name="workspace_premium" size={14} /> },
+                                        { name: 'Priority email support', icon: <MaterialIcon name="smart_toy" size={14} /> },
+                                        { name: 'No recurring monthly fees', icon: <MaterialIcon name="workspace_premium" size={14} /> }
                                         
                                     ].map((item) => (
                                         <li key={item.name} className="flex items-center gap-4">
-                                            <div className="p-1.5 rounded-lg text-white bg-white/5 border border-white/10">
+                                            <div className="p-1.5 rounded-lg text-black bg-black/5 border border-black/10">
                                                 {item.icon}
                                             </div>
-                                            <span className="text-xs font-bold uppercase tracking-widest text-white">
+                                            <span className="text-xs font-bold uppercase tracking-widest text-black">
                                                 {item.name}
                                             </span>
                                         </li>
                                     ))}
-                                    <li className="flex items-center gap-4 group pt-2 border-t border-white/5">
-                                        <div className="p-1.5 rounded-lg text-red-500 bg-red-500/10 border border-red-500/20">
-                                            <MaterialIcon name="bolt" size={14} />
-                                        </div>
-                                        <span className="text-xs font-black uppercase tracking-widest text-red-500">
-                                            Price increase by $40 after {spotsLeft} users
-                                        </span>
-                                    </li>
+
                                 </ul>
                             </div>
 
@@ -412,70 +396,7 @@ const Pricing = () => {
                     </div>
                 </div>
 
-                {/* Bottom Info Banner */}
-                <div className="mt-20 max-w-3xl mx-auto p-2 bg-white/5 border border-white/5 rounded-[3.5rem]">
-                    <div className="rounded-[3rem] bg-[#0c0c0c] border border-white/5 p-6 sm:p-12 md:p-16 text-center relative overflow-hidden group hover:border-orange-500/20 transition-all shadow-none">
-                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                        
-                        <div className="mb-12">
-                            <div className="flex justify-between items-center mb-6">
-                                <p className="text-[10px] font-black text-[#ff914d] uppercase tracking-[0.4em]">Lifetime Plan</p>
-                                    <p className="text-[11px] sm:text-[14px] font-black text-white uppercase tracking-[0.2em] sm:tracking-[0.4em] bg-white/5 px-3 sm:px-4 py-2 rounded-full border border-white/5">
-                                        {slots ? `${slots.sold} FOUNDERS JOINED` : 'LOADING...'}
-                                    </p>
-                            </div>
-                            
-                            {/* Global Roadmap Visual */}
-                            <div className="relative mb-8 pt-4">
-                                <div className="absolute inset-0 flex justify-between items-start z-20 pointer-events-none">
-                                    {[300, 340, 380, 420, 460].map((tick) => {
-                                        const pos = ((tick - 250) / 250) * 100;
-                                        const tickPrice = tick < 260 ? 199 : 259 + Math.floor((tick - 260) / 40) * 40;
-                                        return (
-                                            <div key={tick} className={`absolute flex flex-col items-center -translate-x-1/2 ${tick % 40 !== 0 ? 'hidden sm:flex' : ''}`} style={{ left: `${pos}%` }}>
-                                                {/* Vertical Notch */}
-                                                <div className={`w-[2px] h-8 mb-2 ${currentPrice >= tickPrice ? 'bg-green-500' : 'bg-white/10'}`} />
-                                                {/* Price Label (Below) */}
-                                                <span className={`text-[12px] sm:text-[16px] font-black tracking-tighter ${currentPrice >= tickPrice ? 'text-green-500' : 'text-gray-700'}`}>
-                                                    ${tickPrice}
-                                                </span>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
 
-                                {/* Main Progress Bar Track */}
-                                <div className="relative h-4 bg-white/5 rounded-full border border-white/10 overflow-hidden shadow-inner">
-                                    <div 
-                                        className="h-full bg-gradient-to-r from-orange-600 via-orange-500 to-red-500 rounded-r-full shadow-[0_0_40px_rgba(249,115,22,0.4)] transition-all duration-1000 ease-out"
-                                        style={{ width: `${Math.min(100, Math.max(0, ((currentUsers - 250) / 250) * 100))}%` }}
-                                    />
-                                </div>
-                            </div>
-
-                            {/* End Scale Labels */}
-                            <div className="flex justify-between items-center text-[13px] font-black text-white/70 uppercase tracking-[0.2em] px-2">
-                                <div className="flex flex-col items-start gap-1">
-                                    <span className="text-white/20">|</span>
-                                    <span>250 USERS</span>
-                                </div>
-                                <div className="flex flex-col items-end gap-1">
-                                    <span className="text-white/20">|</span>
-                                    <span>500 USERS</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="max-w-xl mx-auto">
-                            <h3 className="text-3xl md:text-4xl font-black text-white mb-6 tracking-tight">Lock In The Lowest Price Forever</h3>
-                            <p className="text-gray-400 text-[14px] font-medium tracking-[0.1em] leading-[1.8] opacity-90">
-                                We reward the fast movers. RedLeads' value grows every day as we ship new features. 
-                                Secure your lifetime access before the next milestone is hit.
-                                <span className="block mt-4 text-orange-500/80 font-black">Once a tier is gone, it never returns.</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
             </div>
         </section>
     );

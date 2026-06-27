@@ -23,7 +23,10 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        // 1. Save or Create Profile
+        // 1. Save profile data (description, keywords, url).
+        // NOTE: onboarding_completed is NOT set here — it is only set to true
+        // by the Dodo webhook after a successful payment (subscription.active event).
+        // This prevents users who skip checkout from being falsely marked as onboarded.
         const { error: updateError } = await supabase
             .from('profiles')
             .upsert({
@@ -31,7 +34,6 @@ export async function POST(req: Request) {
                 email: user.email,
                 description,
                 keywords,
-                onboarding_completed: true,
                 website_url: url
             });
 

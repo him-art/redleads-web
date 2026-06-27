@@ -9,8 +9,8 @@ import { PLANS } from '@/lib/constants';
 
 export default function BillingTab() {
     const { profile, trialStatus, planDetails } = useDashboardData();
-    const { isStarter, isGrowth, isAdmin, isLifetime } = planDetails;
-    const isSubscribed = isStarter || isGrowth || isAdmin;
+    const { isStarter, isGrowth, isAdmin, isLifetime, isOneTime } = planDetails;
+    const isSubscribed = isStarter || isGrowth || isAdmin || isOneTime;
 
     const [isLoading, setIsLoading] = useState<string | null>(null);
     const [isManaging, setIsManaging] = useState(false);
@@ -18,11 +18,8 @@ export default function BillingTab() {
     const [slots, setSlots] = useState<{ sold: number; total: number } | null>(null);
     const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
 
-    // Dynamic Pricing Logic ($40 every 40 users) - Aligned with Pricing.tsx
-    const currentUsers = slots?.sold || 0; 
-    const currentPrice = currentUsers < 260 ? 259 : 259 + Math.floor((currentUsers - 260) / 40) * 40;
-    const nextCheckpoint = currentUsers < 260 ? 260 : 260 + (Math.floor((currentUsers - 260) / 40) + 1) * 40;
-    const spotsLeft = nextCheckpoint - currentUsers;
+    // Fixed price for One-Time payment
+    const currentPrice = 199;
 
     useEffect(() => { 
         setIsMounted(true);
@@ -50,9 +47,13 @@ export default function BillingTab() {
         fetchSlots();
     }, []);
 
-    const handleUpgrade = async (plan: 'starter' | 'growth' | 'lifetime', interval: 'monthly' | 'annual' = 'monthly') => {
+    const handleUpgrade = async (plan: 'starter' | 'growth' | 'lifetime' | 'one_time', interval: 'monthly' | 'annual' = 'monthly') => {
         if (isLifetime && plan !== 'lifetime') {
             alert("You already have Lifetime Access! This includes all features from other plans as well.");
+            return;
+        }
+        if (isOneTime && plan !== 'one_time') {
+            alert("You already have a One-Time Payment! This includes all Starter features.");
             return;
         }
         setIsLoading(plan);
@@ -62,7 +63,7 @@ export default function BillingTab() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     plan,
-                    interval: plan === 'lifetime' ? 'monthly' : interval 
+                    interval: plan === 'one_time' ? 'monthly' : interval 
                 })
             });
             
@@ -229,8 +230,8 @@ export default function BillingTab() {
                     <div className="bg-void rounded-[1.8rem] p-8 md:p-12 border border-white/5 relative overflow-hidden">
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                         <div className="absolute top-0 right-0 p-8">
-                            <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all duration-500 ${isSubscribed || isAdmin ? (isLifetime ? 'bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'bg-primary/10 text-primary border-primary/20 shadow-void') : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
-                                {isMounted ? (isLifetime ? 'Lifetime Access' : isAdmin ? 'Active Subscription' : isInTrial ? (isSubscribed ? `Preview: ${daysRemaining} Days Left` : `${daysRemaining} Days Left`) : isSubscribed ? 'Active Subscription' : needsCheckout ? 'Activation Required' : 'Preview Expired') : '...'}
+                            <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all duration-500 ${isSubscribed || isAdmin ? (isLifetime ? 'bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.2)]' : isOneTime ? 'bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'bg-primary/10 text-primary border-primary/20 shadow-void') : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
+                                {isMounted ? (isLifetime ? 'Lifetime Access' : isOneTime ? 'One-Time Payment' : isAdmin ? 'Active Subscription' : isInTrial ? (isSubscribed ? `Preview: ${daysRemaining} Days Left` : `${daysRemaining} Days Left`) : isSubscribed ? 'Active Subscription' : needsCheckout ? 'Activation Required' : 'Preview Expired') : '...'}
                             </div>
                         </div>
 
@@ -243,10 +244,10 @@ export default function BillingTab() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {[
-                                { label: 'Keywords', value: isLifetime ? '20 Keywords' : isGrowth ? '20 Keywords' : isStarter ? '10 Keywords' : 'Preview Plan', icon: <Search size={14} /> },
-                                { label: 'Power Searches', value: isLifetime ? '10/Day' : isGrowth ? '10/Day' : isStarter ? '5/Day' : 'Preview Plan', icon: <Compass size={14} /> },
-                                { label: 'AI Outreach', value: isLifetime ? '500 Drafts / Month' : isGrowth ? '500 Drafts / Month' : isStarter ? '100 Drafts / Month' : '5 Drafts', icon: <Bot size={14} /> },
-                                { label: 'Support', value: isLifetime ? 'Priority Support' : 'Standard Support', icon: <CheckCircle2 size={14} /> }
+                                { label: 'Keywords', value: isLifetime ? '20 Keywords' : isGrowth ? '20 Keywords' : (isStarter || isOneTime) ? '10 Keywords' : 'Preview Plan', icon: <Search size={14} /> },
+                                { label: 'Power Searches', value: isLifetime ? '10/Day' : isGrowth ? '10/Day' : (isStarter || isOneTime) ? '5/Day' : 'Preview Plan', icon: <Compass size={14} /> },
+                                { label: 'AI Outreach', value: isLifetime ? '500 Drafts / Month' : isGrowth ? '500 Drafts / Month' : (isStarter || isOneTime) ? '100 Drafts / Month' : '5 Drafts', icon: <Bot size={14} /> },
+                                { label: 'Support', value: (isLifetime || isOneTime) ? 'Priority Support' : 'Standard Support', icon: <CheckCircle2 size={14} /> }
                             ].map((stat) => (
                                 <div key={stat.label} className="p-0.5 surface-1 rounded-2xl transition-all duration-300 hover:scale-[1.02]">
                                     <div className="p-4 rounded-[1.1rem] bg-void border border-white/5 relative overflow-hidden">
@@ -261,7 +262,7 @@ export default function BillingTab() {
                             ))}
                         </div>
 
-                        {isSubscribed && !isAdmin && !isLifetime && (
+                        {isSubscribed && !isAdmin && !isLifetime && !isOneTime && (
                             <div className="mt-12 pt-8 border-t border-white/5 flex flex-wrap gap-4">
                                 <button onClick={handleManageSubscription} disabled={isManaging} className="px-8 py-4 bg-white/5 text-text-primary font-black rounded-xl hover:bg-white/10 transition-all text-[10px] uppercase tracking-widest border border-white/5 flex items-center justify-center">
                                     {isManaging ? <LoadingIcon className="w-3.5 h-3.5" /> : 'Portal Access'}
@@ -365,12 +366,12 @@ export default function BillingTab() {
                             <p className="text-xs font-medium text-text-secondary/80 leading-relaxed mb-10 max-w-[280px]">{plan.desc}</p>
                             
                             <button 
-                                onClick={() => !plan.active && !isLifetime && handleUpgrade(plan.id as any, billingCycle)} 
-                                disabled={!!isLoading || plan.active || isLifetime}
+                                onClick={() => !plan.active && !isLifetime && !isOneTime && handleUpgrade(plan.id as any, billingCycle)} 
+                                disabled={!!isLoading || plan.active || isLifetime || isOneTime}
                                 className={`mt-auto w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 ${
                                     plan.active 
                                         ? 'bg-white/5 text-primary/40 border border-white/5 cursor-not-allowed'
-                                        : isLifetime
+                                        : isLifetime || isOneTime
                                             ? 'bg-white/5 text-text-secondary/20 border border-white/5 cursor-default'
                                             : plan.primary 
                                                 ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_30px_rgba(255,88,54,0.2)] active:scale-95' 
@@ -383,6 +384,8 @@ export default function BillingTab() {
                                     <CheckCircle2 size={16} />
                                 ) : isLifetime ? (
                                     'Owned via Lifetime'
+                                ) : isOneTime ? (
+                                    'Owned via One-Time'
                                 ) : (
                                     `Upgrade to ${plan.id}`
                                 )}
@@ -395,8 +398,8 @@ export default function BillingTab() {
 
         </div>
 
-            {/* Lifetime Upgrade Invitation for existing users or trial users */}
-            {!isLifetime && (
+            {/* One-Time Upgrade Invitation for existing users or trial users */}
+            {!isLifetime && !isOneTime && (
                 <div className="mt-12 p-0.5 surface-1 rounded-[2.5rem] transition-all duration-300">
                     <div className="relative rounded-[2.3rem] bg-void border-2 border-red-500/30 p-8 md:p-12 overflow-hidden group shadow-void">
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
@@ -412,17 +415,17 @@ export default function BillingTab() {
                                 </div>
                                 
                                 <h3 className="text-3xl sm:text-4xl font-black text-text-primary mb-4 tracking-tight flex items-center gap-3">
-                                    Lock in Growth Forever. <Sparkles size={24} className="text-orange-500 animate-pulse" />
+                                    Lock in Starter Forever. <Sparkles size={24} className="text-orange-500 animate-pulse" />
                                 </h3>
                                 
                                 <p className="text-text-secondary font-medium max-w-xl mb-8 leading-relaxed">
-                                    Stop the monthly "SaaS Tax." Pay once and get every lead, every power search, and every future AI update without ever seeing another invoice.
+                                    Stop the monthly "SaaS Tax." Pay once and get lifetime access to Starter limits (excluding daily emails) without ever seeing another invoice.
                                 </p>
 
                                 <div className="flex flex-wrap gap-8 mb-8">
                                     {[
                                         { label: 'One-Time', value: `$${currentPrice}`, icon: <Zap size={14} /> },
-                                        { label: 'Limited', value: `${spotsLeft} Seats Left`, icon: <CheckCircle2 size={14} /> }
+                                        { label: 'Billing', value: `Never Pay Again`, icon: <CheckCircle2 size={14} /> }
                                     ].map((pill) => (
                                         <div key={pill.label} className="flex flex-col">
                                             <div className="flex items-center gap-2 text-text-secondary mb-1">
@@ -435,11 +438,11 @@ export default function BillingTab() {
                                 </div>
 
                                 <button
-                                    onClick={() => handleUpgrade('lifetime')}
+                                    onClick={() => handleUpgrade('one_time')}
                                     disabled={!!isLoading}
                                     className="inline-flex items-center justify-center gap-3 px-10 py-5 bg-white text-black font-black rounded-2xl hover:bg-orange-500 hover:text-white transition-all text-xs uppercase tracking-[0.2em] active:scale-95 disabled:opacity-50"
                                 >
-                                    {isLoading === 'lifetime' ? <LoadingIcon className="w-4 h-4" /> : <>Claim My Lifetime Seat <ArrowRight size={16} /></>}
+                                    {isLoading === 'one_time' ? <LoadingIcon className="w-4 h-4" /> : <>Claim My Limited Seat <ArrowRight size={16} /></>}
                                 </button>
                             </div>
 
@@ -447,13 +450,12 @@ export default function BillingTab() {
                                 <div className="p-1 bg-white/5 border border-white/5 rounded-3xl">
                                     <div className="p-6 rounded-[1.4rem] bg-[#0c0c0c] border border-white/5 space-y-4 relative overflow-hidden">
                                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-                                        <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest text-center mb-2">Growth Features +</p>
+                                        <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest text-center mb-2">Starter Features +</p>
                                         {[
-                                            '10 Power Searches / Day',
-                                            '500 AI Drafts / Month',
-                                            '20 Tracked Keywords',
-                                            'Daily Email alerts',
-                                            'Priority Beta Access'
+                                            '5 Power Searches / Day',
+                                            '100 AI Drafts / Month',
+                                            '10 Tracked Keywords',
+                                            'Future Starter Updates'
                                         ].map((feat) => (
                                             <div key={feat} className="flex items-center gap-3">
                                                 <div className="p-1 rounded-md bg-orange-500/10 text-orange-500">

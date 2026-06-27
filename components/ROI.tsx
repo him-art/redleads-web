@@ -46,24 +46,6 @@ const ROI = () => {
 
     return (
         <section className="pt-0 pb-24 bg-[#1a1a1a] relative">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                        "@context": "https://schema.org",
-                        "@type": "SoftwareApplication",
-                        "name": "RedLeads ROI Calculator",
-                        "applicationCategory": "BusinessApplication",
-                        "operatingSystem": "Web",
-                        "description": "Calculate the potential ROI of using RedLeads for Reddit lead generation.",
-                        "offers": {
-                            "@type": "Offer",
-                            "price": "0",
-                            "priceCurrency": "USD"
-                        }
-                    })
-                }}
-            />
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 
                 <div className="p-2 bg-white/5 border border-white/5 rounded-[3.5rem]">

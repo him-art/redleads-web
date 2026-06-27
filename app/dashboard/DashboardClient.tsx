@@ -76,7 +76,7 @@ function InnerDashboard({ reports, user, initialSearch }: { reports: any[], user
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const showPaywall = isActuallyExpired; 
 
-    const handleCheckout = async (plan: 'starter' | 'growth' | 'lifetime' = 'growth') => {
+    const handleCheckout = async (plan: 'starter' | 'growth' | 'lifetime' | 'one_time' = 'growth') => {
         const res = await fetch('/api/payments/create-checkout', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

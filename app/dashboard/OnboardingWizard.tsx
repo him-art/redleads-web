@@ -138,7 +138,9 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
     }, [step, keywords.length, description, url]);
 
     // ──────────────────────────────
-    // Step 3 → 4: Save profile when leaving keywords step
+    // Save profile data (url, description, keywords)
+    // NOTE: onboarding_completed is NOT set here — it is set by the Dodo
+    // webhook ONLY after a successful payment (subscription.active event).
     // ──────────────────────────────
     const saveProfile = useCallback(async () => {
         setIsCompletingSetup(true);
@@ -168,7 +170,7 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
     // ──────────────────────────────
     // Step 6: Handle plan selection (checkout)
     // ──────────────────────────────
-    const handleSelectPlan = async (plan: 'starter' | 'growth' | 'lifetime') => {
+    const handleSelectPlan = async (plan: 'starter' | 'growth' | 'lifetime' | 'one_time') => {
         setCheckoutLoading(plan);
         try {
             // Ensure latest profile data is saved before redirected
@@ -195,19 +197,10 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
         }
     };
 
-    const handleSkipToTrial = async () => {
-        setIsCompletingSetup(true);
-        try {
-            const saved = await saveProfile();
-            if (saved) {
-                onComplete({ description, keywords }, url);
-            }
-        } catch (err) {
-            console.error('Skip to trial error:', err);
-        } finally {
-            setIsCompletingSetup(false);
-        }
-    };
+    // handleSkipToTrial removed — there is no free trial.
+    // Users must complete checkout to activate. The pricing step (Step 3)
+    // is a hard gate: selecting a plan calls handleSelectPlan which saves
+    // the profile then redirects to the Dodo checkout page.
 
     // ──────────────────────────────
     // Keyword management
@@ -242,9 +235,10 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
             handleGenerate();
             return;
         }
-        if (step === 2) {
-            saveProfile();
-        }
+        // NOTE: saveProfile() is NOT called here at step 2.
+        // Profile data is saved inside handleSelectPlan() when the user
+        // picks a plan on Step 3. This prevents onboarding_completed from
+        // being set before a real payment is made.
         if (step < TOTAL_STEPS - 1) {
             setStep(s => s + 1);
         }
@@ -492,7 +486,7 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
                                 <div className="p-4 sm:p-6 rounded-2xl bg-white/[0.03] border border-white/5 flex flex-col">
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary mb-3">Starter</h3>
                                     <div className="flex items-baseline gap-2 mb-1">
-                                        <span className="text-sm font-bold text-text-secondary/40 line-through">$58</span>
+                                        
                                         <span className="text-3xl font-black text-text-primary">$29</span>
                                         <span className="text-xs text-text-secondary/50 font-bold uppercase">/mo</span>
                                     </div>
@@ -519,7 +513,7 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
                                     </div>
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 mb-3">Growth</h3>
                                     <div className="flex items-baseline gap-2 mb-1">
-                                        <span className="text-sm font-bold text-orange-500/30 line-through">$78</span>
+                                        
                                         <span className="text-3xl font-black text-text-primary">$39</span>
                                         <span className="text-xs text-text-secondary/50 font-bold uppercase">/mo</span>
                                     </div>
@@ -542,35 +536,28 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
                                 {/* Lifetime Plan */}
                                 <div className="p-4 sm:p-6 rounded-2xl bg-white text-black flex flex-col relative overflow-hidden border border-white">
                                     <div className="absolute top-3 right-4 flex items-center gap-1 text-[8px] font-black uppercase text-black/50 tracking-[0.3em]">
-                                        <Sparkles size={10} className="text-orange-600" /> LTD
+                                        <Sparkles size={10} className="text-orange-600" /> OTP
                                     </div>
-                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-black mb-3">Lifetime</h3>
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-black mb-3">One-Time</h3>
                                     <div className="flex items-baseline gap-2 mb-1">
                                         <span className="text-3xl font-black text-black">
-                                            ${slots ? (slots.sold < 260 ? 199 : 259 + Math.floor((slots.sold - 260) / 40) * 40) : "..."}
+                                            $199
                                         </span>
                                         <span className="text-[8px] text-gray-600 font-bold uppercase tracking-tight">One-time</span>
                                     </div>
-                                    {slots && (
-                                        <div className="mb-4">
-                                            <p className="text-[8px] font-black uppercase tracking-[0.2em] text-orange-600">
-                                            Only {slots.sold < 260 ? 260 - slots.sold : 40 - ((slots.sold - 260) % 40)} spots left at this price
-                                            </p>
-                                        </div>
-                                    )}
                                     <ul className="space-y-2.5 my-5 flex-grow">
-                                        {['All Growth features', 'Unlimited discovery', 'Future Pro updates', 'Lifetime access'].map(f => (
+                                        {['All Starter features (Except Daily Emails)', 'No recurring monthly fees', 'Future Starter updates', 'Lifetime access to account'].map(f => (
                                             <li key={f} className="text-[10px] font-bold text-black uppercase tracking-widest flex items-center gap-2">
                                                 <Check size={10} className="text-orange-600" /> {f}
                                             </li>
                                         ))}
                                     </ul>
                                     <button
-                                        onClick={() => handleSelectPlan('lifetime')}
+                                        onClick={() => handleSelectPlan('one_time')}
                                         disabled={!!checkoutLoading}
                                         className="w-full py-4 rounded-xl bg-black text-white font-black text-[10px] uppercase tracking-widest hover:bg-orange-600 transition-all disabled:opacity-50 flex items-center justify-center"
                                     >
-                                        {checkoutLoading === 'lifetime' ? <LoadingIcon className="w-4 h-4" /> : 'Get Lifetime Access'}
+                                        {checkoutLoading === 'one_time' ? <LoadingIcon className="w-4 h-4" /> : 'Get Lifetime Access'}
                                     </button>
                                 </div>
                             </div>
@@ -578,7 +565,7 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
                             <div className="flex flex-col items-center space-y-4 pt-6">
                                 <p className="text-[10px] font-bold text-text-secondary/60 uppercase tracking-[0.2em] flex items-center justify-center gap-1.5 bg-white/5 px-6 py-3 rounded-full border border-white/10">
                                     <Shield size={12} className="text-orange-500 animate-pulse" />
-                                    7-day money-back guarantee. Contact Redleads.app@gmail.com for refunds.
+                                    We guarantee relevant leads or your money back within 7 days
                                 </p>
                             </div>
                         </motion.div>

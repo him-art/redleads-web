@@ -7,79 +7,79 @@ import { getAllSolutions } from './solutions/data';
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.redleads.app';
 
-  const lastModified = new Date();
-
-  // Static pages
+  // Static pages with real last-modified dates.
+  // Using new Date() for every page tells Google ALL pages changed on every crawl,
+  // wasting crawl budget and destroying freshness signal trust.
   const staticPages = [
     {
       url: baseUrl,
-      lastModified,
+      lastModified: new Date('2026-06-10'), // Last landing page refactor
       changeFrequency: 'weekly' as const,
       priority: 1,
     },
     {
       url: `${baseUrl}/login`,
-      lastModified,
+      lastModified: new Date('2026-05-01'),
       changeFrequency: 'monthly' as const,
       priority: 0.8,
     },
     {
       url: `${baseUrl}/blog`,
-      lastModified,
+      lastModified: new Date('2026-06-22'),
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     },
     {
       url: `${baseUrl}/protocol`,
-      lastModified,
+      lastModified: new Date('2026-05-01'),
       changeFrequency: 'monthly' as const,
       priority: 0.9,
     },
     {
       url: `${baseUrl}/compare`,
-      lastModified,
+      lastModified: new Date('2026-05-27'),
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     },
     {
       url: `${baseUrl}/terms`,
-      lastModified,
+      lastModified: new Date('2026-01-01'),
       changeFrequency: 'yearly' as const,
       priority: 0.3,
     },
     {
       url: `${baseUrl}/privacy`,
-      lastModified,
+      lastModified: new Date('2026-01-01'),
       changeFrequency: 'yearly' as const,
       priority: 0.3,
     },
     {
       url: `${baseUrl}/tools/reddit-opportunity-finder`,
-      lastModified,
+      lastModified: new Date('2026-05-15'),
       changeFrequency: 'weekly' as const,
       priority: 1,
     },
     {
       url: `${baseUrl}/tools/reddit-niche-explorer`,
-      lastModified,
+      lastModified: new Date('2026-05-15'),
       changeFrequency: 'weekly' as const,
       priority: 1,
     },
     {
       url: `${baseUrl}/tools`,
-      lastModified,
+      lastModified: new Date('2026-05-15'),
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     },
     {
       url: `${baseUrl}/tools/reddit-engagement-calculator`,
-      lastModified,
+      lastModified: new Date('2026-04-01'),
       changeFrequency: 'monthly' as const,
       priority: 0.8,
     },
     {
       url: `${baseUrl}/tools/reddit-ad-cost-calculator`,
-      lastModified,
+      lastModified: new Date('2026-04-01'),
       changeFrequency: 'monthly' as const,
       priority: 0.8,
     },
@@ -96,7 +96,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Comparison pages
   const comparisonPages = getAllComparisons().map((comparison) => ({
     url: `${baseUrl}/compare/${comparison.slug}`,
-    lastModified,
+    lastModified: new Date('2026-05-27'),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }));
@@ -104,15 +104,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Subreddit hub pages
   const subredditPages = getAllSubredditHubs().map((hub) => ({
     url: `${baseUrl}/subreddits/${hub.slug}`,
-    lastModified,
+    lastModified: new Date('2026-05-15'),
     changeFrequency: 'monthly' as const,
-    priority: 0.8,
+    priority: 0.7,
   }));
 
   // Solution pages (static verticals only)
   const solutionPages = getAllSolutions().map((solution) => ({
     url: `${baseUrl}/solutions/${solution.slug}`,
-    lastModified,
+    lastModified: new Date('2026-05-15'),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }));
@@ -121,7 +121,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...staticPages, 
     {
       url: `${baseUrl}/solutions/directory`,
-      lastModified,
+      lastModified: new Date('2026-05-15'),
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     },

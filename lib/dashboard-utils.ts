@@ -13,7 +13,7 @@ export interface TrialStatus {
  */
 export function isSubscribedPlan(profile: any): boolean {
     const tier = profile?.subscription_tier?.toLowerCase();
-    return tier === 'starter' || tier === 'growth' || tier === 'lifetime' || profile?.is_admin === true;
+    return tier === 'starter' || tier === 'growth' || tier === 'lifetime' || tier === 'one_time' || profile?.is_admin === true;
 }
 
 export function calculateTrialStatus(profile: any): TrialStatus {
@@ -72,6 +72,7 @@ export function getPlanDetails(profile: any) {
         isStarter: isSubscribed,
         isGrowth: tier === 'growth' || tier === 'lifetime' || isAdmin,
         isLifetime: tier === 'lifetime',
+        isOneTime: tier === 'one_time',
     };
 
     if (isAdmin) {
@@ -79,12 +80,16 @@ export function getPlanDetails(profile: any) {
     }
 
     switch (tier) {
+        case 'one_time':
+            return { ...PLANS.ONE_TIME, ...baseDetails, id: 'one_time', name: 'One-Time Payment', isFullAccess: false };
         case 'lifetime':
-            return { ...PLANS.LIFETIME, ...baseDetails, id: 'lifetime', name: 'Lifetime Plan', isFullAccess: true };
+            return { ...PLANS.LIFETIME, ...baseDetails, id: 'lifetime', name: 'Lifetime Plan (Legacy)', isFullAccess: true };
         case 'growth':
             return { ...PLANS.GROWTH, ...baseDetails, id: 'growth', name: 'Growth Plan', isFullAccess: true };
         case 'starter':
             return { ...PLANS.STARTER, ...baseDetails, id: 'starter', name: 'Starter Plan', isFullAccess: false };
+        case 'onboarding_incomplete':
+            return { ...PLANS.STARTER, ...baseDetails, id: 'onboarding_incomplete', name: 'Onboarding Incomplete', isFullAccess: false };
         default:
             return { ...PLANS.STARTER, ...baseDetails, id: 'trial', name: 'Preview Account', isFullAccess: false };
     }
