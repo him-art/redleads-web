@@ -92,7 +92,7 @@ async function getActiveUsers(): Promise<UserProfile[]> {
 
     profiles.forEach(p => {
         const tier = (p.subscription_tier || '').toLowerCase();
-        const isPaid = tier === 'starter' || tier === 'growth' || tier === 'lifetime';
+        const isPaid = tier === 'starter' || tier === 'growth' || tier === 'lifetime' || tier === 'one_time';
         
         const trialEndsAt = p.trial_ends_at ? new Date(p.trial_ends_at) : null;
         const isInTrial = trialEndsAt ? trialEndsAt > now : false;

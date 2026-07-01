@@ -271,27 +271,26 @@ export default function FounderNote() {
                       <span className="absolute -bottom-1.5 left-0 w-full h-[2px] bg-gradient-to-r from-orange-500/40 to-transparent rounded-full" />
                     </span>
                   </h2>
-                  
-                  <div className="space-y-5 text-gray-400 text-sm md:text-[15px] leading-relaxed font-medium">
+                               <div className="space-y-5 text-gray-400 text-sm md:text-[15px] leading-relaxed font-medium">
                     <p>
-                      Every single day, thousands of people type their immediate business pain points directly into Reddit. They aren't looking for corporate paid ads or aggressive cold outreach—they want trusted, contextual recommendations.
+                      Every single day, thousands of people type their immediate pain points directly into Reddit. They aren&apos;t looking for corporate paid ads or aggressive cold outreach; they want trusted, contextual recommendations.
                     </p>
                     <p>
-                      If you show up inside those active threads and add upfront value, you win the customer. But monitoring subreddits 24/7 and manually filtering out chatter takes lots of time and effort.
+                      If you show up in those active threads and add real value first, you win the customer. But monitoring subreddits 24/7 and manually filtering signal from noise takes hours you don&apos;t have.
                     </p>
                     <p>
-                      That’s why I engineered RedLeads.app. It drops an autonomous AI engine onto Reddit to find posts in real-time with single-click filters using AI and timeframes, sends email alerts to your inbox, and much more. Everything I wish I had when I first started.
+                      That&apos;s why I built RedLeads. It automatically finds the exact Reddit conversations where your future users are asking about problems your product solves. You get a curated daily digest, real-time alerts, and AI-drafted replies, so all you have to do is show up and help.
                     </p>
                     
                     <div className="flex items-center gap-2 text-white font-bold bg-white/[0.02] border border-white/5 py-3.5 px-4.5 rounded-2xl max-w-fit">
                       <Heart size={14} className="text-orange-500 fill-current" />
-                      <span>Now, instead of hunting for leads, they find me. I hope it helps you win your next 100 customers.</span>
+                      <span>Finding your first users is the hardest, scariest part of building something new. I built this because I needed it too. I hope it helps you find yours.</span>
                     </div>
-
-                    <p className="text-gray-500 text-xs leading-normal pt-2">
-                      <span className="text-orange-500 font-bold">Important:</span> Authenticity drives conversion. RedLeads is designed strictly for intent discovery, not spam-bots. Follow our <Link href="/protocol" className="text-white hover:text-orange-500 underline transition-colors">Reddit Success Protocol</Link> to build long-term trust.
-                    </p>
                   </div>
+
+                  <p className="text-gray-500 text-xs leading-normal pt-2">
+                    <span className="text-orange-500 font-bold">Important:</span> Authenticity drives conversion. RedLeads is designed strictly for intent discovery, not spam-bots. Follow our <Link href="/protocol" className="text-white hover:text-orange-500 underline transition-colors">Reddit Success Protocol</Link> to build long-term trust.
+                  </p>
                 </div>
 
                 {/* Signature */}
@@ -372,6 +371,33 @@ export default function FounderNote() {
             <p className="text-gray-500 text-sm md:text-base font-medium opacity-60 max-w-2xl mx-auto">
               {FOUNDER_COUNT} founders who signed up during our opening month
             </p>
+          </div>
+
+          {/* Hero testimonial — pinned above the ticker */}
+          <div className="max-w-3xl mx-auto mb-12 px-4">
+            <div className="p-0.5 bg-gradient-to-r from-orange-500/40 via-orange-400/20 to-orange-500/40 rounded-[2rem]">
+              <div className="bg-[#0f0f13] rounded-[1.875rem] p-8 md:p-10 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-orange-500/30 to-transparent" />
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0 border-2 border-orange-500/30">
+                    <Image src="/yaser.webp" alt="Yaser Abbass" fill sizes="48px" className="object-cover" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-white text-base leading-tight">Yaser Abbass</p>
+                    <p className="text-orange-500/70 text-sm font-medium">@yaserabbass</p>
+                  </div>
+                  <div className="ml-auto">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" className="w-5 h-5 fill-current text-white/20">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                    </svg>
+                  </div>
+                </div>
+                <p className="text-white/90 text-lg md:text-xl leading-relaxed font-medium">
+                  &ldquo;Finding users on Reddit usually takes hours of manual searching. Having a tool that{' '}
+                  <span className="text-orange-400 font-bold">pulls relevant threads automatically is huge.</span>&rdquo;
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="-mx-4 md:-mx-[max(1rem,calc((100vw-1152px)/2+1rem))] overflow-hidden space-y-4">

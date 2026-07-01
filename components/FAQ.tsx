@@ -65,8 +65,13 @@ const faqs = [
   }
 ];
 
+const INITIAL_VISIBLE = 5;
+
 const FAQ = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const displayedFaqs = isExpanded ? faqs : faqs.slice(0, INITIAL_VISIBLE);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -94,7 +99,7 @@ const FAQ = () => {
         </h2>
         
         <div className="mt-12 space-y-3">
-          {faqs.map((faq, index) => (
+          {displayedFaqs.map((faq, index) => (
             <div 
               key={index} 
               className={`p-2 rounded-[2.5rem] border transition-all duration-500 bg-white/5 ${
@@ -134,6 +139,25 @@ const FAQ = () => {
               </div>
             </div>
           ))}
+          {/* See More / See Less toggle */}
+          <div className="mt-6 flex justify-center">
+            <button
+              onClick={() => {
+                setIsExpanded(prev => !prev);
+                if (isExpanded) {
+                  document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+              className="group inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-white/5 border border-white/10 text-xs font-black uppercase tracking-[0.2em] text-gray-400 hover:text-white hover:border-orange-500/30 hover:bg-orange-500/5 transition-all duration-300"
+            >
+              <MaterialIcon
+                name={isExpanded ? 'expand_less' : 'expand_more'}
+                size={16}
+                className="text-orange-500 transition-transform duration-300 group-hover:scale-110"
+              />
+              {isExpanded ? `See Less` : `See ${faqs.length - INITIAL_VISIBLE} More Questions`}
+            </button>
+          </div>
         </div>
       </div>
     </section>

@@ -9,7 +9,7 @@ const features = [
     id: 'scoring',
     icon: Target,
     title: "AI-Powered Scoring",
-    description: "Know instantly which posts have buyers ready to act, skip the noise, focus on the money.",
+    description: "Know exactly which Reddit threads have someone who needs your product right now. Skip the guesswork, focus on the sure things.",
     color: "text-orange-500",
     bg: "bg-orange-500/10"
   },
@@ -17,7 +17,7 @@ const features = [
     id: 'inbox',
     icon: Inbox,
     title: "Daily Inbox",
-    description: "Wake up to a curated list of warm leads, scored and ready to engage, before your competitors see them.",
+    description: "Wake up every morning to the Reddit conversations you can actually turn into your first paying users. Curated, scored, ready to act on.",
     color: "text-blue-500",
     bg: "bg-blue-500/10"
   },
@@ -25,15 +25,15 @@ const features = [
     id: 'monitoring',
     icon: Zap,
     title: "Real-time Monitoring",
-    description: "Be the first to reply to high-intent posts. Speed wins on Reddit — early replies get the most visibility.",
+    description: "Never miss a thread where someone asks for exactly what you built. Speed wins the user, because early replies get the most eyeballs.",
     color: "text-yellow-500",
     bg: "bg-yellow-500/10"
   },
   {
     id: 'seo',
     icon: Search,
-    title: "AI & SEO Indexing",
-    description: "Find high-ranking Reddit posts that are actively cited by AI answer engines like ChatGPT and Perplexity.",
+    title: "Power Search",
+    description: "Uncover evergreen Reddit threads where people keep looking for something like yours, even if you are not in them yet.",
     color: "text-purple-500",
     bg: "bg-purple-500/10"
   },
@@ -41,7 +41,7 @@ const features = [
     id: 'replies',
     icon: Sparkles,
     title: "AI Reply Suggestions",
-    description: "Never stare at a blank reply box. Get 3 tailored, non-spammy reply drafts in one click.",
+    description: "Reply in a way that helps first, sells second. Get 3 ready-to-post drafts that don't sound like ads and won't get you banned.",
     color: "text-orange-400",
     bg: "bg-orange-400/10"
   },
@@ -49,7 +49,7 @@ const features = [
     id: 'save',
     icon: BookmarkIcon,
     title: "Save & Organize",
-    description: "Save hot leads and track your outreach pipeline. Never lose a warm conversation again.",
+    description: "Track your best leads and outreach pipeline. Never lose a warm conversation with a potential first user again.",
     color: "text-pink-500",
     bg: "bg-pink-500/10"
   },
@@ -396,7 +396,7 @@ const Features = () => {
         <div className="text-center mb-20">
           
           <h2 className="text-4xl md:text-7xl font-black text-white leading-tight tracking-tighter mb-6">
-            The only <span className="text-orange-500 font-serif-italic">Reddit Marketing Tool</span> <br className="hidden md:block"/>you'll ever need
+            Everything you need to <span className="text-orange-500 font-serif-italic">find your first users</span> <br className="hidden md:block"/>on Reddit
           </h2>
           <p className="max-w-2xl mx-auto text-gray-400 text-sm md:text-base font-medium leading-relaxed opacity-80">
             RedLeads gives you all the tools to discover and engage with potential customers on Reddit effortlessly.
@@ -475,7 +475,7 @@ const Features = () => {
                 href="/login?next=/dashboard" 
                 className="bg-primary hover:bg-[#ff814d] text-white text-lg md:text-xl font-bold py-4 px-10 rounded-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2 border-t border-white/20 shadow-[0_0_20px_rgba(255,88,54,0.3)] hover:shadow-[0_0_30px_rgba(255,88,54,0.5)]"
             >
-                Start Finding Customers <ArrowRight size={20} />
+                Start Finding My First Users <ArrowRight size={20} />
             </a>
         </div>
 

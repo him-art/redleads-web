@@ -53,16 +53,20 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
       
 
         <h1 
-          className="max-w-[100vw] xl:max-w-none mx-auto text-[1.5rem] sm:text-[2.25rem] md:text-[4.5rem] lg:text-[6rem] font-black text-[#f5f5f5] mb-8 leading-[1.1] px-4 font-sans tracking-tight"
-          aria-label="Turn Reddit users into customers with our AI-powered Reddit marketing and lead generation tool"
+          className="max-w-[100vw] xl:max-w-none mx-auto text-[1.5rem] sm:text-[2.25rem] md:text-[4rem] lg:text-[4.8rem] xl:text-[5.5rem] font-black text-[#f5f5f5] mb-8 leading-[1.1] px-4 font-sans tracking-tight"
+          aria-label="Find your first 100 users on Reddit with RedLeads the AI-powered tool that automatically finds high-intent Reddit conversations for your SaaS"
         >
           <div className="flex flex-wrap items-center justify-center gap-x-3 md:gap-x-5">
-            <span>Turn</span>
+            <span>Find your</span>
+            <span className="text-orange-500">first 100</span>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-x-3 md:gap-x-5">
+            <span>users on</span>
             <span className="inline-flex items-center gap-2 px-3 md:px-6 py-0.5 md:py-1.5 bg-orange-500/5 border border-orange-500/20 rounded-[1.25rem] md:rounded-[2rem]">
               <div className="relative w-7 h-7 md:w-14 md:h-14 flex-shrink-0">
                 <Image 
                   src="/reddit-new-logo.webp" 
-                  alt="Reddit Marketing Automation" 
+                  alt="Reddit" 
                   fill
                   priority
                   sizes="56px"
@@ -71,11 +75,6 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
               </div>
               <span className="text-orange-500">Reddit</span>
             </span>
-            <span>users</span>
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-x-3 md:gap-x-5">
-            <span>into</span>
-            <span className="text-orange-500">customers</span>
           </div>
         </h1>
 
@@ -83,7 +82,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
         <p 
           className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-8 leading-relaxed font-medium"
         >
-          Reddit trains ChatGPT. We monitor Reddit 24/7 to insert your SaaS into the exact conversations that <strong className="text-white">AI answer engines trust and cite.</strong>
+          Every day, your future users are on Reddit asking for something exactly like what you built. We find those conversations automatically <strong className="text-white">so you can reach them before your competitors do.</strong>
         </p>
 
 
@@ -159,7 +158,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
                 <CheckCircle2 size={12} /> 7-Day Guarantee
              </div>
              <div className="flex items-center gap-2 text-xs text-slate-400 uppercase tracking-wider font-medium">
-                <CheckCircle2 size={12} /> For Founders
+                <CheckCircle2 size={12} /> First Users in 7 Days
              </div>
           </div>
         </div>

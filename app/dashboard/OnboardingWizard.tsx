@@ -6,6 +6,7 @@ import axios from 'axios';
 import { ArrowRight, Globe, Check, X, Crown, Shield, Sparkles, Users } from 'lucide-react';
 import LoadingIcon from '@/components/ui/LoadingIcon';
 import { FOUNDER_COUNT } from '@/data/stats';
+import { PLANS } from '@/lib/constants';
 
 
 
@@ -487,7 +488,7 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary mb-3">Starter</h3>
                                     <div className="flex items-baseline gap-2 mb-1">
                                         
-                                        <span className="text-3xl font-black text-text-primary">$29</span>
+                                        <span className="text-3xl font-black text-text-primary">${PLANS.STARTER.price}</span>
                                         <span className="text-xs text-text-secondary/50 font-bold uppercase">/mo</span>
                                     </div>
                                     <ul className="space-y-2.5 my-5 flex-grow">
@@ -514,7 +515,7 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 mb-3">Growth</h3>
                                     <div className="flex items-baseline gap-2 mb-1">
                                         
-                                        <span className="text-3xl font-black text-text-primary">$39</span>
+                                        <span className="text-3xl font-black text-text-primary">${PLANS.GROWTH.price}</span>
                                         <span className="text-xs text-text-secondary/50 font-bold uppercase">/mo</span>
                                     </div>
                                     <ul className="space-y-2.5 my-5 flex-grow">
@@ -546,7 +547,7 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
                                         <span className="text-[8px] text-gray-600 font-bold uppercase tracking-tight">One-time</span>
                                     </div>
                                     <ul className="space-y-2.5 my-5 flex-grow">
-                                        {['All Starter features (Except Daily Emails)', 'No recurring monthly fees', 'Future Starter updates', 'Lifetime access to account'].map(f => (
+                                        {['10 Search/day, 20 Keywords, 200 Replies/mo', 'No recurring monthly fees', 'Future Starter plan updates', 'Priority email support'].map(f => (
                                             <li key={f} className="text-[10px] font-bold text-black uppercase tracking-widest flex items-center gap-2">
                                                 <Check size={10} className="text-orange-600" /> {f}
                                             </li>

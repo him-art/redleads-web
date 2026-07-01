@@ -3,6 +3,10 @@ import { Database } from './database.types';
 export type GuideNode = Database['public']['Tables']['Guide_nodes']['Row'] & {
   day_number?: number | null;
   estimated_minutes?: number | null;
+  warning_content?: string | null;
+  target_subreddit?: string | null;
+  suggested_title?: string | null;
+  ready_to_paste_content?: string | null;
 };
 export type UserProgress = Database['public']['Tables']['user_Guide_progress']['Row'];
 

@@ -1,8 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { GuideNode } from '@/types/guide';
 import { motion } from 'framer-motion';
-import { X, ExternalLink } from 'lucide-react';
+import { X, ExternalLink, AlertTriangle, Copy } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useRouter } from 'next/navigation';
@@ -15,6 +16,13 @@ interface NodeDetailProps {
 
 export default function NodeDetail({ node, onNavigate, onClose }: NodeDetailProps) {
     const router = useRouter();
+    const [copiedSection, setCopiedSection] = useState<'title' | 'body' | null>(null);
+
+    const handleCopy = (text: string, section: 'title' | 'body') => {
+        navigator.clipboard.writeText(text);
+        setCopiedSection(section);
+        setTimeout(() => setCopiedSection(null), 2000);
+    };
 
     const handleAction = () => {
         if (node.action_link) {
@@ -78,11 +86,89 @@ export default function NodeDetail({ node, onNavigate, onClose }: NodeDetailProp
                     prose-td:px-4 prose-td:py-3 prose-td:border-b prose-td:border-white/5 prose-td:text-text-secondary
                     prose-hr:border-white/10 prose-hr:my-8
                 ">
+                    {node.warning_content && (
+                        <div className="flex gap-3 p-5 rounded-2xl bg-red-500/10 border border-red-500/20 mb-8 items-start">
+                            <AlertTriangle size={18} className="text-red-400 shrink-0 mt-0.5" />
+                            <div className="space-y-1">
+                                <span className="text-[10px] font-black uppercase tracking-wider text-red-400">REDDIT SAFETY WARNING</span>
+                                <p className="text-xs text-red-200/90 leading-relaxed font-medium">{node.warning_content}</p>
+                            </div>
+                        </div>
+                    )}
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>{node.content || ''}</ReactMarkdown>
                 </div>
 
                 {/* Sidebar / Context */}
                 <div className="space-y-6 lg:pl-6 lg:border-l border-white/[0.05]">
+                    {node.ready_to_paste_content && (
+                        <div className="p-1 bg-gradient-to-b from-ai/10 to-ai/5 border border-ai/20 rounded-3xl shadow-[0_4px_24px_rgba(0,209,255,0.05)]">
+                            <div className="p-6 rounded-[1.4rem] bg-[#0c0c0c] border border-white/[0.05] space-y-4 relative overflow-hidden backdrop-blur-md">
+                                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-ai/20 to-transparent" />
+                                <div className="flex items-center justify-between">
+                                    <h3 className="text-sm font-bold text-text-primary flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-lg bg-ai/10 border border-ai/20 flex items-center justify-center text-ai animate-pulse">
+                                            <Copy size={14} />
+                                        </div>
+                                        Ready-to-Paste Draft
+                                    </h3>
+                                    {node.target_subreddit && (
+                                        <a
+                                            href={`https://reddit.com/${node.target_subreddit}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="px-2 py-1 rounded bg-orange-500/10 text-orange-400 hover:bg-orange-500/20 border border-orange-500/20 text-[10px] font-black uppercase tracking-wider flex items-center gap-1 transition-colors"
+                                        >
+                                            {node.target_subreddit}
+                                            <ExternalLink size={8} />
+                                        </a>
+                                    )}
+                                </div>
+
+                                {node.suggested_title && (
+                                    <div className="space-y-1 bg-white/[0.02] border border-white/[0.04] p-3 rounded-xl">
+                                        <span className="text-[9px] font-black uppercase tracking-wider text-text-secondary/60 font-medium">Suggested Post Title</span>
+                                        <div className="flex items-start justify-between gap-3">
+                                            <p className="text-xs text-text-primary font-bold">{node.suggested_title}</p>
+                                            <button
+                                                onClick={() => handleCopy(node.suggested_title || '', 'title')}
+                                                className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-text-secondary hover:text-text-primary transition-all shrink-0 active:scale-95"
+                                            >
+                                                {copiedSection === 'title' ? (
+                                                    <span className="text-[8px] font-bold text-green-400 uppercase tracking-widest px-1">Copied</span>
+                                                ) : (
+                                                    <Copy size={12} />
+                                                )}
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="space-y-1 bg-white/[0.02] border border-white/[0.04] p-3 rounded-xl">
+                                    <span className="text-[9px] font-black uppercase tracking-wider text-text-secondary/60 font-medium">Post Body / Comment Draft</span>
+                                    <div className="relative">
+                                        <pre className="text-[11px] text-text-secondary font-sans leading-relaxed whitespace-pre-wrap max-h-48 overflow-y-auto custom-scrollbar p-2 bg-black/30 rounded-lg border border-white/5">
+                                            {node.ready_to_paste_content}
+                                        </pre>
+                                        <button
+                                            onClick={() => handleCopy(node.ready_to_paste_content || '', 'body')}
+                                            className="absolute top-2 right-2 p-1.5 rounded-lg bg-black/60 hover:bg-black/90 text-text-secondary hover:text-text-primary transition-all active:scale-95 backdrop-blur border border-white/10"
+                                        >
+                                            {copiedSection === 'body' ? (
+                                                <span className="text-[8px] font-bold text-green-400 uppercase tracking-widest px-1">Copied</span>
+                                            ) : (
+                                                <Copy size={12} />
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="text-[10px] text-text-secondary/70 leading-relaxed border-t border-white/5 pt-3">
+                                    <span className="font-bold text-orange-400 uppercase tracking-wider block mb-0.5 text-[8px]">Growth Tip</span>
+                                    Do not copy-paste the body verbatim. Tweak the first line or hook to match your personal voice so Reddit's auto-moderators verify it as organic.
+                                </div>
+                            </div>
+                        </div>
+                    )}
                     <div className="p-1 bg-gradient-to-b from-white/10 to-white/5 border border-white/5 rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
                         <div className="p-6 rounded-[1.4rem] bg-[#0c0c0c] border border-white/[0.05] space-y-5 relative overflow-hidden backdrop-blur-md">
                             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
@@ -113,7 +199,7 @@ export default function NodeDetail({ node, onNavigate, onClose }: NodeDetailProp
                             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                             <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary/60">Estimated Time</h3>
                             <div className="text-3xl font-black text-text-primary tracking-tight">
-                                ~{(node as any).estimated_minutes || 15} <span className="text-sm text-text-secondary font-medium tracking-normal">min</span>
+                                ~{node.estimated_minutes || 15} <span className="text-sm text-text-secondary font-medium tracking-normal">min</span>
                             </div>
                         </div>
                     </div>

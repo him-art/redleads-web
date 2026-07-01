@@ -27,7 +27,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
         }
 
-        if (!['growth', 'starter', 'lifetime'].includes(profile.subscription_tier)) {
+        if (!['growth', 'starter', 'lifetime', 'one_time'].includes(profile.subscription_tier)) {
             return NextResponse.json({ error: 'No active paid subscription' }, { status: 400 });
         }
 

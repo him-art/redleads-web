@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Lock, Search, Bot, Crown, Zap, Sparkles } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { PLANS } from '@/lib/constants';
 
 interface PaywallModalProps {
     onCheckout: (plan: 'starter' | 'growth' | 'lifetime' | 'one_time') => Promise<void>;
@@ -69,7 +70,7 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                         <div className="p-6 rounded-[2rem] bg-white/5 border border-white/5 flex flex-col">
                             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 mb-2">Starter</h3>
                             <div className="flex items-baseline gap-2 mb-6">
-                                <span className="text-2xl font-black text-white">$29</span>
+                                <span className="text-2xl font-black text-white">${PLANS.STARTER.price}</span>
                                 <span className="text-xs text-gray-600 font-bold uppercase ml-1">/mo</span>
                             </div>
                             <ul className="space-y-3 mb-8 flex-grow">
@@ -94,7 +95,7 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                         <div className="p-6 rounded-[2rem] bg-orange-500/[0.03] border border-orange-500/20 flex flex-col ring-1 ring-orange-500/10 relative overflow-hidden">
                             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 mb-2">Growth</h3>
                             <div className="flex items-baseline gap-2 mb-6">
-                                <span className="text-2xl font-black text-white">$39</span>
+                                <span className="text-2xl font-black text-white">${PLANS.GROWTH.price}</span>
                                 <span className="text-xs text-gray-600 font-bold uppercase ml-1">/mo</span>
                             </div>
                             <ul className="space-y-3 mb-8 flex-grow">
@@ -129,10 +130,13 @@ export default function PaywallModal({ onCheckout }: PaywallModalProps) {
                             </div>
                             <ul className="space-y-3 mb-8 flex-grow">
                                 <li className="text-[9px] font-black text-black uppercase tracking-widest flex items-center gap-2">
-                                    <Zap size={10} className="text-orange-600" /> No recurring fees
+                                    <Search size={10} className="text-orange-600" /> 20 Keywords
                                 </li>
                                 <li className="text-[9px] font-black text-black uppercase tracking-widest flex items-center gap-2">
-                                    <Sparkles size={10} className="text-orange-600" /> Future Starter updates
+                                    <Bot size={10} className="text-orange-600" /> 200 Replies
+                                </li>
+                                <li className="text-[9px] font-black text-black uppercase tracking-widest flex items-center gap-2">
+                                    <Zap size={10} className="text-orange-600" /> No recurring fees
                                 </li>
                             </ul>
                             <button

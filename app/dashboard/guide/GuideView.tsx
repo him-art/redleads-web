@@ -10,11 +10,9 @@ import { useDashboardData } from '../DashboardDataContext';
 import { useRateLimit } from '@/lib/useRateLimit';
 
 const PHASE_META: Record<number, { title: string; icon: React.ElementType; color: string; gradient: string; days: string }> = {
-    1: { title: 'The Foundation', icon: Target, color: 'text-orange-500', gradient: 'from-orange-500/20 to-orange-500/5', days: 'Days 1-7' },
-    2: { title: 'The Value Drop', icon: Rocket, color: 'text-blue-500', gradient: 'from-blue-500/20 to-blue-500/5', days: 'Days 8-21' },
-    3: { title: 'Conversion Engine', icon: Target, color: 'text-green-500', gradient: 'from-green-500/20 to-green-500/5', days: 'Days 22-45' },
-    4: { title: 'The Authority', icon: Target, color: 'text-purple-500', gradient: 'from-purple-500/20 to-purple-500/5', days: 'Days 46-75' },
-    5: { title: 'The Scale System', icon: Rocket, color: 'text-cyan-500', gradient: 'from-cyan-500/20 to-cyan-500/5', days: 'Days 76-90' },
+    1: { title: 'Account Foundation', icon: Target, color: 'text-orange-500', gradient: 'from-orange-500/20 to-orange-500/5', days: 'Days 1-4' },
+    2: { title: 'The 10-Min Engine', icon: Rocket, color: 'text-blue-500', gradient: 'from-blue-500/20 to-blue-500/5', days: 'Days 5-10' },
+    3: { title: 'Conversion Engine', icon: Sparkles, color: 'text-green-500', gradient: 'from-green-500/20 to-green-500/5', days: 'Days 11-14' },
 };
 
 const formatTime = (minutes: number | null | undefined): string => {
@@ -28,6 +26,7 @@ export default function GuideView({ onNavigate, user }: { onNavigate: (tab: stri
     const [nodes, setNodes] = useState<GuideNode[]>([]);
     const [completedDays, setCompletedDays] = useState<Record<string, boolean>>({});
     const [selectedNode, setSelectedNode] = useState<GuideNode | null>(null);
+    const [isCustom, setIsCustom] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
@@ -56,12 +55,18 @@ export default function GuideView({ onNavigate, user }: { onNavigate: (tab: stri
                 const parsed = JSON.parse(storedGuide);
                 if (Array.isArray(parsed) && parsed.length > 0) {
                     setNodes(parsed);
+                    setIsCustom(true);
                 } else {
                     setNodes(FALLBACK_NODES.slice(0, 14));
+                    setIsCustom(false);
                 }
             } catch (e) {
                 setNodes(FALLBACK_NODES.slice(0, 14));
+                setIsCustom(false);
             }
+        } else {
+            setNodes(FALLBACK_NODES.slice(0, 14));
+            setIsCustom(false);
         }
         setHasLoaded(true);
     }, [profile?.id]);
@@ -92,6 +97,7 @@ export default function GuideView({ onNavigate, user }: { onNavigate: (tab: stri
                 const data = await res.json();
                 if (data.nodes && Array.isArray(data.nodes)) {
                     setNodes(data.nodes);
+                    setIsCustom(true);
                     localStorage.setItem(`redleads_custom_guide_${profile.id}`, JSON.stringify(data.nodes));
                 }
             } else if (res.status === 429) {
@@ -100,6 +106,7 @@ export default function GuideView({ onNavigate, user }: { onNavigate: (tab: stri
             } else {
                 console.error("Failed to generate custom guide, using fallback.");
                 setNodes(FALLBACK_NODES.slice(0, 14));
+                setIsCustom(false);
             }
         } catch (error) {
             console.error("Error generating guide:", error);
@@ -138,37 +145,55 @@ export default function GuideView({ onNavigate, user }: { onNavigate: (tab: stri
 
     if (!hasLoaded) return null;
 
-    if (nodes.length === 0) {
-        return (
-            <div className="flex flex-col items-center justify-center py-20 text-center space-y-6">
-                <div className="w-20 h-20 rounded-[2rem] bg-ai/10 flex items-center justify-center border border-ai/20">
-                    <Sparkles size={32} className="text-ai" />
-                </div>
-                <div className="space-y-2 max-w-md">
-                    <h3 className="text-2xl font-bold text-text-primary tracking-tight flex items-center justify-center gap-2">
-                        RedLeads OS 
-                        <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/20">Beta</span>
-                    </h3>
-                    <p className="text-sm text-text-secondary leading-relaxed">
-                        We use AI to instantly generate a hyper-personalized Reddit strategy based on your website and tracked keywords.
-                    </p>
-                </div>
-                <button
-                    onClick={handleGenerate}
-                    disabled={isGenerating}
-                    className="px-8 py-4 bg-ai text-black font-black uppercase tracking-[0.2em] text-[11px] rounded-2xl hover:bg-ai/90 transition-all disabled:opacity-50 flex items-center gap-2 shadow-[0_0_20px_rgba(0,209,255,0.2)]"
-                >
-                    {isGenerating ? 'Analyzing & Generating...' : 'Generate Custom Strategy'}
-                </button>
-                {error && <p className="text-[10px] text-red-400 font-bold mt-2 uppercase tracking-wider max-w-xs">{error}</p>}
-            </div>
-        );
-    }
+    const completedCount = Object.values(completedDays).filter(Boolean).length;
+    const totalCount = nodes.length;
+    const progressPct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
     const allNodes = nodes.map((node, i) => ({ node, globalIndex: i }));
 
     return (
         <div className="relative">
+            {/* Custom Strategy Generator Promo Banner */}
+            {!isCustom && (
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl bg-ai/10 border border-ai/20 mb-6 backdrop-blur-md">
+                    <div className="space-y-1">
+                        <h4 className="text-sm font-bold text-text-primary flex items-center gap-2">
+                            <Sparkles size={16} className="text-ai animate-pulse animate-duration-1000" />
+                            Customize this strategy for your SaaS
+                        </h4>
+                        <p className="text-xs text-text-secondary leading-relaxed">
+                            This is our general Reddit growth strategy. Let our AI analyze your website description and keywords to tailor it specifically to your product niche.
+                        </p>
+                    </div>
+                    <button
+                        onClick={handleGenerate}
+                        disabled={isGenerating}
+                        className="px-5 py-3 bg-ai text-black font-black uppercase tracking-wider text-[10px] rounded-xl hover:bg-ai/90 transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0 shadow-[0_0_15px_rgba(0,209,255,0.15)]"
+                    >
+                        {isGenerating ? 'Analyzing...' : 'Generate Custom Strategy'}
+                    </button>
+                </div>
+            )}
+
+            {/* Progress Bar & Header */}
+            <div className="flex items-center justify-between gap-4 mb-6 bg-white/[0.02] border border-white/[0.04] p-4 rounded-2xl max-w-xl">
+                <div className="flex items-center gap-2">
+                    <span className="text-xs text-text-primary font-bold uppercase tracking-wider">Sprint Progress</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-green-500/10 text-green-500 border border-green-500/20 font-bold">
+                        {completedCount}/{totalCount} Done
+                    </span>
+                </div>
+                <div className="flex-1 max-w-xs flex items-center gap-3">
+                    <div className="flex-1 h-1.5 rounded-full bg-white/5 overflow-hidden">
+                        <div 
+                            className="h-full bg-gradient-to-r from-green-500 to-emerald-400 rounded-full transition-all duration-500"
+                            style={{ width: `${progressPct}%` }}
+                        />
+                    </div>
+                    <span className="text-xs font-mono font-bold text-text-secondary">{progressPct}%</span>
+                </div>
+            </div>
+
             {/* Control Bar for Regenerating */}
             <div className="absolute -top-12 right-0 flex flex-col items-end gap-1">
                 <button 
@@ -260,7 +285,7 @@ export default function GuideView({ onNavigate, user }: { onNavigate: (tab: stri
                                                         </span>
                                                         <span className="text-text-secondary/30">•</span>
                                                         <span className="text-[10px] text-text-secondary font-bold uppercase tracking-[0.1em]">
-                                                            Day {(node as any).day_number || '?'}
+                                                            Day {node.day_number || '?'}
                                                         </span>
                                                     </div>
                                                     <button 
@@ -284,7 +309,7 @@ export default function GuideView({ onNavigate, user }: { onNavigate: (tab: stri
                                                 {/* Footer */}
                                                 <div className="flex items-center justify-between pt-2">
                                                     <span className="text-[10px] text-text-secondary/60 font-medium">
-                                                        {formatTime((node as any).estimated_minutes)}
+                                                        {formatTime(node.estimated_minutes)}
                                                     </span>
                                                     <span className={`text-[10px] font-black uppercase tracking-[0.15em] flex items-center gap-1 ${phaseMeta.color} opacity-0 group-hover:opacity-100 transition-opacity`}>
                                                     Learn More <ArrowRight size={12} />
@@ -341,7 +366,7 @@ export default function GuideView({ onNavigate, user }: { onNavigate: (tab: stri
                                                         </span>
                                                         <span className="text-text-secondary/30">•</span>
                                                         <span className="text-[10px] text-text-secondary font-bold uppercase tracking-[0.1em]">
-                                                            Day {(node as any).day_number || '?'}
+                                                            Day {node.day_number || '?'}
                                                         </span>
                                                     </div>
                                                     <button 
@@ -365,7 +390,7 @@ export default function GuideView({ onNavigate, user }: { onNavigate: (tab: stri
                                                 {/* Footer */}
                                                 <div className="flex items-center justify-between pt-2">
                                                     <span className="text-[10px] text-text-secondary/60 font-medium">
-                                                        {formatTime((node as any).estimated_minutes)}
+                                                        {formatTime(node.estimated_minutes)}
                                                     </span>
                                                     <span className={`text-[10px] font-black uppercase tracking-[0.15em] flex items-center gap-1 ${phaseMeta.color} opacity-0 group-hover:opacity-100 transition-opacity`}>
                                                     Learn More <ArrowRight size={12} />

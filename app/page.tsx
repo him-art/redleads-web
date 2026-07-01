@@ -4,21 +4,21 @@ import Hero from "@/components/Hero";
 import dynamic from "next/dynamic";
 
 export const metadata: Metadata = {
-  title: "RedLeads | #1 AI-Powered Reddit Marketing & Lead Gen",
-  description: "RedLeads is the top AI-powered Reddit marketing & lead generation tool for B2B SaaS. Automate social listening and capture high-intent customers safely.",
+  title: "RedLeads | Find Your First Users on Reddit",
+  description: "RedLeads automatically finds warm, high-intent Reddit conversations for your SaaS so you can land your first users in your first week, with no manual searching.",
   alternates: {
     canonical: 'https://www.redleads.app',
   },
   openGraph: {
-    title: "RedLeads | #1 AI-Powered Reddit Marketing & Lead Gen",
-    description: "RedLeads is the top AI-powered Reddit marketing & lead generation tool for B2B SaaS. Automate social listening and capture high-intent customers safely.",
+    title: "RedLeads | Find Your First Users on Reddit",
+    description: "RedLeads automatically finds warm, high-intent Reddit conversations for your SaaS so you can land your first users in your first week, with no manual searching.",
     url: "https://www.redleads.app",
     images: [
       {
         url: "https://www.redleads.app/og-image.webp?v=3",
         width: 1200,
         height: 630,
-        alt: "RedLeads - AI-Powered Reddit Marketing & Lead Gen Tool",
+        alt: "RedLeads - Find Your First Users on Reddit",
       },
     ],
   },

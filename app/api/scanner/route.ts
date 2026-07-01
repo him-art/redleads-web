@@ -52,7 +52,7 @@ export async function POST(req: Request) {
                 .eq('id', user.id)
                 .single();
             
-            const isPaid = profile?.subscription_tier === 'growth' || profile?.subscription_tier === 'starter' || profile?.subscription_tier === 'lifetime';
+            const isPaid = profile?.subscription_tier === 'growth' || profile?.subscription_tier === 'starter' || profile?.subscription_tier === 'lifetime' || profile?.subscription_tier === 'one_time';
             
             // Get trial status - strictly requires trial_ends_at to be set
             const trialEndsAt = profile?.trial_ends_at ? new Date(profile.trial_ends_at) : null;
@@ -72,6 +72,7 @@ export async function POST(req: Request) {
             const dailyLimit = profile?.scan_allowance || (
                 profile?.subscription_tier === 'lifetime' ? 10 : 
                 profile?.subscription_tier === 'growth' ? 10 : 
+                profile?.subscription_tier === 'one_time' ? 10 : 
                 profile?.subscription_tier === 'starter' ? 5 : 
                 5 // Trial default
             );

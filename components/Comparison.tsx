@@ -12,15 +12,14 @@ const Comparison = () => {
         {/* Header */}
         <div className="text-center max-w-4xl mx-auto mb-20">
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 mb-4 block">
-                The Old Way vs. The Smart Way
+                The Slow Way vs. The Fast Way
             </span>
             <h2 className="text-4xl md:text-[4.5rem] font-black text-white leading-[1.05] tracking-tighter mb-6">
-                Stop spending 3+ hours/day <br className="hidden md:block" />
-                <span className="text-orange-500 font-serif-italic">on Reddit the hard way.</span>
+                Stop spending days searching. <br className="hidden md:block" />
+                <span className="text-orange-500 font-serif-italic">Start getting users this week.</span>
             </h2>
             <p className="text-gray-500 text-lg font-medium leading-relaxed max-w-2xl mx-auto">
-                Stop wasting hours searching customers on Reddit manually and start finding high-intent 
-                conversations that actually convert. RedLeads is your <span className="text-orange-500 font-bold">Reddit Marketing OS</span>.
+                Most founders spend weeks manually hunting Reddit for users and come up empty. RedLeads is the <span className="text-orange-500 font-bold">fastest path from zero to first user</span>.
             </p>
         </div>
 
@@ -37,11 +36,11 @@ const Comparison = () => {
                     </div>
 
                     <ul className="space-y-5 mb-12 flex-1">
-                        <ManualItem text="Spend 3+ hours manually searching for leads" />
-                        <ManualItem text="Guess what AI crawlers are actually reading" />
-                        <ManualItem text="Waste time scrolling through dead threads" />
-                        <ManualItem text="Pay for expensive, bloated SEO tools" />
-                        <ManualItem text="Miss time-sensitive competitor mentions" />
+                        <ManualItem text="Spend 3+ hours manually searching Reddit every single day" />
+                        <ManualItem text="Still not sure if anyone on Reddit even needs your product" />
+                        <ManualItem text="Watch competitors reply to the threads you missed" />
+                        <ManualItem text="No system → no traction → no users" />
+                        <ManualItem text="Get discouraged and quit Reddit before it ever works" />
                     </ul>
 
                     <div className="mt-auto bg-red-500/5 border border-red-500/10 rounded-2xl p-6 flex items-center justify-center gap-3 text-red-500/70">
@@ -76,23 +75,23 @@ const Comparison = () => {
 
                     <ul className="relative z-10 space-y-8 mb-12 flex-1">
                         <BenefitItem 
-                            title="20 mins a day → get targeted leads"
-                            description="AI tracks the exact Reddit conversations that match your niche and scores them for buying intent."
+                            title="Find your first user on Reddit in under a week"
+                            description="RedLeads surfaces the exact Reddit conversations where someone is actively looking for a product like yours."
                         />
                         <BenefitItem 
-                            title="Target AI-indexed threads"
-                            description="We find the high-ranking Reddit posts that ChatGPT and Perplexity actively cite."
+                            title="Know exactly who has buying intent — right now"
+                            description="AI scores every thread. You only engage with people who are already halfway to buying."
                         />
                         <BenefitItem 
-                            title="Automated intent scoring"
-                            description="Skip the noise. Only engage with users who are actively asking for a solution like yours."
+                            title="Show up first. Reply authentically. Win the user."
+                            description="One well-timed, helpful reply in the right thread can be your first paying customer. RedLeads makes sure you never miss it."
                         />
                     </ul>
 
                     <div className="relative z-10 mt-auto bg-white/10 border border-white/30 rounded-2xl p-6 flex items-center justify-center gap-3 text-black shadow-lg shadow-black/5 backdrop-blur-sm">
                         <MaterialIcon name="check_circle" size={20} />
                         <span className="text-xs md:text-sm font-black uppercase tracking-widest">
-                            20 min/day → warm leads delivered to your inbox
+                            Your first users, this week, not months from now
                         </span>
                     </div>
                 </div>

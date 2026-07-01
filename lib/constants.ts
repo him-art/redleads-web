@@ -8,7 +8,7 @@ export const PLANS = {
         id: 'starter',
         name: 'Starter Plan',
         price: 29,
-        annualPrice: 249, // Aggressive discount for immediate annual cashflow
+        annualPrice: 240, // $20/mo × 12
         keywordLimit: 10,
         subredditLimit: 5,
         powerSearchLimit: 5,
@@ -18,7 +18,7 @@ export const PLANS = {
         id: 'growth',
         name: 'Growth Plan',
         price: 39,
-        annualPrice: 349, // Aggressive discount for immediate annual cashflow
+        annualPrice: 348, // $29/mo × 12
         keywordLimit: 20,
         subredditLimit: 15, // New field
         powerSearchLimit: 10,
@@ -35,9 +35,9 @@ export const PLANS = {
     ONE_TIME: {
         id: 'one_time',
         name: 'One-Time Payment',
-        keywordLimit: 10,
+        keywordLimit: 20,
         subredditLimit: 5,
-        powerSearchLimit: 5,
-        aiReplyLimit: 100,
+        powerSearchLimit: 10,
+        aiReplyLimit: 200,
     }
 } as const;

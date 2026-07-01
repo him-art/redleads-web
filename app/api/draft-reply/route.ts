@@ -35,7 +35,7 @@ export async function POST(req: Request) {
         const lastReplyAt = profile?.last_reply_at;
 
         // --- Trial Expiration Check (Free Only) ---
-        const isPaid = tier === 'starter' || tier === 'growth' || tier === 'lifetime';
+        const isPaid = tier === 'starter' || tier === 'growth' || tier === 'lifetime' || tier === 'one_time';
         if (!isPaid) {
             const trialEndsAt = profile?.trial_ends_at ? new Date(profile.trial_ends_at) : null;
             
@@ -67,7 +67,8 @@ export async function POST(req: Request) {
             'trial': 5,
             'starter': 100,
             'growth': 500,
-            'lifetime': 500
+            'lifetime': 500,
+            'one_time': 200
         };
 
         const currentTierKey = tier || 'trial';

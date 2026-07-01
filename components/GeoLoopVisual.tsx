@@ -58,11 +58,11 @@ export default function GeoLoopVisual() {
         {/* Section Header */}
         <div className="text-center mb-16 px-4">
           <h2 className="text-4xl sm:text-[4.5rem] font-black text-white leading-[1.1] tracking-tighter">
-            <span className="block">How It Works: Put Your SaaS</span>
-            <span className="block text-orange-500 font-serif-italic">Inside ChatGPT&apos;s Brain.</span>
+            <span className="block">How RedLeads finds</span>
+            <span className="block text-orange-500 font-serif-italic">your first users.</span>
           </h2>
           <p className="mt-6 text-gray-500 text-base font-medium">
-            AI search models pull recommendations from trusted Reddit conversations. We secure your spot.
+            Your future users are already on Reddit. We surface the exact threads where they&apos;re asking for something like yours.
           </p>
         </div>
 
@@ -147,8 +147,8 @@ export default function GeoLoopVisual() {
 
               {/* Micro Caption */}
               <div className="px-8 pb-8 pt-2 text-center">
-                <h3 className="text-lg font-black text-white tracking-tight">Seed Niche Authority</h3>
-                <p className="text-[11px] text-gray-500 mt-1 font-medium">Helpful replies in high-intent Reddit threads.</p>
+                <h3 className="text-lg font-black text-white tracking-tight">Your users are on Reddit right now</h3>
+                <p className="text-[11px] text-gray-500 mt-1 font-medium">They&apos;re asking questions that your product already answers.</p>
               </div>
             </div>
           </div>
@@ -229,8 +229,8 @@ export default function GeoLoopVisual() {
 
               {/* Micro Caption */}
               <div className="px-8 pb-8 pt-2 text-center">
-                <h3 className="text-lg font-black text-white tracking-tight">Indexed by AI Search</h3>
-                <p className="text-[11px] text-gray-500 mt-1 font-medium">ChatGPT & Perplexity ingest Reddit recommendations.</p>
+                <h3 className="text-lg font-black text-white tracking-tight">RedLeads scans Reddit 24/7 for you</h3>
+                <p className="text-[11px] text-gray-500 mt-1 font-medium">AI scores every thread for buying intent for you.</p>
               </div>
             </div>
           </div>
@@ -316,8 +316,8 @@ export default function GeoLoopVisual() {
 
               {/* Micro Caption */}
               <div className="px-8 pb-8 pt-2 text-center">
-                <h3 className="text-lg font-black text-white tracking-tight">Secure AI Citations</h3>
-                <p className="text-[11px] text-gray-500 mt-1 font-medium">Your SaaS becomes the top recommendation.</p>
+                <h3 className="text-lg font-black text-white tracking-tight">You show up. You get the user.</h3>
+                <p className="text-[11px] text-gray-500 mt-1 font-medium">One authentic reply in the right thread can be your first paying customer.</p>
               </div>
             </div>
           </div>

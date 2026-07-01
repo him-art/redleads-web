@@ -116,7 +116,7 @@ export async function POST(req: Request) {
                     let keywordLimit = 10;
                     if (planType === 'growth') keywordLimit = 20;
                     if (planType === 'lifetime') keywordLimit = 20;
-                    if (planType === 'one_time') keywordLimit = 10;
+                    if (planType === 'one_time') keywordLimit = 20;
 
                     // Calculate trial_ends_at for trial-eligible plans
                     let trialEndsAt = null;
@@ -198,7 +198,7 @@ export async function POST(req: Request) {
                     let keywordLimit = 10;
                     if (planType === 'growth') keywordLimit = 20;
                     if (planType === 'lifetime') keywordLimit = 20;
-                    if (planType === 'one_time') keywordLimit = 10;
+                    if (planType === 'one_time') keywordLimit = 20;
 
                     const updateData: any = {
                         subscription_tier: planType,
@@ -274,7 +274,7 @@ export async function POST(req: Request) {
                         let keywordLimit = 10;
                         if (newPlan === 'growth') keywordLimit = 20;
                         if (newPlan === 'lifetime') keywordLimit = 20;
-                        if (newPlan === 'one_time') keywordLimit = 10;
+                        if (newPlan === 'one_time') keywordLimit = 20;
 
                         await supabase
                             .from('profiles')

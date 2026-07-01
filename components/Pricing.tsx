@@ -105,13 +105,11 @@ const Pricing = () => {
                 inbound: [
                     { name: '5 Deep AI Reddit Search /day', icon: <MaterialIcon name="public" size={14} /> },
                     { name: 'Live Reddit monitoring', icon: <MaterialIcon name="bolt" size={14} /> },
-                    { name: 'Daily Email alerts', icon: <MaterialIcon name="mail" size={14} /> },
                     { name: '10 tracked keywords', icon: <MaterialIcon name="search" size={14} /> },
-                    { name: 'Daily SEO opportunities', icon: <MaterialIcon name="monitoring" size={14} /> }
-                    
+                    { name: 'Daily Email alerts', icon: <MaterialIcon name="mail" size={14} /> }
                 ],
                 engage: [
-                    { name: '100 AI Replies /mo', icon: <MaterialIcon name="smart_toy" size={14} /> },
+                    { name: 'Personalised Outreach', icon: <MaterialIcon name="smart_toy" size={14} /> },
                 ]
             }
         },
@@ -119,19 +117,19 @@ const Pricing = () => {
             name: 'Growth',
             price: PLANS.GROWTH.price,
             annualPrice: PLANS.GROWTH.annualPrice,
-            description: 'For founders serious about find users on Reddit',
+            description: 'For founders ready to turn Reddit into a repeatable user acquisition channel',
             highlight: true,
             badge: 'BEST VALUE',
             features: {
                 inbound: [
                     { name: '10 Deep AI Reddit Search /day', icon: <MaterialIcon name="public" size={14} /> },
                     { name: 'Live Reddit monitoring', icon: <MaterialIcon name="bolt" size={14} /> },
-                    { name: 'Daily Email alerts', icon: <MaterialIcon name="mail" size={14} /> },
                     { name: '20 tracked keywords', icon: <MaterialIcon name="search" size={14} /> },
-                    { name: 'Daily SEO opportunities', icon: <MaterialIcon name="monitoring" size={14} /> }
+                    { name: 'Daily Email alerts', icon: <MaterialIcon name="mail" size={14} /> }
                 ],
                 engage: [
-                    { name: '500 AI Replies /mo', icon: <MaterialIcon name="smart_toy" size={14} /> }
+                    { name: 'Personalised Outreach', icon: <MaterialIcon name="smart_toy" size={14} /> },
+                    { name: 'Priority email support', icon: <MaterialIcon name="mail" size={14} /> }
                 ]
             }
         }
@@ -144,8 +142,8 @@ const Pricing = () => {
                 <div className="text-center mb-6">
                     <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ff914d] mb-6 font-mono">PRICING</p>
                     <h2 className="text-4xl md:text-[5rem] font-black text-white mb-16 tracking-tighter leading-[1.05] max-w-[90vw] mx-auto">
-                        <span className="block sm:whitespace-nowrap">Start getting</span>
-                        <span className="block text-orange-500 font-serif-italic sm:whitespace-nowrap">customers from Reddit</span>
+                        <span className="block sm:whitespace-nowrap">Find your first users</span>
+                        <span className="block text-orange-500 font-serif-italic sm:whitespace-nowrap">this week.</span>
                     </h2>
                     
                     {/* Billing Toggle with Card Border */}
@@ -220,7 +218,7 @@ const Pricing = () => {
                                                     transition={{ duration: 0.3, ease: "easeOut" }}
                                                     className="text-6xl font-black text-white tracking-tighter"
                                                 >
-                                                    ${billingCycle === 'annual' && plan.annualPrice ? (plan.annualPrice / 12).toFixed(2) : plan.price}
+                                                    ${billingCycle === 'annual' && plan.annualPrice ? Math.round(plan.annualPrice / 12) : plan.price}
                                                 </motion.span>
                                             </AnimatePresence>
                                             <span className="text-sm font-bold text-gray-600 uppercase tracking-widest ml-1">
@@ -314,7 +312,7 @@ const Pricing = () => {
                         <div className="absolute -top-3 right-8 bg-black text-white px-6 py-2 rounded-2xl flex items-center gap-3 z-30 shadow-none border-none">
                             <span className="text-xs font-black uppercase tracking-[0.3em] flex items-center gap-3">
                                 <MaterialIcon name="workspace_premium" size={14} className="text-orange-500" />
-                                Limited Time Offer
+                                ONE TIME PAYMENT
                             </span>
                         </div>
                         <div className="relative h-full p-8 md:p-12 bg-white border-2 border-white rounded-[2rem] group flex flex-col overflow-hidden">
@@ -325,14 +323,14 @@ const Pricing = () => {
 
                             <div className="mb-10 relative min-h-[300px] flex flex-col">
                                 <h3 className="text-2xl font-black text-black flex items-center gap-2 mb-6">
-                                    One-Time Payment
+                                    One Time Payment
                                 </h3>
                                 
                                 <div className="flex items-baseline gap-2 mb-4 h-16">
                                     <span className="text-6xl font-black text-black tracking-tighter">${currentPrice}</span>
                                     <span className="text-sm font-bold text-gray-500 uppercase tracking-widest ml-1">One-time</span>
                                 </div>
-                                <div className="h-6" />                                <p className="text-xs font-bold text-gray-600 leading-relaxed max-w-[240px] uppercase tracking-wider mb-8">Pay once and enjoy lifetime access to Starter plan limits, forever.</p>
+                                <div className="h-6" />                                <p className="text-xs font-bold text-gray-600 leading-relaxed max-w-[240px] uppercase tracking-wider mb-4">Pay once and enjoy lifetime access to upgraded limits, forever.</p>
 
                                 <div className="mt-auto">
                                     <button
@@ -348,37 +346,78 @@ const Pricing = () => {
                             </div>
 
 
-                            <div className="flex-grow mb-14">
-                                {/* Everything in Starter callout */}
-                                <div className="p-5 rounded-2xl bg-black/5 border border-black/10 mb-8 shadow-none">
-                                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-black flex items-center gap-2">
-                                        <MaterialIcon name="check" size={14} className="text-orange-500" /> All Starter features (Except Daily Emails)
-                                    </p>
+                            <div className="space-y-10 flex-grow mb-14">
+                                {/* Inbound Group */}
+                                <div>
+                                    <div className="flex items-center gap-2 mb-6">
+                                        <MaterialIcon name="public" size={14} className="text-gray-400" />
+                                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">INBOUND</span>
+                                        <div className="h-[1px] bg-black/5 flex-grow ml-2" />
+                                    </div>
+                                    <ul className="space-y-5">
+                                        {[
+                                            { name: '10 Deep AI Reddit Search /day', icon: <MaterialIcon name="public" size={14} /> },
+                                            { name: 'Live Reddit monitoring', icon: <MaterialIcon name="bolt" size={14} /> },
+                                            { name: '20 tracked keywords', icon: <MaterialIcon name="search" size={14} /> }
+                                        ].map((item) => (
+                                            <li key={item.name} className="flex items-center gap-4">
+                                                <div className="p-1.5 rounded-lg text-black bg-black/5 border border-black/10">
+                                                    {item.icon}
+                                                </div>
+                                                <span className="text-xs font-bold uppercase tracking-widest text-black">
+                                                    {item.name}
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
 
-                                <div className="flex items-center gap-2 mb-6">
-                                    <MaterialIcon name="workspace_premium" size={14} className="text-gray-400" />
-                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">PLUS</span>
-                                    <div className="h-[1px] bg-black/5 flex-grow ml-2" />
+                                {/* Engage Group */}
+                                <div>
+                                    <div className="flex items-center gap-2 mb-6">
+                                        <MaterialIcon name="bolt" size={14} className="text-gray-400" />
+                                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">ENGAGE</span>
+                                        <div className="h-[1px] bg-black/5 flex-grow ml-2" />
+                                    </div>
+                                    <ul className="space-y-5">
+                                        {[
+                                            { name: 'Personalised Outreach', icon: <MaterialIcon name="smart_toy" size={14} /> }
+                                        ].map((item) => (
+                                            <li key={item.name} className="flex items-center gap-4">
+                                                <div className="p-1.5 rounded-lg text-black bg-black/5 border border-black/10">
+                                                    {item.icon}
+                                                </div>
+                                                <span className="text-xs font-bold uppercase tracking-widest text-black">
+                                                    {item.name}
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
-                                <ul className="space-y-5">
-                                    {[
-                                        { name: 'Future Starter plan updates', icon: <MaterialIcon name="workspace_premium" size={14} /> },
-                                        { name: 'Priority email support', icon: <MaterialIcon name="smart_toy" size={14} /> },
-                                        { name: 'No recurring monthly fees', icon: <MaterialIcon name="workspace_premium" size={14} /> }
-                                        
-                                    ].map((item) => (
-                                        <li key={item.name} className="flex items-center gap-4">
-                                            <div className="p-1.5 rounded-lg text-black bg-black/5 border border-black/10">
-                                                {item.icon}
-                                            </div>
-                                            <span className="text-xs font-bold uppercase tracking-widest text-black">
-                                                {item.name}
-                                            </span>
-                                        </li>
-                                    ))}
 
-                                </ul>
+                                {/* Plus Group */}
+                                <div>
+                                    <div className="flex items-center gap-2 mb-6">
+                                        <MaterialIcon name="workspace_premium" size={14} className="text-gray-400" />
+                                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">LIFETIME PLUS</span>
+                                        <div className="h-[1px] bg-black/5 flex-grow ml-2" />
+                                    </div>
+                                    <ul className="space-y-5">
+                                        {[
+                                            { name: 'Priority email support', icon: <MaterialIcon name="mail" size={14} /> },
+                                            { name: 'No recurring monthly fees', icon: <MaterialIcon name="workspace_premium" size={14} /> }
+                                        ].map((item) => (
+                                            <li key={item.name} className="flex items-center gap-4">
+                                                <div className="p-1.5 rounded-lg text-black bg-black/5 border border-black/10">
+                                                    {item.icon}
+                                                </div>
+                                                <span className="text-xs font-bold uppercase tracking-widest text-black">
+                                                    {item.name}
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
                             </div>
 
                            
@@ -391,7 +430,7 @@ const Pricing = () => {
                 <div className="mt-8 flex justify-center">
                     <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-orange-500/10 border border-orange-500/20 rounded-full">
                         <span className="text-[11px] font-black uppercase tracking-[0.2em] text-orange-400">
-                            ⚡ <span className="text-white">We guarantee relevant leads or your money back within 7 days</span>
+                            ⚡ <span className="text-white">Find warm, high-intent users from Reddit within your first week, or your money back.</span>
                         </span>
                     </div>
                 </div>

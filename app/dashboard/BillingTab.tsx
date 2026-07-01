@@ -244,10 +244,10 @@ export default function BillingTab() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {[
-                                { label: 'Keywords', value: isLifetime ? '20 Keywords' : isGrowth ? '20 Keywords' : (isStarter || isOneTime) ? '10 Keywords' : 'Preview Plan', icon: <Search size={14} /> },
-                                { label: 'Power Searches', value: isLifetime ? '10/Day' : isGrowth ? '10/Day' : (isStarter || isOneTime) ? '5/Day' : 'Preview Plan', icon: <Compass size={14} /> },
-                                { label: 'AI Outreach', value: isLifetime ? '500 Drafts / Month' : isGrowth ? '500 Drafts / Month' : (isStarter || isOneTime) ? '100 Drafts / Month' : '5 Drafts', icon: <Bot size={14} /> },
-                                { label: 'Support', value: (isLifetime || isOneTime) ? 'Priority Support' : 'Standard Support', icon: <CheckCircle2 size={14} /> }
+                                { label: 'Keywords', value: isLifetime || isGrowth || isOneTime ? '20 Keywords' : isStarter ? '10 Keywords' : 'Preview Plan', icon: <Search size={14} /> },
+                                { label: 'Power Searches', value: isLifetime || isGrowth || isOneTime ? '10/Day' : isStarter ? '5/Day' : 'Preview Plan', icon: <Compass size={14} /> },
+                                { label: 'AI Outreach', value: isLifetime || isGrowth ? '500 Drafts / Month' : isOneTime ? '200 Drafts / Month' : isStarter ? '100 Drafts / Month' : '5 Drafts', icon: <Bot size={14} /> },
+                                { label: 'Support', value: isLifetime || isOneTime || isGrowth ? 'Priority Support' : 'Standard Support', icon: <CheckCircle2 size={14} /> }
                             ].map((stat) => (
                                 <div key={stat.label} className="p-0.5 surface-1 rounded-2xl transition-all duration-300 hover:scale-[1.02]">
                                     <div className="p-4 rounded-[1.1rem] bg-void border border-white/5 relative overflow-hidden">
@@ -339,7 +339,7 @@ export default function BillingTab() {
                                             transition={{ duration: 0.3, ease: "easeOut" }}
                                             className="text-5xl font-black text-text-primary tracking-tighter"
                                         >
-                                            ${billingCycle === 'annual' ? (plan.price / 12).toFixed(2) : plan.price}
+                                            ${billingCycle === 'annual' ? Math.round(plan.price / 12) : plan.price}
                                         </motion.span>
                                     </AnimatePresence>
                                     <span className="text-xs font-bold text-text-secondary/50 uppercase tracking-widest ml-1">
@@ -419,7 +419,7 @@ export default function BillingTab() {
                                 </h3>
                                 
                                 <p className="text-text-secondary font-medium max-w-xl mb-8 leading-relaxed">
-                                    Stop the monthly "SaaS Tax." Pay once and get lifetime access to Starter limits (excluding daily emails) without ever seeing another invoice.
+                                    Stop the monthly "SaaS Tax." Pay once and get lifetime access to upgraded limits (excluding daily emails) without ever seeing another invoice.
                                 </p>
 
                                 <div className="flex flex-wrap gap-8 mb-8">
@@ -450,11 +450,11 @@ export default function BillingTab() {
                                 <div className="p-1 bg-white/5 border border-white/5 rounded-3xl">
                                     <div className="p-6 rounded-[1.4rem] bg-[#0c0c0c] border border-white/5 space-y-4 relative overflow-hidden">
                                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-                                        <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest text-center mb-2">Starter Features +</p>
+                                        <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest text-center mb-2">Lifetime Features +</p>
                                         {[
-                                            '5 Power Searches / Day',
-                                            '100 AI Drafts / Month',
-                                            '10 Tracked Keywords',
+                                            '10 Power Searches / Day',
+                                            '200 AI Drafts / Month',
+                                            '20 Tracked Keywords',
                                             'Future Starter Updates'
                                         ].map((feat) => (
                                             <div key={feat} className="flex items-center gap-3">

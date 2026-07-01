@@ -14,10 +14,10 @@ const WaitlistCTA = () => {
 
       <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
         <h2 className="text-[2.5rem] sm:text-[3.5rem] font-black text-white leading-tight">
-          Stop Wasting Hours on Reddit.<br /><span className="text-orange-500 italic font-serif font-light">Start Finding Customers Today.</span>
+          You&apos;re one Reddit thread away<br /><span className="text-orange-500 italic font-serif font-light">from your first user.</span>
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-400">
-          Join {FOUNDER_COUNT} founders who stopped manually searching Reddit. Get started today with our 7-day guarantee.
+          Join {FOUNDER_COUNT} founders who used RedLeads to find their first users on Reddit, without spending hours searching manually.
         </p>
 
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
