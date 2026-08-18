@@ -10,7 +10,7 @@ const checkoutSchema = z.object({
 
 /**
  * Creates a Dodo Payments checkout session for subscription upgrade.
- * Supports Starter ($19/mo), Growth ($29/mo), and Lifetime (one-time) plans.
+ * Supports Starter ($29/mo), Growth ($39/mo), and One-Time Payment ($199) plans.
  */
 export async function POST(req: Request) {
     try {
@@ -35,14 +35,17 @@ export async function POST(req: Request) {
         // 3. Get user profile
         const { data: profile } = await supabase
             .from('profiles')
-            .select('email, subscription_tier')
+            .select('email, full_name, subscription_tier')
             .eq('id', user.id)
             .single();
 
         // If they are on the same plan and it's monthly, we allow them to go annual.
         // If we had a subscription_interval column, we could be more precise.
         if (profile?.subscription_tier === plan && interval === 'monthly') {
-            return NextResponse.json({ error: 'Already on this plan' }, { status: 400 });
+            const msg = plan === 'one_time'
+                ? 'You already have lifetime access to RedLeads.'
+                : 'You are already subscribed to this plan.';
+            return NextResponse.json({ error: msg }, { status: 400 });
         }
 
         // 3.5 Check Lifetime Slots if applicable
@@ -99,7 +102,7 @@ export async function POST(req: Request) {
         const session = await dodo.checkoutSessions.create({
             customer: {
                 email: profile?.email || user.email || '',
-                name: profile?.email?.split('@')[0] || 'Customer',
+                name: (profile as any)?.full_name || profile?.email?.split('@')[0] || 'Customer',
             },
             product_cart: [
                 {

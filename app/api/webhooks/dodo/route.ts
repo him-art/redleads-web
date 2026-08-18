@@ -4,6 +4,16 @@ import { createAdminClient } from '@/lib/supabase/server';
 import { sendEmail } from '@/lib/email';
 import * as React from 'react';
 import WelcomeEmail from '@/lib/email-templates/WelcomeEmail';
+import { PLANS } from '@/lib/constants';
+
+// Helper: derive keyword limit from plan constants (single source of truth)
+function getKeywordLimit(planType: string): number {
+    if (planType === 'starter') return PLANS.STARTER.keywordLimit;
+    if (planType === 'growth') return PLANS.GROWTH.keywordLimit;
+    if (planType === 'one_time') return PLANS.ONE_TIME.keywordLimit;
+    if (planType === 'lifetime') return PLANS.LIFETIME.keywordLimit;
+    return 10; // safe default
+}
 
 /**
  * Dodo Payments Webhook Handler
@@ -113,19 +123,15 @@ export async function POST(req: Request) {
                 case 'subscription.created': {
                     const planType = data?.metadata?.plan || 'growth';
 
-                    let keywordLimit = 10;
-                    if (planType === 'growth') keywordLimit = 20;
-                    if (planType === 'lifetime') keywordLimit = 20;
-                    if (planType === 'one_time') keywordLimit = 20;
+                    const keywordLimit = getKeywordLimit(planType);
 
-                    // Calculate trial_ends_at for trial-eligible plans
-                    let trialEndsAt = null;
-                    if (planType === 'starter' || planType === 'growth') {
-                        if (data.next_billing_date) {
-                            trialEndsAt = new Date(data.next_billing_date).toISOString();
-                        } else {
-                            trialEndsAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
-                        }
+                    // Trial only applies to recurring subscription plans
+                    const isSubscriptionPlan = planType === 'starter' || planType === 'growth';
+                    let trialEndsAt: string | null = null;
+                    if (isSubscriptionPlan) {
+                        trialEndsAt = data.next_billing_date
+                            ? new Date(data.next_billing_date).toISOString()
+                            : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
                     }
 
                     // Fetch current profile state — needed for welcome email guard
@@ -195,10 +201,7 @@ export async function POST(req: Request) {
                         && currentProfile?.subscription_started_at;
                     const wasAlreadyOnboarded = currentProfile?.onboarding_completed === true;
 
-                    let keywordLimit = 10;
-                    if (planType === 'growth') keywordLimit = 20;
-                    if (planType === 'lifetime') keywordLimit = 20;
-                    if (planType === 'one_time') keywordLimit = 20;
+                    const keywordLimit = getKeywordLimit(planType);
 
                     const updateData: any = {
                         subscription_tier: planType,
@@ -271,10 +274,7 @@ export async function POST(req: Request) {
                     }
                     // 2. Otherwise, if the plan changed (e.g. Starter → Growth upgrade)
                     else if (newPlan) {
-                        let keywordLimit = 10;
-                        if (newPlan === 'growth') keywordLimit = 20;
-                        if (newPlan === 'lifetime') keywordLimit = 20;
-                        if (newPlan === 'one_time') keywordLimit = 20;
+                        const keywordLimit = getKeywordLimit(newPlan);
 
                         await supabase
                             .from('profiles')

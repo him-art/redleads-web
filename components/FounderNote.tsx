@@ -366,7 +366,7 @@ export default function FounderNote() {
           <div className="text-center mb-14 md:mb-20">
             <h2 className="text-4xl md:text-7xl font-black text-white mb-6 tracking-tighter leading-[1.05] max-w-4xl mx-auto">
               Real reactions from <br />
-              <span className="text-orange-500 font-serif-italic">the community</span>
+              <span className="text-orange-500">the community</span>
             </h2>
             <p className="text-gray-500 text-sm md:text-base font-medium opacity-60 max-w-2xl mx-auto">
               {FOUNDER_COUNT} founders who signed up during our opening month

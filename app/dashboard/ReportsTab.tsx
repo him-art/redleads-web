@@ -27,6 +27,44 @@ export default function ReportsTab({ reports, user }: { reports: any[], user: an
     
     const hasConfig = (profile?.keywords?.length > 0);
 
+    // Filter and Group leads by date
+    const groupedLeads = useMemo(() => {
+        let filteredLeads: MonitoredLead[] = [];
+        if (filter === 'all') {
+            filteredLeads = historyLeads.slice(20);
+        } else {
+            filteredLeads = historyLeads.filter((l: MonitoredLead) => l.is_saved);
+        }
+        return filteredLeads.reduce((groups, lead: MonitoredLead) => {
+            const date = (() => {
+                try {
+                    if (!isMounted) return 'Loading date...';
+                    const d = new Date(lead.created_at);
+                    if (isNaN(d.getTime())) return 'Archive';
+                    return d.toLocaleDateString(undefined, {
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric'
+                    });
+                } catch {
+                    return 'Archive';
+                }
+            })();
+            if (!groups[date]) groups[date] = [];
+            groups[date].push(lead);
+            return groups;
+        }, {} as Record<string, MonitoredLead[]>);
+    }, [historyLeads, filter, isMounted]);
+
+    // Auto-expand the first day ONLY on initial load
+    useEffect(() => {
+        const keys = Object.keys(groupedLeads);
+        if (keys.length > 0 && !expandedDay) {
+            setExpandedDay(keys[0]);
+        }
+    }, [groupedLeads, expandedDay]);
+
     if (isDataLoading) {
         return (
             <div className="flex flex-col items-center justify-center py-24 space-y-6">
@@ -34,45 +72,6 @@ export default function ReportsTab({ reports, user }: { reports: any[], user: an
             </div>
         );
     }
-
-    // Filter and Group leads by date
-    let filteredLeads: MonitoredLead[] = [];
-    if (filter === 'all') {
-        // Show leads older than top 20
-        filteredLeads = historyLeads.slice(20);
-    } else {
-        // Show ALL saved leads (even if recent)
-        filteredLeads = historyLeads.filter((l: MonitoredLead) => l.is_saved);
-    }
-    const groupedLeads = filteredLeads.reduce((groups, lead: MonitoredLead) => {
-        const date = (() => {
-            try {
-                if (!isMounted) return 'Loading date...';
-                const d = new Date(lead.created_at);
-                if (isNaN(d.getTime())) return 'Archive';
-                return d.toLocaleDateString(undefined, {
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric'
-                });
-            } catch (e) {
-                return 'Archive';
-            }
-        })();
-        if (!groups[date]) groups[date] = [];
-        groups[date].push(lead);
-        return groups;
-    }, {} as Record<string, MonitoredLead[]>);
-
-    // Auto-expand the first day ONLY on initial load
-    // NOTE: Do NOT put groupedLeads in deps — it's a new object every render and will cause an infinite loop
-    useEffect(() => {
-        if (Object.keys(groupedLeads).length > 0 && !expandedDay) {
-            setExpandedDay(Object.keys(groupedLeads)[0]);
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [historyLeads.length, filter]);
 
     return (
         <div className="space-y-6 sm:space-y-8">

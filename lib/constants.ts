@@ -36,8 +36,8 @@ export const PLANS = {
         id: 'one_time',
         name: 'One-Time Payment',
         keywordLimit: 20,
-        subredditLimit: 5,
+        subredditLimit: 15,
         powerSearchLimit: 10,
-        aiReplyLimit: 200,
+        aiReplyLimit: 500,
     }
 } as const;

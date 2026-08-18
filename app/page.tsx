@@ -27,6 +27,7 @@ export const metadata: Metadata = {
 
 // Lazy-load all below-the-fold sections to reduce initial JS bundle and improve LCP/INP
 const GeoLoopVisual = dynamic(() => import("@/components/GeoLoopVisual"));
+const CreatorProof = dynamic(() => import("@/components/CreatorProof"));
 const Comparison = dynamic(() => import("@/components/Comparison"));
 const Features = dynamic(() => import("@/components/Features"));
 const FounderNote = dynamic(() => import("@/components/FounderNote"));
@@ -44,6 +45,7 @@ export default function Home() {
         <Navbar />
         <Hero />
         
+        <CreatorProof />
         <GeoLoopVisual />
         <Comparison />
         <Features />

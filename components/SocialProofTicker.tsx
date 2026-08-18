@@ -15,15 +15,15 @@ interface CreatorTweet {
 // Real tweets (or highly authentic versions) from big creators about Reddit
 const creatorTweets: CreatorTweet[] = [
   {
-    handle: '@TheRabbitHole84',
-    name: 'The Rabbit Hole',
-    followers: '150K+',
-    avatar: '/rabbit_pfp.webp',
-    tweet: 'Reddit is the top source for LLMs. No wonder AI sounds so Woke.',
-    highlights: ['top source for LLMs'],
-    url: 'https://x.com/TheRabbitHole/status/1956218956831973648',
-    date: 'Aug 15, 2025',
-    inlineImage: '/rabbit.webp',
+    handle: '@marclou',
+    name: 'Marc Lou',
+    followers: '360K+',
+    avatar: '/marclou_avatar_v3.webp',
+    tweet: "In the last 24h, my new startup got more traffic from Reddit than my main startup in 1 year 🤯\n\n📈 76,400 visitors\n👤 1,155 sign-ups \n\n4 lessons from this madness 👇",
+    highlights: ['got more traffic from Reddit', '76,400 visitors', '1,155 sign-ups'],
+    url: 'https://x.com/marclou/status/1612436162878242818?s=20',
+    date: 'Jan 8, 2023',
+    inlineImage: '/marclou_graph.webp',
   },
   {
     handle: '@illyism',
@@ -41,10 +41,10 @@ const creatorTweets: CreatorTweet[] = [
     name: 'GREG ISENBERG',
     followers: '300K+',
     avatar: '/greg_pfp.webp',
-    tweet: 'LLMs are basically reddit wrappers',
-    highlights: ['basically reddit wrappers'],
-    url: 'https://x.com/gregisenberg/status/1962256357899342097',
-    date: 'Sep 1, 2025',
+    tweet: 'reddit is a goldmine. people post problems they\'d pay to solve every single day',
+    highlights: ['goldmine', 'problems they\'d pay to solve'],
+    url: 'https://x.com/gregisenberg/status/1918318421412069848?s=20',
+    date: 'May 2, 2025',
     inlineImage: '/greg.webp',
   },
   {
@@ -92,10 +92,7 @@ const TweetCard = ({ tweet }: { tweet: CreatorTweet }) => {
   };
 
   return (
-    <a
-      href={tweet.url}
-      target="_blank"
-      rel="noopener noreferrer"
+    <div
       className="flex-shrink-0 w-[380px] sm:w-[420px] block group p-0.5"
       suppressHydrationWarning
     >
@@ -109,7 +106,7 @@ const TweetCard = ({ tweet }: { tweet: CreatorTweet }) => {
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
             </svg>
           </div>
-
+ 
           {/* Header - User Info */}
           <div className="flex items-center gap-4 mb-6 relative z-10">
             <div className="relative w-12 h-12 md:w-14 md:h-14 rounded-full overflow-hidden shrink-0 border border-gray-50 shadow-sm transition-transform group-hover:scale-105">
@@ -136,7 +133,7 @@ const TweetCard = ({ tweet }: { tweet: CreatorTweet }) => {
               </div>
             </div>
           </div>
-
+ 
           {/* Tweet text */}
           <div className="space-y-4 relative z-10 mb-6">
             {tweet.tweet.split('\n\n').map((paragraph, pIdx) => (
@@ -148,7 +145,7 @@ const TweetCard = ({ tweet }: { tweet: CreatorTweet }) => {
               </p>
             ))}
           </div>
-
+ 
           {/* Inline Context Image */}
           {tweet.inlineImage && (
             <div className="relative w-fit max-w-[140px] rounded-xl overflow-hidden border border-gray-100 shadow-sm mb-4 z-10 bg-gray-50 flex items-center justify-center">
@@ -161,14 +158,14 @@ const TweetCard = ({ tweet }: { tweet: CreatorTweet }) => {
               />
             </div>
           )}
-
+ 
           {/* Date Footer */}
           <div className="mt-auto pt-3 relative z-10 border-t border-gray-50">
             <span className="text-gray-400 text-xs font-medium">{tweet.date}</span>
           </div>
         </div>
       </div>
-    </a>
+    </div>
   );
 };
 

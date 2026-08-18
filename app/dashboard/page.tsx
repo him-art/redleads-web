@@ -22,7 +22,7 @@ export default async function DashboardPage(props: { searchParams: Promise<{ sea
     const [profileRes, accessStatusRes] = await Promise.all([
         supabase
             .from('profiles')
-            .select('id, email, subscription_tier, trial_started_at, description, keywords, website_url, subreddits, user_metadata, onboarding_completed, has_initial_scan, daily_scans_used, reply_credits_used, is_admin')
+            .select('id, email, subscription_tier, description, keywords, website_url, user_metadata, onboarding_completed, has_initial_scan, trial_ends_at, subscription_started_at, dodo_customer_id, dodo_subscription_id, scan_count, scan_allowance')
             .eq('id', user.id)
             .single(),
         supabase

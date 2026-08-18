@@ -563,12 +563,7 @@ export default function OnboardingWizard({ onComplete, keywordLimit = 20, defaul
                                 </div>
                             </div>
 
-                            <div className="flex flex-col items-center space-y-4 pt-6">
-                                <p className="text-[10px] font-bold text-text-secondary/60 uppercase tracking-[0.2em] flex items-center justify-center gap-1.5 bg-white/5 px-6 py-3 rounded-full border border-white/10">
-                                    <Shield size={12} className="text-orange-500 animate-pulse" />
-                                    We guarantee relevant leads or your money back within 7 days
-                                </p>
-                            </div>
+
                         </motion.div>
                     )}
                 </AnimatePresence>

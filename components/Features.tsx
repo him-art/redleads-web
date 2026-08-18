@@ -396,7 +396,8 @@ const Features = () => {
         <div className="text-center mb-20">
           
           <h2 className="text-4xl md:text-7xl font-black text-white leading-tight tracking-tighter mb-6">
-            Everything you need to <span className="text-orange-500 font-serif-italic">find your first users</span> <br className="hidden md:block"/>on Reddit
+             Everything you need to <br className="hidden md:block" />
+             <span className="text-orange-500 ">find your first users</span>
           </h2>
           <p className="max-w-2xl mx-auto text-gray-400 text-sm md:text-base font-medium leading-relaxed opacity-80">
             RedLeads gives you all the tools to discover and engage with potential customers on Reddit effortlessly.

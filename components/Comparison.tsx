@@ -11,12 +11,9 @@ const Comparison = () => {
         
         {/* Header */}
         <div className="text-center max-w-4xl mx-auto mb-20">
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 mb-4 block">
-                The Slow Way vs. The Fast Way
-            </span>
             <h2 className="text-4xl md:text-[4.5rem] font-black text-white leading-[1.05] tracking-tighter mb-6">
-                Stop spending days searching. <br className="hidden md:block" />
-                <span className="text-orange-500 font-serif-italic">Start getting users this week.</span>
+                Finding users in days <br className="hidden md:block" />
+                <span className="text-orange-500 ">not months</span>
             </h2>
             <p className="text-gray-500 text-lg font-medium leading-relaxed max-w-2xl mx-auto">
                 Most founders spend weeks manually hunting Reddit for users and come up empty. RedLeads is the <span className="text-orange-500 font-bold">fastest path from zero to first user</span>.
@@ -79,7 +76,7 @@ const Comparison = () => {
                             description="RedLeads surfaces the exact Reddit conversations where someone is actively looking for a product like yours."
                         />
                         <BenefitItem 
-                            title="Know exactly who has buying intent — right now"
+                            title="Know exactly who has buying intent right now"
                             description="AI scores every thread. You only engage with people who are already halfway to buying."
                         />
                         <BenefitItem 

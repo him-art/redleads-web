@@ -95,7 +95,7 @@ const FAQ = () => {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <h2 className="text-center text-4xl sm:text-[4.5rem] font-black text-white leading-[1.1] tracking-tighter">
           <span className="block sm:whitespace-nowrap">Frequently Asked</span>
-          <span className="block text-orange-500 font-serif-italic sm:whitespace-nowrap">Questions</span>
+          <span className="block text-orange-500 sm:whitespace-nowrap">Questions</span>
         </h2>
         
         <div className="mt-12 space-y-3">

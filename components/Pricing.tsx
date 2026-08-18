@@ -143,7 +143,7 @@ const Pricing = () => {
                     <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ff914d] mb-6 font-mono">PRICING</p>
                     <h2 className="text-4xl md:text-[5rem] font-black text-white mb-16 tracking-tighter leading-[1.05] max-w-[90vw] mx-auto">
                         <span className="block sm:whitespace-nowrap">Find your first users</span>
-                        <span className="block text-orange-500 font-serif-italic sm:whitespace-nowrap">this week.</span>
+                        <span className="block text-orange-500 sm:whitespace-nowrap">this week.</span>
                     </h2>
                     
                     {/* Billing Toggle with Card Border */}
@@ -235,7 +235,7 @@ const Pricing = () => {
                                                     exit={{ opacity: 0, height: 0 }}
                                                     className="text-[10px] font-black text-orange-500/80 uppercase tracking-widest mb-4"
                                                 >
-                                                    Save 2 month
+                                                    Save 2 months
                                                 </motion.p>
                                             )}
                                         </AnimatePresence>

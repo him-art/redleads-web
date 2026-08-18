@@ -246,7 +246,7 @@ export default function BillingTab() {
                             {[
                                 { label: 'Keywords', value: isLifetime || isGrowth || isOneTime ? '20 Keywords' : isStarter ? '10 Keywords' : 'Preview Plan', icon: <Search size={14} /> },
                                 { label: 'Power Searches', value: isLifetime || isGrowth || isOneTime ? '10/Day' : isStarter ? '5/Day' : 'Preview Plan', icon: <Compass size={14} /> },
-                                { label: 'AI Outreach', value: isLifetime || isGrowth ? '500 Drafts / Month' : isOneTime ? '200 Drafts / Month' : isStarter ? '100 Drafts / Month' : '5 Drafts', icon: <Bot size={14} /> },
+                                { label: 'AI Outreach', value: isLifetime || isGrowth || isOneTime ? '500 Drafts / Month' : isStarter ? '100 Drafts / Month' : '5 Drafts', icon: <Bot size={14} /> },
                                 { label: 'Support', value: isLifetime || isOneTime || isGrowth ? 'Priority Support' : 'Standard Support', icon: <CheckCircle2 size={14} /> }
                             ].map((stat) => (
                                 <div key={stat.label} className="p-0.5 surface-1 rounded-2xl transition-all duration-300 hover:scale-[1.02]">
@@ -357,7 +357,7 @@ export default function BillingTab() {
                                             exit={{ opacity: 0, height: 0 }}
                                             className="text-[10px] font-black text-primary/80 uppercase tracking-widest"
                                         >
-                                            Save 2 month
+                                            Save 2 months
                                         </motion.p>
                                     )}
                                 </AnimatePresence>
@@ -453,7 +453,7 @@ export default function BillingTab() {
                                         <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest text-center mb-2">Lifetime Features +</p>
                                         {[
                                             '10 Power Searches / Day',
-                                            '200 AI Drafts / Month',
+                                            '500 AI Drafts / Month',
                                             '20 Tracked Keywords',
                                             'Future Starter Updates'
                                         ].map((feat) => (

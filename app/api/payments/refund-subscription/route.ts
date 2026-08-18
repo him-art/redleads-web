@@ -19,7 +19,7 @@ export async function POST(req: Request) {
         // 1. Fetch user profile to verify 7-day window
         const { data: profile, error: profileError } = await supabase
             .from('profiles')
-            .select('subscription_started_at, dodo_customer_id, dodo_payment_id, subscription_tier')
+            .select('subscription_started_at, dodo_customer_id, dodo_payment_id, dodo_subscription_id, subscription_tier')
             .eq('id', user.id)
             .single();
 
@@ -46,10 +46,24 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Customer ID not found' }, { status: 400 });
         }
 
-        // 3. Trigger Refund via Dodo API
+        // 3. Cancel subscription before refunding (recurring plans only)
+        //    This prevents Dodo from billing the user again next cycle.
         if (!dodo) {
             throw new Error('Dodo client not initialized');
         }
+
+        const isRecurringPlan = ['starter', 'growth'].includes(profile.subscription_tier);
+        if (isRecurringPlan && profile.dodo_subscription_id) {
+            try {
+                await (dodo.subscriptions as any).cancel(profile.dodo_subscription_id);
+                console.log(`[Refund] Cancelled Dodo subscription ${profile.dodo_subscription_id} for user ${user.id}`);
+            } catch (cancelErr) {
+                // Non-blocking — still attempt refund; support can cancel manually if needed
+                console.error('[Refund] Failed to cancel Dodo subscription before refund:', cancelErr);
+            }
+        }
+
+        // 4. Trigger Refund via Dodo API
 
         // Use stored payment_id if available, otherwise fetch from Dodo
         let paymentIdToRefund = profile.dodo_payment_id;

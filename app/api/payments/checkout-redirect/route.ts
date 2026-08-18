@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
     // 4. Get user profile
     const { data: profile } = await supabase
         .from('profiles')
-        .select('email, subscription_tier')
+        .select('email, full_name, subscription_tier')
         .eq('id', user.id)
         .single();
 
@@ -72,7 +72,7 @@ export async function GET(req: NextRequest) {
         const session = await dodo.checkoutSessions.create({
             customer: {
                 email: profile?.email || user.email || '',
-                name: profile?.email?.split('@')[0] || 'Customer',
+                name: (profile as any)?.full_name || profile?.email?.split('@')[0] || 'Customer',
             },
             product_cart: [{ product_id: productId, quantity: 1 }],
 
